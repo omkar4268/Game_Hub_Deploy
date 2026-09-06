@@ -359,6 +359,16 @@
         </div>
     </main>
 
+  <!-- Card 3 -->
+            <div class="game-card" onclick="openGamePrompt('Maze.jsp', 'Cyber Maze Runner', '⚡', 'Navigate a procedural cyber labyrinth, choose difficulty, and reach the extraction node.')">
+                <div class="card-banner banner-maze">⚡</div>
+                <div class="card-body">
+                    <div class="card-tag">Procedural Puzzle</div>
+                    <div class="card-title">Cyber Maze Runner</div>
+                    <div class="card-desc">Navigate a procedural labyrinth with dynamic difficulty and find the extraction node.</div>
+                </div>
+            </div>
+
     <!-- Details / Launch Prompt Dialog -->
     <div class="modal-overlay" id="promptModal">
         <div class="detail-panel">
