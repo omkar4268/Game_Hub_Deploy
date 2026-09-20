@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    String currentUser = (session != null) ? (String) session.getAttribute("user") : null;
+    boolean isLoggedIn = (currentUser != null && !currentUser.trim().isEmpty());
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +90,74 @@
     color: #000;
     font-weight: 900;
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+  }
+
+  /* User Auth Widget in Sidebar */
+  .auth-widget {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  .auth-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem auto;
+    background: linear-gradient(135deg, var(--primary), var(--neon-purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #000;
+    font-weight: 900;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  }
+  .auth-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .auth-role {
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .btn-auth {
+    display: inline-block;
+    width: 100%;
+    padding: 0.55rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+  .btn-login {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+  }
+  .btn-login:hover {
+    background: #7dd3fc;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+  }
+  .btn-logout {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  .btn-logout:hover {
+    background: rgba(239, 68, 68, 0.3);
   }
 
   nav { display: flex; flex-direction: column; gap: 0.8rem; }
@@ -411,6 +483,65 @@
   .btn-cancel { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
   .btn-cancel:hover { background: rgba(255, 255, 255, 0.15); }
 
+  /* Input fields for Auth Modals */
+  .auth-form-group {
+    text-align: left;
+    margin-top: 1.2rem;
+  }
+  .auth-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .auth-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 10px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .auth-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    background: rgba(15, 23, 42, 1);
+  }
+  .auth-msg {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    padding: 0.6rem;
+    border-radius: 8px;
+    display: none;
+  }
+  .auth-msg.error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    display: block;
+  }
+  .auth-msg.success {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    display: block;
+  }
+
+  .switch-auth-link {
+    display: inline-block;
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .switch-auth-link:hover { color: var(--primary); }
+
   @media (max-width: 768px) {
     body { flex-direction: column; padding-bottom: 80px; }
 
@@ -421,7 +552,7 @@
       align-items: center; justify-content: space-around; z-index: 999;
     }
 
-    .brand { display: none; }
+    .brand, .auth-widget { display: none; }
     nav { flex-direction: row; width: 100%; justify-content: space-around; gap: 0; }
     .nav-btn {
       flex-direction: column; gap: 6px; padding: 0.5rem; font-size: 0.75rem;
@@ -447,6 +578,22 @@
     <div class="brand">
       CYBER <span class="brand-badge">HUB</span>
     </div>
+
+    <!-- User Profile & Authentication State -->
+    <div class="auth-widget" id="authWidget">
+      <% if (isLoggedIn) { %>
+        <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
+        <div class="auth-name"><%= currentUser %></div>
+        <div class="auth-role">PLAYER ONLINE</div>
+        <button class="btn-auth btn-logout" onclick="performLogout()">TERMINATE [LOGOUT]</button>
+      <% } else { %>
+        <div class="auth-avatar" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">?</div>
+        <div class="auth-name" style="color: var(--text-muted);">GUEST RECRUIT</div>
+        <div class="auth-role" style="color: var(--warning);">UNAUTHENTICATED</div>
+        <button class="btn-auth btn-login" onclick="openLoginModal()">ACCESS TERMINAL</button>
+      <% } %>
+    </div>
+
     <nav>
       <button class="nav-btn active" onclick="switchTab('library', this)">
         <span style="font-size: 1.2rem;">📚</span>
@@ -486,7 +633,7 @@
             <div class="card-title">Defusal Protocol</div>
             <div class="card-desc">Execute override sequences on complex security modules under a strict 3-minute timer. Don't blow it.</div>
             <div class="card-footer">
-              <div class="card-score-preview">Status: <span style="color:var(--danger)">Lethal</span></div>
+              <div class="card-score-preview">Top: <span id="preview-defuse">0 pts</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
@@ -551,21 +698,22 @@
       </div>
     </section>
 
-    <!-- VIEW 2: Scores -->
+    <!-- VIEW 2: Scores & Leaderboard -->
     <section id="scoresView" class="view-panel">
       <div class="score-grid">
         <div class="score-card">
           <h3 style="color:#10b981; margin-bottom:1.2rem; font-size:1.4rem;">🐍 Cyber Snake</h3>
-          <div class="stat-row"><span style="color:var(--text-muted)">High Score</span><span id="statSnakeBest">0 pts</span></div>
-          <div class="stat-row"><span style="color:var(--text-muted)">Longest Streak</span><span id="statSnakeStreak">0</span></div>
+          <div class="stat-row"><span style="color:var(--text-muted)">Cloud Record</span><span id="statSnakeBest">0 pts</span></div>
+          <div class="stat-row"><span style="color:var(--text-muted)">Top Player</span><span id="statSnakeLeader">--</span></div>
+        </div>
+        <div class="score-card">
+          <h3 style="color:#ea580c; margin-bottom:1.2rem; font-size:1.4rem;">☢️ Defusal Protocol</h3>
+          <div class="stat-row"><span style="color:var(--text-muted)">Cloud Record</span><span id="statDefuseBest">0 pts</span></div>
+          <div class="stat-row"><span style="color:var(--text-muted)">Top Player</span><span id="statDefuseLeader">--</span></div>
         </div>
         <div class="score-card">
           <h3 style="color:#38bdf8; margin-bottom:1.2rem; font-size:1.4rem;">⚡ Cyber Maze</h3>
           <div class="stat-row"><span style="color:var(--text-muted)">Mazes Cleared</span><span id="statMazeClears">0</span></div>
-        </div>
-        <div class="score-card">
-          <h3 style="color:#6366f1; margin-bottom:1.2rem; font-size:1.4rem;">🔢 Number Guesser</h3>
-          <div class="stat-row"><span style="color:var(--text-muted)">Fewest Tries</span><span id="statGuessBest">--</span></div>
         </div>
       </div>
     </section>
@@ -610,9 +758,65 @@
       <h2 id="modalTitle" style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Launch Game</h2>
       <p id="modalDesc" style="color:var(--text-muted); font-size:0.95rem; margin-top:0.8rem; line-height: 1.5;"></p>
       <div class="modal-actions">
-        <button class="btn-modal btn-cancel" onclick="closeLaunchModal()">Abort</button>
+        <button class="btn-modal btn-cancel" onclick="closeModal('launchModal')">Abort</button>
         <button class="btn-modal btn-launch" id="confirmLaunchBtn">Initialize</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-box">
+      <h2 style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">IDENT SYSTEM // LOGIN</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Authorize your terminal credentials</p>
+
+      <div class="auth-msg" id="loginMsg"></div>
+
+      <div class="auth-form-group">
+        <label class="auth-label">CALLSIGN [USERNAME]</label>
+        <input type="text" class="auth-input" id="loginUsername" placeholder="e.g. NeoCipher" autocomplete="username">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">CIPHER [PASSWORD]</label>
+        <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal btn-cancel" onclick="closeModal('loginModal')">Cancel</button>
+        <button class="btn-modal btn-launch" onclick="submitLogin()">Authenticate</button>
+      </div>
+
+      <span class="switch-auth-link" onclick="openSignupModal()">New recruit? Register identity here</span>
+    </div>
+  </div>
+
+  <!-- Sign Up Modal -->
+  <div class="modal-overlay" id="signupModal">
+    <div class="modal-box">
+      <h2 style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">NEW RECRUIT // ENLIST</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Create persistent cyber identity</p>
+
+      <div class="auth-msg" id="signupMsg"></div>
+
+      <div class="auth-form-group">
+        <label class="auth-label">CHOOSE CALLSIGN [3-20 ALPHANUMERIC]</label>
+        <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. CyberSamurai">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">CREATE CIPHER [MIN 6 CHARACTERS]</label>
+        <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">CONFIRM CIPHER</label>
+        <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal btn-cancel" onclick="closeModal('signupModal')">Cancel</button>
+        <button class="btn-modal btn-launch" style="background:var(--accent); box-shadow:0 0 15px rgba(34,197,94,0.4);" onclick="submitSignup()">Enlist</button>
+      </div>
+
+      <span class="switch-auth-link" onclick="openLoginModal()">Already enlisted? Sign in</span>
     </div>
   </div>
 
@@ -622,7 +826,6 @@
   function switchTab(tab, btn) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-    
     btn.classList.add('active');
     
     setTimeout(() => {
@@ -632,7 +835,7 @@
       } else if (tab === 'scores') {
         document.getElementById('scoresView').classList.add('active');
         document.getElementById('viewTitle').innerText = 'System Records';
-        loadScores();
+        syncCloudScores();
       } else if (tab === 'settings') {
         document.getElementById('settingsView').classList.add('active');
         document.getElementById('viewTitle').innerText = 'Terminal Config';
@@ -649,17 +852,178 @@
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalDesc').innerText = desc;
     document.getElementById('confirmLaunchBtn').onclick = () => window.location.href = targetUrl;
-    
-    const modal = document.getElementById('launchModal');
+    openModal('launchModal');
+  }
+
+  function openModal(id) {
+    const modal = document.getElementById(id);
     modal.style.display = 'flex';
     void modal.offsetWidth;
     modal.classList.add('active');
   }
 
-  function closeLaunchModal() {
-    const modal = document.getElementById('launchModal');
+  function closeModal(id) {
+    const modal = document.getElementById(id);
     modal.classList.remove('active');
-    setTimeout(() => { modal.style.display = 'none'; }, 300);
+    setTimeout(() => { modal.style.display = 'none'; }, 250);
+  }
+
+  function openLoginModal() {
+    closeModal('signupModal');
+    document.getElementById('loginMsg').className = 'auth-msg';
+    document.getElementById('loginMsg').innerText = '';
+    openModal('loginModal');
+  }
+
+  function openSignupModal() {
+    closeModal('loginModal');
+    document.getElementById('signupMsg').className = 'auth-msg';
+    document.getElementById('signupMsg').innerText = '';
+    openModal('signupModal');
+  }
+
+  // --- AJAX Auth Handlers ---
+  async function submitLogin() {
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value;
+    const msg = document.getElementById('loginMsg');
+
+    if (!u || !p) {
+      msg.className = 'auth-msg error';
+      msg.innerText = 'All credentials required.';
+      return;
+    }
+
+    try {
+      const res = await fetch('login.jsp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ username: u, password: p })
+      });
+      const data = await res.json();
+      if (data.success) {
+        msg.className = 'auth-msg success';
+        msg.innerText = 'Authorized! Loading cyber state...';
+        setTimeout(() => window.location.reload(), 600);
+      } else {
+        msg.className = 'auth-msg error';
+        msg.innerText = data.message || 'Access Denied.';
+      }
+    } catch (err) {
+      msg.className = 'auth-msg error';
+      msg.innerText = 'Connection to gateway timed out.';
+    }
+  }
+
+  async function submitSignup() {
+    const u = document.getElementById('signupUsername').value.trim();
+    const p = document.getElementById('signupPassword').value;
+    const c = document.getElementById('signupPasswordConfirm').value;
+    const msg = document.getElementById('signupMsg');
+
+    if (!u || !p || !c) {
+      msg.className = 'auth-msg error';
+      msg.innerText = 'Fill in all fields.';
+      return;
+    }
+    if (p !== c) {
+      msg.className = 'auth-msg error';
+      msg.innerText = 'Ciphers do not match.';
+      return;
+    }
+
+    try {
+      const res = await fetch('register.jsp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ username: u, password: p })
+      });
+      const data = await res.json();
+      if (data.success) {
+        msg.className = 'auth-msg success';
+        msg.innerText = 'Identity registered! Loading profile...';
+        setTimeout(() => window.location.reload(), 600);
+      } else {
+        msg.className = 'auth-msg error';
+        msg.innerText = data.message || 'Registration failed.';
+      }
+    } catch (err) {
+      msg.className = 'auth-msg error';
+      msg.innerText = 'Server unreachable.';
+    }
+  }
+
+  async function performLogout() {
+    try {
+      await fetch('logout.jsp', { headers: { 'Accept': 'application/json' } });
+      window.location.reload();
+    } catch (e) {
+      window.location.href = 'logout.jsp';
+    }
+  }
+
+  // --- High Score Sync & Fallback ---
+  async function syncCloudScores() {
+    const localSnake = localStorage.getItem('hub_snake_high') || '0';
+    const localDefuse = localStorage.getItem('hub_defuse_high') || '0';
+    const localMaze = localStorage.getItem('hub_maze_clears') || '0';
+    const localGuess = localStorage.getItem('hub_guess_best') || '--';
+
+    const pSnake = document.getElementById('preview-snake');
+    const pDefuse = document.getElementById('preview-defuse');
+    const pMaze = document.getElementById('preview-maze');
+    const pGuess = document.getElementById('preview-guess');
+
+    if (pSnake) pSnake.innerText = localSnake + ' pts';
+    if (pDefuse) pDefuse.innerText = localDefuse + ' pts';
+    if (pMaze) pMaze.innerText = localMaze;
+    if (pGuess) pGuess.innerText = localGuess;
+
+    const sSnake = document.getElementById('statSnakeBest');
+    const sDefuse = document.getElementById('statDefuseBest');
+    const sMaze = document.getElementById('statMazeClears');
+
+    if (sSnake) sSnake.innerText = localSnake + ' pts';
+    if (sDefuse) sDefuse.innerText = localDefuse + ' pts';
+    if (sMaze) sMaze.innerText = localMaze;
+
+    try {
+      const res = await fetch('get_scores.jsp');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.userScores) {
+          if (data.userScores.snake !== undefined) {
+            if (pSnake) pSnake.innerText = data.userScores.snake + ' pts';
+            if (sSnake) sSnake.innerText = data.userScores.snake + ' pts';
+            localStorage.setItem('hub_snake_high', data.userScores.snake);
+          }
+          if (data.userScores.bomb_defuse !== undefined) {
+            if (pDefuse) pDefuse.innerText = data.userScores.bomb_defuse + ' pts';
+            if (sDefuse) sDefuse.innerText = data.userScores.bomb_defuse + ' pts';
+            localStorage.setItem('hub_defuse_high', data.userScores.bomb_defuse);
+          }
+        }
+        if (data.leaders) {
+          const lSnake = document.getElementById('statSnakeLeader');
+          const lDefuse = document.getElementById('statDefuseLeader');
+          if (lSnake && data.leaders.snake) {
+            lSnake.innerText = data.leaders.snake.username + ' (' + data.leaders.snake.score + ' pts)';
+          }
+          if (lDefuse && data.leaders.bomb_defuse) {
+            lDefuse.innerText = data.leaders.bomb_defuse.username + ' (' + data.leaders.bomb_defuse.score + ' pts)';
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Cloud score sync offline; relying on local cache.');
+    }
+  }
+
+  function resetLocalCache() {
+    if(confirm('Purge local score cache? Your cloud scores remain safe.')) {
+      localStorage.clear();
+      syncCloudScores();
+    }
   }
 
   function togglePerformance(checkbox) {
@@ -670,35 +1034,13 @@
     }
   }
 
-  function loadScores() {
-    const snakeScore = localStorage.getItem('hub_snake_high') || '0';
-    const mazeClears = localStorage.getItem('hub_maze_clears') || '0';
-    const guessBest = localStorage.getItem('hub_guess_best') || '--';
-
-    document.getElementById('preview-snake').innerText = snakeScore + ' pts';
-    document.getElementById('preview-maze').innerText = mazeClears;
-    document.getElementById('preview-guess').innerText = guessBest;
-
-    document.getElementById('statSnakeBest').innerText = snakeScore + ' pts';
-    document.getElementById('statSnakeStreak').innerText = (snakeScore > 0 ? Math.floor(snakeScore/10) : 0);
-    document.getElementById('statMazeClears').innerText = mazeClears;
-    document.getElementById('statGuessBest').innerText = guessBest;
-  }
-
-  function resetScores() {
-    if(confirm("WARNING: This will permanently purge all local high scores. Proceed?")) {
-      localStorage.removeItem('hub_snake_high');
-      localStorage.removeItem('hub_maze_clears');
-      localStorage.removeItem('hub_guess_best');
-      loadScores();
-    }
-  }
-
-  document.getElementById('launchModal').addEventListener('click', function(e) {
-    if (e.target === this) closeLaunchModal();
+  document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) closeModal(this.id);
+    });
   });
 
-  window.addEventListener('DOMContentLoaded', loadScores);
+  window.addEventListener('DOMContentLoaded', syncCloudScores);
 </script>
 </body>
 </html>

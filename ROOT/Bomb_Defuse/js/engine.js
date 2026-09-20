@@ -183,19 +183,34 @@ function triggerSuccess() {
     document.body.classList.remove('panic-mode');
     
     const resBox = document.getElementById('resultBox');
+
+    // Calculate score: Level * 100 + Remaining Seconds
+    const levelScore = (currentLevel * 100) + timeRemaining;
+    const existingHigh = parseInt(localStorage.getItem('hub_defuse_high') || '0', 10);
+    if (levelScore > existingHigh) {
+        localStorage.setItem('hub_defuse_high', levelScore);
+    }
+
+    // Sync to Cloud
+    fetch('../save_score.jsp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ game: 'bomb_defuse', score: levelScore })
+    }).catch(() => console.log("Offline mode"));
     
     if (currentLevel === 10) {
         resBox.className = 'ending-box secret-ending';
         document.getElementById('resultTitle').innerText = "GHOST PROTOCOL UNLOCKED";
         document.getElementById('resultSub').innerHTML = `
             You defused the impossible.<br><br>
+            [ SCORE: ${levelScore} PTS ]<br>
             [ SYSTEM ARCHIVE ACCESS GRANTED ]<br>
             "The architect left a backdoor in Sector 7."
         `;
     } else {
         resBox.className = 'ending-box success';
         document.getElementById('resultTitle').innerText = "DEFUSED";
-        document.getElementById('resultSub').innerText = "THREAT NEUTRALIZED.";
+        document.getElementById('resultSub').innerText = `THREAT NEUTRALIZED. SCORE: ${levelScore} PTS`;
     }
     
     document.getElementById('screen-result').classList.add('active');

@@ -308,6 +308,26 @@
     overlayTitle.innerText = "SYSTEM CRASH";
     overlayTitle.style.color = "#f43f5e";
     overlay.style.display = 'flex';
+
+    if (score > 0) {
+      syncScoreToCloud('snake', score);
+    }
+  }
+
+  async function syncScoreToCloud(gameName, finalScore) {
+    try {
+      const res = await fetch('save_score.jsp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ game: gameName, score: finalScore })
+      });
+      const data = await res.json();
+      if (data.success) {
+        console.log("☁ High score synced to MySQL database:", finalScore);
+      }
+    } catch (err) {
+      console.log("Local score saved; could not reach cloud.");
+    }
   }
 
   function render() {

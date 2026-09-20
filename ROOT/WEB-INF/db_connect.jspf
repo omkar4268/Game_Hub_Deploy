@@ -1,0 +1,47 @@
+<%@ page import="java.sql.*, java.security.MessageDigest, java.security.SecureRandom" %>
+<%!
+    // Safe Helper: Returns a live Connection reading Environment Variables or falling back to local
+    public static Connection getDbConnection() throws Exception {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        
+        String dbUrl = System.getenv("DB_URL");
+        String dbUser = System.getenv("DB_USER");
+        String dbPass = System.getenv("DB_PASSWORD");
+        
+        // Default local fallback if environment variables are not set
+        if (dbUrl == null || dbUrl.trim().isEmpty()) {
+            dbUrl = "jdbc:mysql://localhost:3306/gamehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+        }
+        if (dbUser == null || dbUser.trim().isEmpty()) {
+            dbUser = "root";
+        }
+        if (dbPass == null) {
+            dbPass = ""; // Your local MySQL root password
+        }
+        
+        return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+    }
+
+    // Cryptographic Helpers (Native Java - 0 external dependencies)
+    public static String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] saltBytes = new byte[16];
+        random.nextBytes(saltBytes);
+        StringBuilder sb = new StringBuilder();
+        for (byte b : saltBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
+    public static String hashPassword(String password, String salt) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(salt.getBytes("UTF-8"));
+        byte[] hashed = md.digest(password.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashed) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+%>
