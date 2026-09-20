@@ -1,9 +1,11 @@
-<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ include file="/WEB-INF/db_connect.jspf" %>
 <%
+    response.setContentType("application/json; charset=UTF-8");
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
     if (!"POST".equalsIgnoreCase(request.getMethod())) {
-        response.setStatus(405);
-        out.print("{\"success\": false, \"message\": \"Method Not Allowed\"}");
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Method Not Allowed\"}");
         return;
     }
 
@@ -11,8 +13,7 @@
     String password = request.getParameter("password");
 
     if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-        response.setStatus(400);
-        out.print("{\"success\": false, \"message\": \"All fields are required.\"}");
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Callsign and Cipher are required.\"}");
         return;
     }
 
@@ -35,23 +36,23 @@
             String calculatedHash = hashPassword(password, salt);
 
             if (calculatedHash.equals(storedHash)) {
-                // Initialize session
+                // Initialize active HTTP session
                 HttpSession userSession = request.getSession(true);
-                userSession.setAttribute("user_id", userId);
+                userSession.setAttribute("user_session", rs.getString("username"));
                 userSession.setAttribute("user", rs.getString("username"));
+                userSession.setAttribute("user_id", userId);
 
-                out.print("{\"success\": true, \"message\": \"Authentication successful!\", \"username\": \"" + rs.getString("username") + "\"}");
+                out.print("{\"status\": \"success\", \"success\": true, \"message\": \"Authentication successful! Access granted.\", \"username\": \"" + escapeJson(rs.getString("username")) + "\"}");
                 return;
             }
         }
 
-        // Generic error message to prevent user enumeration
-        response.setStatus(401);
-        out.print("{\"success\": false, \"message\": \"Invalid username or password.\"}");
+        // Generic error message for security
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Invalid username or password.\"}");
 
-    } catch (Exception e) {
-        response.setStatus(500);
-        out.print("{\"success\": false, \"message\": \"Server error: " + e.getMessage().replace("\"", "'") + "\"}");
+    } catch (Throwable t) {
+        String errMsg = (t.getMessage() != null) ? t.getMessage() : t.toString();
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"" + escapeJson(errMsg) + "\"}");
     } finally {
         if (rs != null) try { rs.close(); } catch(Exception ignored) {}
         if (stmt != null) try { stmt.close(); } catch(Exception ignored) {}

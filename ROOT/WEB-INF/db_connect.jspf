@@ -1,8 +1,12 @@
 <%@ page import="java.sql.*, java.security.MessageDigest, java.security.SecureRandom" %>
 <%!
-    // Safe Helper: Returns a live Connection reading Environment Variables or falling back to local
+    // Robust Database Connection Helper
     public static Connection getDbConnection() throws Exception {
-        Class.forName("com.mysql.cj.jdbc.Driver");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new Exception("MySQL Driver missing. Make sure mysql-connector-j.jar is inside WEB-INF/lib.");
+        }
         
         String dbUrl = System.getenv("DB_URL");
         String dbUser = System.getenv("DB_USER");
@@ -10,7 +14,7 @@
         
         // Default local fallback if environment variables are not set
         if (dbUrl == null || dbUrl.trim().isEmpty()) {
-            dbUrl = "jdbc:mysql://localhost:3306/gamehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            dbUrl = "jdbc:mysql://localhost:3306/gamehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectTimeout=5000";
         }
         if (dbUser == null || dbUser.trim().isEmpty()) {
             dbUser = "root";
@@ -19,7 +23,11 @@
             dbPass = ""; // Your local MySQL root password
         }
         
-        return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+        try {
+            return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+        } catch (SQLException sqle) {
+            throw new Exception("Database connection failed. Verify MySQL is running or configure DB_URL, DB_USER, DB_PASSWORD environment variables. Detail: " + sqle.getMessage());
+        }
     }
 
     // Cryptographic Helpers (Native Java - 0 external dependencies)
@@ -41,6 +49,34 @@
         StringBuilder sb = new StringBuilder();
         for (byte b : hashed) {
             sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
+    // Safe JSON escaper ensuring valid JSON strings under any exception
+    public static String escapeJson(String s) {
+        if (s == null) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            switch (ch) {
+                case '"': sb.append("\\\""); break;
+                case '\\': sb.append("\\\\"); break;
+                case '\b': sb.append("\\b"); break;
+                case '\f': sb.append("\\f"); break;
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                default:
+                    if (ch < ' ') {
+                        String hex = Integer.toHexString(ch);
+                        sb.append("\\u");
+                        for (int k = 0; k < 4 - hex.length(); k++) sb.append('0');
+                        sb.append(hex);
+                    } else {
+                        sb.append(ch);
+                    }
+            }
         }
         return sb.toString();
     }

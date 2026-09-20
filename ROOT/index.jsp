@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    String currentUser = (session != null) ? (String) session.getAttribute("user") : null;
+    String currentUser = null;
+    if (session != null) {
+        currentUser = (String) session.getAttribute("user_session");
+        if (currentUser == null || currentUser.trim().isEmpty()) {
+            currentUser = (String) session.getAttribute("user");
+        }
+    }
     boolean isLoggedIn = (currentUser != null && !currentUser.trim().isEmpty());
 %>
 <!DOCTYPE html>
@@ -434,102 +440,172 @@
   input:checked + .slider { background-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
   input:checked + .slider:before { transform: translateX(20px); }
 
+  /* =========================================================
+     MOBILE-FIRST RESPONSIVE MODAL SYSTEM (PHASE 2 OVERHAUL)
+     ========================================================= */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(3, 5, 10, 0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(3, 5, 10, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 200;
+    z-index: 9999;
     padding: 1rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
   }
-  .modal-overlay.active { opacity: 1; }
+  .modal-overlay.active { display: flex; opacity: 1; }
   
   .modal-box {
-    background: #0f172a;
+    background: #0d1324;
     border: 1px solid rgba(56, 189, 248, 0.4);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(56, 189, 248, 0.15);
-    border-radius: 20px;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 420px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.25);
+    border-radius: 18px;
+    padding: 2rem 1.6rem;
+    width: 90vw;
+    max-width: 400px;
+    max-height: 85vh;
+    max-height: 85dvh;
+    overflow-y: auto;
+    margin: auto;
     text-align: center;
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0.94);
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    box-sizing: border-box;
   }
   .modal-overlay.active .modal-box { transform: scale(1); }
   
-  .modal-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+  .modal-box::-webkit-scrollbar { width: 6px; }
+  .modal-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+  .modal-box::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
   .btn-modal {
-    padding: 0.8rem 1.5rem;
+    min-height: 44px; /* Mobile touch target */
+    padding: 0.75rem 1.2rem;
     border-radius: 10px;
     border: none;
     cursor: pointer;
     font-weight: 700;
-    font-size: 1rem;
-    transition: all 0.2s;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
     flex: 1;
   }
+  .btn-modal:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+  }
+
   .btn-launch { 
     background: var(--primary); 
     color: #000; 
     box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
   }
-  .btn-launch:hover { background: #0ea5e9; box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6); transform: translateY(-2px); }
+  .btn-launch:hover:not(:disabled) { 
+    background: #0ea5e9; 
+    box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6); 
+    transform: translateY(-2px); 
+  }
   .btn-cancel { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
-  .btn-cancel:hover { background: rgba(255, 255, 255, 0.15); }
+  .btn-cancel:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); }
 
   /* Input fields for Auth Modals */
   .auth-form-group {
     text-align: left;
-    margin-top: 1.2rem;
+    margin-top: 1rem;
   }
   .auth-label {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    margin-bottom: 0.4rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    margin-bottom: 0.35rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
   }
   .auth-input {
     width: 100%;
-    padding: 0.8rem 1rem;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(56, 189, 248, 0.25);
+    height: 46px;
+    min-height: 44px;
+    padding: 0 1rem;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(56, 189, 248, 0.3);
     border-radius: 10px;
     color: var(--text-main);
-    font-size: 0.95rem;
+    font-size: 16px !important; /* Critical: 16px prevents iOS Safari auto-zoom */
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
   }
   .auth-input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
     background: rgba(15, 23, 42, 1);
+  }
+
+  /* Animated Status & Error Banners */
+  @keyframes bannerSlideIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
   .auth-msg {
     margin-top: 1rem;
     font-size: 0.85rem;
-    padding: 0.6rem;
-    border-radius: 8px;
+    line-height: 1.4;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
     display: none;
+    text-align: left;
+    animation: bannerSlideIn 0.3s ease forwards;
+    word-break: break-word;
   }
   .auth-msg.error {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    display: block;
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.6);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .auth-msg.success {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    display: block;
+    background: rgba(34, 197, 94, 0.12);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.6);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Loading Spinner */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
   }
 
   .switch-auth-link {
@@ -539,6 +615,7 @@
     color: var(--text-muted);
     cursor: pointer;
     text-decoration: underline;
+    padding: 0.4rem;
   }
   .switch-auth-link:hover { color: var(--primary); }
 
@@ -569,6 +646,14 @@
     
     .game-carousel { padding-bottom: 2rem; gap: 1.2rem; }
     .game-card { min-width: 85vw; width: 85vw; }
+
+    /* Mobile Overrides for Modals */
+    .modal-box {
+      padding: 1.5rem 1.2rem;
+      width: 92vw;
+      max-height: 82vh;
+      max-height: 82dvh;
+    }
   }
 </style>
 </head>
@@ -764,7 +849,7 @@
     </div>
   </div>
 
-  <!-- Login Modal -->
+  <!-- Login Modal (Mobile Optimized) -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
       <h2 style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">IDENT SYSTEM // LOGIN</h2>
@@ -772,25 +857,29 @@
 
       <div class="auth-msg" id="loginMsg"></div>
 
-      <div class="auth-form-group">
-        <label class="auth-label">CALLSIGN [USERNAME]</label>
-        <input type="text" class="auth-input" id="loginUsername" placeholder="e.g. NeoCipher" autocomplete="username">
-      </div>
-      <div class="auth-form-group">
-        <label class="auth-label">CIPHER [PASSWORD]</label>
-        <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
-      </div>
+      <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
+        <div class="auth-form-group">
+          <label class="auth-label" for="loginUsername">Callsign [Username]</label>
+          <input type="text" class="auth-input" id="loginUsername" placeholder="e.g. NeoCipher" autocomplete="username" required>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label" for="loginPassword">Cipher [Password]</label>
+          <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
 
-      <div class="modal-actions">
-        <button class="btn-modal btn-cancel" onclick="closeModal('loginModal')">Cancel</button>
-        <button class="btn-modal btn-launch" onclick="submitLogin()">Authenticate</button>
-      </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-cancel" onclick="closeModal('loginModal')">Cancel</button>
+          <button type="submit" class="btn-modal btn-launch" id="loginSubmitBtn">
+            <span id="loginBtnText">Authenticate</span>
+          </button>
+        </div>
+      </form>
 
       <span class="switch-auth-link" onclick="openSignupModal()">New recruit? Register identity here</span>
     </div>
   </div>
 
-  <!-- Sign Up Modal -->
+  <!-- Sign Up Modal (Mobile Optimized) -->
   <div class="modal-overlay" id="signupModal">
     <div class="modal-box">
       <h2 style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">NEW RECRUIT // ENLIST</h2>
@@ -798,23 +887,27 @@
 
       <div class="auth-msg" id="signupMsg"></div>
 
-      <div class="auth-form-group">
-        <label class="auth-label">CHOOSE CALLSIGN [3-20 ALPHANUMERIC]</label>
-        <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. CyberSamurai">
-      </div>
-      <div class="auth-form-group">
-        <label class="auth-label">CREATE CIPHER [MIN 6 CHARACTERS]</label>
-        <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••">
-      </div>
-      <div class="auth-form-group">
-        <label class="auth-label">CONFIRM CIPHER</label>
-        <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••">
-      </div>
+      <form id="signupForm" onsubmit="event.preventDefault(); submitSignup();">
+        <div class="auth-form-group">
+          <label class="auth-label" for="signupUsername">Choose Callsign [3-20 Alphanumeric]</label>
+          <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. CyberSamurai" autocomplete="username" required>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label" for="signupPassword">Create Cipher [Min 6 Chars]</label>
+          <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••" autocomplete="new-password" required>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label" for="signupPasswordConfirm">Confirm Cipher</label>
+          <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••" autocomplete="new-password" required>
+        </div>
 
-      <div class="modal-actions">
-        <button class="btn-modal btn-cancel" onclick="closeModal('signupModal')">Cancel</button>
-        <button class="btn-modal btn-launch" style="background:var(--accent); box-shadow:0 0 15px rgba(34,197,94,0.4);" onclick="submitSignup()">Enlist</button>
-      </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-cancel" onclick="closeModal('signupModal')">Cancel</button>
+          <button type="submit" class="btn-modal btn-launch" id="signupSubmitBtn" style="background:var(--accent); box-shadow:0 0 15px rgba(34,197,94,0.4);">
+            <span id="signupBtnText">Enlist</span>
+          </button>
+        </div>
+      </form>
 
       <span class="switch-auth-link" onclick="openLoginModal()">Already enlisted? Sign in</span>
     </div>
@@ -857,42 +950,64 @@
 
   function openModal(id) {
     const modal = document.getElementById(id);
+    if (!modal) return;
     modal.style.display = 'flex';
     void modal.offsetWidth;
     modal.classList.add('active');
+    if (window.innerWidth > 768) {
+      const input = modal.querySelector('input');
+      if (input) input.focus();
+    }
   }
 
   function closeModal(id) {
     const modal = document.getElementById(id);
+    if (!modal) return;
     modal.classList.remove('active');
     setTimeout(() => { modal.style.display = 'none'; }, 250);
   }
 
   function openLoginModal() {
     closeModal('signupModal');
-    document.getElementById('loginMsg').className = 'auth-msg';
-    document.getElementById('loginMsg').innerText = '';
+    const msg = document.getElementById('loginMsg');
+    msg.className = 'auth-msg';
+    msg.innerHTML = '';
+    msg.style.display = 'none';
     openModal('loginModal');
   }
 
   function openSignupModal() {
     closeModal('loginModal');
-    document.getElementById('signupMsg').className = 'auth-msg';
-    document.getElementById('signupMsg').innerText = '';
+    const msg = document.getElementById('signupMsg');
+    msg.className = 'auth-msg';
+    msg.innerHTML = '';
+    msg.style.display = 'none';
     openModal('signupModal');
   }
 
-  // --- AJAX Auth Handlers ---
+  function setBanner(elemId, type, text) {
+    const el = document.getElementById(elemId);
+    if (!el) return;
+    el.className = 'auth-msg ' + type;
+    const icon = (type === 'success') ? '✓ ' : '⚠️ ';
+    el.innerHTML = icon + text;
+    el.style.display = 'flex';
+  }
+
+  // --- BULLETPROOF ASYNC AUTH HANDLERS ---
   async function submitLogin() {
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
-    const msg = document.getElementById('loginMsg');
+    const btn = document.getElementById('loginSubmitBtn');
+    const btnText = document.getElementById('loginBtnText');
 
     if (!u || !p) {
-      msg.className = 'auth-msg error';
-      msg.innerText = 'All credentials required.';
+      setBanner('loginMsg', 'error', 'Callsign and cipher required.');
       return;
     }
+
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> AUTHENTICATING...';
 
     try {
       const res = await fetch('login.jsp', {
@@ -900,18 +1015,37 @@
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ username: u, password: p })
       });
-      const data = await res.json();
-      if (data.success) {
-        msg.className = 'auth-msg success';
-        msg.innerText = 'Authorized! Loading cyber state...';
-        setTimeout(() => window.location.reload(), 600);
-      } else {
-        msg.className = 'auth-msg error';
-        msg.innerText = data.message || 'Access Denied.';
+
+      const rawText = await res.text();
+      let data = null;
+
+      try {
+        data = JSON.parse(rawText);
+      } catch (jsonErr) {
+        console.error("Non-JSON Server Response:", rawText);
+        setBanner('loginMsg', 'error', 'Database offline. Verify MySQL is running or configure DB_URL on Render.');
+        btn.disabled = false;
+        btnText.innerText = 'Authenticate';
+        return;
       }
-    } catch (err) {
-      msg.className = 'auth-msg error';
-      msg.innerText = 'Connection to gateway timed out.';
+
+      if (data.status === 'success' || data.success) {
+        setBanner('loginMsg', 'success', data.message || 'Access Authorized! Initializing profile...');
+        setTimeout(() => {
+          checkLiveSession();
+          closeModal('loginModal');
+          window.location.reload();
+        }, 600);
+      } else {
+        setBanner('loginMsg', 'error', data.message || 'Access Denied: Invalid credentials.');
+        btn.disabled = false;
+        btnText.innerText = 'Authenticate';
+      }
+    } catch (netErr) {
+      console.error("Fetch Network Failure:", netErr);
+      setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
+      btn.disabled = false;
+      btnText.innerText = 'Authenticate';
     }
   }
 
@@ -919,18 +1053,24 @@
     const u = document.getElementById('signupUsername').value.trim();
     const p = document.getElementById('signupPassword').value;
     const c = document.getElementById('signupPasswordConfirm').value;
-    const msg = document.getElementById('signupMsg');
+    const btn = document.getElementById('signupSubmitBtn');
+    const btnText = document.getElementById('signupBtnText');
 
     if (!u || !p || !c) {
-      msg.className = 'auth-msg error';
-      msg.innerText = 'Fill in all fields.';
+      setBanner('signupMsg', 'error', 'All fields required.');
       return;
     }
     if (p !== c) {
-      msg.className = 'auth-msg error';
-      msg.innerText = 'Ciphers do not match.';
+      setBanner('signupMsg', 'error', 'Ciphers do not match.');
       return;
     }
+    if (p.length < 6) {
+      setBanner('signupMsg', 'error', 'Cipher must be at least 6 characters.');
+      return;
+    }
+
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> ENLISTING...';
 
     try {
       const res = await fetch('register.jsp', {
@@ -938,18 +1078,37 @@
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ username: u, password: p })
       });
-      const data = await res.json();
-      if (data.success) {
-        msg.className = 'auth-msg success';
-        msg.innerText = 'Identity registered! Loading profile...';
-        setTimeout(() => window.location.reload(), 600);
-      } else {
-        msg.className = 'auth-msg error';
-        msg.innerText = data.message || 'Registration failed.';
+
+      const rawText = await res.text();
+      let data = null;
+
+      try {
+        data = JSON.parse(rawText);
+      } catch (jsonErr) {
+        console.error("Non-JSON Server Response:", rawText);
+        setBanner('signupMsg', 'error', 'Database offline. Verify MySQL is running or configure DB_URL on Render.');
+        btn.disabled = false;
+        btnText.innerText = 'Enlist';
+        return;
       }
-    } catch (err) {
-      msg.className = 'auth-msg error';
-      msg.innerText = 'Server unreachable.';
+
+      if (data.status === 'success' || data.success) {
+        setBanner('signupMsg', 'success', data.message || 'Identity Enlisted! Initializing cyber state...');
+        setTimeout(() => {
+          checkLiveSession();
+          closeModal('signupModal');
+          window.location.reload();
+        }, 600);
+      } else {
+        setBanner('signupMsg', 'error', data.message || 'Registration failed.');
+        btn.disabled = false;
+        btnText.innerText = 'Enlist';
+      }
+    } catch (netErr) {
+      console.error("Fetch Network Failure:", netErr);
+      setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
+      btn.disabled = false;
+      btnText.innerText = 'Enlist';
     }
   }
 
@@ -959,6 +1118,29 @@
       window.location.reload();
     } catch (e) {
       window.location.href = 'logout.jsp';
+    }
+  }
+
+  // --- Dynamic Client Session Check ---
+  async function checkLiveSession() {
+    try {
+      const res = await fetch('session_check.jsp');
+      const text = await res.text();
+      const data = JSON.parse(text);
+      if (data.status === 'success' && data.loggedIn) {
+        const u = data.username || data.user_session;
+        const widget = document.getElementById('authWidget');
+        if (widget) {
+          widget.innerHTML = `
+            <div class="auth-avatar">${u.substring(0, 1).toUpperCase()}</div>
+            <div class="auth-name">${u}</div>
+            <div class="auth-role">PLAYER ONLINE</div>
+            <button class="btn-auth btn-logout" onclick="performLogout()">TERMINATE [LOGOUT]</button>
+          `;
+        }
+      }
+    } catch (e) {
+      console.warn('Session polling offline:', e);
     }
   }
 
@@ -1040,7 +1222,10 @@
     });
   });
 
-  window.addEventListener('DOMContentLoaded', syncCloudScores);
+  window.addEventListener('DOMContentLoaded', () => {
+    checkLiveSession();
+    syncCloudScores();
+  });
 </script>
 </body>
 </html>

@@ -1,9 +1,11 @@
-<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ include file="/WEB-INF/db_connect.jspf" %>
 <%
+    response.setContentType("application/json; charset=UTF-8");
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
     if (!"POST".equalsIgnoreCase(request.getMethod())) {
-        response.setStatus(405);
-        out.print("{\"success\": false, \"message\": \"Method Not Allowed\"}");
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Method Not Allowed\"}");
         return;
     }
 
@@ -11,21 +13,18 @@
     String password = request.getParameter("password");
 
     if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-        response.setStatus(400);
-        out.print("{\"success\": false, \"message\": \"Username and password are required.\"}");
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Callsign and Cipher are required.\"}");
         return;
     }
 
     username = username.trim();
     if (!username.matches("^[a-zA-Z0-9_]{3,20}$")) {
-        response.setStatus(400);
-        out.print("{\"success\": false, \"message\": \"Username must be 3-20 alphanumeric characters.\"}");
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Callsign must be 3-20 alphanumeric characters.\"}");
         return;
     }
 
     if (password.length() < 6) {
-        response.setStatus(400);
-        out.print("{\"success\": false, \"message\": \"Password must be at least 6 characters.\"}");
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Cipher must be at least 6 characters.\"}");
         return;
     }
 
@@ -42,8 +41,7 @@
         checkStmt.setString(1, username);
         rs = checkStmt.executeQuery();
         if (rs.next()) {
-            response.setStatus(409);
-            out.print("{\"success\": false, \"message\": \"Username is already registered.\"}");
+            out.print("{\"status\": \"error\", \"success\": false, \"message\": \"Username already taken. Please choose another callsign.\"}");
             return;
         }
 
@@ -64,16 +62,17 @@
             newUserId = genKeys.getInt(1);
         }
 
-        // 4. Automatically authenticate the user session
+        // 4. Session Persistence (both user_session and user attributes)
         HttpSession userSession = request.getSession(true);
-        userSession.setAttribute("user_id", newUserId);
+        userSession.setAttribute("user_session", username);
         userSession.setAttribute("user", username);
+        userSession.setAttribute("user_id", newUserId);
 
-        out.print("{\"success\": true, \"message\": \"Account created successfully!\", \"username\": \"" + username + "\"}");
+        out.print("{\"status\": \"success\", \"success\": true, \"message\": \"Enlistment complete. Identity verified!\", \"username\": \"" + escapeJson(username) + "\"}");
 
-    } catch (Exception e) {
-        response.setStatus(500);
-        out.print("{\"success\": false, \"message\": \"Server error: " + e.getMessage().replace("\"", "'") + "\"}");
+    } catch (Throwable t) {
+        String errMsg = (t.getMessage() != null) ? t.getMessage() : t.toString();
+        out.print("{\"status\": \"error\", \"success\": false, \"message\": \"" + escapeJson(errMsg) + "\"}");
     } finally {
         if (rs != null) try { rs.close(); } catch(Exception ignored) {}
         if (checkStmt != null) try { checkStmt.close(); } catch(Exception ignored) {}
