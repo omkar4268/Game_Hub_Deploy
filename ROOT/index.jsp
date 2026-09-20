@@ -32,7 +32,6 @@
     position: relative;
   }
 
-  /* Animated Digital Ambiance Background */
   @keyframes backgroundDrift {
     0% { background-position: 0% 0%; }
     100% { background-position: 100% 100%; }
@@ -55,7 +54,6 @@
     animation: backgroundDrift 90s linear infinite;
   }
 
-  /* Desktop Sidebar */
   aside {
     width: 260px;
     background: rgba(8, 12, 23, 0.7);
@@ -122,7 +120,6 @@
     box-shadow: inset 4px 0 0 var(--primary);
   }
 
-  /* Main Workspace */
   main {
     flex: 1;
     padding: 2.5rem 3rem;
@@ -171,11 +168,9 @@
     animation: pulse 2s infinite;
   }
 
-  /* Views */
   .view-panel { display: none; opacity: 0; transition: opacity 0.4s ease; }
   .view-panel.active { display: block; opacity: 1; }
 
-  /* Carousel */
   .carousel-controls {
     display: flex;
     justify-content: flex-end;
@@ -219,7 +214,6 @@
   .game-carousel::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
   .game-carousel::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-  /* Game Cards with Entrance Animation */
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -244,7 +238,6 @@
     position: relative;
   }
 
-  /* Sweeping shine effect on hover */
   .game-card::after {
     content: '';
     position: absolute;
@@ -280,14 +273,6 @@
     font-size: 4rem;
     position: relative;
     overflow: hidden;
-  }
-  
-  .card-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSJub25lIiAvPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIC8+Cjwvc3ZnPg==');
-    opacity: 0.5;
   }
 
   .card-body {
@@ -337,7 +322,6 @@
     box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6);
   }
 
-  /* Score & Settings Grid */
   .score-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -363,7 +347,6 @@
   .stat-row:last-child, .settings-row:last-child { border-bottom: none; }
   .stat-row span:last-child { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
 
-  /* Custom Toggle Switch for Settings */
   .switch {
     position: relative; display: inline-block; width: 44px; height: 24px;
   }
@@ -379,7 +362,6 @@
   input:checked + .slider { background-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
   input:checked + .slider:before { transform: translateX(20px); }
 
-  /* Modal Overhaul */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -429,7 +411,6 @@
   .btn-cancel { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
   .btn-cancel:hover { background: rgba(255, 255, 255, 0.15); }
 
-  /* Mobile Optimizations */
   @media (max-width: 768px) {
     body { flex-direction: column; padding-bottom: 80px; }
 
@@ -462,7 +443,6 @@
 </head>
 <body>
 
-  <!-- Sidebar / Mobile Nav -->
   <aside>
     <div class="brand">
       CYBER <span class="brand-badge">HUB</span>
@@ -483,7 +463,6 @@
     </nav>
   </aside>
 
-  <!-- Main Content -->
   <main>
     <div class="top-meta">
       <h2 id="viewTitle">Game Library</h2>
@@ -499,7 +478,7 @@
 
       <div class="game-carousel" id="carousel">
         
-        <!-- Bomb Defusal [NEW] -->
+        <!-- Bomb Defusal (Matches your Bomb_Defuse folder) -->
         <div class="game-card" style="animation-delay: 0.1s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol', 'High-stakes 3-minute bomb defusal simulation. Memorize the manual, disarm the modules, and do not trigger the failsafe.')">
           <div class="card-banner banner-bomb">☢️</div>
           <div class="card-body">
@@ -521,7 +500,7 @@
             <div class="card-title">Cyber Chess</div>
             <div class="card-desc">Play against a real chess engine with move analysis, export games as PGN, and view detailed move history.</div>
             <div class="card-footer">
-              <div class="card-score-preview">Engine: <span>Stockfish 16</span></div>
+              <div class="card-score-preview">Engine: <span>Stockfish</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
@@ -658,7 +637,7 @@
         document.getElementById('settingsView').classList.add('active');
         document.getElementById('viewTitle').innerText = 'Terminal Config';
       }
-    }, 50); // slight delay for animation smoothness
+    }, 50);
   }
 
   function scrollCarousel(dist) {
@@ -666,14 +645,13 @@
   }
 
   function openLaunchModal(url, title, desc) {
-    targetUrl = url;[cite: 2]
+    targetUrl = url;
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalDesc').innerText = desc;
     document.getElementById('confirmLaunchBtn').onclick = () => window.location.href = targetUrl;
     
     const modal = document.getElementById('launchModal');
     modal.style.display = 'flex';
-    // Trigger reflow for animation
     void modal.offsetWidth;
     modal.classList.add('active');
   }
@@ -716,7 +694,6 @@
     }
   }
 
-  // Close modal when clicking outside
   document.getElementById('launchModal').addEventListener('click', function(e) {
     if (e.target === this) closeLaunchModal();
   });
