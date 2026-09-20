@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CYBER CHESS // STOCKFISH API</title>
     
-    <!-- Core Dependencies -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
     <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
@@ -36,7 +35,6 @@
             height: 100%;
         }
 
-        /* Digital Ambient Background */
         body::before {
             content: '';
             position: fixed;
@@ -51,7 +49,6 @@
             pointer-events: none;
         }
 
-        /* Top Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -72,7 +69,6 @@
             letter-spacing: 1.5px;
         }
 
-        /* Mobile Menu Toggle */
         .menu-toggle {
             display: none;
             background: none;
@@ -83,7 +79,6 @@
             text-shadow: 0 0 10px var(--primary);
         }
 
-        /* Layout Container */
         .game-layout {
             display: flex;
             height: calc(100vh - 70px);
@@ -91,7 +86,6 @@
             overflow: hidden;
         }
 
-        /* Chess Board Area */
         .board-section {
             flex: 1;
             display: flex;
@@ -122,18 +116,9 @@
             color: var(--primary);
             text-align: center;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            min-width: 300px;
         }
 
-        .thinking-spinner {
-            display: none;
-            margin-left: 10px;
-            color: var(--danger);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Sliding Sidebar */
         .sidebar {
             width: 320px;
             background: var(--sidebar-bg);
@@ -211,7 +196,6 @@
             min-height: 150px;
         }
 
-        /* Mobile Responsive Overlays */
         @media (max-width: 900px) {
             .menu-toggle { display: block; }
             .sidebar {
@@ -223,44 +207,33 @@
                 z-index: 50;
                 box-shadow: -5px 0 25px rgba(0,0,0,0.8);
             }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            #myBoard {
-                max-width: 95vw;
-                width: 95vw;
-            }
+            .sidebar.open { transform: translateX(0); }
+            #myBoard { max-width: 95vw; width: 95vw; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Mobile-friendly Overlay controls -->
     <div class="navbar">
-        <h1 class="title">CYBER CHESS <span style="font-size:0.8rem; color:var(--text-muted);">v2.0 STOCKFISH</span></h1>
+        <h1 class="title">CYBER CHESS <span style="font-size:0.8rem; color:var(--text-muted);">v3.0 OMNI-ROUTING</span></h1>
         <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
     </div>
 
     <div class="game-layout">
-        <!-- Main Board Area -->
         <div class="board-section" id="boardArea">
             <div id="myBoard"></div>
-            <div class="status-box">
-                <span id="status">White to move</span>
-                <i class="fa-solid fa-circle-notch thinking-spinner" id="spinner"></i>
-            </div>
+            <div class="status-box" id="status">White to move</div>
         </div>
 
-        <!-- Sliding Sidebar Panels -->
         <div class="sidebar" id="sidebar">
             <div class="control-group">
                 <label><i class="fa-solid fa-microchip"></i> Engine Difficulty</label>
                 <select id="aiDepth" class="neon-select">
-                    <option value="1">Level 1: Novice (Depth 1)</option>
-                    <option value="4" selected>Level 2: Casual (Depth 4)</option>
+                    <option value="2">Level 1: Novice (Depth 2)</option>
+                    <option value="5" selected>Level 2: Casual (Depth 5)</option>
                     <option value="8">Level 3: Advanced (Depth 8)</option>
-                    <option value="12">Level 4: Master (Depth 12)</option>
-                    <option value="15">Level 5: Grandmaster (Depth 15)</option>
+                    <option value="10">Level 4: Master (Depth 10)</option>
+                    <option value="12">Level 5: Grandmaster (Depth 12)</option>
                 </select>
             </div>
 
@@ -278,81 +251,129 @@
     </div>
 
     <script>
-        // DOM Elements
         const $status =$('#status');
-        const $spinner =$('#spinner');
         const $pgn =$('#pgn');
         const $sidebar =$('#sidebar');
         
-        // Game Logic Variables
         let board = null;
         let game = new Chess();
         let isAiThinking = false;
-        let isWhitePlayer = true; // Flips if user plays as Black
 
-        // Mobile Sidebar Toggle
         $('#menuToggle').on('click', function(e) {
             e.stopPropagation();
             $sidebar.toggleClass('open');
         });
         $('#boardArea').on('click', function() {
-            if ($(window).width() <= 900) {$sidebar.removeClass('open');
-            }
+            if ($(window).width() <= 900)$sidebar.removeClass('open');
         });
 
-        // Fetch best move from Stockfish API
+        // Triple-Routed AI Engine
         async function makeAiMove() {
             if (game.game_over()) return;
 
             isAiThinking = true;
-            $status.html('AI is calculating...');$spinner.show();
+            updateStatus('<i class="fa-solid fa-circle-notch fa-spin"></i> AI is calculating...');
             
             const depth = parseInt($('#aiDepth').val(), 10);
-            
+            let moveObj = null;
+            let usedFallback = false;
+
+            // Route 1: chess-api.com (POST)
             try {
-                // REST API call to chess-api.com
-                const response = await fetch('https://chess-api.com/v1', {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 6000); // 6 sec timeout
+                
+                const res = await fetch('https://chess-api.com/v1', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        fen: game.fen(),
-                        depth: depth
-                    })
+                    body: JSON.stringify({ fen: game.fen(), depth: depth }),
+                    signal: controller.signal
                 });
-
-                if (!response.ok) throw new Error("API Network Error");
+                clearTimeout(timeout);
                 
-                const data = await response.json();
-                
-                // Ensure data exists to prevent crashes
-                if(data && data.from && data.to) {
-                    game.move({
-                        from: data.from,
-                        to: data.to,
-                        promotion: data.promotion || 'q'
-                    });
-                } else {
-                    throw new Error("Invalid API Response");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.from && data.to) {
+                        moveObj = { from: data.from, to: data.to, promotion: data.promotion || 'q' };
+                    }
                 }
+            } catch (e) {
+                console.warn("Primary API timeout/failed. Routing to secondary...");
+            }
 
-                board.position(game.fen());
+            // Route 2: stockfish.online (GET)
+            if (!moveObj) {
+                try {
+                    const controller = new AbortController();
+                    const timeout = setTimeout(() => controller.abort(), 6000);
+                    const fenSafe = encodeURIComponent(game.fen());
+                    
+                    const res2 = await fetch(`https://stockfish.online/api/s/v2.php?fen=${fenSafe}&depth=${depth}`, {
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeout);
+                    
+                    if (res2.ok) {
+                        const data2 = await res2.json();
+                        if (data2 && data2.bestmove) {
+                            const parts = data2.bestmove.split(' '); // "bestmove e7e5 ponder..."
+                            const mStr = parts[1];
+                            if (mStr) {
+                                moveObj = {
+                                    from: mStr.substring(0, 2),
+                                    to: mStr.substring(2, 4),
+                                    promotion: mStr.length > 4 ? mStr.substring(4, 5) : 'q'
+                                };
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Secondary API timeout/failed. Triggering emergency internal fallback...");
+                }
+            }
+
+            // Route 3: Embedded Emergency Fallback (Guarantees the game never breaks)
+            if (!moveObj) {
+                usedFallback = true;
+                const moves = game.moves({ verbose: true });
+                let bestFallback = moves[0];
+                let highestCapture = -1;
+                const vals = { 'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 0 };
                 
-            } catch (error) {
-                console.error("Engine Error:", error);
-                $status.html('<span style="color:var(--danger)">Connection lost. Try again.</span>');
-            } finally {
-                isAiThinking = false;
-                $spinner.hide();
+                // Seek highest value capture immediately available
+                for (let m of moves) {
+                    if (m.flags.includes('c') || m.flags.includes('e')) {
+                        const target = game.get(m.to);
+                        const val = target ? vals[target.type] : 1;
+                        if (val > highestCapture) { highestCapture = val; bestFallback = m; }
+                    }
+                }
+                
+                // Random move if no captures exist
+                if (highestCapture === -1) {
+                    bestFallback = moves[Math.floor(Math.random() * moves.length)];
+                }
+                moveObj = { from: bestFallback.from, to: bestFallback.to, promotion: 'q' };
+            }
+
+            // Execute verified move
+            if (moveObj) {
+                game.move(moveObj);
+                board.position(game.fen());
+            }
+
+            isAiThinking = false;
+            
+            if (usedFallback) {
+                updateStatus('<span style="color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i> Network lag: AI executed emergency move.</span>');
+                setTimeout(() => updateStatus(), 3500); // Revert to normal status after 3.5s
+            } else {
                 updateStatus();
             }
         }
 
-        // Chessboard.js Drag validation
         function onDragStart(source, piece, position, orientation) {
-            // Prevent interaction if game over or AI is thinking
             if (game.game_over() || isAiThinking) return false;
-
-            // Only allow picking up pieces of the user's color
             if ((orientation === 'white' && piece.search(/^b/) !== -1) ||
                 (orientation === 'black' && piece.search(/^w/) !== -1)) {
                 return false;
@@ -360,31 +381,30 @@
         }
 
         function onDrop(source, target) {
-            // Validate move with chess.js
             const move = game.move({
                 from: source,
                 to: target,
-                promotion: 'q' // Auto-promote to queen
+                promotion: 'q' 
             });
 
-            // If illegal move, snap back
             if (move === null) return 'snapback';
-
             updateStatus();
 
-            // Trigger AI response if game isn't over
             if (!game.game_over()) {
-                window.setTimeout(makeAiMove, 300);
+                window.setTimeout(makeAiMove, 250);
             }
         }
 
-        // Update board state after snap animation
         function onSnapEnd() {
             board.position(game.fen());
         }
 
-        // UI Updates for Check, Checkmate, and Draw
-        function updateStatus() {
+        function updateStatus(customOverride = null) {
+            if (customOverride) {
+                $status.html(customOverride);
+                return;
+            }
+
             let statusHTML = '';
             let moveColor = (game.turn() === 'w') ? 'White' : 'Black';
 
@@ -394,23 +414,18 @@
                 statusHTML = `<span style="color:var(--text-muted)">Game Over: Drawn position.</span>`;
             } else {
                 statusHTML = `${moveColor} to move`;
-                if (game.in_check()) {
-                    statusHTML += ` <span style="color:var(--danger)">(Check)</span>`;
-                }
+                if (game.in_check()) statusHTML += ` <span style="color:var(--danger)">(Check)</span>`;
             }
 
             if (!isAiThinking) $status.html(statusHTML);
             
-            // Format PGN
             let history = game.pgn({ max_width: 5, newline_char: '<br>' });
             $pgn.html(history || "Game history will appear here...");
             
-            // Auto-scroll PGN to bottom
             const pgnEl = document.getElementById("pgn");
             pgnEl.scrollTop = pgnEl.scrollHeight;
         }
 
-        // Initialize Board
         const config = {
             draggable: true,
             position: 'start',
@@ -422,37 +437,23 @@
 
         board = Chessboard('myBoard', config);
         
-        // Fix responsive resize issue with chessboard.js
-        $(window).resize(function() {
-            board.resize();
-        });
+        $(window).resize(() => board.resize());
 
-        // Controls
         $('#startBtn').on('click', function() {
             game.reset();
             board.start();
             isAiThinking = false;
-            
-            // Close sidebar on mobile after clicking start
             if ($(window).width() <= 900)$sidebar.removeClass('open');
-            
             updateStatus();
-
-            // If player flipped the board, AI (White) needs to move first
+            
             if (board.orientation() === 'black') {
                 window.setTimeout(makeAiMove, 300);
             }
         });
 
-        $('#flipBtn').on('click', function() {
-            board.flip();
-        });
-        
-        $('#exitBtn').on('click', function() {
-            window.location.href = 'index.jsp';
-        });
+        $('#flipBtn').on('click', () => board.flip());
+        $('#exitBtn').on('click', () => window.location.href = 'index.jsp');
 
-        // Initial setup call
         updateStatus();
     </script>
 </body>
