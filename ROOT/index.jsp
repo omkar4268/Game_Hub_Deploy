@@ -190,6 +190,7 @@
   .banner-guesser { background: linear-gradient(135deg, #4338ca, #6366f1); }
   .banner-snake { background: linear-gradient(135deg, #065f46, #10b981); }
   .banner-maze { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+  .banner-chess { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
 
   .card-banner {
     height: 140px;
@@ -432,6 +433,20 @@
             <div class="card-desc">Navigate randomized labyrinth algorithms and locate extraction gates.</div>
             <div class="card-footer">
               <div class="card-score-preview">Cleared: <span id="preview-maze">0</span></div>
+              <div class="launch-arrow">➔</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cyber Chess -->
+        <div class="game-card" onclick="openLaunchModal('Chess.jsp', 'Cyber Chess', 'Experience enhanced chess with actual AI engine, move evaluation, PGN export, move history, and sound effects in a futuristic cyber theme.')">
+          <div class="card-banner banner-chess">♟️</div>
+          <div class="card-body">
+            <div class="card-tag">AI Strategy</div>
+            <div class="card-title">Cyber Chess</div>
+            <div class="card-desc">Play against a real chess engine with move analysis, export games as PGN, view move history, and enjoy immersive sound effects with stunning cyber visuals.</div>
+            <div class="card-footer">
+              <div class="card-score-preview">Rating: <span id="preview-chess">???</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
