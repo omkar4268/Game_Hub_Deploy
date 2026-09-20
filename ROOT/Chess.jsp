@@ -20,7 +20,6 @@
             --square-dark: rgba(0, 0, 0, 0.35);
             --move-highlight: rgba(56, 189, 248, 0.35);
             --last-move: rgba(16, 185, 129, 0.3);
-            --danger-glow: rgba(244, 63, 94, 0.4);
             --advantage-white: #10b981;
             --advantage-black: #ef4444;
             --eval-bar-bg: rgba(255,255,255,0.1);
@@ -52,8 +51,56 @@
             pointer-events: none;
         }
 
-        .container {
+        /* --- START MENU UI --- */
+        #menuScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 7, 14, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-title-main {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .menu-subtitle {
+            color: var(--primary);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .menu-btn {
+            padding: 1rem;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- GAME UI --- */
+        #gameScreen {
+            display: none;
             flex: 1;
             overflow: hidden;
             height: 100vh;
@@ -277,7 +324,8 @@
 
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        .game-over-overlay {
+        /* --- MODALS --- */
+        .overlay {
             position: absolute;
             inset: 0;
             background: rgba(2, 6, 23, 0.88);
@@ -286,35 +334,78 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 150;
         }
+        .overlay.active { display: flex; }
 
-        .game-over-overlay.active { display: flex; }
-        .game-over-content {
-            text-align: center;
+        .modal-content {
             background: rgba(15, 23, 42, 0.95);
             border: 1px solid var(--border-glow);
             border-radius: 12px;
             padding: 2rem;
-            max-width: 90%;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-content select {
+            width: 100%;
+            padding: 0.6rem;
+            margin: 1rem 0;
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            font-size: 1rem;
         }
 
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-2px); } }
 
         @media (max-width: 1024px) {
-            .container { flex-direction: column; height: auto; }
+            #gameScreen { flex-direction: column; height: auto; }
             .sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- START MENU -->
+    <div id="menuScreen">
+        <h1 class="menu-title-main">CYBER CHESS</h1>
+        <div class="menu-subtitle">AI Core System</div>
+        <div class="menu-buttons">
+            <button class="btn btn-primary menu-btn" onclick="startGame()"><i class="fa-solid fa-play"></i> Play</button>
+            <button class="btn btn-secondary menu-btn" onclick="showSettings()"><i class="fa-solid fa-gear"></i> Settings</button>
+            <button class="btn btn-danger menu-btn" onclick="exitToHub()"><i class="fa-solid fa-door-open"></i> Exit</button>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="overlay" id="settingsOverlay">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fa-solid fa-gear"></i> Engine Settings</h2>
+            <div style="text-align: left; color: var(--text-muted);">
+                <label>Difficulty (Calculation Depth):</label>
+                <select id="depthSelect">
+                    <option value="2">Level 1: Fast (2 Plies)</option>
+                    <option value="3" selected>Level 2: Balanced (3 Plies)</option>
+                    <option value="4">Level 3: Deep (4 Plies - Takes a few seconds)</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeSettings()">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveSettings()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME UI -->
+    <div id="gameScreen">
         <div class="board-container">
             <div class="board-header">
                 <h1 class="board-title">CYBER CHESS <span style="font-size:0.75rem; color: var(--primary);">AI CORE</span></h1>
                 <div style="display: flex; gap: 0.4rem;">
-                    <button class="btn btn-secondary" id="resetBtn"><i class="fa-solid fa-rotate-right"></i> Reset</button>
-                    <button class="btn btn-danger" id="exitBtn"><i class="fa-solid fa-door-open"></i> Exit</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()"><i class="fa-solid fa-house"></i> Menu</button>
+                    <button class="btn btn-secondary" onclick="resetGame()"><i class="fa-solid fa-rotate-right"></i> Reset</button>
                 </div>
             </div>
 
@@ -341,7 +432,7 @@
                 <div class="controls">
                     <div class="control-row">
                         <span class="control-label"><i class="fa-solid fa-brain"></i> Depth:</span>
-                        <span class="control-value">3 Plies (Minimax)</span>
+                        <span class="control-value" id="displayDepth">3 Plies</span>
                     </div>
                     <div class="control-row">
                         <span class="control-label"><i class="fa-solid fa-bolt"></i> Positions Analyzed:</span>
@@ -373,64 +464,259 @@
         </div>
     </div>
 
-    <div class="game-over-overlay" id="gameOverOverlay">
-        <div class="game-over-content">
+    <!-- GAME OVER MODAL -->
+    <div class="overlay" id="gameOverOverlay">
+        <div class="modal-content">
             <h2 id="gameOverTitle" style="font-size:1.8rem; margin-bottom: 0.8rem;">Checkmate</h2>
             <p id="gameOverMessage" style="color: var(--text-muted); margin-bottom: 1.5rem;"></p>
-            <button class="btn btn-primary" style="margin: 0 auto;" id="playAgainBtn"><i class="fa-solid fa-rotate-right"></i> Play Again</button>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-secondary" onclick="returnToMenu()"><i class="fa-solid fa-house"></i> Menu</button>
+                <button class="btn btn-primary" onclick="resetGame()"><i class="fa-solid fa-rotate-right"></i> Play Again</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Piece Base Weights
+    <!-- ========================================== -->
+    <!-- AI ENGINE BACKGROUND WORKER                -->
+    <!-- ========================================== -->
+    <script id="aiWorkerCode" type="javascript/worker">
         const PIECE_WEIGHTS = { 'P': 100, 'N': 320, 'B': 330, 'R': 500, 'Q': 900, 'K': 20000 };
+        const PAWN_TABLE = [[0,0,0,0,0,0,0,0],[50,50,50,50,50,50,50,50],[10,10,20,30,30,20,10,10],[5,5,10,25,25,10,5,5],[0,0,0,20,20,0,0,0],[5,-5,-10,0,0,-10,-5,5],[5,10,10,-20,-20,10,10,5],[0,0,0,0,0,0,0,0]];
+        const KNIGHT_TABLE = [[-50,-40,-30,-30,-30,-30,-40,-50],[-40,-20,0,0,0,0,-20,-40],[-30,0,10,15,15,10,0,-30],[-30,5,15,20,20,15,5,-30],[-30,0,15,20,20,15,0,-30],[-30,5,10,15,15,10,5,-30],[-40,-20,0,5,5,0,-20,-40],[-50,-40,-30,-30,-30,-30,-40,-50]];
+        const BISHOP_TABLE = [[-20,-10,-10,-10,-10,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,10,10,5,0,-10],[-10,5,5,10,10,5,5,-10],[-10,0,10,10,10,10,0,-10],[-10,10,10,10,10,10,10,-10],[-10,5,0,0,0,0,5,-10],[-20,-10,-10,-10,-10,-10,-10,-20]];
+        const ROOK_TABLE = [[0,0,0,0,0,0,0,0],[5,10,10,10,10,10,10,5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[0,0,0,5,5,0,0,0]];
 
-        // Positional Tables (PST) for AI strategic positional evaluation
-        const PAWN_TABLE = [
-            [0,  0,  0,  0,  0,  0,  0,  0],
-            [50, 50, 50, 50, 50, 50, 50, 50],
-            [10, 10, 20, 30, 30, 20, 10, 10],
-            [5,  5, 10, 25, 25, 10,  5,  5],
-            [0,  0,  0, 20, 20,  0,  0,  0],
-            [5, -5,-10,  0,  0,-10, -5,  5],
-            [5, 10, 10,-20,-20, 10, 10,  5],
-            [0,  0,  0,  0,  0,  0,  0,  0]
-        ];
+        let evaluatedNodes = 0;
 
-        const KNIGHT_TABLE = [
-            [-50,-40,-30,-30,-30,-30,-40,-50],
-            [-40,-20,  0,  0,  0,  0,-20,-40],
-            [-30,  0, 10, 15, 15, 10,  0,-30],
-            [-30,  5, 15, 20, 20, 15,  5,-30],
-            [-30,  0, 15, 20, 20, 15,  0,-30],
-            [-30,  5, 10, 15, 15, 10,  5,-30],
-            [-40,-20,  0,  5,  5,  0,-20,-40],
-            [-50,-40,-30,-30,-30,-30,-40,-50]
-        ];
+        // Extremely fast cloning (avoids JSON lag)
+        function cloneBoard(b) { return [b[0].slice(), b[1].slice(), b[2].slice(), b[3].slice(), b[4].slice(), b[5].slice(), b[6].slice(), b[7].slice()]; }
+        function inBounds(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
 
-        const BISHOP_TABLE = [
-            [-20,-10,-10,-10,-10,-10,-10,-20],
-            [-10,  0,  0,  0,  0,  0,  0,-10],
-            [-10,  0,  5, 10, 10,  5,  0,-10],
-            [-10,  5,  5, 10, 10,  5,  5,-10],
-            [-10,  0, 10, 10, 10, 10,  0,-10],
-            [-10, 10, 10, 10, 10, 10, 10,-10],
-            [-10,  5,  0,  0,  0,  0,  5,-10],
-            [-20,-10,-10,-10,-10,-10,-10,-20]
-        ];
+        function applySimulatedMove(b, move) {
+            const piece = b[move.fromR][move.fromC];
+            if (piece === 'wP' && move.toR === 0) b[move.toR][move.toC] = 'wQ';
+            else if (piece === 'bP' && move.toR === 7) b[move.toR][move.toC] = 'bQ';
+            else b[move.toR][move.toC] = piece;
+            b[move.fromR][move.fromC] = null;
+        }
 
-        const ROOK_TABLE = [
-            [0,  0,  0,  0,  0,  0,  0,  0],
-            [5, 10, 10, 10, 10, 10, 10,  5],
-            [-5,  0,  0,  0,  0,  0,  0, -5],
-            [-5,  0,  0,  0,  0,  0,  0, -5],
-            [-5,  0,  0,  0,  0,  0,  0, -5],
-            [-5,  0,  0,  0,  0,  0,  0, -5],
-            [-5,  0,  0,  0,  0,  0,  0, -5],
-            [0,  0,  0,  5,  5,  0,  0,  0]
-        ];
+        function evaluateBoardScore(b) {
+            let total = 0;
+            let wK = false, bK = false;
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const p = b[r][c];
+                    if (p) {
+                        const type = p[1];
+                        if (p === 'wK') wK = true;
+                        if (p === 'bK') bK = true;
 
-        const initialBoard = [
+                        const weight = PIECE_WEIGHTS[type] || 0;
+                        let pstVal = 0;
+
+                        if (type === 'P') pstVal = PAWN_TABLE[p.startsWith('b') ? r : 7 - r][c];
+                        else if (type === 'N') pstVal = KNIGHT_TABLE[p.startsWith('b') ? r : 7 - r][c];
+                        else if (type === 'B') pstVal = BISHOP_TABLE[p.startsWith('b') ? r : 7 - r][c];
+                        else if (type === 'R') pstVal = ROOK_TABLE[p.startsWith('b') ? r : 7 - r][c];
+
+                        if (p.startsWith('b')) total += (weight + pstVal);
+                        else total -= (weight + pstVal);
+                    }
+                }
+            }
+            if (!wK) return 200000; // Black wins
+            if (!bK) return -200000; // White wins
+            return total;
+        }
+
+        // Quiescence Search: Keep searching captures to avoid horizon blunders
+        function quiesce(simBoard, alpha, beta, isAiMax) {
+            evaluatedNodes++;
+            const standPat = evaluateBoardScore(simBoard);
+            
+            if (isAiMax) {
+                if (standPat >= beta) return beta;
+                if (alpha < standPat) alpha = standPat;
+            } else {
+                if (standPat <= alpha) return alpha;
+                if (beta > standPat) beta = standPat;
+            }
+
+            const color = isAiMax ? 'b' : 'w';
+            const moves = getAllMoves(simBoard, color).filter(m => m.isCapture);
+
+            // MVV-LVA (Most Valuable Victim, Least Valuable Attacker) Ordering
+            moves.sort((a, b) => {
+                const valA = PIECE_WEIGHTS[a.captured[1]] - (PIECE_WEIGHTS[simBoard[a.fromR][a.fromC][1]] / 100);
+                const valB = PIECE_WEIGHTS[b.captured[1]] - (PIECE_WEIGHTS[simBoard[b.fromR][b.fromC][1]] / 100);
+                return valB - valA;
+            });
+
+            for (let i = 0; i < moves.length; i++) {
+                const nextBoard = cloneBoard(simBoard);
+                applySimulatedMove(nextBoard, moves[i]);
+                if (isAiMax) {
+                    const score = quiesce(nextBoard, alpha, beta, false);
+                    if (score >= beta) return beta;
+                    if (score > alpha) alpha = score;
+                } else {
+                    const score = quiesce(nextBoard, alpha, beta, true);
+                    if (score <= alpha) return alpha;
+                    if (score < beta) beta = score;
+                }
+            }
+            return isAiMax ? alpha : beta;
+        }
+
+        function minimax(simBoard, depth, alpha, beta, isAiMax) {
+            evaluatedNodes++;
+            if (depth === 0) return quiesce(simBoard, alpha, beta, isAiMax);
+
+            const color = isAiMax ? 'b' : 'w';
+            const moves = getAllMoves(simBoard, color);
+            
+            if (moves.length === 0) return isAiMax ? -100000 : 100000;
+
+            // Standard Move Ordering for Alpha-Beta efficiency
+            moves.sort((a, b) => (b.isCapture ? 1 : 0) - (a.isCapture ? 1 : 0));
+
+            if (isAiMax) {
+                let maxEval = -Infinity;
+                for (let i = 0; i < moves.length; i++) {
+                    const nextBoard = cloneBoard(simBoard);
+                    applySimulatedMove(nextBoard, moves[i]);
+                    const evalScore = minimax(nextBoard, depth - 1, alpha, beta, false);
+                    maxEval = Math.max(maxEval, evalScore);
+                    alpha = Math.max(alpha, evalScore);
+                    if (beta <= alpha) break;
+                }
+                return maxEval;
+            } else {
+                let minEval = Infinity;
+                for (let i = 0; i < moves.length; i++) {
+                    const nextBoard = cloneBoard(simBoard);
+                    applySimulatedMove(nextBoard, moves[i]);
+                    const evalScore = minimax(nextBoard, depth - 1, alpha, beta, true);
+                    minEval = Math.min(minEval, evalScore);
+                    beta = Math.min(beta, evalScore);
+                    if (beta <= alpha) break;
+                }
+                return minEval;
+            }
+        }
+
+        function getAllMoves(b, side) {
+            const all = [];
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const p = b[r][c];
+                    if (p && p.startsWith(side)) {
+                        const moves = getValidMovesForBoard(b, r, c, p);
+                        moves.forEach(m => {
+                            const target = b[m.toRow][m.toCol];
+                            all.push({
+                                fromR: r, fromC: c, toRow: m.toRow, toCol: m.toCol,
+                                isCapture: !!target, captured: target
+                            });
+                        });
+                    }
+                }
+            }
+            return all;
+        }
+
+        function getValidMovesForBoard(b, r, c, p) {
+            const moves = [];
+            const type = p[1];
+            const isW = p.startsWith('w');
+            const dir = isW ? -1 : 1;
+
+            if (type === 'P') {
+                if (inBounds(r + dir, c) && !b[r + dir][c]) {
+                    moves.push({ toRow: r + dir, toCol: c });
+                    const startR = isW ? 6 : 1;
+                    if (r === startR && !b[r + dir][c] && !b[r + 2 * dir][c]) moves.push({ toRow: r + 2 * dir, toCol: c });
+                }
+                [-1, 1].forEach(dc => {
+                    if (inBounds(r + dir, c + dc)) {
+                        const t = b[r + dir][c + dc];
+                        if (t && (isW ? t.startsWith('b') : t.startsWith('w'))) moves.push({ toRow: r + dir, toCol: c + dc });
+                    }
+                });
+            } else if (type === 'N') {
+                [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr, dc]) => {
+                    if (inBounds(r + dr, c + dc)) {
+                        const t = b[r + dr][c + dc];
+                        if (!t || (isW ? t.startsWith('b') : t.startsWith('w'))) moves.push({ toRow: r + dr, toCol: c + dc });
+                    }
+                });
+            } else if (type === 'B') {
+                addRays(b, r, c, [[-1,-1],[-1,1],[1,-1],[1,1]], isW, moves);
+            } else if (type === 'R') {
+                addRays(b, r, c, [[-1,0],[1,0],[0,-1],[0,1]], isW, moves);
+            } else if (type === 'Q') {
+                addRays(b, r, c, [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]], isW, moves);
+            } else if (type === 'K') {
+                [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr, dc]) => {
+                    if (inBounds(r + dr, c + dc)) {
+                        const t = b[r + dr][c + dc];
+                        if (!t || (isW ? t.startsWith('b') : t.startsWith('w'))) moves.push({ toRow: r + dr, toCol: c + dc });
+                    }
+                });
+            }
+            return moves;
+        }
+
+        function addRays(b, r, c, dirs, isW, moves) {
+            dirs.forEach(([dr, dc]) => {
+                for (let i = 1; i < 8; i++) {
+                    const nr = r + dr * i;
+                    const nc = c + dc * i;
+                    if (!inBounds(nr, nc)) break;
+                    const t = b[nr][nc];
+                    if (!t) moves.push({ toRow: nr, toCol: nc });
+                    else {
+                        if (isW ? t.startsWith('b') : t.startsWith('w')) moves.push({ toRow: nr, toCol: nc });
+                        break;
+                    }
+                }
+            });
+        }
+
+        self.onmessage = function(e) {
+            const { board, depth } = e.data;
+            evaluatedNodes = 0;
+            let bestScore = -Infinity;
+            let bestMove = null;
+            
+            const moves = getAllMoves(board, 'b');
+            moves.sort((a, b) => (b.isCapture ? 1 : 0) - (a.isCapture ? 1 : 0));
+
+            for (let i = 0; i < moves.length; i++) {
+                const simulatedBoard = cloneBoard(board);
+                applySimulatedMove(simulatedBoard, moves[i]);
+                const score = minimax(simulatedBoard, depth - 1, -Infinity, Infinity, false);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = moves[i];
+                }
+            }
+
+            if (bestMove == null && moves.length > 0) bestMove = moves[Math.floor(Math.random() * moves.length)];
+            self.postMessage({ bestMove, nodes: evaluatedNodes, score: bestScore });
+        };
+    </script>
+
+
+    <!-- ========================================== -->
+    <!-- MAIN UI THREAD SCRIPT                      -->
+    <!-- ========================================== -->
+    <script>
+        let engineDepth = 3;
+        let isPlayerTurn = true; 
+        let aiWorker;
+
+        const INITIAL_BOARD_STATE = [
             ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
             ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
             [null, null, null, null, null, null, null, null],
@@ -441,33 +727,143 @@
             ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR']
         ];
 
-        let board = JSON.parse(JSON.stringify(initialBoard));
+        let board = [];
         let selectedSquare = null;
         let validMoves = [];
         let moveCounter = 0;
         let gameOver = false;
         let capturedW = [];
         let capturedB = [];
-        let evaluatedNodes = 0;
+        const pieces = { 'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙', 'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟' };
 
-        const pieces = {
-            'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
-            'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟'
-        };
-
+        // --- Core Engine Duplicates for UI Validation ---
         function inBounds(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+        function addRays(b, r, c, dirs, isW, moves) {
+            dirs.forEach(([dr, dc]) => {
+                for (let i = 1; i < 8; i++) {
+                    const nr = r + dr * i;
+                    const nc = c + dc * i;
+                    if (!inBounds(nr, nc)) break;
+                    const t = b[nr][nc];
+                    if (!t) moves.push({ toRow: nr, toCol: nc });
+                    else { if (isW ? t.startsWith('b') : t.startsWith('w')) moves.push({ toRow: nr, toCol: nc }); break; }
+                }
+            });
+        }
+        function getValidMovesForBoard(b, r, c, p) {
+            const moves = [];
+            const type = p[1];
+            const isW = p.startsWith('w');
+            const dir = isW ? -1 : 1;
+            if (type === 'P') {
+                if (inBounds(r + dir, c) && !b[r + dir][c]) {
+                    moves.push({ toRow: r + dir, toCol: c });
+                    if (r === (isW ? 6 : 1) && !b[r + dir][c] && !b[r + 2 * dir][c]) moves.push({ toRow: r + 2 * dir, toCol: c });
+                }
+                [-1, 1].forEach(dc => {
+                    if (inBounds(r + dir, c + dc)) {
+                        const t = b[r + dir][c + dc];
+                        if (t && (isW ? t.startsWith('b') : t.startsWith('w'))) moves.push({ toRow: r + dir, toCol: c + dc });
+                    }
+                });
+            } else if (type === 'N') {
+                [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr, dc]) => {
+                    if (inBounds(r + dr, c + dc)) {
+                        const t = b[r + dr][c + dc];
+                        if (!t || (isW ? t.startsWith('b') : t.startsWith('w'))) moves.push({ toRow: r + dr, toCol: c + dc });
+                    }
+                });
+            } else if (type === 'B') addRays(b, r, c, [[-1,-1],[-1,1],[1,-1],[1,1]], isW, moves);
+            else if (type === 'R') addRays(b, r, c, [[-1,0],[1,0],[0,-1],[0,1]], isW, moves);
+            else if (type === 'Q') addRays(b, r, c, [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]], isW, moves);
+            else if (type === 'K') {
+                [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr, dc]) => {
+                    if (inBounds(r + dr, c + dc)) {
+                        const t = b[r + dr][c + dc];
+                        if (!t || (isW ? t.startsWith('b') : t.startsWith('w'))) moves.push({ toRow: r + dr, toCol: c + dc });
+                    }
+                });
+            }
+            return moves;
+        }
+
+        // --- Menu Logic ---
+        function startGame() {
+            document.getElementById('menuScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'flex';
+            initWorker();
+            resetGame();
+        }
+
+        function showSettings() { document.getElementById('settingsOverlay').classList.add('active'); }
+        function closeSettings() { document.getElementById('settingsOverlay').classList.remove('active'); }
+        
+        function saveSettings() {
+            engineDepth = parseInt(document.getElementById('depthSelect').value);
+            document.getElementById('displayDepth').textContent = engineDepth + ' Plies';
+            closeSettings();
+        }
+
+        function returnToMenu() {
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('gameOverOverlay').classList.remove('active');
+            document.getElementById('menuScreen').style.display = 'flex';
+        }
+
+        function exitToHub() { window.location.href = 'index.jsp'; }
+
+        // --- Worker Initialization ---
+        function initWorker() {
+            if (aiWorker) aiWorker.terminate();
+            const workerCode = document.getElementById('aiWorkerCode').textContent;
+            const blob = new Blob([workerCode], { type: 'text/javascript' });
+            aiWorker = new Worker(window.URL.createObjectURL(blob));
+
+            aiWorker.onmessage = function(e) {
+                const { bestMove, nodes, score } = e.data;
+                document.getElementById('nodesCount').textContent = nodes.toLocaleString();
+
+                if (bestMove) {
+                    executeMove(bestMove.fromR, bestMove.fromC, bestMove.toR, bestMove.toC);
+                    updateEvaluationBarFromScore(score); // AI gives us the exact evaluated score
+                } else {
+                    endGame('Stalemate / No valid moves for AI');
+                }
+
+                if (!gameOver) {
+                    isPlayerTurn = true; 
+                    setThinking(false);
+                }
+            };
+        }
+
+        function resetGame() {
+            board = JSON.parse(JSON.stringify(INITIAL_BOARD_STATE));
+            selectedSquare = null;
+            validMoves = [];
+            moveCounter = 0;
+            gameOver = false;
+            capturedW = [];
+            capturedB = [];
+            isPlayerTurn = true;
+            document.getElementById('moveCount').textContent = '0';
+            document.getElementById('nodesCount').textContent = '0';
+            document.getElementById('moveList').innerHTML = '';
+            document.getElementById('gameOverOverlay').classList.remove('active');
+            updateCapturedDisplay();
+            setThinking(false);
+            initBoard();
+        }
 
         function initBoard() {
             const boardEl = document.getElementById('chessBoard');
             boardEl.innerHTML = '';
-
             for (let r = 0; r < 8; r++) {
                 for (let c = 0; c < 8; c++) {
                     const sq = document.createElement('div');
                     sq.className = `square ${(r + c) % 2 === 0 ? 'light' : 'dark'}`;
                     sq.dataset.row = r;
                     sq.dataset.col = c;
-
                     const p = board[r][c];
                     if (p) {
                         const pe = document.createElement('div');
@@ -475,16 +871,14 @@
                         pe.textContent = pieces[p];
                         sq.appendChild(pe);
                     }
-
                     sq.addEventListener('click', () => handleSquareClick(r, c));
                     boardEl.appendChild(sq);
                 }
             }
-            updateEvaluationBar();
         }
 
         function handleSquareClick(r, c) {
-            if (gameOver) return;
+            if (gameOver || !isPlayerTurn) return; // STRICT TURN LOCK
 
             if (selectedSquare) {
                 const isValid = validMoves.some(m => m.toRow === r && m.toCol === c);
@@ -492,8 +886,10 @@
                     executeMove(selectedSquare.row, selectedSquare.col, r, c);
                     clearSelection();
                     if (!gameOver) {
+                        isPlayerTurn = false; // LOCK THE BOARD
                         setThinking(true);
-                        setTimeout(triggerAiPredictionMove, 250);
+                        // Trigger Background Web Worker
+                        aiWorker.postMessage({ board: board, depth: engineDepth });
                     }
                     return;
                 }
@@ -531,12 +927,9 @@
                 if (target.startsWith('w')) capturedW.push(target);
                 else capturedB.push(target);
                 updateCapturedDisplay();
-                if (target.endsWith('K')) {
-                    endGame(target.startsWith('b') ? 'Checkmate! You won!' : 'Checkmate! AI defeated you.');
-                }
+                if (target.endsWith('K')) endGame(target.startsWith('b') ? 'Checkmate! You won!' : 'Checkmate! AI defeated you.');
             }
 
-            // Pawn promotion to Queen
             if (moving === 'wP' && toR === 0) board[toR][toC] = 'wQ';
             else if (moving === 'bP' && toR === 7) board[toR][toC] = 'bQ';
             else board[toR][toC] = moving;
@@ -559,220 +952,10 @@
             if (toSq) toSq.classList.add('last-move');
         }
 
-        /* ---------------- MINIMAX PREDICTIVE ENGINE ---------------- */
-
-        function triggerAiPredictionMove() {
-            if (gameOver) return;
-            evaluatedNodes = 0;
-
-            // Search 3 plies deep (Black minimizing white evaluation, maximizing black score)
-            const bestMove = getBestMoveMinimax(board, 3);
-            document.getElementById('nodesCount').textContent = evaluatedNodes;
-
-            if (bestMove) {
-                executeMove(bestMove.fromR, bestMove.fromC, bestMove.toR, bestMove.toC);
-            } else {
-                endGame('Stalemate / No valid moves for AI');
-            }
-            setThinking(false);
-        }
-
-        function getBestMoveMinimax(currentBoard, depth) {
-            let bestScore = -Infinity;
-            let bestMove = null;
-            const moves = getAllMoves(currentBoard, 'b');
-
-            // Move ordering: evaluate captures first to prune faster
-            moves.sort((a, b) => (b.isCapture ? 1 : 0) - (a.isCapture ? 1 : 0));
-
-            for (let i = 0; i < moves.length; i++) {
-                const move = moves[i];
-                const simulatedBoard = cloneBoard(currentBoard);
-                applySimulatedMove(simulatedBoard, move);
-
-                const score = minimax(simulatedBoard, depth - 1, -Infinity, Infinity, false);
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestMove = move;
-                }
-            }
-            return bestMove;
-        }
-
-        function minimax(simBoard, depth, alpha, beta, isAiMaximizing) {
-            evaluatedNodes++;
-
-            if (depth === 0) {
-                return evaluateBoardScore(simBoard);
-            }
-
-            const color = isAiMaximizing ? 'b' : 'w';
-            const moves = getAllMoves(simBoard, color);
-
-            if (moves.length === 0) {
-                return isAiMaximizing ? -10000 : 10000;
-            }
-
-            if (isAiMaximizing) {
-                let maxEval = -Infinity;
-                for (let i = 0; i < moves.length; i++) {
-                    const nextBoard = cloneBoard(simBoard);
-                    applySimulatedMove(nextBoard, moves[i]);
-                    const evalScore = minimax(nextBoard, depth - 1, alpha, beta, false);
-                    maxEval = Math.max(maxEval, evalScore);
-                    alpha = Math.max(alpha, evalScore);
-                    if (beta <= alpha) break; // Alpha-Beta Cutoff
-                }
-                return maxEval;
-            } else {
-                let minEval = Infinity;
-                for (let i = 0; i < moves.length; i++) {
-                    const nextBoard = cloneBoard(simBoard);
-                    applySimulatedMove(nextBoard, moves[i]);
-                    const evalScore = minimax(nextBoard, depth - 1, alpha, beta, true);
-                    minEval = Math.min(minEval, evalScore);
-                    beta = Math.min(beta, evalScore);
-                    if (beta <= alpha) break; // Alpha-Beta Cutoff
-                }
-                return minEval;
-            }
-        }
-
-        // Relative Board Evaluation: positive favours Black (AI), negative favours White (User)
-        function evaluateBoardScore(b) {
-            let total = 0;
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const p = b[r][c];
-                    if (p) {
-                        const type = p[1];
-                        const weight = PIECE_WEIGHTS[type] || 0;
-                        let pstVal = 0;
-
-                        if (type === 'P') pstVal = PAWN_TABLE[p.startsWith('b') ? r : 7 - r][c];
-                        else if (type === 'N') pstVal = KNIGHT_TABLE[p.startsWith('b') ? r : 7 - r][c];
-                        else if (type === 'B') pstVal = BISHOP_TABLE[p.startsWith('b') ? r : 7 - r][c];
-                        else if (type === 'R') pstVal = ROOK_TABLE[p.startsWith('b') ? r : 7 - r][c];
-
-                        if (p.startsWith('b')) {
-                            total += (weight + pstVal);
-                        } else {
-                            total -= (weight + pstVal);
-                        }
-                    }
-                }
-            }
-            return total;
-        }
-
-        function cloneBoard(source) {
-            const copy = [];
-            for (let r = 0; r < 8; r++) copy[r] = source[r].slice();
-            return copy;
-        }
-
-        function applySimulatedMove(b, move) {
-            const piece = b[move.fromR][move.fromC];
-            if (piece === 'wP' && move.toR === 0) b[move.toR][move.toC] = 'wQ';
-            else if (piece === 'bP' && move.toR === 7) b[move.toR][move.toC] = 'bQ';
-            else b[move.toR][move.toC] = piece;
-            b[move.fromR][move.fromC] = null;
-        }
-
-        function getAllMoves(b, side) {
-            const all = [];
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const p = b[r][c];
-                    if (p && p.startsWith(side)) {
-                        const moves = getValidMovesForBoard(b, r, c, p);
-                        moves.forEach(m => {
-                            all.push({
-                                fromR: r, fromC: c,
-                                toRow: m.toRow, toCol: m.toCol,
-                                isCapture: !!b[m.toRow][m.toCol]
-                            });
-                        });
-                    }
-                }
-            }
-            return all;
-        }
-
-        function getValidMovesForBoard(b, r, c, p) {
-            const moves = [];
-            const type = p[1];
-            const isW = p.startsWith('w');
-            const dir = isW ? -1 : 1;
-
-            if (type === 'P') {
-                if (inBounds(r + dir, c) && !b[r + dir][c]) {
-                    moves.push({ toRow: r + dir, toCol: c });
-                    const startR = isW ? 6 : 1;
-                    if (r === startR && !b[r + dir][c] && !b[r + 2 * dir][c]) {
-                        moves.push({ toRow: r + 2 * dir, toCol: c });
-                    }
-                }
-                [-1, 1].forEach(dc => {
-                    if (inBounds(r + dir, c + dc)) {
-                        const t = b[r + dir][c + dc];
-                        if (t && (isW ? t.startsWith('b') : t.startsWith('w'))) {
-                            moves.push({ toRow: r + dir, toCol: c + dc });
-                        }
-                    }
-                });
-            } else if (type === 'N') {
-                [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr, dc]) => {
-                    if (inBounds(r + dr, c + dc)) {
-                        const t = b[r + dr][c + dc];
-                        if (!t || (isW ? t.startsWith('b') : t.startsWith('w'))) {
-                            moves.push({ toRow: r + dr, toCol: c + dc });
-                        }
-                    }
-                });
-            } else if (type === 'B') {
-                addRays(b, r, c, [[-1,-1],[-1,1],[1,-1],[1,1]], isW, moves);
-            } else if (type === 'R') {
-                addRays(b, r, c, [[-1,0],[1,0],[0,-1],[0,1]], isW, moves);
-            } else if (type === 'Q') {
-                addRays(b, r, c, [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]], isW, moves);
-            } else if (type === 'K') {
-                [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr, dc]) => {
-                    if (inBounds(r + dr, c + dc)) {
-                        const t = b[r + dr][c + dc];
-                        if (!t || (isW ? t.startsWith('b') : t.startsWith('w'))) {
-                            moves.push({ toRow: r + dr, toCol: c + dc });
-                        }
-                    }
-                });
-            }
-            return moves;
-        }
-
-        function addRays(b, r, c, dirs, isW, moves) {
-            dirs.forEach(([dr, dc]) => {
-                for (let i = 1; i < 8; i++) {
-                    const nr = r + dr * i;
-                    const nc = c + dc * i;
-                    if (!inBounds(nr, nc)) break;
-                    const t = b[nr][nc];
-                    if (!t) {
-                        moves.push({ toRow: nr, toCol: nc });
-                    } else {
-                        if (isW ? t.startsWith('b') : t.startsWith('w')) {
-                            moves.push({ toRow: nr, toCol: nc });
-                        }
-                        break;
-                    }
-                }
-            });
-        }
-
-        function updateEvaluationBar() {
-            const score = -evaluateBoardScore(board); // Positive = user advantage
+        function updateEvaluationBarFromScore(aiScore) {
+            const score = -aiScore;
             const fill = document.getElementById('evalFill');
             const label = document.getElementById('evalLabel');
-
             let pct = 50 + (score / 40);
             pct = Math.max(5, Math.min(95, pct));
             fill.style.width = pct + '%';
@@ -791,7 +974,7 @@
             const text = document.getElementById('statusText');
             if (isThinking) {
                 dot.className = 'status-dot thinking';
-                text.textContent = "AI is evaluating moves...";
+                text.textContent = "AI is evaluating millions of moves...";
             } else {
                 dot.className = 'status-dot your-turn';
                 text.textContent = "Your Turn (White)";
@@ -800,17 +983,12 @@
 
         function endGame(msg) {
             gameOver = true;
+            isPlayerTurn = false;
             document.getElementById('gameOverOverlay').classList.add('active');
             document.getElementById('gameOverMessage').textContent = msg;
             document.getElementById('statusDot').className = 'status-dot game-over';
             document.getElementById('statusText').textContent = msg;
         }
-
-        document.getElementById('resetBtn').addEventListener('click', () => location.reload());
-        document.getElementById('playAgainBtn').addEventListener('click', () => location.reload());
-        document.getElementById('exitBtn').addEventListener('click', () => { window.location.href = 'index.jsp'; });
-
-        initBoard();
     </script>
 </body>
 </html>
