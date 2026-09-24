@@ -210,13 +210,226 @@
             .sidebar.open { transform: translateX(0); }
             #myBoard { max-width: 95vw; width: 95vw; }
         }
+
+        /* Standardized Pre-Game Startup Overlay */
+        .chess-overlay-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 1000;
+            text-align: center;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .overlay-icon {
+            font-size: 3rem;
+            margin-bottom: 0.4rem;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.5));
+            animation: floatChess 2.5s infinite ease-in-out;
+        }
+        @keyframes floatChess {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .overlay-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-badge {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: var(--primary);
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+        }
+
+        .overlay-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 320px;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+
+        .overlay-stats {
+            display: flex;
+            gap: 1.2rem;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.5rem 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            font-size: 0.8rem;
+        }
+        .overlay-stats div span {
+            display: block;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--accent);
+        }
+
+        .menu-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+            max-width: 260px;
+        }
+
+        .btn-cyber {
+            min-height: 44px;
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 800;
+            font-size: 0.88rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+        .btn-cyber-primary {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+        .btn-cyber-primary:hover {
+            background: #7dd3fc;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+            transform: translateY(-2px);
+        }
+        .btn-cyber-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .btn-cyber-secondary:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: var(--primary);
+        }
+
+        .intel-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.96);
+            backdrop-filter: blur(14px);
+            display: none;
+            flex-direction: column;
+            padding: 1.6rem;
+            z-index: 1050;
+            text-align: left;
+            overflow-y: auto;
+            max-width: 440px;
+            margin: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            max-height: 80vh;
+        }
+        .intel-modal.active { display: flex; }
+        .intel-title {
+            font-size: 1.15rem;
+            color: var(--accent);
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .intel-row {
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+        .intel-row strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 3px;
+        }
     </style>
 </head>
 <body>
 
     <div class="navbar">
         <h1 class="title">CYBER CHESS <span style="font-size:0.8rem; color:var(--text-muted);">v3.0 OMNI-ROUTING</span></h1>
-        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <a href="index.jsp" class="btn btn-secondary" style="text-decoration:none; padding: 6px 12px; font-size:0.82rem;"><i class="fa-solid fa-arrow-left"></i> Hub</a>
+            <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </div>
+
+    <!-- Standardized Pre-Game Interactive Startup Screen -->
+    <div id="chessStartupModal" class="chess-overlay-screen">
+        <div class="overlay-icon">♟️</div>
+        <h2 class="overlay-title">
+            CYBER CHESS
+            <span class="header-badge">AI GRANDMASTER</span>
+        </h2>
+        <p class="overlay-sub">Engage neural Stockfish chess engines with real-time evaluation, rating progression, and tactical PGN analysis.</p>
+        
+        <div class="overlay-stats">
+            <div>Tactical Rating<span id="splashChessRating">1200</span></div>
+            <div>Win Ratio<span id="splashChessRatio">0%</span></div>
+        </div>
+
+        <div class="menu-actions">
+            <button class="btn-cyber btn-cyber-primary" onclick="startChessMatch()">▶ INITIATE MATCH</button>
+            <button class="btn-cyber btn-cyber-secondary" onclick="openChessIntel()">⚙ PROTOCOL & CONTROLS</button>
+            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+        </div>
+    </div>
+
+    <!-- Chess Intel Modal -->
+    <div id="chessIntelModal" class="intel-modal">
+        <div class="intel-title">
+            <span>SECURITY DIRECTIVE</span>
+            <button class="btn btn-secondary" style="padding: 4px 10px;" onclick="closeChessIntel()">✕ Close</button>
+        </div>
+
+        <div class="intel-row">
+            <strong>🎮 GAMEPLAY RULES</strong>
+            Standard chess rules with drag-and-drop movement, pawn promotions, and automated checkmate detection.
+        </div>
+
+        <div class="intel-row">
+            <strong>⚡ NEURAL AI DIFFICULTY</strong>
+            Switch Stockfish engine search depth from Level 1 (Novice) up to Level 5 (Grandmaster) via the sidebar selector.
+        </div>
+
+        <div class="intel-row">
+            <strong>🎯 TACTICAL RATING</strong>
+            Victory against the neural engine awards +30 rating points. Defeat subtracts -15 rating points. All ratings sync to your central arcade records!
+        </div>
+
+        <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeChessIntel(); startChessMatch();">
+            ▶ COMMENCE MATCH
+        </button>
     </div>
 
     <div class="game-layout">
@@ -486,6 +699,35 @@
         $('#flipBtn').on('click', () => board.flip());
         $('#exitBtn').on('click', () => window.location.href = 'index.jsp');
 
+        // Startup Screen Logic
+        function loadChessTelemetry() {
+            const rating = localStorage.getItem('hub_chess_rating') || '1200';
+            const wins = parseInt(localStorage.getItem('hub_chess_wins') || '0', 10);
+            const losses = parseInt(localStorage.getItem('hub_chess_losses') || '0', 10);
+            const total = wins + losses;
+            const ratio = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+            document.getElementById('splashChessRating').innerText = rating;
+            document.getElementById('splashChessRatio').innerText = ratio + '% (' + wins + 'W/' + losses + 'L)';
+        }
+
+        function startChessMatch() {
+            document.getElementById('chessStartupModal').style.display = 'none';
+            document.getElementById('chessIntelModal').classList.remove('active');
+            game.reset();
+            board.start();
+            isAiThinking = false;
+            updateStatus();
+        }
+
+        function openChessIntel() {
+            document.getElementById('chessIntelModal').classList.add('active');
+        }
+        function closeChessIntel() {
+            document.getElementById('chessIntelModal').classList.remove('active');
+        }
+
+        loadChessTelemetry();
         updateStatus();
     </script>
 </body>

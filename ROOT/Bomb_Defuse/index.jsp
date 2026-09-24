@@ -7,18 +7,111 @@
     <title>Defusal Protocol // Bomb Simulator</title>
     <!-- Link to the separated CSS file -->
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .intel-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.96);
+            backdrop-filter: blur(14px);
+            display: none;
+            flex-direction: column;
+            padding: 1.6rem;
+            z-index: 1050;
+            text-align: left;
+            overflow-y: auto;
+            max-width: 440px;
+            margin: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            max-height: 80vh;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .intel-modal.active { display: flex; }
+        .intel-title {
+            font-size: 1.15rem;
+            color: var(--neon-blue);
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .intel-row {
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+        .intel-row strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 3px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- MAIN MENU -->
-    <div id="screen-menu" class="screen active">
+    <!-- STANDARDIZED PRE-GAME STARTUP SCREEN -->
+    <div id="screen-startup" class="screen active">
+        <div class="menu-container" style="max-width: 440px; padding: 25px 22px;">
+            <div style="font-size: 2.6rem; margin-bottom: 4px;">☢️</div>
+            <h1 class="menu-title" style="font-size: 1.65rem; margin-bottom: 4px;">DEFUSAL PROTOCOL</h1>
+            <div style="display:inline-block; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); color:#f43f5e; font-size:0.68rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-bottom: 12px; letter-spacing:1px;">CRISIS SIM v2.5</div>
+            <p style="color: var(--text-muted); font-size: 0.84rem; line-height: 1.5; margin-bottom: 15px;">
+                High-stakes 3-minute bomb defusal simulation. Complete override sequences across security modules before detonation occurs.
+            </p>
+            <div style="display:flex; justify-content:space-around; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); margin-bottom:18px; font-size:0.8rem;">
+                <div>Record Score<span id="splashDefuseScore" style="display:block; font-size:1.1rem; color:var(--neon-blue); font-weight:bold;">0 pts</span></div>
+                <div>Disarms<span id="splashDefuseDisarms" style="display:block; font-size:1.1rem; color:var(--neon-green); font-weight:bold;">0</span></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; min-height:44px;" onclick="openLevelSelect()">▶ INITIATE RUN</button>
+                <button class="level-btn" style="min-height:44px;" onclick="openDefuseIntel()">⚙ PROTOCOL & CONTROLS</button>
+                <button class="btn-abort" style="min-height:44px;" onclick="window.location.href='../index.jsp'">‹ RETURN TO HUB</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTEL & CONTROLS MODAL -->
+    <div id="defuseIntelModal" class="intel-modal">
+        <div class="intel-title">
+            <span>TACTICAL DIRECTIVE</span>
+            <button class="btn-abort" style="padding: 4px 10px;" onclick="closeDefuseIntel()">✕ Close</button>
+        </div>
+
+        <div class="intel-row">
+            <strong>⏱ DETONATION CLOCK</strong>
+            You have precisely 3 minutes (180s) to disarm all active modules in the briefcase chassis.
+        </div>
+
+        <div class="intel-row">
+            <strong>⚠️ SYSTEM INTEGRITY & STRIKES</strong>
+            Clicking modules triggers interactive override sequences. 3 system strikes will initiate immediate detonation!
+        </div>
+
+        <div class="intel-row">
+            <strong>🎯 SCORING & RECORDS</strong>
+            Score formula: [Level Cleared × 100] + Remaining Seconds. Scores and total successful disarms synchronize with your Cyber Hub records.
+        </div>
+
+        <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; margin-top: auto;" onclick="closeDefuseIntel(); openLevelSelect();">
+            ▶ SELECT SECURITY TIER
+        </button>
+    </div>
+
+    <!-- MAIN MENU (LEVEL SELECT) -->
+    <div id="screen-menu" class="screen">
         <div class="menu-container">
-            <h1 class="menu-title">DEFUSAL PROTOCOL</h1>
-            <p style="color: var(--text-muted); letter-spacing: 2px;">SELECT SECURITY TIER</p>
+            <h1 class="menu-title">SECURITY TIERS</h1>
+            <p style="color: var(--text-muted); letter-spacing: 2px;">SELECT SECURITY CLEARANCE LEVEL</p>
             <div class="level-grid" id="levelGrid">
                 <!-- Generated by JS -->
             </div>
-            <button class="btn-abort" onclick="window.location.href='../index.jsp'" style="margin-top: 30px;">EXIT TO HUB</button>
+            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+                <button class="level-btn" onclick="showStartupScreen()">‹ BACK</button>
+                <button class="btn-abort" onclick="window.location.href='../index.jsp'">EXIT TO HUB</button>
+            </div>
         </div>
     </div>
 

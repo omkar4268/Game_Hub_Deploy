@@ -18,7 +18,7 @@
 <style>
   :root {
     --bg-base: #03050a;
-    --card-bg: rgba(13, 19, 36, 0.72);
+    --card-bg: rgba(13, 19, 36, 0.75);
     --border-glow: rgba(56, 189, 248, 0.35);
     --primary: #38bdf8;
     --primary-rgb: 56, 189, 248;
@@ -62,9 +62,9 @@
     width: 200%;
     height: 200%;
     background: 
-      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 30%),
-      radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 30%),
-      radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 35%),
+      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.09) 0%, transparent 30%),
+      radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.09) 0%, transparent 30%),
+      radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.04) 0%, transparent 35%),
       linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
@@ -74,7 +74,183 @@
   }
 
   /* =========================================================
-     FEATURE 1: IMMERSIVE ENTRY PORTAL & WELCOME LANDING STATE
+     FEATURE 1: CINEMATIC CLOSING DOORS LOGIN TRANSITION
+     ========================================================= */
+  .blast-doors-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .blast-doors-overlay.active {
+    display: flex;
+    pointer-events: all;
+  }
+
+  .blast-door {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50.5%;
+    background: linear-gradient(135deg, #0b1120 0%, #030712 100%);
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.9), 0 0 50px rgba(0,0,0,0.8);
+    transition: transform 0.65s cubic-bezier(0.85, 0, 0.15, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    overflow: hidden;
+  }
+
+  .door-left {
+    left: 0;
+    transform: translateX(-100%);
+    border-right: 3px solid var(--primary);
+    box-shadow: 10px 0 35px rgba(56, 189, 248, 0.4);
+  }
+  .door-right {
+    right: 0;
+    transform: translateX(100%);
+    border-left: 3px solid var(--primary);
+    box-shadow: -10px 0 35px rgba(56, 189, 248, 0.4);
+  }
+
+  /* Closed State */
+  .blast-doors-overlay.closed .door-left { transform: translateX(0); }
+  .blast-doors-overlay.closed .door-right { transform: translateX(0); }
+
+  /* Industrial door patterns */
+  .door-panel-graphics {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background: 
+      repeating-linear-gradient(45deg, rgba(56, 189, 248, 0.3) 0, rgba(56, 189, 248, 0.3) 15px, transparent 15px, transparent 30px);
+    pointer-events: none;
+  }
+  .door-hazard-stripe {
+    height: 12px;
+    width: 100%;
+    background: repeating-linear-gradient(
+      -45deg,
+      #f59e0b,
+      #f59e0b 12px,
+      #000 12px,
+      #000 24px
+    );
+    opacity: 0.6;
+    margin: 1.5rem 0;
+  }
+
+  /* Center Scanning Laser & Energy Seam */
+  .door-seam-glow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    transform: translateX(-50%);
+    background: #38bdf8;
+    box-shadow: 0 0 30px #38bdf8, 0 0 60px #22c55e;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+  .blast-doors-overlay.closed .door-seam-glow { opacity: 1; }
+
+  .laser-scanner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #22c55e, #38bdf8, transparent);
+    box-shadow: 0 0 25px #38bdf8, 0 0 10px #22c55e;
+    top: 20%;
+    opacity: 0;
+    z-index: 20;
+    pointer-events: none;
+  }
+  @keyframes laserSweep {
+    0% { top: 20%; opacity: 0; }
+    20% { opacity: 1; }
+    50% { top: 75%; opacity: 1; }
+    80% { opacity: 1; }
+    100% { top: 20%; opacity: 0; }
+  }
+  .blast-doors-overlay.closed .laser-scanner {
+    animation: laserSweep 1.1s ease-in-out infinite;
+  }
+
+  /* Blast Door Center HUD */
+  .door-hud-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 2rem;
+    background: rgba(3, 7, 18, 0.88);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 40px rgba(0,0,0,0.9), 0 0 25px rgba(56, 189, 248, 0.3);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    width: 90vw;
+    max-width: 440px;
+    opacity: 0;
+    transition: opacity 0.35s ease 0.3s;
+  }
+  .blast-doors-overlay.closed .door-hud-center { opacity: 1; }
+
+  .door-hud-badge {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    color: var(--primary);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .door-hud-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
+  }
+  .door-hud-log {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    min-height: 24px;
+  }
+  .door-progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .door-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    box-shadow: 0 0 12px var(--accent);
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* =========================================================
+     LANDING PORTAL OVERLAY
      ========================================================= */
   #landingPortal {
     position: fixed;
@@ -87,20 +263,18 @@
     justify-content: center;
     padding: 1.5rem;
     text-align: center;
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-
   #landingPortal.dismissed {
     opacity: 0;
-    transform: scale(1.05);
     pointer-events: none;
     visibility: hidden;
   }
 
   .portal-content {
-    max-width: 580px;
+    max-width: 540px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -122,10 +296,9 @@
     letter-spacing: 2px;
     color: var(--primary);
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
   }
-
   .portal-tag::before {
     content: '';
     width: 8px;
@@ -141,11 +314,11 @@
   }
 
   .portal-title {
-    font-size: 3rem;
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
     font-weight: 900;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     line-height: 1.1;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     background: linear-gradient(135deg, #ffffff 30%, var(--primary) 70%, var(--neon-purple) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -153,26 +326,26 @@
   }
 
   .portal-subtitle {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
     color: var(--text-muted);
     line-height: 1.6;
-    margin-bottom: 2.5rem;
-    max-width: 480px;
+    margin-bottom: 2rem;
+    max-width: 460px;
   }
 
   .portal-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
+    gap: 0.85rem;
     width: 100%;
-    max-width: 340px;
+    max-width: 320px;
   }
 
   .btn-portal {
-    min-height: 50px;
-    padding: 0.85rem 1.6rem;
+    min-height: 48px;
+    padding: 0.8rem 1.4rem;
     border-radius: 12px;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 800;
     letter-spacing: 1px;
     cursor: pointer;
@@ -189,11 +362,11 @@
   .btn-portal-primary {
     background: linear-gradient(135deg, var(--primary), #0284c7);
     color: #000;
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
   }
   .btn-portal-primary:hover {
     background: linear-gradient(135deg, #7dd3fc, var(--primary));
-    box-shadow: 0 0 35px rgba(56, 189, 248, 0.6);
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
     transform: translateY(-2px);
   }
 
@@ -222,8 +395,8 @@
   }
 
   .portal-footer-note {
-    margin-top: 2rem;
-    font-size: 0.75rem;
+    margin-top: 1.8rem;
+    font-size: 0.72rem;
     color: #64748b;
     letter-spacing: 0.8px;
   }
@@ -232,14 +405,14 @@
      MAIN APPLICATION LAYOUT & SIDEBAR
      ========================================================= */
   aside {
-    width: 270px;
+    width: 260px;
     background: rgba(8, 12, 23, 0.85);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-right: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
     flex-direction: column;
-    padding: 2.2rem 1.4rem;
+    padding: 2rem 1.3rem;
     flex-shrink: 0;
     z-index: 100;
     box-shadow: 5px 0 35px rgba(0,0,0,0.6);
@@ -383,7 +556,6 @@
     box-shadow: inset 4px 0 0 var(--primary);
   }
 
-  /* Portal Recall Button in sidebar bottom */
   .btn-portal-recall {
     margin-top: auto;
     background: rgba(255, 255, 255, 0.04);
@@ -404,11 +576,17 @@
     color: var(--text-main);
   }
 
+  /* =========================================================
+     FEATURE 2: BALANCED UI PROPORTIONS & GRID SCALING
+     ========================================================= */
   main {
     flex: 1;
-    padding: 2.5rem 3rem;
+    padding: 2.2rem 2.5rem;
     overflow-y: auto;
     width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .top-meta {
@@ -416,9 +594,11 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
   .top-meta h2 { 
-    font-size: 2.2rem; 
+    font-size: clamp(1.8rem, 4vw, 2.3rem); 
     font-weight: 900; 
     background: linear-gradient(to right, #fff, #94a3b8);
     -webkit-background-clip: text;
@@ -437,7 +617,6 @@
     border: 1px solid rgba(34, 197, 94, 0.25);
     box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
   }
-  
   .sys-status::before {
     content: '';
     width: 8px;
@@ -480,10 +659,9 @@
 
   .game-carousel {
     display: flex;
-    gap: 1.8rem;
+    gap: 1.6rem;
     overflow-x: auto;
-    padding: 1rem 1rem 3rem 1rem;
-    margin: -1rem;
+    padding: 0.8rem 0.5rem 2.5rem 0.5rem;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -494,15 +672,16 @@
   .game-carousel::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(25px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   .game-card {
-    min-width: 310px;
-    width: 310px;
+    min-width: 290px;
+    max-width: 320px;
+    width: 300px;
     background: var(--card-bg);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     overflow: hidden;
@@ -518,25 +697,10 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   }
 
-  .game-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 50%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
-    transform: skewX(-20deg);
-    transition: 0s;
-  }
-
   .game-card:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-8px) scale(1.02);
     border-color: rgba(var(--primary-rgb), 0.5);
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(var(--primary-rgb), 0.25);
-  }
-  
-  .game-card:hover::after {
-    left: 200%;
-    transition: left 0.8s ease-in-out;
   }
 
   .banner-bomb    { background: linear-gradient(135deg, #7f1d1d, #ea580c); }
@@ -546,39 +710,39 @@
   .banner-guesser { background: linear-gradient(135deg, #312e81, #6366f1); }
 
   .card-banner {
-    height: 150px;
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3.8rem;
+    font-size: 3.6rem;
     position: relative;
     overflow: hidden;
   }
 
   .card-body {
-    padding: 1.4rem;
+    padding: 1.3rem;
     display: flex;
     flex-direction: column;
     flex: 1;
     background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.85) 100%);
   }
   .card-tag {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     letter-spacing: 1.5px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--primary);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
   }
-  .card-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
-  .card-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.2rem; }
+  .card-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.35rem; }
+  .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.2rem; }
 
   .card-footer {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 0.9rem;
+    padding-top: 0.85rem;
     border-top: 1px solid rgba(255,255,255,0.06);
   }
   .card-score-preview { font-size: 0.82rem; color: var(--text-muted); }
@@ -602,20 +766,18 @@
     box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6);
   }
 
-  /* =========================================================
-     FEATURE 2: EXPANDED SCORING & LEADERBOARDS GRID
-     ========================================================= */
+  /* Score Grid */
   .score-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 1.5rem;
+    gap: 1.4rem;
   }
   .score-card, .settings-box {
     background: var(--card-bg);
     backdrop-filter: blur(14px);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 18px;
-    padding: 1.8rem;
+    padding: 1.6rem;
     transition: transform 0.3s ease, border-color 0.3s ease;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     position: relative;
@@ -631,12 +793,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1.2rem;
-    padding-bottom: 0.8rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
   .score-card-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 800;
     letter-spacing: 0.5px;
     display: flex;
@@ -655,12 +817,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
+    padding: 0.7rem 0;
     border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
   }
   .stat-row:last-child, .settings-row:last-child { border-bottom: none; }
-  .stat-label { color: var(--text-muted); font-size: 0.88rem; }
-  .stat-val { font-weight: 800; font-size: 1.05rem; }
+  .stat-label { color: var(--text-muted); font-size: 0.85rem; }
+  .stat-val { font-weight: 800; font-size: 1rem; }
 
   .switch {
     position: relative; display: inline-block; width: 44px; height: 24px;
@@ -677,9 +839,7 @@
   input:checked + .slider { background-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
   input:checked + .slider:before { transform: translateX(20px); }
 
-  /* =========================================================
-     MOBILE-FIRST RESPONSIVE MODAL SYSTEM
-     ========================================================= */
+  /* Modals */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -703,9 +863,9 @@
     border: 1px solid rgba(56, 189, 248, 0.4);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.25);
     border-radius: 18px;
-    padding: 2rem 1.6rem;
+    padding: 1.8rem 1.5rem;
     width: 90vw;
-    max-width: 420px;
+    max-width: 410px;
     max-height: 85vh;
     max-height: 85dvh;
     overflow-y: auto;
@@ -722,7 +882,7 @@
     display: flex;
     gap: 0.8rem;
     justify-content: center;
-    margin-top: 1.5rem;
+    margin-top: 1.4rem;
   }
   .btn-modal {
     min-height: 46px;
@@ -731,7 +891,7 @@
     border: none;
     cursor: pointer;
     font-weight: 800;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -739,33 +899,16 @@
     transition: all 0.2s ease;
     flex: 1;
   }
-  .btn-modal:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-    filter: grayscale(0.5);
-  }
-
-  .btn-launch { 
-    background: var(--primary); 
-    color: #000; 
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
-  }
-  .btn-launch:hover:not(:disabled) { 
-    background: #0ea5e9; 
-    box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6); 
-    transform: translateY(-2px); 
-  }
+  .btn-modal:disabled { opacity: 0.65; cursor: not-allowed; filter: grayscale(0.5); }
+  .btn-launch { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4); }
+  .btn-launch:hover:not(:disabled) { background: #0ea5e9; box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6); transform: translateY(-2px); }
   .btn-cancel { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
   .btn-cancel:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); }
 
-  /* Input fields for Auth Modals */
-  .auth-form-group {
-    text-align: left;
-    margin-top: 1rem;
-  }
+  .auth-form-group { text-align: left; margin-top: 1rem; }
   .auth-label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     color: var(--text-muted);
     margin-bottom: 0.35rem;
     font-weight: 700;
@@ -774,14 +917,14 @@
   }
   .auth-input {
     width: 100%;
-    height: 48px;
+    height: 46px;
     min-height: 44px;
     padding: 0 1rem;
     background: rgba(15, 23, 42, 0.9);
     border: 1px solid rgba(56, 189, 248, 0.3);
     border-radius: 10px;
     color: var(--text-main);
-    font-size: 16px !important; /* Critical: 16px prevents iOS Safari auto-zoom */
+    font-size: 16px !important; /* Critical: blocks iOS Safari auto-zoom */
     outline: none;
     transition: all 0.2s ease;
     box-sizing: border-box;
@@ -792,7 +935,6 @@
     background: rgba(15, 23, 42, 1);
   }
 
-  /* Animated Status & Error Banners */
   @keyframes bannerSlideIn {
     from { opacity: 0; transform: translateY(-8px) scale(0.96); }
     to { opacity: 1; transform: translateY(0) scale(1); }
@@ -840,7 +982,7 @@
 
   .switch-auth-link {
     display: inline-block;
-    margin-top: 1.2rem;
+    margin-top: 1.1rem;
     font-size: 0.85rem;
     color: var(--text-muted);
     cursor: pointer;
@@ -849,15 +991,13 @@
   }
   .switch-auth-link:hover { color: var(--primary); }
 
-  /* =========================================================
-     RESPONSIVE BREAKPOINTS (MOBILE & TABLET)
-     ========================================================= */
+  /* Mobile Overrides */
   @media (max-width: 768px) {
     body { flex-direction: column; padding-bottom: 80px; }
 
     aside {
       width: 100%; height: 75px; position: fixed; bottom: 0; left: 0; right: 0;
-      padding: 0.5rem; flex-direction: row; border-right: none;
+      padding: 0.4rem; flex-direction: row; border-right: none;
       border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(8, 12, 23, 0.96);
       align-items: center; justify-content: space-around; z-index: 999;
     }
@@ -865,7 +1005,7 @@
     .brand, .auth-widget, .btn-portal-recall { display: none; }
     nav { flex-direction: row; width: 100%; justify-content: space-around; gap: 0; }
     .nav-btn {
-      flex-direction: column; gap: 4px; padding: 0.4rem; font-size: 0.72rem;
+      flex-direction: column; gap: 4px; padding: 0.35rem; font-size: 0.72rem;
       border-left: none !important; border-radius: 10px; text-align: center;
     }
     .nav-btn.active {
@@ -873,18 +1013,15 @@
       box-shadow: none; border-top: 2px solid var(--primary);
     }
 
-    main { padding: 1.4rem 1.1rem; }
-    .top-meta h2 { font-size: 1.6rem; }
+    main { padding: 1.2rem 1rem; }
+    .top-meta h2 { font-size: 1.5rem; }
     .carousel-controls { display: none; }
     
-    .portal-title { font-size: 2.2rem; }
-    .portal-subtitle { font-size: 0.85rem; margin-bottom: 1.8rem; }
-    
-    .game-carousel { padding-bottom: 2rem; gap: 1.2rem; }
-    .game-card { min-width: 85vw; width: 85vw; }
+    .game-carousel { padding-bottom: 1.8rem; gap: 1.2rem; }
+    .game-card { min-width: 82vw; width: 82vw; }
 
     .modal-box {
-      padding: 1.5rem 1.2rem;
+      padding: 1.4rem 1.1rem;
       width: 92vw;
       max-height: 82vh;
       max-height: 82dvh;
@@ -895,7 +1032,40 @@
 <body>
 
   <!-- =========================================================
-       FEATURE 1: IMMERSIVE ENTRY PORTAL & WELCOME LANDING STATE
+       FEATURE 1: CINEMATIC CLOSING DOORS OVERLAY
+       ========================================================= -->
+  <div id="blastDoorsOverlay" class="blast-doors-overlay">
+    <!-- Left Cyber Door -->
+    <div class="blast-door door-left">
+      <div class="door-panel-graphics"></div>
+      <div class="door-hazard-stripe"></div>
+      <div class="door-hazard-stripe" style="margin-top:auto;"></div>
+    </div>
+
+    <!-- Right Cyber Door -->
+    <div class="blast-door door-right">
+      <div class="door-panel-graphics"></div>
+      <div class="door-hazard-stripe"></div>
+      <div class="door-hazard-stripe" style="margin-top:auto;"></div>
+    </div>
+
+    <!-- Center Seam & Scanning Elements -->
+    <div class="door-seam-glow"></div>
+    <div class="laser-scanner"></div>
+
+    <!-- Center HUD Terminal Readout -->
+    <div class="door-hud-center">
+      <div class="door-hud-badge">NEURAL GATEWAY // SECURITY INTERFACE</div>
+      <div class="door-hud-title" id="doorHudTitle">ACCESS CLEARANCE</div>
+      <div class="door-hud-log" id="doorHudLog">AUTHENTICATING SECURITY PROTOCOL...</div>
+      <div class="door-progress-track">
+        <div class="door-progress-bar" id="doorProgressBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       LANDING PORTAL OVERLAY
        ========================================================= -->
   <div id="landingPortal">
     <div class="portal-content">
@@ -907,7 +1077,7 @@
 
       <div class="portal-actions">
         <% if (isLoggedIn) { %>
-          <button class="btn-portal btn-portal-primary" onclick="enterTerminal()">
+          <button class="btn-portal btn-portal-primary" onclick="triggerDoorTransition('OPERATOR: <%= currentUser.toUpperCase() %>', 'ACCESS AUTHORIZED // SYSTEM READY')">
             <span>⚡ ENTER AS <%= currentUser.toUpperCase() %></span>
           </button>
           <button class="btn-portal btn-portal-secondary" onclick="performLogout()">
@@ -920,7 +1090,7 @@
           <button class="btn-portal btn-portal-secondary" onclick="openSignupModal()">
             <span>⚡ REGISTER CALLSIGN</span>
           </button>
-          <button class="btn-portal btn-portal-guest" onclick="continueAsGuest()">
+          <button class="btn-portal btn-portal-guest" onclick="triggerDoorTransition('GUEST RECRUIT', 'GUEST ACCESS GRANTED // OVERRIDE ENGAGED')">
             <span>🎮 CONTINUE AS GUEST</span>
           </button>
         <% } %>
@@ -933,14 +1103,13 @@
   </div>
 
   <!-- =========================================================
-       SIDEBAR & CALLSIGN PROFILE STATE
+       SIDEBAR & PROFILE STATE
        ========================================================= -->
   <aside>
     <div class="brand" onclick="showPortal()">
       CYBER <span class="brand-badge">HUB</span>
     </div>
 
-    <!-- Active User Profile Widget -->
     <div class="auth-widget" id="authWidget">
       <% if (isLoggedIn) { %>
         <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
@@ -1066,9 +1235,7 @@
       </div>
     </section>
 
-    <!-- =========================================================
-         FEATURE 2: EXPANDED SCORING & LEADERBOARDS (ALL 5 GAMES)
-         ========================================================= -->
+    <!-- VIEW 2: EXPANDED SCORING & LEADERBOARDS -->
     <section id="scoresView" class="view-panel">
       <div class="score-grid">
         
@@ -1144,7 +1311,7 @@
           </div>
           <div class="stat-row">
             <span class="stat-label">Clock Rate</span>
-            <span class="stat-val" style="color: var(--primary);">135ms Balanced</span>
+            <span class="stat-val" style="color: var(--primary);">145ms Balanced</span>
           </div>
           <div class="stat-row">
             <span class="stat-label">Top Global Operator</span>
@@ -1324,25 +1491,56 @@
 <script>
   let targetUrl = '';
 
-  // --- PORTAL MANAGEMENT ---
-  const isServerLoggedIn = <%= isLoggedIn %>;
+  // =========================================================
+  // CINEMATIC BLAST DOORS ENGINE
+  // =========================================================
+  const blastDoors = document.getElementById('blastDoorsOverlay');
+  const doorHudTitle = document.getElementById('doorHudTitle');
+  const doorHudLog = document.getElementById('doorHudLog');
+  const doorProgressBar = document.getElementById('doorProgressBar');
   const portal = document.getElementById('landingPortal');
 
-  function enterTerminal() {
-    portal.classList.add('dismissed');
-    sessionStorage.setItem('hub_portal_passed', 'true');
-  }
+  function triggerDoorTransition(targetIdentity, completionMsg, onCompleteCallback) {
+    blastDoors.classList.add('active');
+    doorHudTitle.innerText = targetIdentity || 'ACCESS CLEARANCE';
+    doorHudLog.innerText = 'SEALING NEURAL AIRLOCK...';
+    doorHudLog.style.color = '#38bdf8';
+    doorProgressBar.style.width = '10%';
 
-  function continueAsGuest() {
-    portal.classList.add('dismissed');
-    sessionStorage.setItem('hub_portal_passed', 'true');
+    // Step 1: Doors slam inward
+    setTimeout(() => {
+      blastDoors.classList.add('closed');
+      doorHudLog.innerText = 'AUTHENTICATING SECURITY PROTOCOL...';
+      doorProgressBar.style.width = '45%';
+    }, 50);
+
+    // Step 2: Biometric / Security Verification Scan
+    setTimeout(() => {
+      doorHudLog.innerText = completionMsg || 'SECURITY CIPHER VERIFIED // ACCESS GRANTED';
+      doorHudLog.style.color = '#22c55e';
+      doorProgressBar.style.width = '100%';
+      // Dismiss the background portal while doors are shut
+      portal.classList.add('dismissed');
+      sessionStorage.setItem('hub_portal_passed', 'true');
+    }, 950);
+
+    // Step 3: Doors slide open smoothly, revealing the library
+    setTimeout(() => {
+      blastDoors.classList.remove('closed');
+    }, 1800);
+
+    // Step 4: Deactivate overlay completely
+    setTimeout(() => {
+      blastDoors.classList.remove('active');
+      if (onCompleteCallback) onCompleteCallback();
+    }, 2500);
   }
 
   function showPortal() {
     portal.classList.remove('dismissed');
   }
 
-  // Auto-dismiss portal if user already clicked through or logged in in this session
+  // Auto-dismiss portal if user already completed entrance in this browser tab
   if (sessionStorage.getItem('hub_portal_passed') === 'true') {
     portal.classList.add('dismissed');
   }
@@ -1426,7 +1624,7 @@
     el.style.display = 'flex';
   }
 
-  // --- ASYNC AUTH HANDLERS ---
+  // --- ASYNC AUTH HANDLERS WITH BLAST DOORS INTEGRATION ---
   async function submitLogin() {
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
@@ -1454,7 +1652,6 @@
       try {
         data = JSON.parse(rawText);
       } catch (jsonErr) {
-        console.error("Non-JSON Response:", rawText);
         setBanner('loginMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
         btnText.innerText = 'Authenticate';
@@ -1462,22 +1659,20 @@
       }
 
       if (data.status === 'success' || data.success) {
-        setBanner('loginMsg', 'success', data.message || 'Access Authorized! Initializing profile...');
-        sessionStorage.setItem('hub_portal_passed', 'true');
+        setBanner('loginMsg', 'success', 'Access Authorized! Triggering airlock sequence...');
         setTimeout(() => {
-          checkLiveSession();
           closeModal('loginModal');
-          portal.classList.add('dismissed');
-          window.location.reload();
-        }, 500);
+          triggerDoorTransition('OPERATOR: ' + u.toUpperCase(), 'CIPHER VALIDATED // ACCESS GRANTED', () => {
+            window.location.reload();
+          });
+        }, 400);
       } else {
         setBanner('loginMsg', 'error', data.message || 'Access Denied: Invalid credentials.');
         btn.disabled = false;
         btnText.innerText = 'Authenticate';
       }
     } catch (netErr) {
-      console.error("Network Failure:", netErr);
-      setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or check if Render service is starting.');
+      setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
       btn.disabled = false;
       btnText.innerText = 'Authenticate';
     }
@@ -1519,7 +1714,6 @@
       try {
         data = JSON.parse(rawText);
       } catch (jsonErr) {
-        console.error("Non-JSON Response:", rawText);
         setBanner('signupMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
         btnText.innerText = 'Enlist';
@@ -1527,22 +1721,20 @@
       }
 
       if (data.status === 'success' || data.success) {
-        setBanner('signupMsg', 'success', data.message || 'Identity Enlisted! Initializing cyber state...');
-        sessionStorage.setItem('hub_portal_passed', 'true');
+        setBanner('signupMsg', 'success', 'Identity Enlisted! Initializing cyber state...');
         setTimeout(() => {
-          checkLiveSession();
           closeModal('signupModal');
-          portal.classList.add('dismissed');
-          window.location.reload();
-        }, 500);
+          triggerDoorTransition('NEW RECRUIT: ' + u.toUpperCase(), 'SECURITY CLEARANCE ISSUED // ACCESS GRANTED', () => {
+            window.location.reload();
+          });
+        }, 400);
       } else {
         setBanner('signupMsg', 'error', data.message || 'Registration failed.');
         btn.disabled = false;
         btnText.innerText = 'Enlist';
       }
     } catch (netErr) {
-      console.error("Network Failure:", netErr);
-      setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or check if Render service is starting.');
+      setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
       btn.disabled = false;
       btnText.innerText = 'Enlist';
     }
@@ -1581,9 +1773,7 @@
     }
   }
 
-  // =========================================================
-  // FEATURE 2: COMPREHENSIVE MULTI-GAME STATS & SYNC
-  // =========================================================
+  // --- MULTI-GAME TELEMETRY SYNC ---
   async function syncCloudScores() {
     // 1. Defusal Protocol Metrics
     const localDefuse = localStorage.getItem('hub_defuse_high') || '0';
@@ -1654,7 +1844,7 @@
     if (pGuess) pGuess.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
     if (sGuessBest) sGuessBest.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
 
-    // --- Query Database High Scores & Global Leaderboards ---
+    // Query Database High Scores & Global Leaderboards
     try {
       const res = await fetch('get_scores.jsp');
       if (res.ok) {

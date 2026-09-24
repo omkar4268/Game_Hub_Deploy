@@ -238,5 +238,37 @@ function abortToMenu() {
     document.getElementById('screen-menu').classList.add('active');
 }
 
+// Startup Screen Controls
+function openLevelSelect() {
+    document.getElementById('screen-startup').classList.remove('active');
+    document.getElementById('defuseIntelModal').classList.remove('active');
+    document.getElementById('screen-menu').classList.add('active');
+}
+
+function showStartupScreen() {
+    document.getElementById('screen-menu').classList.remove('active');
+    document.getElementById('defuseIntelModal').classList.remove('active');
+    document.getElementById('screen-startup').classList.add('active');
+    loadDefusalTelemetry();
+}
+
+function openDefuseIntel() {
+    document.getElementById('defuseIntelModal').classList.add('active');
+}
+
+function closeDefuseIntel() {
+    document.getElementById('defuseIntelModal').classList.remove('active');
+}
+
+function loadDefusalTelemetry() {
+    const high = localStorage.getItem('hub_defuse_high') || '0';
+    const disarms = localStorage.getItem('hub_defuse_disarms') || '0';
+    const sScore = document.getElementById('splashDefuseScore');
+    const sDisarms = document.getElementById('splashDefuseDisarms');
+    if (sScore) sScore.innerText = high + ' pts';
+    if (sDisarms) sDisarms.innerText = disarms;
+}
+
 // Initial Call
 initMenu();
+loadDefusalTelemetry();

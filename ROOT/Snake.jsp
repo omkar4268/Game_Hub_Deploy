@@ -38,7 +38,8 @@
     align-items: center;
     justify-content: center;
     padding: 0.8rem;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     touch-action: none;
     position: relative;
   }
@@ -62,11 +63,13 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 380px;
+    max-width: 360px;
     margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .header-title-box {
+  .header-left {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -85,10 +88,10 @@
     border: 1px solid rgba(16, 185, 129, 0.4);
     color: var(--primary);
     font-size: 0.65rem;
-    padding: 2px 6px;
+    padding: 2px 7px;
     border-radius: 4px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
   }
 
   .btn-hub {
@@ -99,7 +102,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     transition: all 0.2s;
     display: inline-flex;
@@ -108,114 +111,129 @@
   }
   .btn-hub:hover {
     background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(56, 189, 248, 0.4);
   }
 
   .scoreboard {
     display: flex;
-    gap: 1.2rem;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 360px;
     background: var(--card-bg);
-    padding: 0.4rem 1.2rem;
+    padding: 0.45rem 1rem;
     border-radius: 9999px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     margin-bottom: 0.6rem;
     backdrop-filter: blur(8px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   }
-  .scoreboard span { color: var(--primary); font-weight: 700; }
+  .scoreboard span { color: var(--primary); font-weight: 800; }
   .scoreboard .best-label span { color: #facc15; }
 
-  /* Canvas Container */
+  /* Canvas Container with strict proportions */
   .canvas-wrapper {
     position: relative;
+    width: min(340px, 88vw);
+    height: min(340px, 88vw);
     border-radius: 16px;
     border: 2px solid var(--border-glow);
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
     background: #020617;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
   canvas {
+    width: 100%;
+    height: 100%;
     display: block;
     background: #020617;
   }
 
-  /* Full Screen Pre-Game Menu & Overlays */
+  /* Standardized Pre-Game Startup Screen & Overlays */
   .overlay-screen {
     position: absolute;
     inset: 0;
-    background: rgba(3, 7, 18, 0.92);
+    background: rgba(3, 7, 18, 0.94);
     backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 1.2rem;
     z-index: 20;
     text-align: center;
-    transition: all 0.3s ease;
+    box-sizing: border-box;
+    overflow-y: auto;
   }
 
   .overlay-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
+    font-size: 2.4rem;
+    margin-bottom: 0.3rem;
     filter: drop-shadow(0 0 15px var(--primary-glow));
     animation: bounce 2s infinite ease-in-out;
   }
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    50% { transform: translateY(-4px); }
   }
 
   .overlay-title {
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     font-weight: 900;
     letter-spacing: 2px;
     color: var(--primary);
     text-shadow: 0 0 18px var(--primary-glow);
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   .overlay-subtitle {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
-    max-width: 280px;
+    max-width: 270px;
     line-height: 1.4;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem;
   }
 
   .overlay-stats {
     display: flex;
-    gap: 1.2rem;
+    gap: 1rem;
     background: rgba(15, 23, 42, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.9rem;
     border-radius: 10px;
-    margin-bottom: 1.2rem;
-    font-size: 0.78rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.75rem;
   }
   .overlay-stats div span {
     display: block;
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--accent);
   }
 
   .menu-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.5rem;
     width: 100%;
     max-width: 240px;
   }
 
   .btn-cyber {
-    padding: 0.7rem 1.4rem;
+    min-height: 42px;
+    padding: 0.6rem 1.2rem;
     border-radius: 10px;
     border: none;
     font-weight: 800;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -224,11 +242,12 @@
     justify-content: center;
     gap: 8px;
     text-decoration: none;
+    box-sizing: border-box;
   }
   .btn-cyber-primary {
     background: var(--primary);
     color: #000;
-    box-shadow: 0 0 18px var(--primary-glow);
+    box-shadow: 0 0 15px var(--primary-glow);
   }
   .btn-cyber-primary:hover {
     background: #34d399;
@@ -246,7 +265,7 @@
     color: var(--accent);
   }
 
-  /* Settings / Controls Modal */
+  /* Manual / Controls Drawer */
   .manual-modal {
     position: absolute;
     inset: 0;
@@ -254,25 +273,26 @@
     backdrop-filter: blur(12px);
     display: none;
     flex-direction: column;
-    padding: 1.4rem;
+    padding: 1.2rem;
     z-index: 30;
     text-align: left;
     overflow-y: auto;
+    box-sizing: border-box;
   }
   .manual-modal.active { display: flex; }
 
   .manual-title {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--accent);
     font-weight: 800;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .manual-row {
-    margin-bottom: 0.8rem;
-    font-size: 0.82rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.8rem;
     line-height: 1.4;
     color: var(--text-muted);
   }
@@ -290,7 +310,7 @@
   .speed-btn {
     flex: 1;
     padding: 6px 0;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(15, 23, 42, 0.8);
@@ -309,7 +329,7 @@
   #mobileDpad {
     display: none;
     grid-template-columns: repeat(3, 56px);
-    grid-template-rows: repeat(3, 48px);
+    grid-template-rows: repeat(3, 46px);
     gap: 6px;
     margin-top: 0.8rem;
   }
@@ -319,7 +339,7 @@
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: var(--accent);
     border-radius: 12px;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -343,13 +363,11 @@
 <body>
 
   <div class="header">
-    <div class="header-title-box">
+    <div class="header-left">
       <h1>CYBER SNAKE</h1>
-      <span class="header-badge">v2.4</span>
+      <span class="header-badge">ARCADE PROTOCOL</span>
     </div>
-    <a href="index.jsp" class="btn-hub">
-      <span>‹</span> Hub
-    </a>
+    <a href="index.jsp" class="btn-hub">‹ Hub</a>
   </div>
 
   <div class="scoreboard">
@@ -359,11 +377,14 @@
   </div>
 
   <div class="canvas-wrapper">
-    <!-- Screen 1: Pre-Game Interactive Splash Menu -->
+    <!-- Screen 1: Standardized Pre-Game Interactive Splash Menu -->
     <div id="startScreen" class="overlay-screen">
       <div class="overlay-icon">🐍</div>
-      <h2 class="overlay-title">CYBER SNAKE</h2>
-      <p class="overlay-subtitle">Steer your serpent through the digital grid, consume rogue data nodes, and set the ultimate record.</p>
+      <h2 class="overlay-title">
+        CYBER SNAKE
+        <span class="header-badge">v2.5</span>
+      </h2>
+      <p class="overlay-subtitle">Navigate your neural serpent across the digital matrix, devour rogue data packets, and breach system high scores.</p>
       
       <div class="overlay-stats">
         <div>High Score<span id="splashBest">0 pts</span></div>
@@ -373,7 +394,7 @@
       <div class="menu-actions">
         <button class="btn-cyber btn-cyber-primary" onclick="startGame()">▶ INITIATE RUN</button>
         <button class="btn-cyber btn-cyber-secondary" onclick="openManual()">⚙ PROTOCOL & CONTROLS</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">✕ EXIT TO HUB</a>
+        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
       </div>
     </div>
 
@@ -391,40 +412,40 @@
       <div class="menu-actions">
         <button class="btn-cyber btn-cyber-primary" onclick="startGame()">↻ RETRY RUN</button>
         <button class="btn-cyber btn-cyber-secondary" onclick="showStartScreen()">☰ MAIN MENU</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">✕ EXIT TO HUB</a>
+        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
       </div>
     </div>
 
     <!-- Screen 3: Settings & Controls Modal -->
     <div id="manualModal" class="manual-modal">
       <div class="manual-title">
-        <span>SECURITY MANUAL</span>
+        <span>SECURITY DIRECTIVE</span>
         <button class="btn-hub" onclick="closeManual()">✕ Close</button>
       </div>
 
       <div class="manual-row">
         <strong>🎮 PC CONTROLS</strong>
-        Arrow Keys or W/A/S/D to steer your serpent. Instant response with zero 180° self-reversals.
+        Arrow Keys or W/A/S/D to steer your serpent. Responsive instant turning prevents 180° self-reversals.
       </div>
 
       <div class="manual-row">
         <strong>📱 MOBILE CONTROLS</strong>
-        Swipe across the playfield or use the tactical on-screen D-Pad below.
+        Swipe anywhere across the grid or use the on-screen tactical D-Pad below.
       </div>
 
       <div class="manual-row">
-        <strong>⚡ GAMEPLAY SPEED (BALANCED)</strong>
-        Select your neural clock rate:
+        <strong>⚡ NEURAL CLOCK TICK (GAME SPEED)</strong>
+        Balanced for smooth, fluid navigation:
         <div class="speed-picker">
-          <button class="speed-btn" id="spdScout" onclick="setSpeed(165, 'spdScout')">Scout (Chill)</button>
-          <button class="speed-btn active" id="spdAgent" onclick="setSpeed(135, 'spdAgent')">Agent (Balanced)</button>
-          <button class="speed-btn" id="spdOver" onclick="setSpeed(100, 'spdOver')">Overclock</button>
+          <button class="speed-btn" id="spdScout" onclick="setSpeed(175, 'spdScout')">Scout (Chill)</button>
+          <button class="speed-btn active" id="spdAgent" onclick="setSpeed(145, 'spdAgent')">Agent (Balanced)</button>
+          <button class="speed-btn" id="spdOver" onclick="setSpeed(110, 'spdOver')">Overclock</button>
         </div>
       </div>
 
       <div class="manual-row">
         <strong>🎯 SCORING FORMULA</strong>
-        Each glowing crimson data packet awards +10 points and elongates your chassis. High scores persist in your cloud profile!
+        Each crimson data node awards +10 points. High scores automatically persist to your cloud profile!
       </div>
 
       <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeManual(); startGame();">
@@ -459,7 +480,6 @@
   const finalNodesVal = document.getElementById('finalNodesVal');
   const dpad = document.getElementById('mobileDpad');
 
-  // Mobile detection
   const isMobile = ('ontouchstart' in window) || 
                    (navigator.maxTouchPoints > 0) || 
                    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -467,7 +487,7 @@
     dpad.style.display = 'grid';
   }
 
-  // Grid sizing
+  // Grid resolution
   const grid = 17; 
   const cols = 20; 
   const rows = 20;
@@ -492,9 +512,8 @@
   let isPlaying = false;
   let lastTick = 0;
   
-  // BALANCED GAME TICK (FEATURE 4):
-  // Changed from aggressive 95ms to a comfortable, fluid 135ms default tick interval
-  let tickRate = 135; 
+  // FEATURE 4: BALANCED & RESPONSIVE TICK RATE (145ms default)
+  let tickRate = 145; 
 
   function setSpeed(ms, btnId) {
     tickRate = ms;
@@ -502,12 +521,8 @@
     document.getElementById(btnId).classList.add('active');
   }
 
-  function openManual() {
-    manualModal.classList.add('active');
-  }
-  function closeManual() {
-    manualModal.classList.remove('active');
-  }
+  function openManual() { manualModal.classList.add('active'); }
+  function closeManual() { manualModal.classList.remove('active'); }
 
   function showStartScreen() {
     gameOverScreen.style.display = 'none';
@@ -551,7 +566,6 @@
   }
 
   function setDirection(newX, newY) {
-    // Prevent immediate 180-degree self-reversals
     if (newX !== -dir.x && newY !== -dir.y) {
       nextDir = { x: newX, y: newY };
     }
@@ -583,7 +597,6 @@
       scoreVal.innerText = score;
       nodesVal.innerText = runNodes;
 
-      // Update LocalStorage stats
       localStorage.setItem('hub_snake_nodes', totalNodes);
 
       if (score > highScore) {
@@ -628,7 +641,6 @@
     ctx.fillStyle = '#020617';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Subtle matrix-style background dots
     ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
     for (let x = 0; x < cols; x++) {
       for (let y = 0; y < rows; y++) {
@@ -636,7 +648,7 @@
       }
     }
 
-    // Draw Neon Food (Glowing Packet)
+    // Draw Neon Food
     ctx.fillStyle = '#f43f5e';
     ctx.shadowColor = '#f43f5e';
     ctx.shadowBlur = 10;
@@ -665,7 +677,7 @@
     if (isPlaying) requestAnimationFrame(gameLoop);
   }
 
-  // Keyboard navigation for desktop
+  // Keyboard navigation
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'ArrowUp': case 'w': case 'W': setDirection(0, -1); e.preventDefault(); break;
@@ -675,7 +687,7 @@
     }
   });
 
-  // D-Pad Touch Listeners
+  // Touch D-Pad
   document.querySelectorAll('.d-btn').forEach(btn => {
     const handlePress = (e) => {
       e.preventDefault();
@@ -689,7 +701,7 @@
     btn.addEventListener('mousedown', handlePress);
   });
 
-  // Canvas Swipe Detection
+  // Swipe detection
   let touchStartX = 0;
   let touchStartY = 0;
 

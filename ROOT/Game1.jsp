@@ -77,7 +77,8 @@
     justify-content: center;
     padding: 1rem;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   body::before {
     content: '';
@@ -97,29 +98,42 @@
     background: var(--card-bg);
     border: 1px solid rgba(56, 189, 248, 0.3);
     border-radius: 20px;
-    padding: 2.2rem 1.8rem;
-    width: 90vw;
-    max-width: 400px;
+    padding: 2rem 1.6rem;
+    width: min(380px, 90vw);
     box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(56, 189, 248, 0.2);
     backdrop-filter: blur(12px);
     text-align: center;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
   }
 
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .card-header h2 {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     color: var(--primary);
     letter-spacing: 1.5px;
     font-weight: 900;
     text-shadow: 0 0 12px var(--primary-glow);
   }
+  .header-badge {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: var(--primary);
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+  }
+
   .btn-hub {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -127,7 +141,7 @@
     padding: 0.35rem 0.8rem;
     border-radius: 8px;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     transition: all 0.2s;
   }
@@ -137,8 +151,8 @@
   }
 
   .cipher-icon {
-    font-size: 3.5rem;
-    margin-bottom: 0.8rem;
+    font-size: 3rem;
+    margin-bottom: 0.6rem;
     filter: drop-shadow(0 0 15px var(--primary-glow));
   }
 
@@ -146,12 +160,12 @@
     background: rgba(15, 23, 42, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
-    padding: 0.8rem 1rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.88rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.85rem;
     line-height: 1.4;
     color: #e2e8f0;
-    min-height: 48px;
+    min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,15 +181,15 @@
   .stats-bar {
     display: flex;
     justify-content: space-around;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 0.6rem;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.55rem;
     border-radius: 10px;
-    margin-bottom: 1.5rem;
-    font-size: 0.8rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.78rem;
   }
   .stats-bar div span {
     display: block;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 800;
     color: var(--primary);
   }
@@ -193,6 +207,7 @@
     text-align: center;
     outline: none;
     transition: all 0.2s;
+    box-sizing: border-box;
   }
   input[type="number"]:focus {
     border-color: var(--primary);
@@ -204,11 +219,11 @@
     gap: 0.6rem;
   }
   .btn-cyber {
-    flex: 1;
-    padding: 0.75rem;
+    min-height: 44px;
+    padding: 0.65rem 1.2rem;
     border-radius: 10px;
     border: none;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s;
@@ -216,6 +231,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
   }
   .btn-cyber-primary {
     background: var(--primary);
@@ -235,7 +251,82 @@
     background: rgba(255, 255, 255, 0.16);
   }
 
-  /* Overlay Modal (Rules & Intel) */
+  /* Standardized Pre-Game Startup Overlay */
+  .startup-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.95);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.4rem;
+    z-index: 25;
+    text-align: center;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  .startup-overlay.dismissed { display: none; }
+
+  .overlay-icon {
+    font-size: 2.6rem;
+    margin-bottom: 0.3rem;
+    filter: drop-shadow(0 0 15px var(--primary-glow));
+    animation: bounce 2s infinite ease-in-out;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .overlay-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--primary);
+    text-shadow: 0 0 15px var(--primary-glow);
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .overlay-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    max-width: 270px;
+    line-height: 1.4;
+    margin-bottom: 0.9rem;
+  }
+
+  .overlay-stats {
+    display: flex;
+    gap: 1.2rem;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.45rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.1rem;
+    font-size: 0.75rem;
+  }
+  .overlay-stats div span {
+    display: block;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--accent);
+  }
+
+  .menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    width: 100%;
+    max-width: 240px;
+  }
+
+  /* Rules Modal */
   .rules-modal {
     position: absolute;
     inset: 0;
@@ -243,9 +334,11 @@
     backdrop-filter: blur(12px);
     display: none;
     flex-direction: column;
-    padding: 1.5rem;
-    z-index: 30;
+    padding: 1.4rem;
+    z-index: 35;
     text-align: left;
+    box-sizing: border-box;
+    overflow-y: auto;
   }
   .rules-modal.active { display: flex; }
 </style>
@@ -253,8 +346,32 @@
 <body>
 
 <div class="game-card">
+  <!-- Standardized Pre-Game Startup Screen -->
+  <div id="guesserStartup" class="startup-overlay <%= (guessParam != null || restart != null) ? "dismissed" : "" %>">
+    <div class="overlay-icon">🔢</div>
+    <h2 class="overlay-title">
+      CIPHER GUESSER
+      <span class="header-badge">CRYPTO v2.5</span>
+    </h2>
+    <p class="overlay-sub">Intercept and decrypt server-side randomized encryption keys between 1 and 100 in minimal probe attempts.</p>
+    
+    <div class="overlay-stats">
+      <div>Fewest Tries<span id="splashGuessBest">--</span></div>
+      <div>Security Level<span style="color:var(--primary)">1 - 100</span></div>
+    </div>
+
+    <div class="menu-actions">
+      <button class="btn-cyber btn-cyber-primary" onclick="dismissGuesserStartup()">▶ INITIATE RUN</button>
+      <button class="btn-cyber btn-cyber-secondary" onclick="openRules()">⚙ PROTOCOL & CONTROLS</button>
+      <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+    </div>
+  </div>
+
   <div class="card-header">
-    <h2>CIPHER GUESSER</h2>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <h2>CIPHER GUESSER</h2>
+      <span class="header-badge">v2.5</span>
+    </div>
     <a href="index.jsp" class="btn-hub">‹ Hub</a>
   </div>
 
@@ -271,14 +388,14 @@
 
   <form method="POST" action="Game1.jsp">
     <% if (!gameWon) { %>
-      <input type="number" name="guess" min="1" max="100" placeholder="Input Integer (1 - 100)" required autofocus autocomplete="off">
+      <input type="number" id="guessInput" name="guess" min="1" max="100" placeholder="Input Integer (1 - 100)" required autofocus autocomplete="off">
       <div class="btn-action-group">
-        <button type="submit" class="btn-cyber btn-cyber-primary">SUBMIT PROBE</button>
+        <button type="submit" class="btn-cyber btn-cyber-primary" style="flex:1;">SUBMIT PROBE</button>
         <button type="button" class="btn-cyber btn-cyber-secondary" onclick="openRules()">RULES</button>
       </div>
     <% } else { %>
       <div class="btn-action-group">
-        <a href="Game1.jsp?restart=true" class="btn-cyber btn-cyber-primary">PLAY AGAIN</a>
+        <a href="Game1.jsp?restart=true" class="btn-cyber btn-cyber-primary" style="flex:1;">PLAY AGAIN</a>
         <a href="index.jsp" class="btn-cyber btn-cyber-secondary">RETURN TO HUB</a>
       </div>
     <% } %>
@@ -286,8 +403,8 @@
 
   <!-- Rules Modal -->
   <div id="rulesModal" class="rules-modal">
-    <h3 style="color: var(--primary); margin-bottom: 1rem;">DECRYPTION MANUAL</h3>
-    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+    <h3 style="color: var(--primary); margin-bottom: 0.8rem; font-size:1.15rem;">DECRYPTION MANUAL</h3>
+    <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
       1. The server generates a random encrypted key from 1 to 100.<br><br>
       2. Submit probe integers. The system will report whether the target cipher is higher or lower.<br><br>
       3. Crack the key in the fewest possible attempts. Your best record is preserved in the central Cyber Hub records!
@@ -300,11 +417,19 @@
   function openRules() { document.getElementById('rulesModal').classList.add('active'); }
   function closeRules() { document.getElementById('rulesModal').classList.remove('active'); }
 
+  function dismissGuesserStartup() {
+    document.getElementById('guesserStartup').classList.add('dismissed');
+    const input = document.getElementById('guessInput');
+    if (input) input.focus();
+  }
+
   // Telemetry Sync
   const bestAttemptsVal = document.getElementById('bestAttemptsVal');
+  const splashGuessBest = document.getElementById('splashGuessBest');
   let savedBest = parseInt(localStorage.getItem('hub_guess_best') || '0', 10);
   if (savedBest > 0) {
     bestAttemptsVal.innerText = savedBest + ' tries';
+    if (splashGuessBest) splashGuessBest.innerText = savedBest + ' tries';
   }
 
   <% if (gameWon) { %>
@@ -314,7 +439,6 @@
       bestAttemptsVal.innerText = currentTries + ' tries';
     }
 
-    // Award score based on speed: (20 - tries) * 50
     const calcScore = Math.max(50, (20 - currentTries) * 50);
     fetch('save_score.jsp', {
       method: 'POST',

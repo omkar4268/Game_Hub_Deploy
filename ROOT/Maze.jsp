@@ -36,7 +36,8 @@
     padding: 0.8rem;
     user-select: none;
     touch-action: none;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
   }
 
@@ -59,8 +60,10 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 420px;
-    margin-bottom: 0.6rem;
+    max-width: 360px;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .header-left {
     display: flex;
@@ -79,9 +82,10 @@
     border: 1px solid rgba(56, 189, 248, 0.4);
     color: var(--primary);
     font-size: 0.65rem;
-    padding: 2px 6px;
+    padding: 2px 7px;
     border-radius: 4px;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.8px;
   }
 
   .btn-hub {
@@ -92,7 +96,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     transition: all 0.2s ease;
   }
@@ -107,15 +111,16 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 420px;
-    margin-bottom: 0.8rem;
+    max-width: 360px;
+    margin-bottom: 0.6rem;
     background: var(--card-bg);
-    padding: 0.4rem 0.8rem;
+    padding: 0.45rem 1rem;
     border-radius: 9999px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   }
-  .controls-bar span { color: var(--accent); font-weight: 700; }
+  .controls-bar span { color: var(--accent); font-weight: 800; }
 
   select {
     background: #0f172a;
@@ -123,87 +128,108 @@
     border: 1px solid #475569;
     padding: 0.25rem 0.6rem;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     cursor: pointer;
   }
 
   .game-container {
     position: relative;
-    border-radius: 14px;
+    width: min(340px, 88vw);
+    height: min(340px, 88vw);
+    border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.15);
     background: #020617;
     border: 2px solid rgba(56, 189, 248, 0.3);
     overflow: hidden;
+    flex-shrink: 0;
   }
-  canvas { display: block; }
+  canvas { 
+    width: 100%; 
+    height: 100%; 
+    display: block; 
+  }
 
   /* Overlay Menus */
   .overlay-screen {
     position: absolute;
     inset: 0;
-    background: rgba(3, 7, 18, 0.93);
+    background: rgba(3, 7, 18, 0.94);
     backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 1.2rem;
     z-index: 20;
     text-align: center;
+    box-sizing: border-box;
+    overflow-y: auto;
   }
 
   .overlay-icon {
-    font-size: 3rem;
-    margin-bottom: 0.4rem;
+    font-size: 2.4rem;
+    margin-bottom: 0.3rem;
     filter: drop-shadow(0 0 15px var(--primary-glow));
+    animation: bounce 2s infinite ease-in-out;
   }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
   .overlay-title {
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     font-weight: 900;
     letter-spacing: 2px;
     color: var(--primary);
     text-shadow: 0 0 15px var(--primary-glow);
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
   .overlay-sub {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
     max-width: 270px;
     line-height: 1.4;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem;
   }
 
   .overlay-stats {
     display: flex;
-    gap: 1.2rem;
+    gap: 1rem;
     background: rgba(15, 23, 42, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.9rem;
     border-radius: 10px;
-    margin-bottom: 1.2rem;
-    font-size: 0.78rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.75rem;
   }
   .overlay-stats div span {
     display: block;
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--accent);
   }
 
   .menu-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.5rem;
     width: 100%;
     max-width: 240px;
   }
 
   .btn-cyber {
-    padding: 0.65rem 1.2rem;
+    min-height: 42px;
+    padding: 0.6rem 1.2rem;
     border-radius: 10px;
     border: none;
     font-weight: 800;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -212,6 +238,7 @@
     justify-content: center;
     gap: 8px;
     text-decoration: none;
+    box-sizing: border-box;
   }
   .btn-cyber-primary {
     background: var(--primary);
@@ -233,7 +260,7 @@
     color: var(--primary);
   }
 
-  /* Intel & Rules Modal */
+  /* Intel & Rules Drawer */
   .intel-modal {
     position: absolute;
     inset: 0;
@@ -241,25 +268,26 @@
     backdrop-filter: blur(12px);
     display: none;
     flex-direction: column;
-    padding: 1.4rem;
+    padding: 1.2rem;
     z-index: 30;
     text-align: left;
     overflow-y: auto;
+    box-sizing: border-box;
   }
   .intel-modal.active { display: flex; }
 
   .intel-title {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--accent);
     font-weight: 800;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .intel-row {
-    margin-bottom: 0.8rem;
-    font-size: 0.82rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.8rem;
     line-height: 1.4;
     color: var(--text-muted);
   }
@@ -280,12 +308,12 @@
     justify-content: center;
     z-index: 15;
     gap: 1rem;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--primary);
   }
   .spinner {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border: 4px solid #334155;
     border-top: 4px solid var(--primary);
     border-radius: 50%;
@@ -296,8 +324,8 @@
   /* Mobile D-Pad */
   .dpad {
     display: grid;
-    grid-template-columns: repeat(3, 54px);
-    grid-template-rows: repeat(3, 48px);
+    grid-template-columns: repeat(3, 56px);
+    grid-template-rows: repeat(3, 46px);
     gap: 6px;
     margin-top: 0.8rem;
   }
@@ -306,7 +334,7 @@
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: var(--primary);
     border-radius: 12px;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -332,7 +360,7 @@
   <div class="header">
     <div class="header-left">
       <h1>CYBER MAZE</h1>
-      <span class="badge">v2.1</span>
+      <span class="badge">LABYRINTH PROTOCOL</span>
     </div>
     <a href="index.jsp" class="btn-hub">‹ Hub</a>
   </div>
@@ -350,39 +378,42 @@
   </div>
 
   <div class="game-container">
-    <!-- Pre-game Splash Screen -->
+    <!-- Standardized Pre-Game Interactive Startup Screen -->
     <div id="splashScreen" class="overlay-screen">
       <div class="overlay-icon">⚡</div>
-      <h2 class="overlay-title">CYBER MAZE</h2>
-      <p class="overlay-sub">Solve procedurally generated labyrinth nodes and locate the green extraction portal before timeout.</p>
+      <h2 class="overlay-title">
+        CYBER MAZE
+        <span class="badge">v2.5</span>
+      </h2>
+      <p class="overlay-sub">Solve procedurally generated labyrinth nodes, navigate recursive backtracker corridors, and locate the green extraction portal.</p>
       
       <div class="overlay-stats">
         <div>Mazes Cleared<span id="splashClears">0</span></div>
-        <div>Best Time<span id="splashBestTime">--</span></div>
+        <div>Fastest Escape<span id="splashBestTime">--</span></div>
       </div>
 
       <div class="menu-actions">
-        <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">▶ ENTER LABYRINTH</button>
-        <button class="btn-cyber btn-cyber-secondary" onclick="openIntel()">⚙ PROTOCOL & INTEL</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">✕ EXIT TO HUB</a>
+        <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">▶ INITIATE RUN</button>
+        <button class="btn-cyber btn-cyber-secondary" onclick="openIntel()">⚙ PROTOCOL & CONTROLS</button>
+        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
       </div>
     </div>
 
-    <!-- Win Modal Screen -->
+    <!-- Win Screen -->
     <div id="winScreen" class="overlay-screen" style="display: none;">
       <div class="overlay-icon" style="color: var(--accent);">🏆</div>
       <h2 class="overlay-title" style="color: var(--accent); text-shadow: 0 0 15px var(--accent-glow);">MAZE CLEARED</h2>
       <p class="overlay-sub">Extraction portal reached. Neural telemetry verified.</p>
       
       <div class="overlay-stats">
-        <div>Time Elapsed<span id="winTimeVal">00:00</span></div>
+        <div>Escape Time<span id="winTimeVal">00:00</span></div>
         <div>Total Cleared<span id="winClearsVal">1</span></div>
       </div>
 
       <div class="menu-actions">
         <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">↻ NEXT MAZE</button>
         <button class="btn-cyber btn-cyber-secondary" onclick="showSplashScreen()">☰ MAIN MENU</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">✕ EXIT TO HUB</a>
+        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
       </div>
     </div>
 
@@ -400,12 +431,12 @@
 
       <div class="intel-row">
         <strong>⚡ OBJECTIVE</strong>
-        Navigate your cyan cursor through randomized corridors to reach the pulsing emerald extraction node.
+        Navigate your cyan runner block through randomized walls to reach the pulsing emerald extraction portal.
       </div>
 
       <div class="intel-row">
         <strong>🎯 TELEMETRY TRACKING</strong>
-        Total labyrinth clears and record completion times automatically synchronize with your Cyber Hub profile and global leaderboards.
+        Total labyrinth clears and fastest escape seconds automatically synchronize with your Cyber Hub profile and global leaderboards.
       </div>
 
       <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeIntel(); startNewGame();">
@@ -454,7 +485,6 @@
   let timerInterval = null;
   let secondsElapsed = 0;
 
-  // Persistent stats
   let totalClears = parseInt(localStorage.getItem('hub_maze_clears') || '0', 10);
   let bestTime = parseInt(localStorage.getItem('hub_maze_best_time') || '0', 10);
 
@@ -509,7 +539,7 @@
         secondsElapsed++;
         updateTimerDisplay();
       }, 1000);
-    }, 300);
+    }, 250);
   }
 
   function updateTimerDisplay() {
@@ -518,7 +548,6 @@
     timerVal.innerText = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
   }
 
-  // Recursive Backtracker algorithm
   function generateMaze() {
     grid = Array.from({ length: rows }, () => Array(cols).fill(1));
 
@@ -590,7 +619,6 @@
         localStorage.setItem('hub_maze_best_time', bestTime);
       }
 
-      // Sync points to cloud: Clears * 100 + bonus
       const mazeScore = totalClears * 100;
       fetch('save_score.jsp', {
         method: 'POST',
@@ -619,7 +647,7 @@
       }
     }
 
-    // Portal
+    // Extraction Portal
     ctx.fillStyle = '#22c55e';
     ctx.shadowColor = '#22c55e';
     ctx.shadowBlur = 10;
@@ -627,7 +655,7 @@
     ctx.arc((goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize, cellSize * 0.38, 0, Math.PI * 2);
     ctx.fill();
 
-    // Player
+    // Runner Block
     ctx.fillStyle = '#38bdf8';
     ctx.shadowColor = '#38bdf8';
     ctx.shadowBlur = 8;
@@ -644,7 +672,6 @@
     }
   });
 
-  // Setup initial canvas dimensions before game start
   canvas.width = 21 * 16;
   canvas.height = 21 * 16;
   ctx.fillStyle = '#020617';
