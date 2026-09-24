@@ -10,14 +10,14 @@
     --bg-base: #030712;
     --card-bg: rgba(15, 23, 42, 0.88);
     --primary: #10b981;
-    --primary-glow: rgba(16, 185, 129, 0.4);
+    --primary-glow: rgba(16, 185, 129, 0.45);
     --accent: #38bdf8;
     --accent-glow: rgba(56, 189, 248, 0.4);
     --food: #f43f5e;
-    --food-glow: rgba(244, 63, 94, 0.5);
+    --food-glow: rgba(244, 63, 94, 0.55);
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
-    --border-glow: rgba(16, 185, 129, 0.25);
+    --border-glow: rgba(16, 185, 129, 0.35);
   }
 
   * {
@@ -37,10 +37,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.8rem;
+    padding: 1.2rem;
     overflow-x: hidden;
-    overflow-y: auto;
-    touch-action: none;
     position: relative;
   }
 
@@ -49,13 +47,22 @@
     position: fixed;
     inset: 0;
     background: 
-      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.09) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.09) 0%, transparent 40%),
       linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
     z-index: -1;
     pointer-events: none;
+  }
+
+  /* Main Game Arena Container */
+  .game-arena {
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .header {
@@ -63,48 +70,45 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 360px;
-    margin-bottom: 0.6rem;
-    flex-wrap: wrap;
-    gap: 8px;
+    margin-bottom: 0.8rem;
   }
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
   .header h1 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--primary);
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     font-weight: 900;
-    text-shadow: 0 0 12px var(--primary-glow);
+    text-shadow: 0 0 15px var(--primary-glow);
   }
 
   .header-badge {
     background: rgba(16, 185, 129, 0.15);
     border: 1px solid rgba(16, 185, 129, 0.4);
     color: var(--primary);
-    font-size: 0.65rem;
-    padding: 2px 7px;
-    border-radius: 4px;
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 6px;
     font-weight: 800;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
   }
 
   .btn-hub {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--text-main);
-    padding: 0.4rem 0.85rem;
-    border-radius: 8px;
+    padding: 0.45rem 1rem;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -112,146 +116,160 @@
   .btn-hub:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(56, 189, 248, 0.4);
+    transform: translateY(-1px);
   }
 
   .scoreboard {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 360px;
     background: var(--card-bg);
-    padding: 0.45rem 1rem;
-    border-radius: 9999px;
+    padding: 0.65rem 1.6rem;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.85rem;
-    margin-bottom: 0.6rem;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
-  .scoreboard span { color: var(--primary); font-weight: 800; }
+  .scoreboard span { color: var(--primary); font-weight: 800; font-size: 1.1rem; }
   .scoreboard .best-label span { color: #facc15; }
 
-  /* Canvas Container with strict proportions */
+  /* Canvas Container with responsive PC/Mobile scaling */
   .canvas-wrapper {
     position: relative;
-    width: min(340px, 88vw);
-    height: min(340px, 88vw);
-    border-radius: 16px;
+    width: 100%;
+    max-width: 580px;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
     border: 2px solid var(--border-glow);
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.18), 0 20px 50px rgba(0, 0, 0, 0.8);
     background: #020617;
     overflow: hidden;
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   canvas {
     width: 100%;
     height: 100%;
     display: block;
-    background: #020617;
+    image-rendering: pixelated;
   }
 
-  /* Standardized Pre-Game Startup Screen & Overlays */
+  /* Pre-Game Startup Overlay - Fully Centered, Zero Scrollbars */
   .overlay-screen {
     position: absolute;
     inset: 0;
     background: rgba(3, 7, 18, 0.94);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(14px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.2rem;
-    z-index: 20;
+    padding: 2rem 1.8rem;
+    z-index: 30;
     text-align: center;
     box-sizing: border-box;
-    overflow-y: auto;
   }
 
   .overlay-icon {
-    font-size: 2.4rem;
-    margin-bottom: 0.3rem;
-    filter: drop-shadow(0 0 15px var(--primary-glow));
-    animation: bounce 2s infinite ease-in-out;
+    font-size: clamp(2.5rem, 5vw, 3.4rem);
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 0 20px var(--primary-glow));
+    animation: bounce 2.2s infinite ease-in-out;
   }
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-5px); }
   }
 
   .overlay-title {
-    font-size: 1.35rem;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
     font-weight: 900;
     letter-spacing: 2px;
     color: var(--primary);
-    text-shadow: 0 0 18px var(--primary-glow);
-    margin-bottom: 0.25rem;
+    text-shadow: 0 0 20px var(--primary-glow);
+    margin-bottom: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
   .overlay-subtitle {
-    font-size: 0.78rem;
+    font-size: clamp(0.82rem, 2vw, 0.95rem);
     color: var(--text-muted);
-    max-width: 270px;
-    line-height: 1.4;
-    margin-bottom: 0.8rem;
+    max-width: 440px;
+    line-height: 1.6;
+    margin-bottom: 1.4rem;
   }
 
   .overlay-stats {
     display: flex;
-    gap: 1rem;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.4rem 0.9rem;
-    border-radius: 10px;
-    margin-bottom: 0.9rem;
-    font-size: 0.75rem;
+    gap: 2rem;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 2rem;
+    border-radius: 14px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+  .overlay-stats div {
+    font-size: 0.8rem;
+    color: var(--text-muted);
   }
   .overlay-stats div span {
     display: block;
-    font-weight: 800;
-    font-size: 0.95rem;
+    font-weight: 900;
+    font-size: 1.3rem;
     color: var(--accent);
+    margin-top: 2px;
   }
 
   .menu-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.8rem;
     width: 100%;
-    max-width: 240px;
+    max-width: 400px;
+  }
+
+  .menu-actions-row {
+    display: flex;
+    gap: 0.8rem;
+    width: 100%;
   }
 
   .btn-cyber {
-    min-height: 42px;
-    padding: 0.6rem 1.2rem;
-    border-radius: 10px;
+    min-height: 48px;
+    padding: 0.75rem 1.4rem;
+    border-radius: 12px;
     border: none;
     font-weight: 800;
-    font-size: 0.84rem;
+    font-size: 0.92rem;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     text-decoration: none;
     box-sizing: border-box;
+    flex: 1;
   }
   .btn-cyber-primary {
     background: var(--primary);
     color: #000;
-    box-shadow: 0 0 15px var(--primary-glow);
+    box-shadow: 0 0 20px var(--primary-glow);
   }
   .btn-cyber-primary:hover {
     background: #34d399;
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.7);
     transform: translateY(-2px);
   }
   .btn-cyber-secondary {
@@ -263,55 +281,57 @@
     background: rgba(255, 255, 255, 0.16);
     border-color: rgba(56, 189, 248, 0.4);
     color: var(--accent);
+    transform: translateY(-1px);
   }
 
   /* Manual / Controls Drawer */
   .manual-modal {
     position: absolute;
     inset: 0;
-    background: rgba(3, 7, 18, 0.96);
-    backdrop-filter: blur(12px);
+    background: rgba(3, 7, 18, 0.97);
+    backdrop-filter: blur(16px);
     display: none;
     flex-direction: column;
-    padding: 1.2rem;
-    z-index: 30;
+    padding: 2rem;
+    z-index: 40;
     text-align: left;
-    overflow-y: auto;
     box-sizing: border-box;
+    overflow-y: auto;
   }
   .manual-modal.active { display: flex; }
 
   .manual-title {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     color: var(--accent);
     font-weight: 800;
-    margin-bottom: 0.7rem;
+    margin-bottom: 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .manual-row {
-    margin-bottom: 0.7rem;
-    font-size: 0.8rem;
-    line-height: 1.4;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
     color: var(--text-muted);
   }
   .manual-row strong {
     color: var(--text-main);
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
   }
 
   .speed-picker {
     display: flex;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 8px;
   }
   .speed-btn {
     flex: 1;
-    padding: 6px 0;
-    font-size: 0.72rem;
-    border-radius: 6px;
+    padding: 8px 0;
+    font-size: 0.8rem;
+    border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(15, 23, 42, 0.8);
     color: var(--text-muted);
@@ -323,23 +343,24 @@
     background: rgba(16, 185, 129, 0.2);
     border-color: var(--primary);
     color: var(--primary);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
   }
 
-  /* Mobile Virtual D-Pad */
+  /* Mobile Virtual D-Pad (Auto-hidden on PC) */
   #mobileDpad {
     display: none;
-    grid-template-columns: repeat(3, 56px);
-    grid-template-rows: repeat(3, 46px);
-    gap: 6px;
-    margin-top: 0.8rem;
+    grid-template-columns: repeat(3, 58px);
+    grid-template-rows: repeat(3, 50px);
+    gap: 8px;
+    margin-top: 1rem;
   }
 
   .d-btn {
     background: rgba(15, 23, 42, 0.9);
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: var(--accent);
-    border-radius: 12px;
-    font-size: 1.25rem;
+    border-radius: 14px;
+    font-size: 1.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -358,110 +379,125 @@
   .d-left  { grid-column: 1; grid-row: 2; }
   .d-down  { grid-column: 2; grid-row: 2; }
   .d-right { grid-column: 3; grid-row: 2; }
+
+  @media (max-width: 640px) {
+    .game-arena { max-width: 94vw; }
+    .header h1 { font-size: 1.25rem; }
+    .scoreboard { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    .overlay-screen { padding: 1.4rem; }
+    .overlay-stats { gap: 1.2rem; padding: 0.5rem 1.2rem; margin-bottom: 1.1rem; }
+    .menu-actions-row { flex-direction: column; gap: 0.5rem; }
+  }
 </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="header-left">
-      <h1>CYBER SNAKE</h1>
-      <span class="header-badge">ARCADE PROTOCOL</span>
-    </div>
-    <a href="index.jsp" class="btn-hub">‹ Hub</a>
-  </div>
-
-  <div class="scoreboard">
-    <div>Score: <span id="scoreVal">0</span></div>
-    <div class="best-label">Best: <span id="highScoreVal">0</span></div>
-    <div>Nodes: <span id="nodesVal">0</span></div>
-  </div>
-
-  <div class="canvas-wrapper">
-    <!-- Screen 1: Standardized Pre-Game Interactive Splash Menu -->
-    <div id="startScreen" class="overlay-screen">
-      <div class="overlay-icon">🐍</div>
-      <h2 class="overlay-title">
-        CYBER SNAKE
-        <span class="header-badge">v2.5</span>
-      </h2>
-      <p class="overlay-subtitle">Navigate your neural serpent across the digital matrix, devour rogue data packets, and breach system high scores.</p>
-      
-      <div class="overlay-stats">
-        <div>High Score<span id="splashBest">0 pts</span></div>
-        <div>Nodes Consumed<span id="splashNodes">0</span></div>
+  <div class="game-arena">
+    <div class="header">
+      <div class="header-left">
+        <h1>CYBER SNAKE</h1>
+        <span class="header-badge">ARCADE PROTOCOL</span>
       </div>
-
-      <div class="menu-actions">
-        <button class="btn-cyber btn-cyber-primary" onclick="startGame()">▶ INITIATE RUN</button>
-        <button class="btn-cyber btn-cyber-secondary" onclick="openManual()">⚙ PROTOCOL & CONTROLS</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
-      </div>
+      <a href="index.jsp" class="btn-hub">‹ Hub</a>
     </div>
 
-    <!-- Screen 2: Game Over Screen -->
-    <div id="gameOverScreen" class="overlay-screen" style="display: none;">
-      <div class="overlay-icon" style="color: var(--food);">💥</div>
-      <h2 class="overlay-title" style="color: var(--food); text-shadow: 0 0 18px var(--food-glow);">SYSTEM CRASH</h2>
-      <p class="overlay-subtitle" id="gameOverSub">Sub-routine terminated. Vector collision detected.</p>
-      
-      <div class="overlay-stats">
-        <div>Run Score<span id="finalScoreVal" style="color: var(--primary);">0 pts</span></div>
-        <div>Nodes Collected<span id="finalNodesVal" style="color: var(--accent);">0</span></div>
-      </div>
-
-      <div class="menu-actions">
-        <button class="btn-cyber btn-cyber-primary" onclick="startGame()">↻ RETRY RUN</button>
-        <button class="btn-cyber btn-cyber-secondary" onclick="showStartScreen()">☰ MAIN MENU</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
-      </div>
+    <div class="scoreboard">
+      <div>Score: <span id="scoreVal">0</span></div>
+      <div class="best-label">Record: <span id="highScoreVal">0</span></div>
+      <div>Data Nodes: <span id="nodesVal">0</span></div>
     </div>
 
-    <!-- Screen 3: Settings & Controls Modal -->
-    <div id="manualModal" class="manual-modal">
-      <div class="manual-title">
-        <span>SECURITY DIRECTIVE</span>
-        <button class="btn-hub" onclick="closeManual()">✕ Close</button>
-      </div>
+    <div class="canvas-wrapper">
+      <!-- Screen 1: Pre-Game Interactive Splash Screen -->
+      <div id="startScreen" class="overlay-screen">
+        <div class="overlay-icon">🐍</div>
+        <h2 class="overlay-title">
+          CYBER SNAKE
+          <span class="header-badge">v2.5</span>
+        </h2>
+        <p class="overlay-subtitle">Navigate your neural serpent across the digital vector matrix, devour rogue data packets, and set the all-time high score.</p>
+        
+        <div class="overlay-stats">
+          <div>High Score<span id="splashBest">0 pts</span></div>
+          <div>Nodes Consumed<span id="splashNodes">0</span></div>
+        </div>
 
-      <div class="manual-row">
-        <strong>🎮 PC CONTROLS</strong>
-        Arrow Keys or W/A/S/D to steer your serpent. Responsive instant turning prevents 180° self-reversals.
-      </div>
-
-      <div class="manual-row">
-        <strong>📱 MOBILE CONTROLS</strong>
-        Swipe anywhere across the grid or use the on-screen tactical D-Pad below.
-      </div>
-
-      <div class="manual-row">
-        <strong>⚡ NEURAL CLOCK TICK (GAME SPEED)</strong>
-        Balanced for smooth, fluid navigation:
-        <div class="speed-picker">
-          <button class="speed-btn" id="spdScout" onclick="setSpeed(175, 'spdScout')">Scout (Chill)</button>
-          <button class="speed-btn active" id="spdAgent" onclick="setSpeed(145, 'spdAgent')">Agent (Balanced)</button>
-          <button class="speed-btn" id="spdOver" onclick="setSpeed(110, 'spdOver')">Overclock</button>
+        <div class="menu-actions">
+          <button class="btn-cyber btn-cyber-primary" onclick="startGame()">▶ INITIATE RUN</button>
+          <div class="menu-actions-row">
+            <button class="btn-cyber btn-cyber-secondary" onclick="openManual()">⚙ PROTOCOL & CONTROLS</button>
+            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+          </div>
         </div>
       </div>
 
-      <div class="manual-row">
-        <strong>🎯 SCORING FORMULA</strong>
-        Each crimson data node awards +10 points. High scores automatically persist to your cloud profile!
+      <!-- Screen 2: Game Over Screen -->
+      <div id="gameOverScreen" class="overlay-screen" style="display: none;">
+        <div class="overlay-icon" style="color: var(--food);">💥</div>
+        <h2 class="overlay-title" style="color: var(--food); text-shadow: 0 0 20px var(--food-glow);">SYSTEM CRASH</h2>
+        <p class="overlay-subtitle" id="gameOverSub">Sub-routine terminated. Vector collision detected.</p>
+        
+        <div class="overlay-stats">
+          <div>Run Score<span id="finalScoreVal" style="color: var(--primary);">0 pts</span></div>
+          <div>Nodes Collected<span id="finalNodesVal" style="color: var(--accent);">0</span></div>
+        </div>
+
+        <div class="menu-actions">
+          <button class="btn-cyber btn-cyber-primary" onclick="startGame()">↻ RETRY RUN</button>
+          <div class="menu-actions-row">
+            <button class="btn-cyber btn-cyber-secondary" onclick="showStartScreen()">☰ MAIN MENU</button>
+            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+          </div>
+        </div>
       </div>
 
-      <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeManual(); startGame();">
-        ▶ START PLAYING
-      </button>
+      <!-- Screen 3: Settings & Controls Modal -->
+      <div id="manualModal" class="manual-modal">
+        <div class="manual-title">
+          <span>SECURITY DIRECTIVE</span>
+          <button class="btn-hub" onclick="closeManual()">✕ Close</button>
+        </div>
+
+        <div class="manual-row">
+          <strong>🎮 PC KEYBOARD CONTROLS</strong>
+          Use Arrow Keys or W/A/S/D to steer your serpent. Responsive direction buffer prevents 180° self-reversals.
+        </div>
+
+        <div class="manual-row">
+          <strong>📱 MOBILE TOUCH CONTROLS</strong>
+          Swipe anywhere across the grid or tap the tactical on-screen D-Pad.
+        </div>
+
+        <div class="manual-row">
+          <strong>⚡ NEURAL TICK SPEED (BALANCED)</strong>
+          Select game clock frequency:
+          <div class="speed-picker">
+            <button class="speed-btn" id="spdScout" onclick="setSpeed(175, 'spdScout')">Scout (Chill)</button>
+            <button class="speed-btn active" id="spdAgent" onclick="setSpeed(145, 'spdAgent')">Agent (Balanced)</button>
+            <button class="speed-btn" id="spdOver" onclick="setSpeed(110, 'spdOver')">Overclock</button>
+          </div>
+        </div>
+
+        <div class="manual-row">
+          <strong>🎯 SCORING TELEMETRY</strong>
+          Each crimson data node awards +10 points. High scores automatically persist to your cloud profile!
+        </div>
+
+        <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeManual(); startGame();">
+          ▶ START PLAYING
+        </button>
+      </div>
+
+      <canvas id="gameCanvas" width="400" height="400"></canvas>
     </div>
 
-    <canvas id="gameCanvas" width="340" height="340"></canvas>
-  </div>
-
-  <!-- On-Screen Controls for Mobile Devices -->
-  <div id="mobileDpad">
-    <div class="d-btn d-up" data-dir="UP">▲</div>
-    <div class="d-btn d-left" data-dir="LEFT">◀</div>
-    <div class="d-btn d-down" data-dir="DOWN">▼</div>
-    <div class="d-btn d-right" data-dir="RIGHT">▶</div>
+    <!-- On-Screen Controls for Mobile Devices -->
+    <div id="mobileDpad">
+      <div class="d-btn d-up" data-dir="UP">▲</div>
+      <div class="d-btn d-left" data-dir="LEFT">◀</div>
+      <div class="d-btn d-down" data-dir="DOWN">▼</div>
+      <div class="d-btn d-right" data-dir="RIGHT">▶</div>
+    </div>
   </div>
 
 <script>
@@ -487,8 +523,8 @@
     dpad.style.display = 'grid';
   }
 
-  // Grid resolution
-  const grid = 17; 
+  // Crisp 20x20 grid on a 400x400 internal canvas
+  const grid = 20; 
   const cols = 20; 
   const rows = 20;
   canvas.width = cols * grid;
@@ -512,7 +548,7 @@
   let isPlaying = false;
   let lastTick = 0;
   
-  // FEATURE 4: BALANCED & RESPONSIVE TICK RATE (145ms default)
+  // Balanced 145ms tick rate
   let tickRate = 145; 
 
   function setSpeed(ms, btnId) {
@@ -651,7 +687,7 @@
     // Draw Neon Food
     ctx.fillStyle = '#f43f5e';
     ctx.shadowColor = '#f43f5e';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
     ctx.beginPath();
     ctx.arc((food.x + 0.5) * grid, (food.y + 0.5) * grid, grid * 0.38, 0, Math.PI * 2);
     ctx.fill();
@@ -660,8 +696,8 @@
     snake.forEach((seg, index) => {
       ctx.fillStyle = (index === 0) ? '#34d399' : '#10b981';
       ctx.shadowColor = '#10b981';
-      ctx.shadowBlur = (index === 0) ? 10 : 4;
-      ctx.fillRect(seg.x * grid + 1.5, seg.y * grid + 1.5, grid - 3, grid - 3);
+      ctx.shadowBlur = (index === 0) ? 12 : 5;
+      ctx.fillRect(seg.x * grid + 2, seg.y * grid + 2, grid - 4, grid - 4);
     });
 
     ctx.shadowBlur = 0;
@@ -677,7 +713,6 @@
     if (isPlaying) requestAnimationFrame(gameLoop);
   }
 
-  // Keyboard navigation
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'ArrowUp': case 'w': case 'W': setDirection(0, -1); e.preventDefault(); break;

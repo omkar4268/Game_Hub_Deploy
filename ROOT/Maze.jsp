@@ -10,12 +10,13 @@
     --bg-dark: #070b14;
     --card-bg: rgba(15, 23, 42, 0.88);
     --primary: #38bdf8;
-    --primary-glow: rgba(56, 189, 248, 0.4);
+    --primary-glow: rgba(56, 189, 248, 0.45);
     --accent: #22c55e;
     --accent-glow: rgba(34, 197, 94, 0.4);
     --danger: #ef4444;
     --text: #f8fafc;
     --text-muted: #94a3b8;
+    --border-glow: rgba(56, 189, 248, 0.35);
   }
   * { 
     box-sizing: border-box; 
@@ -33,11 +34,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.8rem;
+    padding: 1.2rem;
     user-select: none;
     touch-action: none;
     overflow-x: hidden;
-    overflow-y: auto;
     position: relative;
   }
 
@@ -46,13 +46,22 @@
     position: fixed;
     inset: 0;
     background: 
-      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.09) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.09) 0%, transparent 40%),
       linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
     z-index: -1;
     pointer-events: none;
+  }
+
+  /* Main Game Arena Container */
+  .game-arena {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .header {
@@ -60,88 +69,98 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 360px;
-    margin-bottom: 0.5rem;
-    flex-wrap: wrap;
-    gap: 8px;
+    margin-bottom: 0.8rem;
   }
   .header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
   h1 { 
     color: var(--primary); 
-    font-size: 1.25rem; 
-    letter-spacing: 1.5px; 
+    font-size: 1.5rem; 
+    letter-spacing: 2px; 
     font-weight: 900;
-    text-shadow: 0 0 12px var(--primary-glow);
+    text-shadow: 0 0 15px var(--primary-glow);
   }
   .badge {
     background: rgba(56, 189, 248, 0.15);
     border: 1px solid rgba(56, 189, 248, 0.4);
     color: var(--primary);
-    font-size: 0.65rem;
-    padding: 2px 7px;
-    border-radius: 4px;
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 6px;
     font-weight: 800;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
   }
 
   .btn-hub {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--text);
-    padding: 0.35rem 0.8rem;
-    border-radius: 8px;
+    padding: 0.45rem 1rem;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .btn-hub:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(56, 189, 248, 0.4);
+    transform: translateY(-1px);
   }
 
   .controls-bar {
     display: flex;
-    gap: 0.6rem;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 360px;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.8rem;
     background: var(--card-bg);
-    padding: 0.45rem 1rem;
-    border-radius: 9999px;
+    padding: 0.65rem 1.6rem;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.82rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    font-size: 0.95rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
   }
-  .controls-bar span { color: var(--accent); font-weight: 800; }
+  .controls-bar span { color: var(--accent); font-weight: 800; font-size: 1.1rem; }
 
   select {
     background: #0f172a;
     color: var(--text);
     border: 1px solid #475569;
-    padding: 0.25rem 0.6rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 8px;
-    font-size: 0.78rem;
+    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+  }
+  select:focus {
+    border-color: var(--primary);
   }
 
+  /* Responsive Game Container */
   .game-container {
     position: relative;
-    width: min(340px, 88vw);
-    height: min(340px, 88vw);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.15);
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 35px rgba(56, 189, 248, 0.2);
     background: #020617;
-    border: 2px solid rgba(56, 189, 248, 0.3);
+    border: 2px solid var(--border-glow);
     overflow: hidden;
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   canvas { 
     width: 100%; 
@@ -149,105 +168,116 @@
     display: block; 
   }
 
-  /* Overlay Menus */
+  /* Pre-Game Startup Overlay - Fully Centered, Zero Scrollbars */
   .overlay-screen {
     position: absolute;
     inset: 0;
     background: rgba(3, 7, 18, 0.94);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(14px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.2rem;
-    z-index: 20;
+    padding: 2rem 1.8rem;
+    z-index: 30;
     text-align: center;
     box-sizing: border-box;
-    overflow-y: auto;
   }
 
   .overlay-icon {
-    font-size: 2.4rem;
-    margin-bottom: 0.3rem;
-    filter: drop-shadow(0 0 15px var(--primary-glow));
-    animation: bounce 2s infinite ease-in-out;
+    font-size: clamp(2.5rem, 5vw, 3.4rem);
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 0 20px var(--primary-glow));
+    animation: bounce 2.2s infinite ease-in-out;
   }
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-5px); }
   }
 
   .overlay-title {
-    font-size: 1.35rem;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
     font-weight: 900;
     letter-spacing: 2px;
     color: var(--primary);
-    text-shadow: 0 0 15px var(--primary-glow);
-    margin-bottom: 0.25rem;
+    text-shadow: 0 0 20px var(--primary-glow);
+    margin-bottom: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
   }
   .overlay-sub {
-    font-size: 0.78rem;
+    font-size: clamp(0.82rem, 2vw, 0.95rem);
     color: var(--text-muted);
-    max-width: 270px;
-    line-height: 1.4;
-    margin-bottom: 0.8rem;
+    max-width: 440px;
+    line-height: 1.6;
+    margin-bottom: 1.4rem;
   }
 
   .overlay-stats {
     display: flex;
-    gap: 1rem;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.4rem 0.9rem;
-    border-radius: 10px;
-    margin-bottom: 0.9rem;
-    font-size: 0.75rem;
+    gap: 2rem;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 2rem;
+    border-radius: 14px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+  .overlay-stats div {
+    font-size: 0.8rem;
+    color: var(--text-muted);
   }
   .overlay-stats div span {
     display: block;
-    font-weight: 800;
-    font-size: 0.95rem;
+    font-weight: 900;
+    font-size: 1.3rem;
     color: var(--accent);
+    margin-top: 2px;
   }
 
   .menu-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.8rem;
     width: 100%;
-    max-width: 240px;
+    max-width: 400px;
+  }
+
+  .menu-actions-row {
+    display: flex;
+    gap: 0.8rem;
+    width: 100%;
   }
 
   .btn-cyber {
-    min-height: 42px;
-    padding: 0.6rem 1.2rem;
-    border-radius: 10px;
+    min-height: 48px;
+    padding: 0.75rem 1.4rem;
+    border-radius: 12px;
     border: none;
     font-weight: 800;
-    font-size: 0.84rem;
+    font-size: 0.92rem;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     text-decoration: none;
     box-sizing: border-box;
+    flex: 1;
   }
   .btn-cyber-primary {
     background: var(--primary);
     color: #000;
-    box-shadow: 0 0 15px var(--primary-glow);
+    box-shadow: 0 0 20px var(--primary-glow);
   }
   .btn-cyber-primary:hover {
     background: #7dd3fc;
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
     transform: translateY(-2px);
   }
   .btn-cyber-secondary {
@@ -256,45 +286,48 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
   }
   .btn-cyber-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(56, 189, 248, 0.4);
     color: var(--primary);
+    transform: translateY(-1px);
   }
 
   /* Intel & Rules Drawer */
   .intel-modal {
     position: absolute;
     inset: 0;
-    background: rgba(3, 7, 18, 0.96);
-    backdrop-filter: blur(12px);
+    background: rgba(3, 7, 18, 0.97);
+    backdrop-filter: blur(16px);
     display: none;
     flex-direction: column;
-    padding: 1.2rem;
-    z-index: 30;
+    padding: 2rem;
+    z-index: 40;
     text-align: left;
-    overflow-y: auto;
     box-sizing: border-box;
+    overflow-y: auto;
   }
   .intel-modal.active { display: flex; }
 
   .intel-title {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     color: var(--accent);
     font-weight: 800;
-    margin-bottom: 0.7rem;
+    margin-bottom: 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .intel-row {
-    margin-bottom: 0.7rem;
-    font-size: 0.8rem;
-    line-height: 1.4;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
     color: var(--text-muted);
   }
   .intel-row strong {
     color: var(--text);
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
   }
 
   /* Loading Overlay */
@@ -306,14 +339,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 15;
+    z-index: 25;
     gap: 1rem;
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     color: var(--primary);
   }
   .spinner {
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
     border: 4px solid #334155;
     border-top: 4px solid var(--primary);
     border-radius: 50%;
@@ -321,20 +354,20 @@
   }
   @keyframes spin { 100% { transform: rotate(360deg); } }
 
-  /* Mobile D-Pad */
+  /* Mobile Touch D-Pad */
   .dpad {
     display: grid;
-    grid-template-columns: repeat(3, 56px);
-    grid-template-rows: repeat(3, 46px);
-    gap: 6px;
-    margin-top: 0.8rem;
+    grid-template-columns: repeat(3, 58px);
+    grid-template-rows: repeat(3, 50px);
+    gap: 8px;
+    margin-top: 1rem;
   }
   .dpad button {
     background: rgba(15, 23, 42, 0.9);
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: var(--primary);
-    border-radius: 12px;
-    font-size: 1.25rem;
+    border-radius: 14px;
+    font-size: 1.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -353,112 +386,127 @@
   @media (min-width: 768px) {
     .dpad { display: none; }
   }
+
+  @media (max-width: 640px) {
+    .game-arena { max-width: 94vw; }
+    .header h1 { font-size: 1.25rem; }
+    .controls-bar { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    .overlay-screen { padding: 1.4rem; }
+    .overlay-stats { gap: 1.2rem; padding: 0.5rem 1.2rem; margin-bottom: 1.1rem; }
+    .menu-actions-row { flex-direction: column; gap: 0.5rem; }
+  }
 </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="header-left">
-      <h1>CYBER MAZE</h1>
-      <span class="badge">LABYRINTH PROTOCOL</span>
-    </div>
-    <a href="index.jsp" class="btn-hub">‹ Hub</a>
-  </div>
-
-  <div class="controls-bar">
-    <div>Time: <span id="timerVal">00:00</span></div>
-    <div>Cleared: <span id="clearedVal">0</span></div>
-    <div>
-      <select id="difficulty" onchange="onDiffChange()">
-        <option value="easy">Easy (13x13)</option>
-        <option value="medium" selected>Medium (21x21)</option>
-        <option value="hard">Hard (31x31)</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="game-container">
-    <!-- Standardized Pre-Game Interactive Startup Screen -->
-    <div id="splashScreen" class="overlay-screen">
-      <div class="overlay-icon">⚡</div>
-      <h2 class="overlay-title">
-        CYBER MAZE
-        <span class="badge">v2.5</span>
-      </h2>
-      <p class="overlay-sub">Solve procedurally generated labyrinth nodes, navigate recursive backtracker corridors, and locate the green extraction portal.</p>
-      
-      <div class="overlay-stats">
-        <div>Mazes Cleared<span id="splashClears">0</span></div>
-        <div>Fastest Escape<span id="splashBestTime">--</span></div>
+  <div class="game-arena">
+    <div class="header">
+      <div class="header-left">
+        <h1>CYBER MAZE</h1>
+        <span class="badge">LABYRINTH PROTOCOL</span>
       </div>
+      <a href="index.jsp" class="btn-hub">‹ Hub</a>
+    </div>
 
-      <div class="menu-actions">
-        <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">▶ INITIATE RUN</button>
-        <button class="btn-cyber btn-cyber-secondary" onclick="openIntel()">⚙ PROTOCOL & CONTROLS</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+    <div class="controls-bar">
+      <div>Time: <span id="timerVal">00:00</span></div>
+      <div>Cleared: <span id="clearedVal">0</span></div>
+      <div>
+        <select id="difficulty" onchange="onDiffChange()">
+          <option value="easy">Easy (13x13)</option>
+          <option value="medium" selected>Medium (21x21)</option>
+          <option value="hard">Hard (31x31)</option>
+        </select>
       </div>
     </div>
 
-    <!-- Win Screen -->
-    <div id="winScreen" class="overlay-screen" style="display: none;">
-      <div class="overlay-icon" style="color: var(--accent);">🏆</div>
-      <h2 class="overlay-title" style="color: var(--accent); text-shadow: 0 0 15px var(--accent-glow);">MAZE CLEARED</h2>
-      <p class="overlay-sub">Extraction portal reached. Neural telemetry verified.</p>
-      
-      <div class="overlay-stats">
-        <div>Escape Time<span id="winTimeVal">00:00</span></div>
-        <div>Total Cleared<span id="winClearsVal">1</span></div>
+    <div class="game-container">
+      <!-- Standardized Pre-Game Interactive Startup Screen -->
+      <div id="splashScreen" class="overlay-screen">
+        <div class="overlay-icon">⚡</div>
+        <h2 class="overlay-title">
+          CYBER MAZE
+          <span class="badge">v2.5</span>
+        </h2>
+        <p class="overlay-sub">Solve procedurally generated labyrinth nodes, navigate recursive backtracker corridors, and locate the green extraction portal.</p>
+        
+        <div class="overlay-stats">
+          <div>Mazes Cleared<span id="splashClears">0</span></div>
+          <div>Fastest Escape<span id="splashBestTime">--</span></div>
+        </div>
+
+        <div class="menu-actions">
+          <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">▶ INITIATE RUN</button>
+          <div class="menu-actions-row">
+            <button class="btn-cyber btn-cyber-secondary" onclick="openIntel()">⚙ PROTOCOL & CONTROLS</button>
+            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+          </div>
+        </div>
       </div>
 
-      <div class="menu-actions">
-        <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">↻ NEXT MAZE</button>
-        <button class="btn-cyber btn-cyber-secondary" onclick="showSplashScreen()">☰ MAIN MENU</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+      <!-- Win Screen -->
+      <div id="winScreen" class="overlay-screen" style="display: none;">
+        <div class="overlay-icon" style="color: var(--accent);">🏆</div>
+        <h2 class="overlay-title" style="color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">MAZE CLEARED</h2>
+        <p class="overlay-sub">Extraction portal reached. Neural telemetry verified.</p>
+        
+        <div class="overlay-stats">
+          <div>Escape Time<span id="winTimeVal">00:00</span></div>
+          <div>Total Cleared<span id="winClearsVal">1</span></div>
+        </div>
+
+        <div class="menu-actions">
+          <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">↻ NEXT MAZE</button>
+          <div class="menu-actions-row">
+            <button class="btn-cyber btn-cyber-secondary" onclick="showSplashScreen()">☰ MAIN MENU</button>
+            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+          </div>
+        </div>
       </div>
+
+      <!-- Intel Modal -->
+      <div id="intelModal" class="intel-modal">
+        <div class="intel-title">
+          <span>SECURITY DIRECTIVE</span>
+          <button class="btn-hub" onclick="closeIntel()">✕ Close</button>
+        </div>
+
+        <div class="intel-row">
+          <strong>🎮 CONTROLS</strong>
+          Use Arrow Keys or W/A/S/D on desktop, or the on-screen tactical D-Pad on mobile viewports.
+        </div>
+
+        <div class="intel-row">
+          <strong>⚡ OBJECTIVE</strong>
+          Navigate your cyan runner block through randomized walls to reach the pulsing emerald extraction portal.
+        </div>
+
+        <div class="intel-row">
+          <strong>🎯 TELEMETRY TRACKING</strong>
+          Total labyrinth clears and fastest escape seconds automatically synchronize with your Cyber Hub profile and global leaderboards.
+        </div>
+
+        <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeIntel(); startNewGame();">
+          ▶ COMMENCE MISSION
+        </button>
+      </div>
+
+      <!-- Loading Overlay -->
+      <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <div>Synthesizing Maze Architecture...</div>
+      </div>
+
+      <canvas id="mazeCanvas"></canvas>
     </div>
 
-    <!-- Intel Modal -->
-    <div id="intelModal" class="intel-modal">
-      <div class="intel-title">
-        <span>SECURITY DIRECTIVE</span>
-        <button class="btn-hub" onclick="closeIntel()">✕ Close</button>
-      </div>
-
-      <div class="intel-row">
-        <strong>🎮 CONTROLS</strong>
-        Use Arrow Keys or W/A/S/D on desktop, or the on-screen tactical D-Pad on mobile viewports.
-      </div>
-
-      <div class="intel-row">
-        <strong>⚡ OBJECTIVE</strong>
-        Navigate your cyan runner block through randomized walls to reach the pulsing emerald extraction portal.
-      </div>
-
-      <div class="intel-row">
-        <strong>🎯 TELEMETRY TRACKING</strong>
-        Total labyrinth clears and fastest escape seconds automatically synchronize with your Cyber Hub profile and global leaderboards.
-      </div>
-
-      <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeIntel(); startNewGame();">
-        ▶ COMMENCE MISSION
-      </button>
+    <!-- Mobile Touch Controls -->
+    <div class="dpad">
+      <button class="dpad-up" onclick="movePlayer(0, -1)">▲</button>
+      <button class="dpad-left" onclick="movePlayer(-1, 0)">◀</button>
+      <button class="dpad-down" onclick="movePlayer(0, 1)">▼</button>
+      <button class="dpad-right" onclick="movePlayer(1, 0)">▶</button>
     </div>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay">
-      <div class="spinner"></div>
-      <div>Synthesizing Maze Architecture...</div>
-    </div>
-
-    <canvas id="mazeCanvas"></canvas>
-  </div>
-
-  <!-- Mobile Touch Controls -->
-  <div class="dpad">
-    <button class="dpad-up" onclick="movePlayer(0, -1)">▲</button>
-    <button class="dpad-left" onclick="movePlayer(-1, 0)">◀</button>
-    <button class="dpad-down" onclick="movePlayer(0, 1)">▼</button>
-    <button class="dpad-right" onclick="movePlayer(1, 0)">▶</button>
   </div>
 
 <script>
@@ -478,7 +526,7 @@
 
   let grid = [];
   let rows, cols;
-  let cellSize = 18;
+  let cellSize = 20;
   let player = { x: 1, y: 1 };
   let goal = { x: 1, y: 1 };
   let isGameOver = true;
@@ -521,9 +569,9 @@
     updateTimerDisplay();
 
     const diff = difficultySelect.value;
-    if (diff === 'easy') { rows = cols = 13; cellSize = 24; }
-    else if (diff === 'medium') { rows = cols = 21; cellSize = 16; }
-    else { rows = cols = 31; cellSize = 11; }
+    if (diff === 'easy') { rows = cols = 15; cellSize = 28; }
+    else if (diff === 'medium') { rows = cols = 25; cellSize = 18; }
+    else { rows = cols = 35; cellSize = 13; }
 
     canvas.width = cols * cellSize;
     canvas.height = rows * cellSize;
@@ -650,7 +698,7 @@
     // Extraction Portal
     ctx.fillStyle = '#22c55e';
     ctx.shadowColor = '#22c55e';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
     ctx.beginPath();
     ctx.arc((goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize, cellSize * 0.38, 0, Math.PI * 2);
     ctx.fill();
@@ -658,7 +706,7 @@
     // Runner Block
     ctx.fillStyle = '#38bdf8';
     ctx.shadowColor = '#38bdf8';
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = 10;
     ctx.fillRect(player.x * cellSize + 2, player.y * cellSize + 2, cellSize - 4, cellSize - 4);
     ctx.shadowBlur = 0;
   }
@@ -672,8 +720,8 @@
     }
   });
 
-  canvas.width = 21 * 16;
-  canvas.height = 21 * 16;
+  canvas.width = 25 * 18;
+  canvas.height = 25 * 18;
   ctx.fillStyle = '#020617';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 </script>
