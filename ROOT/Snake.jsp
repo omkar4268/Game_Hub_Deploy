@@ -4,25 +4,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Cyber Snake // Neon Edition</title>
+<title>Cyber Snake // Neon Protocol</title>
 <style>
   :root {
     --bg-base: #030712;
-    --card-bg: rgba(15, 23, 42, 0.85);
+    --card-bg: rgba(15, 23, 42, 0.88);
     --primary: #10b981;
     --primary-glow: rgba(16, 185, 129, 0.4);
     --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.4);
     --food: #f43f5e;
     --food-glow: rgba(244, 63, 94, 0.5);
     --text-main: #f8fafc;
-    --text-muted: #64748b;
+    --text-muted: #94a3b8;
+    --border-glow: rgba(16, 185, 129, 0.25);
   }
 
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -30,6 +32,7 @@
     background: radial-gradient(circle at top, #0f172a, var(--bg-base));
     color: var(--text-main);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,6 +40,21 @@
     padding: 0.8rem;
     overflow: hidden;
     touch-action: none;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .header {
@@ -44,29 +62,54 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 420px;
-    margin-bottom: 0.8rem;
+    max-width: 380px;
+    margin-bottom: 0.6rem;
+  }
+
+  .header-title-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .header h1 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     color: var(--primary);
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px var(--primary-glow);
+    letter-spacing: 1.5px;
+    font-weight: 900;
+    text-shadow: 0 0 12px var(--primary-glow);
+  }
+
+  .header-badge {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: var(--primary);
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
   }
 
   .btn-hub {
     background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--text-main);
-    padding: 0.35rem 0.8rem;
+    padding: 0.4rem 0.85rem;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
     text-decoration: none;
-    transition: 0.2s;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
-  .btn-hub:hover { background: rgba(255, 255, 255, 0.15); }
+  .btn-hub:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
 
   .scoreboard {
     display: flex;
@@ -75,18 +118,20 @@
     padding: 0.4rem 1.2rem;
     border-radius: 9999px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.9rem;
-    margin-bottom: 0.8rem;
+    font-size: 0.88rem;
+    margin-bottom: 0.6rem;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   }
   .scoreboard span { color: var(--primary); font-weight: 700; }
   .scoreboard .best-label span { color: #facc15; }
 
-  /* Game Canvas Wrapper */
+  /* Canvas Container */
   .canvas-wrapper {
     position: relative;
     border-radius: 16px;
-    border: 2px solid rgba(16, 185, 129, 0.3);
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+    border: 2px solid var(--border-glow);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
     background: #020617;
     overflow: hidden;
   }
@@ -96,49 +141,177 @@
     background: #020617;
   }
 
-  /* Overlay Screens (Start & Game Over) */
-  .game-overlay {
+  /* Full Screen Pre-Game Menu & Overlays */
+  .overlay-screen {
     position: absolute;
     inset: 0;
-    background: rgba(3, 7, 18, 0.85);
-    backdrop-filter: blur(6px);
+    background: rgba(3, 7, 18, 0.92);
+    backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.8rem;
-    z-index: 10;
+    padding: 1.5rem;
+    z-index: 20;
+    text-align: center;
+    transition: all 0.3s ease;
   }
-  .game-overlay h2 {
-    font-size: 1.8rem;
+
+  .overlay-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 15px var(--primary-glow));
+    animation: bounce 2s infinite ease-in-out;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .overlay-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 2px;
     color: var(--primary);
-    text-shadow: 0 0 15px var(--primary-glow);
+    text-shadow: 0 0 18px var(--primary-glow);
+    margin-bottom: 0.3rem;
   }
-  .game-overlay p {
+
+  .overlay-subtitle {
+    font-size: 0.8rem;
     color: var(--text-muted);
-    font-size: 0.85rem;
+    max-width: 280px;
+    line-height: 1.4;
+    margin-bottom: 1.2rem;
   }
-  .btn-play {
-    background: var(--primary);
-    color: #000;
-    font-weight: 700;
-    padding: 0.6rem 1.5rem;
+
+  .overlay-stats {
+    display: flex;
+    gap: 1.2rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    font-size: 0.78rem;
+  }
+  .overlay-stats div span {
+    display: block;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--accent);
+  }
+
+  .menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 240px;
+  }
+
+  .btn-cyber {
+    padding: 0.7rem 1.4rem;
     border-radius: 10px;
     border: none;
+    font-weight: 800;
+    font-size: 0.88rem;
+    letter-spacing: 1px;
     cursor: pointer;
-    font-size: 0.95rem;
-    box-shadow: 0 0 15px var(--primary-glow);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .btn-cyber-primary {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 18px var(--primary-glow);
+  }
+  .btn-cyber-primary:hover {
+    background: #34d399;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+    transform: translateY(-2px);
+  }
+  .btn-cyber-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .btn-cyber-secondary:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(56, 189, 248, 0.4);
+    color: var(--accent);
+  }
+
+  /* Settings / Controls Modal */
+  .manual-modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.96);
+    backdrop-filter: blur(12px);
+    display: none;
+    flex-direction: column;
+    padding: 1.4rem;
+    z-index: 30;
+    text-align: left;
+    overflow-y: auto;
+  }
+  .manual-modal.active { display: flex; }
+
+  .manual-title {
+    font-size: 1.15rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .manual-row {
+    margin-bottom: 0.8rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+  .manual-row strong {
+    color: var(--text-main);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .speed-picker {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .speed-btn {
+    flex: 1;
+    padding: 6px 0;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.8);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-weight: 700;
     transition: 0.2s;
   }
-  .btn-play:active { transform: scale(0.96); }
+  .speed-btn.active {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
 
   /* Mobile Virtual D-Pad */
   #mobileDpad {
-    display: none; /* Auto-enabled via JS on mobile detection */
+    display: none;
     grid-template-columns: repeat(3, 56px);
-    grid-template-rows: repeat(3, 52px);
+    grid-template-rows: repeat(3, 48px);
     gap: 6px;
-    margin-top: 1rem;
+    margin-top: 0.8rem;
   }
 
   .d-btn {
@@ -155,14 +328,12 @@
     transition: background 0.1s, transform 0.1s;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
-
   .d-btn:active {
     background: var(--accent);
     color: #000;
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
     transform: scale(0.93);
   }
-
   .d-up    { grid-column: 2; grid-row: 1; }
   .d-left  { grid-column: 1; grid-row: 2; }
   .d-down  { grid-column: 2; grid-row: 2; }
@@ -172,21 +343,95 @@
 <body>
 
   <div class="header">
-    <h1>CYBER SNAKE</h1>
-    <a href="index.jsp" class="btn-hub">Exit Hub</a>
+    <div class="header-title-box">
+      <h1>CYBER SNAKE</h1>
+      <span class="header-badge">v2.4</span>
+    </div>
+    <a href="index.jsp" class="btn-hub">
+      <span>‹</span> Hub
+    </a>
   </div>
 
   <div class="scoreboard">
     <div>Score: <span id="scoreVal">0</span></div>
     <div class="best-label">Best: <span id="highScoreVal">0</span></div>
+    <div>Nodes: <span id="nodesVal">0</span></div>
   </div>
 
   <div class="canvas-wrapper">
-    <div id="overlay" class="game-overlay">
-      <h2 id="overlayTitle">CYBER SNAKE</h2>
-      <p id="overlayDesc">Use Arrows / Swipe / D-Pad</p>
-      <button class="btn-play" onclick="startGame()">PRESS TO PLAY</button>
+    <!-- Screen 1: Pre-Game Interactive Splash Menu -->
+    <div id="startScreen" class="overlay-screen">
+      <div class="overlay-icon">🐍</div>
+      <h2 class="overlay-title">CYBER SNAKE</h2>
+      <p class="overlay-subtitle">Steer your serpent through the digital grid, consume rogue data nodes, and set the ultimate record.</p>
+      
+      <div class="overlay-stats">
+        <div>High Score<span id="splashBest">0 pts</span></div>
+        <div>Nodes Consumed<span id="splashNodes">0</span></div>
+      </div>
+
+      <div class="menu-actions">
+        <button class="btn-cyber btn-cyber-primary" onclick="startGame()">▶ INITIATE RUN</button>
+        <button class="btn-cyber btn-cyber-secondary" onclick="openManual()">⚙ PROTOCOL & CONTROLS</button>
+        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">✕ EXIT TO HUB</a>
+      </div>
     </div>
+
+    <!-- Screen 2: Game Over Screen -->
+    <div id="gameOverScreen" class="overlay-screen" style="display: none;">
+      <div class="overlay-icon" style="color: var(--food);">💥</div>
+      <h2 class="overlay-title" style="color: var(--food); text-shadow: 0 0 18px var(--food-glow);">SYSTEM CRASH</h2>
+      <p class="overlay-subtitle" id="gameOverSub">Sub-routine terminated. Vector collision detected.</p>
+      
+      <div class="overlay-stats">
+        <div>Run Score<span id="finalScoreVal" style="color: var(--primary);">0 pts</span></div>
+        <div>Nodes Collected<span id="finalNodesVal" style="color: var(--accent);">0</span></div>
+      </div>
+
+      <div class="menu-actions">
+        <button class="btn-cyber btn-cyber-primary" onclick="startGame()">↻ RETRY RUN</button>
+        <button class="btn-cyber btn-cyber-secondary" onclick="showStartScreen()">☰ MAIN MENU</button>
+        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">✕ EXIT TO HUB</a>
+      </div>
+    </div>
+
+    <!-- Screen 3: Settings & Controls Modal -->
+    <div id="manualModal" class="manual-modal">
+      <div class="manual-title">
+        <span>SECURITY MANUAL</span>
+        <button class="btn-hub" onclick="closeManual()">✕ Close</button>
+      </div>
+
+      <div class="manual-row">
+        <strong>🎮 PC CONTROLS</strong>
+        Arrow Keys or W/A/S/D to steer your serpent. Instant response with zero 180° self-reversals.
+      </div>
+
+      <div class="manual-row">
+        <strong>📱 MOBILE CONTROLS</strong>
+        Swipe across the playfield or use the tactical on-screen D-Pad below.
+      </div>
+
+      <div class="manual-row">
+        <strong>⚡ GAMEPLAY SPEED (BALANCED)</strong>
+        Select your neural clock rate:
+        <div class="speed-picker">
+          <button class="speed-btn" id="spdScout" onclick="setSpeed(165, 'spdScout')">Scout (Chill)</button>
+          <button class="speed-btn active" id="spdAgent" onclick="setSpeed(135, 'spdAgent')">Agent (Balanced)</button>
+          <button class="speed-btn" id="spdOver" onclick="setSpeed(100, 'spdOver')">Overclock</button>
+        </div>
+      </div>
+
+      <div class="manual-row">
+        <strong>🎯 SCORING FORMULA</strong>
+        Each glowing crimson data packet awards +10 points and elongates your chassis. High scores persist in your cloud profile!
+      </div>
+
+      <button class="btn-cyber btn-cyber-primary" style="margin-top: auto;" onclick="closeManual(); startGame();">
+        ▶ START PLAYING
+      </button>
+    </div>
+
     <canvas id="gameCanvas" width="340" height="340"></canvas>
   </div>
 
@@ -201,17 +446,23 @@
 <script>
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-  const overlay = document.getElementById('overlay');
-  const overlayTitle = document.getElementById('overlayTitle');
+  const startScreen = document.getElementById('startScreen');
+  const gameOverScreen = document.getElementById('gameOverScreen');
+  const manualModal = document.getElementById('manualModal');
+
   const scoreVal = document.getElementById('scoreVal');
   const highScoreVal = document.getElementById('highScoreVal');
+  const nodesVal = document.getElementById('nodesVal');
+  const splashBest = document.getElementById('splashBest');
+  const splashNodes = document.getElementById('splashNodes');
+  const finalScoreVal = document.getElementById('finalScoreVal');
+  const finalNodesVal = document.getElementById('finalNodesVal');
   const dpad = document.getElementById('mobileDpad');
 
-  // Detect mobile user agent or touch capability
+  // Mobile detection
   const isMobile = ('ontouchstart' in window) || 
                    (navigator.maxTouchPoints > 0) || 
                    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
   if (isMobile) {
     dpad.style.display = 'grid';
   }
@@ -228,12 +479,43 @@
   let nextDir = { x: 1, y: 0 };
   let food = { x: 0, y: 0 };
   let score = 0;
+  let runNodes = 0;
+
+  // Persistent stats
   let highScore = parseInt(localStorage.getItem('hub_snake_high') || '0', 10);
+  let totalNodes = parseInt(localStorage.getItem('hub_snake_nodes') || '0', 10);
+  
   highScoreVal.innerText = highScore;
+  splashBest.innerText = highScore + ' pts';
+  splashNodes.innerText = totalNodes;
 
   let isPlaying = false;
   let lastTick = 0;
-  const tickRate = 95; // Fixed tick rate for smooth, responsive movement
+  
+  // BALANCED GAME TICK (FEATURE 4):
+  // Changed from aggressive 95ms to a comfortable, fluid 135ms default tick interval
+  let tickRate = 135; 
+
+  function setSpeed(ms, btnId) {
+    tickRate = ms;
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(btnId).classList.add('active');
+  }
+
+  function openManual() {
+    manualModal.classList.add('active');
+  }
+  function closeManual() {
+    manualModal.classList.remove('active');
+  }
+
+  function showStartScreen() {
+    gameOverScreen.style.display = 'none';
+    manualModal.classList.remove('active');
+    startScreen.style.display = 'flex';
+    splashBest.innerText = highScore + ' pts';
+    splashNodes.innerText = totalNodes;
+  }
 
   function spawnFood() {
     let valid = false;
@@ -247,6 +529,10 @@
   }
 
   function startGame() {
+    startScreen.style.display = 'none';
+    gameOverScreen.style.display = 'none';
+    manualModal.classList.remove('active');
+
     snake = [
       { x: 8, y: 10 },
       { x: 7, y: 10 },
@@ -255,9 +541,10 @@
     dir = { x: 1, y: 0 };
     nextDir = { x: 1, y: 0 };
     score = 0;
+    runNodes = 0;
     scoreVal.innerText = score;
+    nodesVal.innerText = runNodes;
     spawnFood();
-    overlay.style.display = 'none';
     isPlaying = true;
     lastTick = performance.now();
     requestAnimationFrame(gameLoop);
@@ -291,7 +578,14 @@
     // Food consumption
     if (head.x === food.x && head.y === food.y) {
       score += 10;
+      runNodes++;
+      totalNodes++;
       scoreVal.innerText = score;
+      nodesVal.innerText = runNodes;
+
+      // Update LocalStorage stats
+      localStorage.setItem('hub_snake_nodes', totalNodes);
+
       if (score > highScore) {
         highScore = score;
         highScoreVal.innerText = highScore;
@@ -305,9 +599,9 @@
 
   function triggerGameOver() {
     isPlaying = false;
-    overlayTitle.innerText = "SYSTEM CRASH";
-    overlayTitle.style.color = "#f43f5e";
-    overlay.style.display = 'flex';
+    finalScoreVal.innerText = score + ' pts';
+    finalNodesVal.innerText = runNodes;
+    gameOverScreen.style.display = 'flex';
 
     if (score > 0) {
       syncScoreToCloud('snake', score);
@@ -323,10 +617,10 @@
       });
       const data = await res.json();
       if (data.success) {
-        console.log("☁ High score synced to MySQL database:", finalScore);
+        console.log("☁ High score synced to database:", finalScore);
       }
     } catch (err) {
-      console.log("Local score saved; could not reach cloud.");
+      console.log("Local score preserved; cloud unreachable.");
     }
   }
 
@@ -342,7 +636,7 @@
       }
     }
 
-    // Draw Neon Food
+    // Draw Neon Food (Glowing Packet)
     ctx.fillStyle = '#f43f5e';
     ctx.shadowColor = '#f43f5e';
     ctx.shadowBlur = 10;
@@ -410,7 +704,7 @@
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    if (Math.max(absX, absY) > 25) { // Minimum swipe threshold
+    if (Math.max(absX, absY) > 25) {
       if (absX > absY) {
         setDirection(dx > 0 ? 1 : -1, 0);
       } else {
@@ -419,7 +713,7 @@
     }
   }, { passive: true });
 
-  // Initial render
+  // Initial draw
   render();
 </script>
 </body>

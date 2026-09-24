@@ -14,15 +14,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CYBER HUB // ARCADE</title>
+<title>CYBER HUB // ARCADE MATRIX</title>
 <style>
   :root {
     --bg-base: #03050a;
-    --card-bg: rgba(13, 19, 36, 0.65);
-    --border-glow: rgba(56, 189, 248, 0.3);
+    --card-bg: rgba(13, 19, 36, 0.72);
+    --border-glow: rgba(56, 189, 248, 0.35);
     --primary: #38bdf8;
     --primary-rgb: 56, 189, 248;
     --accent: #22c55e;
+    --accent-glow: rgba(34, 197, 94, 0.4);
     --neon-pink: #f43f5e;
     --neon-purple: #a855f7;
     --warning: #f59e0b;
@@ -31,12 +32,19 @@
     --text-muted: #94a3b8;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+    -webkit-tap-highlight-color: transparent; 
+  }
 
   body {
     background-color: var(--bg-base);
     color: var(--text-main);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     overflow-x: hidden;
     position: relative;
@@ -54,43 +62,203 @@
     width: 200%;
     height: 200%;
     background: 
-      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 25%),
-      radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 25%),
+      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 30%),
+      radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 30%),
+      radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 35%),
       linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
     z-index: -1;
     pointer-events: none;
-    animation: backgroundDrift 90s linear infinite;
+    animation: backgroundDrift 100s linear infinite;
   }
 
-  aside {
-    width: 260px;
-    background: rgba(8, 12, 23, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  /* =========================================================
+     FEATURE 1: IMMERSIVE ENTRY PORTAL & WELCOME LANDING STATE
+     ========================================================= */
+  #landingPortal {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    background: radial-gradient(circle at center, #091122 0%, #020408 100%);
     display: flex;
     flex-direction: column;
-    padding: 2.5rem 1.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #landingPortal.dismissed {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .portal-content {
+    max-width: 580px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .portal-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+  }
+
+  .portal-tag::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulseDot 1.8s infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.6; }
+  }
+
+  .portal-title {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ffffff 30%, var(--primary) 70%, var(--neon-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+  }
+
+  .portal-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+  }
+
+  .portal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .btn-portal {
+    min-height: 50px;
+    padding: 0.85rem 1.6rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .btn-portal-primary {
+    background: linear-gradient(135deg, var(--primary), #0284c7);
+    color: #000;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+  }
+  .btn-portal-primary:hover {
+    background: linear-gradient(135deg, #7dd3fc, var(--primary));
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .btn-portal-secondary {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #86efac;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+  }
+  .btn-portal-secondary:hover {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .btn-portal-guest {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted);
+  }
+  .btn-portal-guest:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .portal-footer-note {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: #64748b;
+    letter-spacing: 0.8px;
+  }
+
+  /* =========================================================
+     MAIN APPLICATION LAYOUT & SIDEBAR
+     ========================================================= */
+  aside {
+    width: 270px;
+    background: rgba(8, 12, 23, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    padding: 2.2rem 1.4rem;
     flex-shrink: 0;
     z-index: 100;
-    box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+    box-shadow: 5px 0 35px rgba(0,0,0,0.6);
   }
 
   .brand {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 900;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    cursor: pointer;
   }
   .brand-badge {
     background: linear-gradient(135deg, var(--primary), var(--neon-purple));
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     padding: 3px 8px;
     border-radius: 6px;
     color: #000;
@@ -100,31 +268,31 @@
 
   /* User Auth Widget in Sidebar */
   .auth-widget {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    border-radius: 12px;
-    padding: 1rem;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 14px;
+    padding: 1.1rem;
     margin-bottom: 2rem;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   }
   .auth-avatar {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    margin: 0 auto 0.5rem auto;
+    margin: 0 auto 0.6rem auto;
     background: linear-gradient(135deg, var(--primary), var(--neon-purple));
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     color: #000;
     font-weight: 900;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
   }
   .auth-name {
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 0.98rem;
+    font-weight: 800;
     color: var(--primary);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -135,12 +303,28 @@
     color: var(--accent);
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
+  .auth-role::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+  }
+
   .btn-auth {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     width: 100%;
-    padding: 0.55rem;
+    padding: 0.6rem;
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 700;
@@ -159,11 +343,12 @@
   }
   .btn-logout {
     background: rgba(239, 68, 68, 0.15);
-    color: var(--danger);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.35);
   }
   .btn-logout:hover {
     background: rgba(239, 68, 68, 0.3);
+    color: #fff;
   }
 
   nav { display: flex; flex-direction: column; gap: 0.8rem; }
@@ -171,15 +356,15 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem 1.2rem;
+    padding: 0.9rem 1.1rem;
     border-radius: 12px;
     background: transparent;
     color: var(--text-muted);
     border: 1px solid transparent;
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     text-align: left;
     position: relative;
     overflow: hidden;
@@ -187,15 +372,36 @@
   
   .nav-btn:hover { 
     color: var(--text-main); 
-    background: rgba(255, 255, 255, 0.03); 
-    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.04); 
+    transform: translateX(4px);
   }
   
   .nav-btn.active {
-    background: linear-gradient(90deg, rgba(56, 189, 248, 0.1), transparent);
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.12), transparent);
     color: var(--primary);
-    border-color: rgba(56, 189, 248, 0.2);
+    border-color: rgba(56, 189, 248, 0.25);
     box-shadow: inset 4px 0 0 var(--primary);
+  }
+
+  /* Portal Recall Button in sidebar bottom */
+  .btn-portal-recall {
+    margin-top: auto;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    padding: 0.6rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+  .btn-portal-recall:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-main);
   }
 
   main {
@@ -209,7 +415,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
   }
   .top-meta h2 { 
     font-size: 2.2rem; 
@@ -221,20 +427,15 @@
   .sys-status {
     font-size: 0.85rem;
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
     background: rgba(34, 197, 94, 0.1);
     padding: 6px 14px;
     border-radius: 20px;
-    border: 1px solid rgba(34, 197, 94, 0.2);
-  }
-  
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-    70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
   }
   
   .sys-status::before {
@@ -243,17 +444,17 @@
     height: 8px;
     border-radius: 50%;
     background: var(--accent);
-    animation: pulse 2s infinite;
+    animation: pulseDot 2s infinite;
   }
 
-  .view-panel { display: none; opacity: 0; transition: opacity 0.4s ease; }
+  .view-panel { display: none; opacity: 0; transition: opacity 0.35s ease; }
   .view-panel.active { display: block; opacity: 1; }
 
   .carousel-controls {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
   }
   .scroll-btn {
     background: rgba(15, 23, 42, 0.6);
@@ -279,7 +480,7 @@
 
   .game-carousel {
     display: flex;
-    gap: 2rem;
+    gap: 1.8rem;
     overflow-x: auto;
     padding: 1rem 1rem 3rem 1rem;
     margin: -1rem;
@@ -293,27 +494,28 @@
   .game-carousel::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(25px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   .game-card {
-    min-width: 320px;
-    width: 320px;
+    min-width: 310px;
+    width: 310px;
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     overflow: hidden;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     scroll-snap-align: center;
     flex-shrink: 0;
     opacity: 0;
-    animation: fadeInUp 0.6s ease forwards;
+    animation: fadeInUp 0.5s ease forwards;
     position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   }
 
   .game-card::after {
@@ -321,15 +523,15 @@
     position: absolute;
     top: 0; left: -100%;
     width: 50%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
     transform: skewX(-20deg);
     transition: 0s;
   }
 
   .game-card:hover {
-    transform: translateY(-12px) scale(1.02);
+    transform: translateY(-10px) scale(1.02);
     border-color: rgba(var(--primary-rgb), 0.5);
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--primary-rgb), 0.2);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(var(--primary-rgb), 0.25);
   }
   
   .game-card:hover::after {
@@ -338,27 +540,27 @@
   }
 
   .banner-bomb    { background: linear-gradient(135deg, #7f1d1d, #ea580c); }
-  .banner-guesser { background: linear-gradient(135deg, #312e81, #6366f1); }
+  .banner-chess   { background: linear-gradient(135deg, #4c1d95, #ec4899); }
   .banner-snake   { background: linear-gradient(135deg, #064e3b, #10b981); }
   .banner-maze    { background: linear-gradient(135deg, #0c4a6e, #38bdf8); }
-  .banner-chess   { background: linear-gradient(135deg, #4c1d95, #ec4899); }
+  .banner-guesser { background: linear-gradient(135deg, #312e81, #6366f1); }
 
   .card-banner {
-    height: 160px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
+    font-size: 3.8rem;
     position: relative;
     overflow: hidden;
   }
 
   .card-body {
-    padding: 1.5rem;
+    padding: 1.4rem;
     display: flex;
     flex-direction: column;
     flex: 1;
-    background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.8) 100%);
+    background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.85) 100%);
   }
   .card-tag {
     font-size: 0.7rem;
@@ -366,20 +568,20 @@
     font-weight: 800;
     text-transform: uppercase;
     color: var(--primary);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
-  .card-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 0.5rem; }
-  .card-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem; }
+  .card-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
+  .card-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.2rem; }
 
   .card-footer {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
   }
-  .card-score-preview { font-size: 0.85rem; color: var(--text-muted); }
+  .card-score-preview { font-size: 0.82rem; color: var(--text-muted); }
   .card-score-preview span { color: var(--primary); font-weight: 800; }
   
   .launch-arrow {
@@ -391,7 +593,7 @@
     align-items: center;
     justify-content: center;
     color: var(--primary);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     transition: all 0.3s;
   }
   .game-card:hover .launch-arrow {
@@ -400,30 +602,65 @@
     box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6);
   }
 
+  /* =========================================================
+     FEATURE 2: EXPANDED SCORING & LEADERBOARDS GRID
+     ========================================================= */
   .score-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
     gap: 1.5rem;
   }
   .score-card, .settings-box {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
     padding: 1.8rem;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
   }
-  .score-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.1); }
+  .score-card:hover { 
+    transform: translateY(-4px); 
+    border-color: rgba(56, 189, 248, 0.3); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  }
   
+  .score-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .score-card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+
   .stat-row, .settings-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
   }
   .stat-row:last-child, .settings-row:last-child { border-bottom: none; }
-  .stat-row span:last-child { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
+  .stat-label { color: var(--text-muted); font-size: 0.88rem; }
+  .stat-val { font-weight: 800; font-size: 1.05rem; }
 
   .switch {
     position: relative; display: inline-block; width: 44px; height: 24px;
@@ -441,7 +678,7 @@
   input:checked + .slider:before { transform: translateX(20px); }
 
   /* =========================================================
-     MOBILE-FIRST RESPONSIVE MODAL SYSTEM (PHASE 2 OVERHAUL)
+     MOBILE-FIRST RESPONSIVE MODAL SYSTEM
      ========================================================= */
   .modal-overlay {
     position: fixed;
@@ -468,23 +705,19 @@
     border-radius: 18px;
     padding: 2rem 1.6rem;
     width: 90vw;
-    max-width: 400px;
+    max-width: 420px;
     max-height: 85vh;
     max-height: 85dvh;
     overflow-y: auto;
     margin: auto;
     text-align: center;
     transform: scale(0.94);
-    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     box-sizing: border-box;
   }
   .modal-overlay.active .modal-box { transform: scale(1); }
   
-  .modal-box::-webkit-scrollbar { width: 6px; }
-  .modal-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
-  .modal-box::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
-
   .modal-actions {
     display: flex;
     gap: 0.8rem;
@@ -492,12 +725,12 @@
     margin-top: 1.5rem;
   }
   .btn-modal {
-    min-height: 44px; /* Mobile touch target */
+    min-height: 46px;
     padding: 0.75rem 1.2rem;
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.95rem;
     display: inline-flex;
     align-items: center;
@@ -541,7 +774,7 @@
   }
   .auth-input {
     width: 100%;
-    height: 46px;
+    height: 48px;
     min-height: 44px;
     padding: 0 1rem;
     background: rgba(15, 23, 42, 0.9);
@@ -594,10 +827,7 @@
     gap: 8px;
   }
 
-  /* Loading Spinner */
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .spinner {
     display: inline-block;
     width: 16px;
@@ -619,20 +849,23 @@
   }
   .switch-auth-link:hover { color: var(--primary); }
 
+  /* =========================================================
+     RESPONSIVE BREAKPOINTS (MOBILE & TABLET)
+     ========================================================= */
   @media (max-width: 768px) {
     body { flex-direction: column; padding-bottom: 80px; }
 
     aside {
       width: 100%; height: 75px; position: fixed; bottom: 0; left: 0; right: 0;
       padding: 0.5rem; flex-direction: row; border-right: none;
-      border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(8, 12, 23, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(8, 12, 23, 0.96);
       align-items: center; justify-content: space-around; z-index: 999;
     }
 
-    .brand, .auth-widget { display: none; }
+    .brand, .auth-widget, .btn-portal-recall { display: none; }
     nav { flex-direction: row; width: 100%; justify-content: space-around; gap: 0; }
     .nav-btn {
-      flex-direction: column; gap: 6px; padding: 0.5rem; font-size: 0.75rem;
+      flex-direction: column; gap: 4px; padding: 0.4rem; font-size: 0.72rem;
       border-left: none !important; border-radius: 10px; text-align: center;
     }
     .nav-btn.active {
@@ -640,14 +873,16 @@
       box-shadow: none; border-top: 2px solid var(--primary);
     }
 
-    main { padding: 1.5rem 1.2rem; }
+    main { padding: 1.4rem 1.1rem; }
     .top-meta h2 { font-size: 1.6rem; }
     .carousel-controls { display: none; }
+    
+    .portal-title { font-size: 2.2rem; }
+    .portal-subtitle { font-size: 0.85rem; margin-bottom: 1.8rem; }
     
     .game-carousel { padding-bottom: 2rem; gap: 1.2rem; }
     .game-card { min-width: 85vw; width: 85vw; }
 
-    /* Mobile Overrides for Modals */
     .modal-box {
       padding: 1.5rem 1.2rem;
       width: 92vw;
@@ -659,12 +894,53 @@
 </head>
 <body>
 
+  <!-- =========================================================
+       FEATURE 1: IMMERSIVE ENTRY PORTAL & WELCOME LANDING STATE
+       ========================================================= -->
+  <div id="landingPortal">
+    <div class="portal-content">
+      <div class="portal-tag">SYSTEM ONLINE // SECURE ACCESS v2.5</div>
+      <h1 class="portal-title">CYBER HUB // ARCADE</h1>
+      <p class="portal-subtitle">
+        Tactical neural gaming matrix. Engage in timed crisis defusals, engine-analyzed cyber chess, procedural labyrinths, and grid breaches.
+      </p>
+
+      <div class="portal-actions">
+        <% if (isLoggedIn) { %>
+          <button class="btn-portal btn-portal-primary" onclick="enterTerminal()">
+            <span>⚡ ENTER AS <%= currentUser.toUpperCase() %></span>
+          </button>
+          <button class="btn-portal btn-portal-secondary" onclick="performLogout()">
+            <span>✕ SIGN OUT</span>
+          </button>
+        <% } else { %>
+          <button class="btn-portal btn-portal-primary" onclick="openLoginModal()">
+            <span>🔐 SIGN IN</span>
+          </button>
+          <button class="btn-portal btn-portal-secondary" onclick="openSignupModal()">
+            <span>⚡ REGISTER CALLSIGN</span>
+          </button>
+          <button class="btn-portal btn-portal-guest" onclick="continueAsGuest()">
+            <span>🎮 CONTINUE AS GUEST</span>
+          </button>
+        <% } %>
+      </div>
+
+      <div class="portal-footer-note">
+        CLUSTERS: TOKYO SECURE [TLS] // AP-NORTHEAST-1 // PERSISTENT ARCHIVE
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SIDEBAR & CALLSIGN PROFILE STATE
+       ========================================================= -->
   <aside>
-    <div class="brand">
+    <div class="brand" onclick="showPortal()">
       CYBER <span class="brand-badge">HUB</span>
     </div>
 
-    <!-- User Profile & Authentication State -->
+    <!-- Active User Profile Widget -->
     <div class="auth-widget" id="authWidget">
       <% if (isLoggedIn) { %>
         <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
@@ -693,15 +969,22 @@
         <span>System</span>
       </button>
     </nav>
+
+    <button class="btn-portal-recall" onclick="showPortal()">
+      <span>🔒 Portal Screen</span>
+    </button>
   </aside>
 
+  <!-- =========================================================
+       MAIN CONTENT DASHBOARD
+       ========================================================= -->
   <main>
     <div class="top-meta">
       <h2 id="viewTitle">Game Library</h2>
       <div class="sys-status">Live Server</div>
     </div>
 
-    <!-- VIEW 1: Games -->
+    <!-- VIEW 1: GAME LIBRARY CAROUSEL -->
     <section id="libraryView" class="view-panel active">
       <div class="carousel-controls">
         <button class="scroll-btn" onclick="scrollCarousel(-340)">‹</button>
@@ -710,13 +993,13 @@
 
       <div class="game-carousel" id="carousel">
         
-        <!-- Bomb Defusal (Matches your Bomb_Defuse folder) -->
-        <div class="game-card" style="animation-delay: 0.1s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol', 'High-stakes 3-minute bomb defusal simulation. Memorize the manual, disarm the modules, and do not trigger the failsafe.')">
+        <!-- Game 1: Defusal Protocol -->
+        <div class="game-card" style="animation-delay: 0.05s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol', 'High-stakes 3-minute bomb defusal simulation. Complete bypass sequences across modules before the integrity failsafe triggers.')">
           <div class="card-banner banner-bomb">☢️</div>
           <div class="card-body">
             <div class="card-tag">Crisis Sim</div>
             <div class="card-title">Defusal Protocol</div>
-            <div class="card-desc">Execute override sequences on complex security modules under a strict 3-minute timer. Don't blow it.</div>
+            <div class="card-desc">Execute override sequences on complex security modules under strict countdown timers. Zero tolerance for errors.</div>
             <div class="card-footer">
               <div class="card-score-preview">Top: <span id="preview-defuse">0 pts</span></div>
               <div class="launch-arrow">➔</div>
@@ -724,27 +1007,27 @@
           </div>
         </div>
 
-        <!-- Cyber Chess -->
-        <div class="game-card" style="animation-delay: 0.2s;" onclick="openLaunchModal('Chess.jsp', 'Cyber Chess', 'Experience enhanced chess with actual AI engine, move evaluation, PGN export, move history, and sound effects in a futuristic cyber theme.')">
+        <!-- Game 2: Cyber Chess -->
+        <div class="game-card" style="animation-delay: 0.1s;" onclick="openLaunchModal('Chess.jsp', 'Cyber Chess', 'Experience grandmaster AI chess with Stockfish depth evaluation, move history analysis, and dynamic tactical rating.')">
           <div class="card-banner banner-chess">♟️</div>
           <div class="card-body">
             <div class="card-tag">AI Strategy</div>
             <div class="card-title">Cyber Chess</div>
-            <div class="card-desc">Play against a real chess engine with move analysis, export games as PGN, and view detailed move history.</div>
+            <div class="card-desc">Challenge deep neural chess engines with move evaluation, rating progression, and PGN game export.</div>
             <div class="card-footer">
-              <div class="card-score-preview">Engine: <span>Stockfish</span></div>
+              <div class="card-score-preview">Rating: <span id="preview-chess">1200</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
         </div>
 
-        <!-- Snake -->
-        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Snake.jsp', 'Cyber Snake', 'Steer your cyber serpent, consume data nodes, and break your record.')">
+        <!-- Game 3: Cyber Snake -->
+        <div class="game-card" style="animation-delay: 0.15s;" onclick="openLaunchModal('Snake.jsp', 'Cyber Snake', 'Steer your serpent through the cyber grid, devour rogue data packets, and breach node high scores.')">
           <div class="card-banner banner-snake">🐍</div>
           <div class="card-body">
             <div class="card-tag">Arcade Classic</div>
             <div class="card-title">Cyber Snake</div>
-            <div class="card-desc">Steer your cyber serpent through the grid, consume data nodes, and set the ultimate high score.</div>
+            <div class="card-desc">Balanced, fluid snake arcade experience with adjustable tick clocks, touch D-pads, and node tracking.</div>
             <div class="card-footer">
               <div class="card-score-preview">Record: <span id="preview-snake">0 pts</span></div>
               <div class="launch-arrow">➔</div>
@@ -752,13 +1035,13 @@
           </div>
         </div>
 
-        <!-- Maze Runner -->
-        <div class="game-card" style="animation-delay: 0.4s;" onclick="openLaunchModal('Maze.jsp', 'Cyber Maze Runner', 'Solve procedurally generated mazes under varying algorithm complexities.')">
+        <!-- Game 4: Cyber Maze -->
+        <div class="game-card" style="animation-delay: 0.2s;" onclick="openLaunchModal('Maze.jsp', 'Cyber Maze Runner', 'Solve procedurally generated labyrinth nodes with recursive backtracking algorithms and locate extraction portals.')">
           <div class="card-banner banner-maze">⚡</div>
           <div class="card-body">
             <div class="card-tag">Procedural Puzzle</div>
             <div class="card-title">Cyber Maze</div>
-            <div class="card-desc">Navigate randomized labyrinth algorithms and locate extraction gates before the system resets.</div>
+            <div class="card-desc">Navigate randomized labyrinth architectures and locate extraction gates before system telemetry resets.</div>
             <div class="card-footer">
               <div class="card-score-preview">Cleared: <span id="preview-maze">0</span></div>
               <div class="launch-arrow">➔</div>
@@ -766,15 +1049,15 @@
           </div>
         </div>
 
-        <!-- Number Guesser -->
-        <div class="game-card" style="animation-delay: 0.5s;" onclick="openLaunchModal('Game1.jsp', 'Number Guesser', 'Guess the secret integer generated by the server session.')">
+        <!-- Game 5: Number Guesser -->
+        <div class="game-card" style="animation-delay: 0.25s;" onclick="openLaunchModal('Game1.jsp', 'Cipher Guesser', 'Crack the secret integer generated by the server session in minimal probe attempts.')">
           <div class="card-banner banner-guesser">🔢</div>
           <div class="card-body">
             <div class="card-tag">Session Puzzle</div>
-            <div class="card-title">Number Guesser</div>
-            <div class="card-desc">Crack the secret integer generated by the internal server session in minimal attempts.</div>
+            <div class="card-title">Cipher Guesser</div>
+            <div class="card-desc">Crack the server-side encrypted integer between 1 and 100 in minimal probe iterations.</div>
             <div class="card-footer">
-              <div class="card-score-preview">Best: <span id="preview-guess">--</span></div>
+              <div class="card-score-preview">Fewest: <span id="preview-guess">--</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
@@ -783,35 +1066,144 @@
       </div>
     </section>
 
-    <!-- VIEW 2: Scores & Leaderboard -->
+    <!-- =========================================================
+         FEATURE 2: EXPANDED SCORING & LEADERBOARDS (ALL 5 GAMES)
+         ========================================================= -->
     <section id="scoresView" class="view-panel">
       <div class="score-grid">
+        
+        <!-- 1. Defusal Protocol -->
         <div class="score-card">
-          <h3 style="color:#10b981; margin-bottom:1.2rem; font-size:1.4rem;">🐍 Cyber Snake</h3>
-          <div class="stat-row"><span style="color:var(--text-muted)">Cloud Record</span><span id="statSnakeBest">0 pts</span></div>
-          <div class="stat-row"><span style="color:var(--text-muted)">Top Player</span><span id="statSnakeLeader">--</span></div>
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #ea580c;">☢️ Defusal Protocol</div>
+            <div class="score-badge" style="background: rgba(234, 88, 12, 0.15); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.3);">Tier 1 Sim</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">High Score</span>
+            <span class="stat-val" id="statDefuseBest" style="color: #ea580c;">0 pts</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Best Tier Cleared</span>
+            <span class="stat-val" id="statDefuseLevel">Level 1</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Successful Disarms</span>
+            <span class="stat-val" id="statDefuseDisarms">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Strikes Avoided</span>
+            <span class="stat-val" id="statDefuseStrikes">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Top Global Agent</span>
+            <span class="stat-val" id="statDefuseLeader" style="color: var(--primary);">--</span>
+          </div>
         </div>
+
+        <!-- 2. Cyber Chess -->
         <div class="score-card">
-          <h3 style="color:#ea580c; margin-bottom:1.2rem; font-size:1.4rem;">☢️ Defusal Protocol</h3>
-          <div class="stat-row"><span style="color:var(--text-muted)">Cloud Record</span><span id="statDefuseBest">0 pts</span></div>
-          <div class="stat-row"><span style="color:var(--text-muted)">Top Player</span><span id="statDefuseLeader">--</span></div>
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #ec4899;">♟️ Cyber Chess</div>
+            <div class="score-badge" style="background: rgba(236, 72, 153, 0.15); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.3);">Stockfish API</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Rating</span>
+            <span class="stat-val" id="statChessRating" style="color: #ec4899;">1200</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Matches Won</span>
+            <span class="stat-val" id="statChessWins" style="color: var(--accent);">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Matches Lost</span>
+            <span class="stat-val" id="statChessLosses" style="color: var(--danger);">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Win Ratio</span>
+            <span class="stat-val" id="statChessRatio">0%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Evaluation Engine</span>
+            <span class="stat-val" style="color: var(--primary);">Depth 12</span>
+          </div>
         </div>
+
+        <!-- 3. Cyber Snake -->
         <div class="score-card">
-          <h3 style="color:#38bdf8; margin-bottom:1.2rem; font-size:1.4rem;">⚡ Cyber Maze</h3>
-          <div class="stat-row"><span style="color:var(--text-muted)">Mazes Cleared</span><span id="statMazeClears">0</span></div>
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #10b981;">🐍 Cyber Snake</div>
+            <div class="score-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">Balanced Tick</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">High Score</span>
+            <span class="stat-val" id="statSnakeBest" style="color: #10b981;">0 pts</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Total Data Nodes</span>
+            <span class="stat-val" id="statSnakeNodes">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Clock Rate</span>
+            <span class="stat-val" style="color: var(--primary);">135ms Balanced</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Top Global Operator</span>
+            <span class="stat-val" id="statSnakeLeader" style="color: var(--accent);">--</span>
+          </div>
         </div>
+
+        <!-- 4. Cyber Maze -->
+        <div class="score-card">
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #38bdf8;">⚡ Cyber Maze</div>
+            <div class="score-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">Recursive Grid</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Mazes Cleared</span>
+            <span class="stat-val" id="statMazeClears" style="color: #38bdf8;">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Fastest Escape</span>
+            <span class="stat-val" id="statMazeBestTime">--</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Labyrinth Synthesis</span>
+            <span class="stat-val" style="color: var(--accent);">Adaptive</span>
+          </div>
+        </div>
+
+        <!-- 5. Cipher Guesser -->
+        <div class="score-card">
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #6366f1;">🔢 Cipher Guesser</div>
+            <div class="score-badge" style="background: rgba(99, 102, 241, 0.15); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.3);">Session Crypto</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Fewest Attempts</span>
+            <span class="stat-val" id="statGuessBest" style="color: #6366f1;">--</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Decryption Range</span>
+            <span class="stat-val">1 - 100</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Key Security</span>
+            <span class="stat-val" style="color: var(--accent);">Server-Side</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- VIEW 3: Settings -->
+    <!-- VIEW 3: SYSTEM PREFERENCES -->
     <section id="settingsView" class="view-panel">
-      <div class="settings-box" style="max-width: 500px;">
+      <div class="settings-box" style="max-width: 520px;">
         <h3 style="margin-bottom: 1.5rem; color: var(--primary);">System Preferences</h3>
         
         <div class="settings-row">
           <div>
-            <div style="font-weight: 600;">Audio Effects</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Enable UI sounds and game audio</div>
+            <div style="font-weight: 700;">Audio Effects</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Enable interactive feedback soundscapes</div>
           </div>
           <label class="switch">
             <input type="checkbox" checked>
@@ -821,27 +1213,39 @@
         
         <div class="settings-row">
           <div>
-            <div style="font-weight: 600;">Performance Mode</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Disable background animations</div>
+            <div style="font-weight: 700;">Performance Mode</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Disable background grid animations</div>
           </div>
           <label class="switch">
             <input type="checkbox" onchange="togglePerformance(this)">
             <span class="slider"></span>
           </label>
         </div>
+
+        <div class="settings-row">
+          <div>
+            <div style="font-weight: 700;">Entry Portal Bypass</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Show landing gateway on initial visits</div>
+          </div>
+          <button class="btn-modal btn-cancel" style="flex: initial; padding: 6px 14px; font-size: 0.8rem;" onclick="showPortal()">
+            Show Portal
+          </button>
+        </div>
         
-        <button class="btn-modal btn-cancel" onclick="resetScores()" style="margin-top: 2rem; width:100%; color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);">
-          ⚠ Purge Local Data
+        <button class="btn-modal btn-cancel" onclick="resetLocalCache()" style="margin-top: 2rem; width:100%; color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.35);">
+          ⚠ Purge Local Score Cache
         </button>
       </div>
     </section>
   </main>
 
-  <!-- Launch Modal -->
+  <!-- =========================================================
+       MODAL 1: PRE-GAME LAUNCH CONFIRMATION
+       ========================================================= -->
   <div class="modal-overlay" id="launchModal">
     <div class="modal-box">
-      <h2 id="modalTitle" style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Launch Game</h2>
-      <p id="modalDesc" style="color:var(--text-muted); font-size:0.95rem; margin-top:0.8rem; line-height: 1.5;"></p>
+      <h2 id="modalTitle" style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Launch Mission</h2>
+      <p id="modalDesc" style="color:var(--text-muted); font-size:0.92rem; margin-top:0.8rem; line-height: 1.6;"></p>
       <div class="modal-actions">
         <button class="btn-modal btn-cancel" onclick="closeModal('launchModal')">Abort</button>
         <button class="btn-modal btn-launch" id="confirmLaunchBtn">Initialize</button>
@@ -849,7 +1253,9 @@
     </div>
   </div>
 
-  <!-- Login Modal (Mobile Optimized) -->
+  <!-- =========================================================
+       MODAL 2: IDENT SYSTEM // LOGIN (MOBILE FIRST)
+       ========================================================= -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
       <h2 style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">IDENT SYSTEM // LOGIN</h2>
@@ -879,7 +1285,9 @@
     </div>
   </div>
 
-  <!-- Sign Up Modal (Mobile Optimized) -->
+  <!-- =========================================================
+       MODAL 3: NEW RECRUIT // ENLIST (MOBILE FIRST)
+       ========================================================= -->
   <div class="modal-overlay" id="signupModal">
     <div class="modal-box">
       <h2 style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">NEW RECRUIT // ENLIST</h2>
@@ -916,6 +1324,30 @@
 <script>
   let targetUrl = '';
 
+  // --- PORTAL MANAGEMENT ---
+  const isServerLoggedIn = <%= isLoggedIn %>;
+  const portal = document.getElementById('landingPortal');
+
+  function enterTerminal() {
+    portal.classList.add('dismissed');
+    sessionStorage.setItem('hub_portal_passed', 'true');
+  }
+
+  function continueAsGuest() {
+    portal.classList.add('dismissed');
+    sessionStorage.setItem('hub_portal_passed', 'true');
+  }
+
+  function showPortal() {
+    portal.classList.remove('dismissed');
+  }
+
+  // Auto-dismiss portal if user already clicked through or logged in in this session
+  if (sessionStorage.getItem('hub_portal_passed') === 'true') {
+    portal.classList.add('dismissed');
+  }
+
+  // --- TAB NAVIGATION ---
   function switchTab(tab, btn) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -933,7 +1365,7 @@
         document.getElementById('settingsView').classList.add('active');
         document.getElementById('viewTitle').innerText = 'Terminal Config';
       }
-    }, 50);
+    }, 40);
   }
 
   function scrollCarousel(dist) {
@@ -994,7 +1426,7 @@
     el.style.display = 'flex';
   }
 
-  // --- BULLETPROOF ASYNC AUTH HANDLERS ---
+  // --- ASYNC AUTH HANDLERS ---
   async function submitLogin() {
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
@@ -1022,8 +1454,8 @@
       try {
         data = JSON.parse(rawText);
       } catch (jsonErr) {
-        console.error("Non-JSON Server Response:", rawText);
-        setBanner('loginMsg', 'error', 'Database offline. Verify MySQL is running or configure DB_URL on Render.');
+        console.error("Non-JSON Response:", rawText);
+        setBanner('loginMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
         btnText.innerText = 'Authenticate';
         return;
@@ -1031,19 +1463,21 @@
 
       if (data.status === 'success' || data.success) {
         setBanner('loginMsg', 'success', data.message || 'Access Authorized! Initializing profile...');
+        sessionStorage.setItem('hub_portal_passed', 'true');
         setTimeout(() => {
           checkLiveSession();
           closeModal('loginModal');
+          portal.classList.add('dismissed');
           window.location.reload();
-        }, 600);
+        }, 500);
       } else {
         setBanner('loginMsg', 'error', data.message || 'Access Denied: Invalid credentials.');
         btn.disabled = false;
         btnText.innerText = 'Authenticate';
       }
     } catch (netErr) {
-      console.error("Fetch Network Failure:", netErr);
-      setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
+      console.error("Network Failure:", netErr);
+      setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or check if Render service is starting.');
       btn.disabled = false;
       btnText.innerText = 'Authenticate';
     }
@@ -1085,8 +1519,8 @@
       try {
         data = JSON.parse(rawText);
       } catch (jsonErr) {
-        console.error("Non-JSON Server Response:", rawText);
-        setBanner('signupMsg', 'error', 'Database offline. Verify MySQL is running or configure DB_URL on Render.');
+        console.error("Non-JSON Response:", rawText);
+        setBanner('signupMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
         btnText.innerText = 'Enlist';
         return;
@@ -1094,25 +1528,28 @@
 
       if (data.status === 'success' || data.success) {
         setBanner('signupMsg', 'success', data.message || 'Identity Enlisted! Initializing cyber state...');
+        sessionStorage.setItem('hub_portal_passed', 'true');
         setTimeout(() => {
           checkLiveSession();
           closeModal('signupModal');
+          portal.classList.add('dismissed');
           window.location.reload();
-        }, 600);
+        }, 500);
       } else {
         setBanner('signupMsg', 'error', data.message || 'Registration failed.');
         btn.disabled = false;
         btnText.innerText = 'Enlist';
       }
     } catch (netErr) {
-      console.error("Fetch Network Failure:", netErr);
-      setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
+      console.error("Network Failure:", netErr);
+      setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or check if Render service is starting.');
       btn.disabled = false;
       btnText.innerText = 'Enlist';
     }
   }
 
   async function performLogout() {
+    sessionStorage.removeItem('hub_portal_passed');
     try {
       await fetch('logout.jsp', { headers: { 'Accept': 'application/json' } });
       window.location.reload();
@@ -1144,47 +1581,105 @@
     }
   }
 
-  // --- High Score Sync & Fallback ---
+  // =========================================================
+  // FEATURE 2: COMPREHENSIVE MULTI-GAME STATS & SYNC
+  // =========================================================
   async function syncCloudScores() {
-    const localSnake = localStorage.getItem('hub_snake_high') || '0';
+    // 1. Defusal Protocol Metrics
     const localDefuse = localStorage.getItem('hub_defuse_high') || '0';
-    const localMaze = localStorage.getItem('hub_maze_clears') || '0';
-    const localGuess = localStorage.getItem('hub_guess_best') || '--';
+    const localDefuseLvl = localStorage.getItem('hub_defuse_level') || '1';
+    const localDefuseDisarms = localStorage.getItem('hub_defuse_disarms') || '0';
+    const localDefuseStrikes = localStorage.getItem('hub_defuse_strikes_avoided') || '0';
+
+    const pDefuse = document.getElementById('preview-defuse');
+    const sDefuseBest = document.getElementById('statDefuseBest');
+    const sDefuseLevel = document.getElementById('statDefuseLevel');
+    const sDefuseDisarms = document.getElementById('statDefuseDisarms');
+    const sDefuseStrikes = document.getElementById('statDefuseStrikes');
+
+    if (pDefuse) pDefuse.innerText = localDefuse + ' pts';
+    if (sDefuseBest) sDefuseBest.innerText = localDefuse + ' pts';
+    if (sDefuseLevel) sDefuseLevel.innerText = 'Level ' + localDefuseLvl;
+    if (sDefuseDisarms) sDefuseDisarms.innerText = localDefuseDisarms;
+    if (sDefuseStrikes) sDefuseStrikes.innerText = localDefuseStrikes;
+
+    // 2. Cyber Chess Metrics
+    const localChessRating = localStorage.getItem('hub_chess_rating') || '1200';
+    const localChessWins = parseInt(localStorage.getItem('hub_chess_wins') || '0', 10);
+    const localChessLosses = parseInt(localStorage.getItem('hub_chess_losses') || '0', 10);
+    const totalMatches = localChessWins + localChessLosses;
+    const winRatio = totalMatches > 0 ? Math.round((localChessWins / totalMatches) * 100) : 0;
+
+    const pChess = document.getElementById('preview-chess');
+    const sChessRating = document.getElementById('statChessRating');
+    const sChessWins = document.getElementById('statChessWins');
+    const sChessLosses = document.getElementById('statChessLosses');
+    const sChessRatio = document.getElementById('statChessRatio');
+
+    if (pChess) pChess.innerText = localChessRating;
+    if (sChessRating) sChessRating.innerText = localChessRating;
+    if (sChessWins) sChessWins.innerText = localChessWins;
+    if (sChessLosses) sChessLosses.innerText = localChessLosses;
+    if (sChessRatio) sChessRatio.innerText = winRatio + '%';
+
+    // 3. Cyber Snake Metrics
+    const localSnake = localStorage.getItem('hub_snake_high') || '0';
+    const localSnakeNodes = localStorage.getItem('hub_snake_nodes') || '0';
 
     const pSnake = document.getElementById('preview-snake');
-    const pDefuse = document.getElementById('preview-defuse');
-    const pMaze = document.getElementById('preview-maze');
-    const pGuess = document.getElementById('preview-guess');
+    const sSnakeBest = document.getElementById('statSnakeBest');
+    const sSnakeNodes = document.getElementById('statSnakeNodes');
 
     if (pSnake) pSnake.innerText = localSnake + ' pts';
-    if (pDefuse) pDefuse.innerText = localDefuse + ' pts';
-    if (pMaze) pMaze.innerText = localMaze;
-    if (pGuess) pGuess.innerText = localGuess;
+    if (sSnakeBest) sSnakeBest.innerText = localSnake + ' pts';
+    if (sSnakeNodes) sSnakeNodes.innerText = localSnakeNodes;
 
-    const sSnake = document.getElementById('statSnakeBest');
-    const sDefuse = document.getElementById('statDefuseBest');
-    const sMaze = document.getElementById('statMazeClears');
+    // 4. Cyber Maze Metrics
+    const localMazeClears = localStorage.getItem('hub_maze_clears') || '0';
+    const localMazeBestTime = localStorage.getItem('hub_maze_best_time') || '0';
 
-    if (sSnake) sSnake.innerText = localSnake + ' pts';
-    if (sDefuse) sDefuse.innerText = localDefuse + ' pts';
-    if (sMaze) sMaze.innerText = localMaze;
+    const pMaze = document.getElementById('preview-maze');
+    const sMazeClears = document.getElementById('statMazeClears');
+    const sMazeBestTime = document.getElementById('statMazeBestTime');
 
+    if (pMaze) pMaze.innerText = localMazeClears;
+    if (sMazeClears) sMazeClears.innerText = localMazeClears;
+    if (sMazeBestTime) sMazeBestTime.innerText = localMazeBestTime > 0 ? localMazeBestTime + 's' : '--';
+
+    // 5. Cipher Guesser Metrics
+    const localGuess = localStorage.getItem('hub_guess_best') || '--';
+    const pGuess = document.getElementById('preview-guess');
+    const sGuessBest = document.getElementById('statGuessBest');
+
+    if (pGuess) pGuess.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
+    if (sGuessBest) sGuessBest.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
+
+    // --- Query Database High Scores & Global Leaderboards ---
     try {
       const res = await fetch('get_scores.jsp');
       if (res.ok) {
         const data = await res.json();
         if (data.userScores) {
           if (data.userScores.snake !== undefined) {
-            if (pSnake) pSnake.innerText = data.userScores.snake + ' pts';
-            if (sSnake) sSnake.innerText = data.userScores.snake + ' pts';
-            localStorage.setItem('hub_snake_high', data.userScores.snake);
+            const dbSnake = data.userScores.snake;
+            if (pSnake) pSnake.innerText = dbSnake + ' pts';
+            if (sSnakeBest) sSnakeBest.innerText = dbSnake + ' pts';
+            localStorage.setItem('hub_snake_high', dbSnake);
           }
           if (data.userScores.bomb_defuse !== undefined) {
-            if (pDefuse) pDefuse.innerText = data.userScores.bomb_defuse + ' pts';
-            if (sDefuse) sDefuse.innerText = data.userScores.bomb_defuse + ' pts';
-            localStorage.setItem('hub_defuse_high', data.userScores.bomb_defuse);
+            const dbDefuse = data.userScores.bomb_defuse;
+            if (pDefuse) pDefuse.innerText = dbDefuse + ' pts';
+            if (sDefuseBest) sDefuseBest.innerText = dbDefuse + ' pts';
+            localStorage.setItem('hub_defuse_high', dbDefuse);
+          }
+          if (data.userScores.chess !== undefined) {
+            const dbChess = data.userScores.chess;
+            if (pChess) pChess.innerText = dbChess;
+            if (sChessRating) sChessRating.innerText = dbChess;
+            localStorage.setItem('hub_chess_rating', dbChess);
           }
         }
+
         if (data.leaders) {
           const lSnake = document.getElementById('statSnakeLeader');
           const lDefuse = document.getElementById('statDefuseLeader');
@@ -1197,19 +1692,20 @@
         }
       }
     } catch (e) {
-      console.warn('Cloud score sync offline; relying on local cache.');
+      console.warn('Cloud score sync offline; relying on local telemetry.');
     }
   }
 
   function resetLocalCache() {
-    if(confirm('Purge local score cache? Your cloud scores remain safe.')) {
+    if (confirm('Purge local score and telemetry cache? Your cloud records remain safe in the database.')) {
       localStorage.clear();
       syncCloudScores();
+      alert('Local telemetry purged successfully.');
     }
   }
 
   function togglePerformance(checkbox) {
-    if(checkbox.checked) {
+    if (checkbox.checked) {
       document.body.style.setProperty('animation', 'none', 'important');
     } else {
       document.body.style.removeProperty('animation');

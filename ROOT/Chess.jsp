@@ -410,6 +410,38 @@
 
             if (game.in_checkmate()) {
                 statusHTML = `<span style="color:var(--danger)">Game Over: ${moveColor} is in checkmate.</span>`;
+                
+                // Track Wins / Losses / Rating
+                if (!game._recorded) {
+                    game._recorded = true;
+                    let wins = parseInt(localStorage.getItem('hub_chess_wins') || '0', 10);
+                    let losses = parseInt(localStorage.getItem('hub_chess_losses') || '0', 10);
+                    let rating = parseInt(localStorage.getItem('hub_chess_rating') || '1200', 10);
+
+                    const playerWon = (moveColor === 'Black' && board.orientation() === 'white') ||
+                                      (moveColor === 'White' && board.orientation() === 'black');
+
+                    if (playerWon) {
+                        wins++;
+                        rating += 30;
+                        localStorage.setItem('hub_chess_wins', wins);
+                        localStorage.setItem('hub_chess_rating', rating);
+                        statusHTML += ` <br><span style="color:var(--accent); font-size: 1rem;">Victory! Rating: ${rating} (+30)</span>`;
+                    } else {
+                        losses++;
+                        rating = Math.max(800, rating - 15);
+                        localStorage.setItem('hub_chess_losses', losses);
+                        localStorage.setItem('hub_chess_rating', rating);
+                        statusHTML += ` <br><span style="color:var(--danger); font-size: 1rem;">Defeat. Rating: ${rating} (-15)</span>`;
+                    }
+
+                    // Sync to Cloud
+                    fetch('save_score.jsp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ game: 'chess', score: rating })
+                    }).catch(() => console.log('Offline chess score saved.'));
+                }
             } else if (game.in_draw()) {
                 statusHTML = `<span style="color:var(--text-muted)">Game Over: Drawn position.</span>`;
             } else {

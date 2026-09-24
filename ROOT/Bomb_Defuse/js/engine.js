@@ -191,6 +191,19 @@ function triggerSuccess() {
         localStorage.setItem('hub_defuse_high', levelScore);
     }
 
+    // Extended Hub Records Tracking
+    const currentDisarms = parseInt(localStorage.getItem('hub_defuse_disarms') || '0', 10) + 1;
+    localStorage.setItem('hub_defuse_disarms', currentDisarms);
+
+    const currentMaxLvl = parseInt(localStorage.getItem('hub_defuse_level') || '0', 10);
+    if (currentLevel > currentMaxLvl) {
+        localStorage.setItem('hub_defuse_level', currentLevel);
+    }
+
+    const strikesAvoidedThisRun = Math.max(0, 3 - strikes);
+    const totalStrikesAvoided = parseInt(localStorage.getItem('hub_defuse_strikes_avoided') || '0', 10) + strikesAvoidedThisRun;
+    localStorage.setItem('hub_defuse_strikes_avoided', totalStrikesAvoided);
+
     // Sync to Cloud
     fetch('../save_score.jsp', {
         method: 'POST',
