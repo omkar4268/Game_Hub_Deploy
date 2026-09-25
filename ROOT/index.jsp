@@ -619,6 +619,7 @@
   .banner-maze    { background: linear-gradient(135deg, #0c4a6e, #38bdf8); }
   .banner-guesser { background: linear-gradient(135deg, #312e81, #6366f1); }
   .banner-breaker { background: linear-gradient(135deg, #1e1b4b, #a855f7 60%, #06b6d4 100%); }
+  .banner-glitch  { background: linear-gradient(135deg, #0284c7, #38bdf8 50%, #22c55e 100%); }
 
   .card-banner {
     height: 140px;
@@ -1153,6 +1154,20 @@
           </div>
         </div>
 
+        <!-- Game 7: Cyber Grid: Glitch Protocol -->
+        <div class="game-card" style="animation-delay: 0.35s;" onclick="openLaunchModal('Glitch_Protocol.jsp', 'Cyber Grid: Glitch Protocol', 'Physics-based Match-3 puzzle. Swap adjacent glowing nodes, trigger cascading data streams, and purge corrupted firewall tiles across auto-scaling matrices.')">
+          <div class="card-banner banner-glitch">⚡</div>
+          <div class="card-body">
+            <div class="card-tag">Match-3 Puzzle</div>
+            <div class="card-title">Glitch Protocol</div>
+            <div class="card-desc">Swap adjacent data streams, trigger cascading chain reactions, and purge corrupted firewall sectors.</div>
+            <div class="card-footer">
+              <div class="card-score-preview">Record: <span id="preview-glitch">0 pts</span></div>
+              <div class="launch-arrow">➔</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1301,6 +1316,30 @@
           <div class="stat-row">
             <span class="stat-label">Top Global Operator</span>
             <span class="stat-val" id="statBreakerLeader" style="color: var(--accent);">--</span>
+          </div>
+        </div>
+
+        <!-- 7. Glitch Protocol -->
+        <div class="score-card">
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #38bdf8;">⚡ Glitch Protocol</div>
+            <div class="score-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">Match-3 Stream</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">High Score</span>
+            <span class="stat-val" id="statGlitchBest" style="color: #38bdf8;">0 pts</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Deepest Sector</span>
+            <span class="stat-val" id="statGlitchSector">Sector 1</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Engine Mechanics</span>
+            <span class="stat-val" style="color: var(--accent);">Cascading Purge</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Top Global Operator</span>
+            <span class="stat-val" id="statGlitchLeader" style="color: var(--warning);">--</span>
           </div>
         </div>
 
@@ -1809,6 +1848,18 @@
     if (sBreakerBest) sBreakerBest.innerText = localBreaker + ' pts';
     if (sBreakerLevel) sBreakerLevel.innerText = localBreakerLevel;
 
+    // 7. Cyber Grid: Glitch Protocol Metrics
+    const localGlitch = localStorage.getItem('hub_glitch_high') || '0';
+    const localGlitchSector = localStorage.getItem('hub_glitch_sector') || 'Sector 1';
+
+    const pGlitch = document.getElementById('preview-glitch');
+    const sGlitchBest = document.getElementById('statGlitchBest');
+    const sGlitchSector = document.getElementById('statGlitchSector');
+
+    if (pGlitch) pGlitch.innerText = localGlitch + ' pts';
+    if (sGlitchBest) sGlitchBest.innerText = localGlitch + ' pts';
+    if (sGlitchSector) sGlitchSector.innerText = localGlitchSector;
+
     // Query Database High Scores & Global Leaderboards
     try {
       const res = await fetch('get_scores.jsp');
@@ -1839,12 +1890,19 @@
             if (sBreakerBest) sBreakerBest.innerText = dbBreaker + ' pts';
             localStorage.setItem('hub_nodebreaker_high', dbBreaker);
           }
+          if (data.userScores.glitch_protocol !== undefined) {
+            const dbGlitch = data.userScores.glitch_protocol;
+            if (pGlitch) pGlitch.innerText = dbGlitch + ' pts';
+            if (sGlitchBest) sGlitchBest.innerText = dbGlitch + ' pts';
+            localStorage.setItem('hub_glitch_high', dbGlitch);
+          }
         }
 
         if (data.leaders) {
           const lSnake = document.getElementById('statSnakeLeader');
           const lDefuse = document.getElementById('statDefuseLeader');
           const lBreaker = document.getElementById('statBreakerLeader');
+          const lGlitch = document.getElementById('statGlitchLeader');
           if (lSnake && data.leaders.snake) {
             lSnake.innerText = data.leaders.snake.username + ' (' + data.leaders.snake.score + ' pts)';
           }
@@ -1853,6 +1911,9 @@
           }
           if (lBreaker && data.leaders.node_breaker) {
             lBreaker.innerText = data.leaders.node_breaker.username + ' (' + data.leaders.node_breaker.score + ' pts)';
+          }
+          if (lGlitch && data.leaders.glitch_protocol) {
+            lGlitch.innerText = data.leaders.glitch_protocol.username + ' (' + data.leaders.glitch_protocol.score + ' pts)';
           }
         }
       }
