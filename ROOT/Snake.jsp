@@ -346,21 +346,21 @@
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
   }
 
-  /* Mobile Virtual D-Pad (Auto-hidden on PC) */
+  /* Mobile Virtual D-Pad (Context-aware display) */
   #mobileDpad {
     display: none;
-    grid-template-columns: repeat(3, 58px);
-    grid-template-rows: repeat(3, 50px);
-    gap: 8px;
-    margin-top: 1rem;
+    grid-template-columns: repeat(3, 52px);
+    grid-template-rows: repeat(3, 46px);
+    gap: 6px;
+    margin-top: 0.8rem;
   }
 
   .d-btn {
     background: rgba(15, 23, 42, 0.9);
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: var(--accent);
-    border-radius: 14px;
-    font-size: 1.35rem;
+    border-radius: 12px;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -380,17 +380,65 @@
   .d-down  { grid-column: 2; grid-row: 2; }
   .d-right { grid-column: 3; grid-row: 2; }
 
+  /* Universal Cyber-Scanner Wipe Transition */
+  .cyber-wipe-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .cyber-wipe-overlay.active {
+    pointer-events: all;
+    opacity: 1;
+  }
+  .cyber-wipe-beam {
+    position: absolute;
+    top: 0;
+    left: -100vw;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
+    box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+    transform: translate3d(0, 0, 0);
+  }
+  .cyber-wipe-overlay.active .cyber-wipe-beam {
+    animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes cyberBeamSweep {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(200vw); }
+  }
+
+  /* Compact Mobile Viewports (No Clipping, Perfect Proportions) */
   @media (max-width: 640px) {
-    .game-arena { max-width: 94vw; }
+    body { padding: 0.6rem; }
+    .game-arena { max-width: 100%; width: 100%; }
     .header h1 { font-size: 1.25rem; }
-    .scoreboard { padding: 0.5rem 1rem; font-size: 0.85rem; }
-    .overlay-screen { padding: 1.4rem; }
-    .overlay-stats { gap: 1.2rem; padding: 0.5rem 1.2rem; margin-bottom: 1.1rem; }
-    .menu-actions-row { flex-direction: column; gap: 0.5rem; }
+    .scoreboard { padding: 0.5rem 1rem; font-size: 0.82rem; margin-bottom: 0.6rem; }
+    .canvas-wrapper { max-width: min(380px, 94vw); width: 100%; aspect-ratio: 1 / 1; border-radius: 16px; }
+    .overlay-screen { padding: 1.1rem 0.9rem; }
+    .overlay-icon { font-size: 2.1rem; margin-bottom: 2px; }
+    .overlay-title { font-size: 1.25rem; margin-bottom: 2px; gap: 6px; }
+    .overlay-subtitle { font-size: 0.78rem; line-height: 1.35; margin-bottom: 0.65rem; max-width: 300px; }
+    .overlay-stats { gap: 1rem; padding: 0.35rem 0.9rem; margin-bottom: 0.75rem; border-radius: 10px; }
+    .overlay-stats div { font-size: 0.72rem; }
+    .overlay-stats div span { font-size: 1.05rem; }
+    .menu-actions { gap: 0.55rem; width: 100%; max-width: 320px; }
+    .menu-actions-row { display: flex; flex-direction: row; gap: 0.55rem; width: 100%; }
+    .btn-cyber { min-height: 44px; padding: 0.55rem 0.75rem; font-size: 0.8rem; border-radius: 10px; }
+    #mobileDpad { grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 44px); gap: 5px; margin-top: 0.6rem; }
+    .d-btn { font-size: 1.15rem; border-radius: 10px; }
   }
 </style>
 </head>
 <body>
+  <!-- Universal Cyber-Scanner Wipe Transition -->
+  <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
+    <div class="cyber-wipe-beam"></div>
+  </div>
 
   <div class="game-arena">
     <div class="header">
@@ -398,7 +446,7 @@
         <h1>CYBER SNAKE</h1>
         <span class="header-badge">ARCADE PROTOCOL</span>
       </div>
-      <a href="index.jsp" class="btn-hub">‹ Hub</a>
+      <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-hub">‹ Hub</a>
     </div>
 
     <div class="scoreboard">
@@ -426,7 +474,7 @@
           <button class="btn-cyber btn-cyber-primary" onclick="startGame()">▶ INITIATE RUN</button>
           <div class="menu-actions-row">
             <button class="btn-cyber btn-cyber-secondary" onclick="openManual()">⚙ PROTOCOL & CONTROLS</button>
-            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+            <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
           </div>
         </div>
       </div>
@@ -446,7 +494,7 @@
           <button class="btn-cyber btn-cyber-primary" onclick="startGame()">↻ RETRY RUN</button>
           <div class="menu-actions-row">
             <button class="btn-cyber btn-cyber-secondary" onclick="showStartScreen()">☰ MAIN MENU</button>
-            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+            <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
           </div>
         </div>
       </div>
@@ -519,9 +567,8 @@
   const isMobile = ('ontouchstart' in window) || 
                    (navigator.maxTouchPoints > 0) || 
                    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  if (isMobile) {
-    dpad.style.display = 'grid';
-  }
+  // Keep D-pad hidden on initial startup screen
+  dpad.style.display = 'none';
 
   // Crisp 20x20 grid on a 400x400 internal canvas
   const grid = 20; 
@@ -557,8 +604,14 @@
     document.getElementById(btnId).classList.add('active');
   }
 
-  function openManual() { manualModal.classList.add('active'); }
-  function closeManual() { manualModal.classList.remove('active'); }
+  function openManual() { 
+    manualModal.classList.add('active'); 
+    dpad.style.display = 'none';
+  }
+  function closeManual() { 
+    manualModal.classList.remove('active'); 
+    if (isPlaying && isMobile) dpad.style.display = 'grid';
+  }
 
   function showStartScreen() {
     gameOverScreen.style.display = 'none';
@@ -566,6 +619,7 @@
     startScreen.style.display = 'flex';
     splashBest.innerText = highScore + ' pts';
     splashNodes.innerText = totalNodes;
+    dpad.style.display = 'none';
   }
 
   function spawnFood() {
@@ -583,6 +637,7 @@
     startScreen.style.display = 'none';
     gameOverScreen.style.display = 'none';
     manualModal.classList.remove('active');
+    if (isMobile) dpad.style.display = 'grid';
 
     snake = [
       { x: 8, y: 10 },
@@ -651,6 +706,7 @@
     finalScoreVal.innerText = score + ' pts';
     finalNodesVal.innerText = runNodes;
     gameOverScreen.style.display = 'flex';
+    dpad.style.display = 'none';
 
     if (score > 0) {
       syncScoreToCloud('snake', score);
@@ -762,6 +818,24 @@
 
   // Initial draw
   render();
+
+  // Cyber-Scanner Navigation Wipe Handler
+  function cyberNavigate(url) {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 220);
+    } else {
+      window.location.href = url;
+    }
+  }
+
+  window.addEventListener('pageshow', () => {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) overlay.classList.remove('active');
+  });
 </script>
 </body>
 </html>

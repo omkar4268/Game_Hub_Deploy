@@ -358,14 +358,56 @@
   }
   .rules-modal.active { display: flex; }
 
+  /* Universal Cyber-Scanner Wipe Transition */
+  .cyber-wipe-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .cyber-wipe-overlay.active {
+    pointer-events: all;
+    opacity: 1;
+  }
+  .cyber-wipe-beam {
+    position: absolute;
+    top: 0;
+    left: -100vw;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
+    box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+    transform: translate3d(0, 0, 0);
+  }
+  .cyber-wipe-overlay.active .cyber-wipe-beam {
+    animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes cyberBeamSweep {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(200vw); }
+  }
+
   @media (max-width: 600px) {
-    .game-card { padding: 1.8rem 1.4rem; max-width: 94vw; }
-    .overlay-stats { gap: 1.2rem; padding: 0.6rem 1.2rem; }
-    .menu-actions-row { flex-direction: column; gap: 0.6rem; }
+    .game-card { padding: 1.5rem 1.1rem; max-width: 95vw; }
+    .overlay-screen, .startup-overlay { padding: 1.2rem 1rem; }
+    .overlay-icon { font-size: 2.2rem; margin-bottom: 2px; }
+    .overlay-title { font-size: 1.3rem; margin-bottom: 2px; }
+    .overlay-sub { font-size: 0.8rem; line-height: 1.4; margin-bottom: 0.8rem; }
+    .overlay-stats { gap: 1rem; padding: 0.4rem 1rem; margin-bottom: 0.8rem; }
+    .menu-actions { gap: 0.55rem; width: 100%; max-width: 320px; }
+    .menu-actions-row { display: flex; flex-direction: row; gap: 0.55rem; width: 100%; }
+    .btn-cyber { min-height: 44px; padding: 0.55rem 0.75rem; font-size: 0.82rem; }
   }
 </style>
 </head>
 <body>
+<!-- Universal Cyber-Scanner Wipe Transition -->
+<div id="cyberWipeOverlay" class="cyber-wipe-overlay">
+  <div class="cyber-wipe-beam"></div>
+</div>
 
 <div class="game-card">
   <!-- Standardized Pre-Game Startup Screen -->
@@ -386,7 +428,7 @@
       <button class="btn-cyber btn-cyber-primary" onclick="dismissGuesserStartup()">▶ INITIATE RUN</button>
       <div class="menu-actions-row">
         <button class="btn-cyber btn-cyber-secondary" onclick="openRules()">⚙ PROTOCOL & CONTROLS</button>
-        <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+        <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
       </div>
     </div>
   </div>
@@ -396,7 +438,7 @@
       <h2>CIPHER GUESSER</h2>
       <span class="header-badge">v2.5</span>
     </div>
-    <a href="index.jsp" class="btn-hub">‹ Hub</a>
+    <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-hub">‹ Hub</a>
   </div>
 
   <div class="cipher-icon">🔢</div>
@@ -470,6 +512,24 @@
       body: new URLSearchParams({ game: 'number_guess', score: calcScore })
     }).catch(() => console.log('Offline score preserved.'));
   <% } %>
+
+  // Cyber-Scanner Navigation Wipe Handler
+  function cyberNavigate(url) {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 220);
+    } else {
+      window.location.href = url;
+    }
+  }
+
+  window.addEventListener('pageshow', () => {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) overlay.classList.remove('active');
+  });
 </script>
 </body>
 </html>

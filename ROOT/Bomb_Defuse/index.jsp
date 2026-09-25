@@ -51,24 +51,30 @@
     </style>
 </head>
 <body>
+    <!-- Universal Cyber-Scanner Wipe Transition -->
+    <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
+        <div class="cyber-wipe-beam"></div>
+    </div>
 
     <!-- STANDARDIZED PRE-GAME STARTUP SCREEN -->
     <div id="screen-startup" class="screen active">
-        <div class="menu-container" style="max-width: 440px; padding: 25px 22px;">
-            <div style="font-size: 2.6rem; margin-bottom: 4px;">☢️</div>
-            <h1 class="menu-title" style="font-size: 1.65rem; margin-bottom: 4px;">DEFUSAL PROTOCOL</h1>
-            <div style="display:inline-block; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); color:#f43f5e; font-size:0.68rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-bottom: 12px; letter-spacing:1px;">CRISIS SIM v2.5</div>
-            <p style="color: var(--text-muted); font-size: 0.84rem; line-height: 1.5; margin-bottom: 15px;">
+        <div class="menu-container" style="max-width: 440px; padding: 22px 18px;">
+            <div style="font-size: 2.4rem; margin-bottom: 4px;">☢️</div>
+            <h1 class="menu-title" style="font-size: 1.6rem; margin-bottom: 4px;">DEFUSAL PROTOCOL</h1>
+            <div style="display:inline-block; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); color:#f43f5e; font-size:0.68rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-bottom: 10px; letter-spacing:1px;">CRISIS SIM v2.5</div>
+            <p style="color: var(--text-muted); font-size: 0.82rem; line-height: 1.45; margin-bottom: 14px;">
                 High-stakes 3-minute bomb defusal simulation. Complete override sequences across security modules before detonation occurs.
             </p>
-            <div style="display:flex; justify-content:space-around; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); margin-bottom:18px; font-size:0.8rem;">
-                <div>Record Score<span id="splashDefuseScore" style="display:block; font-size:1.1rem; color:var(--neon-blue); font-weight:bold;">0 pts</span></div>
-                <div>Disarms<span id="splashDefuseDisarms" style="display:block; font-size:1.1rem; color:var(--neon-green); font-weight:bold;">0</span></div>
+            <div style="display:flex; justify-content:space-around; background:rgba(0,0,0,0.5); padding:8px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); margin-bottom:14px; font-size:0.8rem;">
+                <div>Record Score<span id="splashDefuseScore" style="display:block; font-size:1.05rem; color:var(--neon-blue); font-weight:bold;">0 pts</span></div>
+                <div>Disarms<span id="splashDefuseDisarms" style="display:block; font-size:1.05rem; color:var(--neon-green); font-weight:bold;">0</span></div>
             </div>
             <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
                 <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; min-height:44px;" onclick="openLevelSelect()">▶ INITIATE RUN</button>
-                <button class="level-btn" style="min-height:44px;" onclick="openDefuseIntel()">⚙ PROTOCOL & CONTROLS</button>
-                <button class="btn-abort" style="min-height:44px;" onclick="window.location.href='../index.jsp'">‹ RETURN TO HUB</button>
+                <div style="display:flex; gap:8px; width:100%;">
+                    <button class="level-btn" style="flex:1; min-height:44px; padding:8px 6px; font-size:0.85rem;" onclick="openDefuseIntel()">⚙ PROTOCOL</button>
+                    <button class="btn-abort" style="flex:1; min-height:44px; padding:8px 6px; font-size:0.85rem;" onclick="cyberNavigate('../index.jsp')">‹ HUB</button>
+                </div>
             </div>
         </div>
     </div>
@@ -110,7 +116,7 @@
             </div>
             <div style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
                 <button class="level-btn" onclick="showStartupScreen()">‹ BACK</button>
-                <button class="btn-abort" onclick="window.location.href='../index.jsp'">EXIT TO HUB</button>
+                <button class="btn-abort" onclick="cyberNavigate('../index.jsp')">EXIT TO HUB</button>
             </div>
         </div>
     </div>
@@ -163,5 +169,23 @@
 
     <!-- Link to the separated JavaScript file -->
     <script src="js/engine.js"></script>
+    <script>
+      function cyberNavigate(url) {
+        const overlay = document.getElementById('cyberWipeOverlay');
+        if (overlay) {
+          overlay.classList.add('active');
+          setTimeout(() => {
+            window.location.href = url;
+          }, 220);
+        } else {
+          window.location.href = url;
+        }
+      }
+
+      window.addEventListener('pageshow', () => {
+        const overlay = document.getElementById('cyberWipeOverlay');
+        if (overlay) overlay.classList.remove('active');
+      });
+    </script>
 </body>
 </html>

@@ -372,14 +372,59 @@
             display: block;
             margin-bottom: 3px;
         }
+
+        /* Universal Cyber-Scanner Wipe Transition */
+        .cyber-wipe-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99999;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .cyber-wipe-overlay.active {
+            pointer-events: all;
+            opacity: 1;
+        }
+        .cyber-wipe-beam {
+            position: absolute;
+            top: 0;
+            left: -100vw;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
+            box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+            transform: translate3d(0, 0, 0);
+        }
+        .cyber-wipe-overlay.active .cyber-wipe-beam {
+            animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        @keyframes cyberBeamSweep {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(200vw); }
+        }
+
+        @media (max-width: 768px) {
+            .chess-overlay-screen { padding: 1.2rem 1rem; }
+            .overlay-icon { font-size: 2.2rem; margin-bottom: 2px; }
+            .overlay-title { font-size: 1.3rem; margin-bottom: 2px; }
+            .overlay-sub { font-size: 0.8rem; line-height: 1.4; margin-bottom: 0.8rem; max-width: 300px; }
+            .overlay-stats { padding: 0.4rem 1rem; margin-bottom: 0.8rem; gap: 1rem; }
+            .status-box { min-width: unset; width: 90%; font-size: 0.95rem; padding: 0.6rem 1rem; margin-top: 0.8rem; }
+        }
     </style>
 </head>
 <body>
+    <!-- Universal Cyber-Scanner Wipe Transition -->
+    <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
+        <div class="cyber-wipe-beam"></div>
+    </div>
 
     <div class="navbar">
         <h1 class="title">CYBER CHESS <span style="font-size:0.8rem; color:var(--text-muted);">v3.0 OMNI-ROUTING</span></h1>
         <div style="display:flex; align-items:center; gap:8px;">
-            <a href="index.jsp" class="btn btn-secondary" style="text-decoration:none; padding: 6px 12px; font-size:0.82rem;"><i class="fa-solid fa-arrow-left"></i> Hub</a>
+            <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn btn-secondary" style="text-decoration:none; padding: 6px 12px; font-size:0.82rem;"><i class="fa-solid fa-arrow-left"></i> Hub</a>
             <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
         </div>
     </div>
@@ -398,10 +443,12 @@
             <div>Win Ratio<span id="splashChessRatio">0%</span></div>
         </div>
 
-        <div class="menu-actions">
+        <div class="menu-actions" style="max-width: 320px;">
             <button class="btn-cyber btn-cyber-primary" onclick="startChessMatch()">▶ INITIATE MATCH</button>
-            <button class="btn-cyber btn-cyber-secondary" onclick="openChessIntel()">⚙ PROTOCOL & CONTROLS</button>
-            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+            <div style="display:flex; gap:8px; width:100%;">
+                <button class="btn-cyber btn-cyber-secondary" style="flex:1;" onclick="openChessIntel()">⚙ PROTOCOL</button>
+                <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-cyber btn-cyber-secondary" style="flex:1;">‹ HUB</a>
+            </div>
         </div>
     </div>
 
@@ -697,7 +744,7 @@
         });
 
         $('#flipBtn').on('click', () => board.flip());
-        $('#exitBtn').on('click', () => window.location.href = 'index.jsp');
+        $('#exitBtn').on('click', () => cyberNavigate('index.jsp'));
 
         // Startup Screen Logic
         function loadChessTelemetry() {
@@ -729,6 +776,24 @@
 
         loadChessTelemetry();
         updateStatus();
+
+        // Cyber-Scanner Navigation Wipe Handler
+        function cyberNavigate(url) {
+            const overlay = document.getElementById('cyberWipeOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 220);
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        window.addEventListener('pageshow', () => {
+            const overlay = document.getElementById('cyberWipeOverlay');
+            if (overlay) overlay.classList.remove('active');
+        });
     </script>
 </body>
 </html>

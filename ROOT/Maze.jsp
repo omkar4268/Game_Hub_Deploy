@@ -354,20 +354,20 @@
   }
   @keyframes spin { 100% { transform: rotate(360deg); } }
 
-  /* Mobile Touch D-Pad */
+  /* Mobile Touch D-Pad (Context-aware display) */
   .dpad {
-    display: grid;
-    grid-template-columns: repeat(3, 58px);
-    grid-template-rows: repeat(3, 50px);
-    gap: 8px;
-    margin-top: 1rem;
+    display: none;
+    grid-template-columns: repeat(3, 52px);
+    grid-template-rows: repeat(3, 46px);
+    gap: 6px;
+    margin-top: 0.8rem;
   }
   .dpad button {
     background: rgba(15, 23, 42, 0.9);
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: var(--primary);
-    border-radius: 14px;
-    font-size: 1.35rem;
+    border-radius: 12px;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -383,21 +383,65 @@
   .dpad-down { grid-column: 2; grid-row: 2; }
   .dpad-right { grid-column: 3; grid-row: 2; }
 
-  @media (min-width: 768px) {
-    .dpad { display: none; }
+  /* Universal Cyber-Scanner Wipe Transition */
+  .cyber-wipe-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .cyber-wipe-overlay.active {
+    pointer-events: all;
+    opacity: 1;
+  }
+  .cyber-wipe-beam {
+    position: absolute;
+    top: 0;
+    left: -100vw;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
+    box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+    transform: translate3d(0, 0, 0);
+  }
+  .cyber-wipe-overlay.active .cyber-wipe-beam {
+    animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes cyberBeamSweep {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(200vw); }
   }
 
+  /* Compact Mobile Viewports (No Clipping, Perfect Proportions) */
   @media (max-width: 640px) {
-    .game-arena { max-width: 94vw; }
+    body { padding: 0.6rem; }
+    .game-arena { max-width: 100%; width: 100%; }
     .header h1 { font-size: 1.25rem; }
-    .controls-bar { padding: 0.5rem 1rem; font-size: 0.85rem; }
-    .overlay-screen { padding: 1.4rem; }
-    .overlay-stats { gap: 1.2rem; padding: 0.5rem 1.2rem; margin-bottom: 1.1rem; }
-    .menu-actions-row { flex-direction: column; gap: 0.5rem; }
+    .controls-bar { padding: 0.5rem 1rem; font-size: 0.82rem; margin-bottom: 0.6rem; }
+    .game-container { max-width: min(380px, 94vw); width: 100%; aspect-ratio: 1 / 1; border-radius: 16px; }
+    .overlay-screen { padding: 1.1rem 0.9rem; }
+    .overlay-icon { font-size: 2.1rem; margin-bottom: 2px; }
+    .overlay-title { font-size: 1.25rem; margin-bottom: 2px; gap: 6px; }
+    .overlay-sub { font-size: 0.78rem; line-height: 1.35; margin-bottom: 0.65rem; max-width: 300px; }
+    .overlay-stats { gap: 1rem; padding: 0.35rem 0.9rem; margin-bottom: 0.75rem; border-radius: 10px; }
+    .overlay-stats div { font-size: 0.72rem; }
+    .overlay-stats div span { font-size: 1.05rem; }
+    .menu-actions { gap: 0.55rem; width: 100%; max-width: 320px; }
+    .menu-actions-row { display: flex; flex-direction: row; gap: 0.55rem; width: 100%; }
+    .btn-cyber { min-height: 44px; padding: 0.55rem 0.75rem; font-size: 0.8rem; border-radius: 10px; }
+    .dpad { grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 44px); gap: 5px; margin-top: 0.6rem; }
+    .dpad button { font-size: 1.15rem; border-radius: 10px; }
   }
 </style>
 </head>
 <body>
+  <!-- Universal Cyber-Scanner Wipe Transition -->
+  <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
+    <div class="cyber-wipe-beam"></div>
+  </div>
 
   <div class="game-arena">
     <div class="header">
@@ -405,7 +449,7 @@
         <h1>CYBER MAZE</h1>
         <span class="badge">LABYRINTH PROTOCOL</span>
       </div>
-      <a href="index.jsp" class="btn-hub">‹ Hub</a>
+      <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-hub">‹ Hub</a>
     </div>
 
     <div class="controls-bar">
@@ -439,7 +483,7 @@
           <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">▶ INITIATE RUN</button>
           <div class="menu-actions-row">
             <button class="btn-cyber btn-cyber-secondary" onclick="openIntel()">⚙ PROTOCOL & CONTROLS</button>
-            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+            <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
           </div>
         </div>
       </div>
@@ -459,7 +503,7 @@
           <button class="btn-cyber btn-cyber-primary" onclick="startNewGame()">↻ NEXT MAZE</button>
           <div class="menu-actions-row">
             <button class="btn-cyber btn-cyber-secondary" onclick="showSplashScreen()">☰ MAIN MENU</button>
-            <a href="index.jsp" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+            <a href="javascript:void(0)" onclick="cyberNavigate('index.jsp')" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
           </div>
         </div>
       </div>
@@ -501,7 +545,7 @@
     </div>
 
     <!-- Mobile Touch Controls -->
-    <div class="dpad">
+    <div class="dpad" id="mobileDpad">
       <button class="dpad-up" onclick="movePlayer(0, -1)">▲</button>
       <button class="dpad-left" onclick="movePlayer(-1, 0)">◀</button>
       <button class="dpad-down" onclick="movePlayer(0, 1)">▼</button>
@@ -523,6 +567,12 @@
   const splashBestTime = document.getElementById('splashBestTime');
   const winTimeVal = document.getElementById('winTimeVal');
   const winClearsVal = document.getElementById('winClearsVal');
+  const dpadElem = document.getElementById('mobileDpad');
+
+  const isMobile = ('ontouchstart' in window) || 
+                   (navigator.maxTouchPoints > 0) || 
+                   /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (dpadElem) dpadElem.style.display = 'none';
 
   let grid = [];
   let rows, cols;
@@ -540,8 +590,14 @@
   splashClears.innerText = totalClears;
   splashBestTime.innerText = bestTime > 0 ? bestTime + 's' : '--';
 
-  function openIntel() { intelModal.classList.add('active'); }
-  function closeIntel() { intelModal.classList.remove('active'); }
+  function openIntel() { 
+    intelModal.classList.add('active'); 
+    if (dpadElem) dpadElem.style.display = 'none';
+  }
+  function closeIntel() { 
+    intelModal.classList.remove('active'); 
+    if (!isGameOver && isMobile && dpadElem) dpadElem.style.display = 'grid';
+  }
 
   function showSplashScreen() {
     winScreen.style.display = 'none';
@@ -549,6 +605,7 @@
     splashScreen.style.display = 'flex';
     splashClears.innerText = totalClears;
     splashBestTime.innerText = bestTime > 0 ? bestTime + 's' : '--';
+    if (dpadElem) dpadElem.style.display = 'none';
   }
 
   function onDiffChange() {
@@ -581,6 +638,7 @@
       placeEntities();
       loadingOverlay.style.display = 'none';
       isGameOver = false;
+      if (isMobile && dpadElem) dpadElem.style.display = 'grid';
       draw();
 
       timerInterval = setInterval(() => {
@@ -676,6 +734,7 @@
 
       winTimeVal.innerText = timerVal.innerText;
       winClearsVal.innerText = totalClears;
+      if (dpadElem) dpadElem.style.display = 'none';
       setTimeout(() => { winScreen.style.display = 'flex'; }, 150);
     }
   }
@@ -724,6 +783,24 @@
   canvas.height = 25 * 18;
   ctx.fillStyle = '#020617';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Cyber-Scanner Navigation Wipe Handler
+  function cyberNavigate(url) {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 220);
+    } else {
+      window.location.href = url;
+    }
+  }
+
+  window.addEventListener('pageshow', () => {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) overlay.classList.remove('active');
+  });
 </script>
 </body>
 </html>

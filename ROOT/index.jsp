@@ -74,179 +74,83 @@
   }
 
   /* =========================================================
-     FEATURE 1: CINEMATIC CLOSING DOORS LOGIN TRANSITION
+     FEATURE 1: HIGH-SPEED DIGITAL ZOOM-THROUGH & CYBER SHUTTER
      ========================================================= */
-  .blast-doors-overlay {
+  .cyber-shutter {
     position: fixed;
     inset: 0;
-    z-index: 99999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    z-index: 5500;
     pointer-events: none;
-  }
-  .blast-doors-overlay.active {
-    display: flex;
-    pointer-events: all;
-  }
-
-  .blast-door {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50.5%;
-    background: linear-gradient(135deg, #0b1120 0%, #030712 100%);
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.9), 0 0 50px rgba(0,0,0,0.8);
-    transition: transform 0.65s cubic-bezier(0.85, 0, 0.15, 1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border: 1px solid rgba(56, 189, 248, 0.15);
-    overflow: hidden;
-  }
-
-  .door-left {
-    left: 0;
-    transform: translateX(-100%);
-    border-right: 3px solid var(--primary);
-    box-shadow: 10px 0 35px rgba(56, 189, 248, 0.4);
-  }
-  .door-right {
-    right: 0;
-    transform: translateX(100%);
-    border-left: 3px solid var(--primary);
-    box-shadow: -10px 0 35px rgba(56, 189, 248, 0.4);
-  }
-
-  /* Closed State */
-  .blast-doors-overlay.closed .door-left { transform: translateX(0); }
-  .blast-doors-overlay.closed .door-right { transform: translateX(0); }
-
-  /* Industrial door patterns */
-  .door-panel-graphics {
-    position: absolute;
-    inset: 0;
-    opacity: 0.15;
-    background: 
-      repeating-linear-gradient(45deg, rgba(56, 189, 248, 0.3) 0, rgba(56, 189, 248, 0.3) 15px, transparent 15px, transparent 30px);
-    pointer-events: none;
-  }
-  .door-hazard-stripe {
-    height: 12px;
-    width: 100%;
-    background: repeating-linear-gradient(
-      -45deg,
-      #f59e0b,
-      #f59e0b 12px,
-      #000 12px,
-      #000 24px
-    );
-    opacity: 0.6;
-    margin: 1.5rem 0;
-  }
-
-  /* Center Scanning Laser & Energy Seam */
-  .door-seam-glow {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 4px;
-    transform: translateX(-50%);
-    background: #38bdf8;
-    box-shadow: 0 0 30px #38bdf8, 0 0 60px #22c55e;
     opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 10;
   }
-  .blast-doors-overlay.closed .door-seam-glow { opacity: 1; }
+  .cyber-shutter.active {
+    pointer-events: all;
+    opacity: 1;
+    animation: cyberShutterAnim 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes cyberShutterAnim {
+    0% {
+      background: rgba(56, 189, 248, 0.25);
+      box-shadow: inset 0 0 100px rgba(56, 189, 248, 0.5);
+      backdrop-filter: blur(2px);
+    }
+    50% {
+      background: rgba(34, 197, 94, 0.2);
+      backdrop-filter: blur(0px);
+    }
+    100% {
+      background: transparent;
+      opacity: 0;
+    }
+  }
 
-  .laser-scanner {
+  .cyber-shutter-beam {
     position: absolute;
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, transparent, #38bdf8, #22c55e, #38bdf8, transparent);
-    box-shadow: 0 0 25px #38bdf8, 0 0 10px #22c55e;
-    top: 20%;
-    opacity: 0;
-    z-index: 20;
+    top: -10px;
+    background: linear-gradient(90deg, transparent 0%, #38bdf8 30%, #22c55e 70%, transparent 100%);
+    box-shadow: 0 0 25px #38bdf8, 0 0 40px #22c55e;
+  }
+  .cyber-shutter.active .cyber-shutter-beam {
+    animation: shutterBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes shutterBeamSweep {
+    0% { top: 0%; opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  /* Universal Cyber-Scanner Wipe Transition */
+  .cyber-wipe-overlay {
+    position: fixed;
+    inset: 0;
     pointer-events: none;
-  }
-  @keyframes laserSweep {
-    0% { top: 20%; opacity: 0; }
-    20% { opacity: 1; }
-    50% { top: 75%; opacity: 1; }
-    80% { opacity: 1; }
-    100% { top: 20%; opacity: 0; }
-  }
-  .blast-doors-overlay.closed .laser-scanner {
-    animation: laserSweep 1.1s ease-in-out infinite;
-  }
-
-  /* Blast Door Center HUD */
-  .door-hud-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 30;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1.5rem 2rem;
-    background: rgba(3, 7, 18, 0.88);
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    box-shadow: 0 0 40px rgba(0,0,0,0.9), 0 0 25px rgba(56, 189, 248, 0.3);
-    border-radius: 16px;
-    backdrop-filter: blur(12px);
-    width: 90vw;
-    max-width: 440px;
+    z-index: 99999;
     opacity: 0;
-    transition: opacity 0.35s ease 0.3s;
-  }
-  .blast-doors-overlay.closed .door-hud-center { opacity: 1; }
-
-  .door-hud-badge {
-    font-size: 0.72rem;
-    letter-spacing: 2px;
-    color: var(--primary);
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-  .door-hud-title {
-    font-size: 1.25rem;
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: 1px;
-    margin-bottom: 0.6rem;
-  }
-  .door-hud-log {
-    font-size: 0.85rem;
-    color: var(--accent);
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    margin-bottom: 1.2rem;
-    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-    min-height: 24px;
-  }
-  .door-progress-track {
-    width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
     overflow: hidden;
-    position: relative;
   }
-  .door-progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    box-shadow: 0 0 12px var(--accent);
-    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  .cyber-wipe-overlay.active {
+    pointer-events: all;
+    opacity: 1;
+  }
+  .cyber-wipe-beam {
+    position: absolute;
+    top: 0;
+    left: -100vw;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
+    box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+    transform: translate3d(0, 0, 0);
+  }
+  .cyber-wipe-overlay.active .cyber-wipe-beam {
+    animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes cyberBeamSweep {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(200vw); }
   }
 
   /* =========================================================
@@ -263,9 +167,15 @@
     justify-content: center;
     padding: 1.5rem;
     text-align: center;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, filter 0.25s ease, visibility 0.28s ease;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+  #landingPortal.zoom-through {
+    transform: scale(1.08);
+    opacity: 0;
+    filter: blur(5px);
+    pointer-events: none;
   }
   #landingPortal.dismissed {
     opacity: 0;
@@ -1026,42 +936,38 @@
       max-height: 82vh;
       max-height: 82dvh;
     }
+
+    .portal-content {
+      padding: 0.5rem;
+    }
+    .portal-title {
+      font-size: 1.95rem;
+    }
+    .portal-subtitle {
+      font-size: 0.82rem;
+      margin-bottom: 1.2rem;
+    }
+    .portal-actions {
+      max-width: 100%;
+      width: 100%;
+    }
+    .btn-portal {
+      min-height: 44px;
+      padding: 0.7rem 1rem;
+    }
   }
 </style>
 </head>
 <body>
 
-  <!-- =========================================================
-       FEATURE 1: CINEMATIC CLOSING DOORS OVERLAY
-       ========================================================= -->
-  <div id="blastDoorsOverlay" class="blast-doors-overlay">
-    <!-- Left Cyber Door -->
-    <div class="blast-door door-left">
-      <div class="door-panel-graphics"></div>
-      <div class="door-hazard-stripe"></div>
-      <div class="door-hazard-stripe" style="margin-top:auto;"></div>
-    </div>
+  <!-- Universal Cyber-Scanner Wipe Transition -->
+  <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
+    <div class="cyber-wipe-beam"></div>
+  </div>
 
-    <!-- Right Cyber Door -->
-    <div class="blast-door door-right">
-      <div class="door-panel-graphics"></div>
-      <div class="door-hazard-stripe"></div>
-      <div class="door-hazard-stripe" style="margin-top:auto;"></div>
-    </div>
-
-    <!-- Center Seam & Scanning Elements -->
-    <div class="door-seam-glow"></div>
-    <div class="laser-scanner"></div>
-
-    <!-- Center HUD Terminal Readout -->
-    <div class="door-hud-center">
-      <div class="door-hud-badge">NEURAL GATEWAY // SECURITY INTERFACE</div>
-      <div class="door-hud-title" id="doorHudTitle">ACCESS CLEARANCE</div>
-      <div class="door-hud-log" id="doorHudLog">AUTHENTICATING SECURITY PROTOCOL...</div>
-      <div class="door-progress-track">
-        <div class="door-progress-bar" id="doorProgressBar"></div>
-      </div>
-    </div>
+  <!-- High-Speed Cyber Shutter Flash -->
+  <div id="cyberShutter" class="cyber-shutter">
+    <div class="cyber-shutter-beam"></div>
   </div>
 
   <!-- =========================================================
@@ -1077,7 +983,7 @@
 
       <div class="portal-actions">
         <% if (isLoggedIn) { %>
-          <button class="btn-portal btn-portal-primary" onclick="triggerDoorTransition('OPERATOR: <%= currentUser.toUpperCase() %>', 'ACCESS AUTHORIZED // SYSTEM READY')">
+          <button class="btn-portal btn-portal-primary" onclick="triggerFastEnter('OPERATOR: <%= currentUser.toUpperCase() %>', 'ACCESS AUTHORIZED // SYSTEM READY')">
             <span>⚡ ENTER AS <%= currentUser.toUpperCase() %></span>
           </button>
           <button class="btn-portal btn-portal-secondary" onclick="performLogout()">
@@ -1090,7 +996,7 @@
           <button class="btn-portal btn-portal-secondary" onclick="openSignupModal()">
             <span>⚡ REGISTER CALLSIGN</span>
           </button>
-          <button class="btn-portal btn-portal-guest" onclick="triggerDoorTransition('GUEST RECRUIT', 'GUEST ACCESS GRANTED // OVERRIDE ENGAGED')">
+          <button class="btn-portal btn-portal-guest" onclick="triggerFastEnter('GUEST RECRUIT', 'GUEST ACCESS GRANTED // OVERRIDE ENGAGED')">
             <span>🎮 CONTINUE AS GUEST</span>
           </button>
         <% } %>
@@ -1492,58 +1398,66 @@
   let targetUrl = '';
 
   // =========================================================
-  // CINEMATIC BLAST DOORS ENGINE
+  // HIGH-SPEED DIGITAL ZOOM-THROUGH & CYBER SHUTTER ENGINE
   // =========================================================
-  const blastDoors = document.getElementById('blastDoorsOverlay');
-  const doorHudTitle = document.getElementById('doorHudTitle');
-  const doorHudLog = document.getElementById('doorHudLog');
-  const doorProgressBar = document.getElementById('doorProgressBar');
   const portal = document.getElementById('landingPortal');
+  const cyberShutter = document.getElementById('cyberShutter');
 
-  function triggerDoorTransition(targetIdentity, completionMsg, onCompleteCallback) {
-    blastDoors.classList.add('active');
-    doorHudTitle.innerText = targetIdentity || 'ACCESS CLEARANCE';
-    doorHudLog.innerText = 'SEALING NEURAL AIRLOCK...';
-    doorHudLog.style.color = '#38bdf8';
-    doorProgressBar.style.width = '10%';
+  function triggerFastEnter(targetIdentity, completionMsg, onCompleteCallback) {
+    if (cyberShutter) {
+      cyberShutter.classList.add('active');
+    }
+    if (portal) {
+      portal.classList.add('zoom-through');
+    }
 
-    // Step 1: Doors slam inward
     setTimeout(() => {
-      blastDoors.classList.add('closed');
-      doorHudLog.innerText = 'AUTHENTICATING SECURITY PROTOCOL...';
-      doorProgressBar.style.width = '45%';
-    }, 50);
-
-    // Step 2: Biometric / Security Verification Scan
-    setTimeout(() => {
-      doorHudLog.innerText = completionMsg || 'SECURITY CIPHER VERIFIED // ACCESS GRANTED';
-      doorHudLog.style.color = '#22c55e';
-      doorProgressBar.style.width = '100%';
-      // Dismiss the background portal while doors are shut
-      portal.classList.add('dismissed');
+      if (portal) {
+        portal.classList.add('dismissed');
+        portal.classList.remove('zoom-through');
+      }
+      if (cyberShutter) {
+        cyberShutter.classList.remove('active');
+      }
       sessionStorage.setItem('hub_portal_passed', 'true');
-    }, 950);
-
-    // Step 3: Doors slide open smoothly, revealing the library
-    setTimeout(() => {
-      blastDoors.classList.remove('closed');
-    }, 1800);
-
-    // Step 4: Deactivate overlay completely
-    setTimeout(() => {
-      blastDoors.classList.remove('active');
       if (onCompleteCallback) onCompleteCallback();
-    }, 2500);
+    }, 260);
+  }
+
+  // Backward-compatible alias
+  function triggerDoorTransition(targetIdentity, completionMsg, onCompleteCallback) {
+    triggerFastEnter(targetIdentity, completionMsg, onCompleteCallback);
   }
 
   function showPortal() {
-    portal.classList.remove('dismissed');
+    if (portal) {
+      portal.classList.remove('dismissed');
+      portal.classList.remove('zoom-through');
+    }
   }
 
   // Auto-dismiss portal if user already completed entrance in this browser tab
   if (sessionStorage.getItem('hub_portal_passed') === 'true') {
-    portal.classList.add('dismissed');
+    if (portal) portal.classList.add('dismissed');
   }
+
+  // Cyber-Scanner Navigation Wipe Handler
+  function cyberNavigate(url) {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 220);
+    } else {
+      window.location.href = url;
+    }
+  }
+
+  window.addEventListener('pageshow', () => {
+    const overlay = document.getElementById('cyberWipeOverlay');
+    if (overlay) overlay.classList.remove('active');
+  });
 
   // --- TAB NAVIGATION ---
   function switchTab(tab, btn) {
@@ -1574,7 +1488,7 @@
     targetUrl = url;
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalDesc').innerText = desc;
-    document.getElementById('confirmLaunchBtn').onclick = () => window.location.href = targetUrl;
+    document.getElementById('confirmLaunchBtn').onclick = () => cyberNavigate(targetUrl);
     openModal('launchModal');
   }
 
