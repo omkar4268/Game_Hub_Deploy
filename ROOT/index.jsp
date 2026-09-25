@@ -618,6 +618,7 @@
   .banner-snake   { background: linear-gradient(135deg, #064e3b, #10b981); }
   .banner-maze    { background: linear-gradient(135deg, #0c4a6e, #38bdf8); }
   .banner-guesser { background: linear-gradient(135deg, #312e81, #6366f1); }
+  .banner-breaker { background: linear-gradient(135deg, #1e1b4b, #a855f7 60%, #06b6d4 100%); }
 
   .card-banner {
     height: 140px;
@@ -1138,6 +1139,20 @@
           </div>
         </div>
 
+        <!-- Game 6: Cyber Grid: Node Breaker -->
+        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Node_Breaker.jsp', 'Cyber Grid: Node Breaker', 'Defragment cluster circuits, trigger gravitational collapses, and breach dynamic target matrices scaling progressively up to 8x8.')">
+          <div class="card-banner banner-breaker">💠</div>
+          <div class="card-body">
+            <div class="card-tag">Tactical Logic</div>
+            <div class="card-title">Node Breaker</div>
+            <div class="card-desc">Neutralize cluster circuits, trigger quantum chain-reactions, and defragment data matrices across auto-scaling grids.</div>
+            <div class="card-footer">
+              <div class="card-score-preview">Record: <span id="preview-breaker">0 pts</span></div>
+              <div class="launch-arrow">➔</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1262,6 +1277,30 @@
           <div class="stat-row">
             <span class="stat-label">Key Security</span>
             <span class="stat-val" style="color: var(--accent);">Server-Side</span>
+          </div>
+        </div>
+
+        <!-- 6. Cyber Grid: Node Breaker -->
+        <div class="score-card">
+          <div class="score-card-header">
+            <div class="score-card-title" style="color: #a855f7;">💠 Node Breaker</div>
+            <div class="score-badge" style="background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3);">Progressive 8x8</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">High Score</span>
+            <span class="stat-val" id="statBreakerBest" style="color: #a855f7;">0 pts</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Highest Stage Cleared</span>
+            <span class="stat-val" id="statBreakerLevel">Stage 1</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Grid Matrix Density</span>
+            <span class="stat-val" style="color: var(--primary);">Dynamic 5x5 - 8x8</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Top Global Operator</span>
+            <span class="stat-val" id="statBreakerLeader" style="color: var(--accent);">--</span>
           </div>
         </div>
 
@@ -1758,6 +1797,18 @@
     if (pGuess) pGuess.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
     if (sGuessBest) sGuessBest.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
 
+    // 6. Cyber Grid: Node Breaker Metrics
+    const localBreaker = localStorage.getItem('hub_nodebreaker_high') || '0';
+    const localBreakerLevel = localStorage.getItem('hub_nodebreaker_level') || 'Stage 1';
+
+    const pBreaker = document.getElementById('preview-breaker');
+    const sBreakerBest = document.getElementById('statBreakerBest');
+    const sBreakerLevel = document.getElementById('statBreakerLevel');
+
+    if (pBreaker) pBreaker.innerText = localBreaker + ' pts';
+    if (sBreakerBest) sBreakerBest.innerText = localBreaker + ' pts';
+    if (sBreakerLevel) sBreakerLevel.innerText = localBreakerLevel;
+
     // Query Database High Scores & Global Leaderboards
     try {
       const res = await fetch('get_scores.jsp');
@@ -1782,16 +1833,26 @@
             if (sChessRating) sChessRating.innerText = dbChess;
             localStorage.setItem('hub_chess_rating', dbChess);
           }
+          if (data.userScores.node_breaker !== undefined) {
+            const dbBreaker = data.userScores.node_breaker;
+            if (pBreaker) pBreaker.innerText = dbBreaker + ' pts';
+            if (sBreakerBest) sBreakerBest.innerText = dbBreaker + ' pts';
+            localStorage.setItem('hub_nodebreaker_high', dbBreaker);
+          }
         }
 
         if (data.leaders) {
           const lSnake = document.getElementById('statSnakeLeader');
           const lDefuse = document.getElementById('statDefuseLeader');
+          const lBreaker = document.getElementById('statBreakerLeader');
           if (lSnake && data.leaders.snake) {
             lSnake.innerText = data.leaders.snake.username + ' (' + data.leaders.snake.score + ' pts)';
           }
           if (lDefuse && data.leaders.bomb_defuse) {
             lDefuse.innerText = data.leaders.bomb_defuse.username + ' (' + data.leaders.bomb_defuse.score + ' pts)';
+          }
+          if (lBreaker && data.leaders.node_breaker) {
+            lBreaker.innerText = data.leaders.node_breaker.username + ' (' + data.leaders.node_breaker.score + ' pts)';
           }
         }
       }
