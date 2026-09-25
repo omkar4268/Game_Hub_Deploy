@@ -1140,7 +1140,7 @@
         </div>
 
         <!-- Game 6: Reactor Meltdown -->
-        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Reactor_Meltdown.jsp', 'Reactor Meltdown', 'Progressive core memory puzzle inspired by Among Us. Replicate randomized glowing tile sequences under a 10s tension timer (+1s per clear) before containment collapses.')">
+        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Reactor_Meltdown/index.jsp', 'Reactor Meltdown', 'Progressive core memory puzzle inspired by Among Us. Replicate randomized glowing tile sequences under a 10s tension timer (+1s per clear) before containment collapses.')">
           <div class="card-banner banner-reactor">☢️</div>
           <div class="card-body">
             <div class="card-tag">Core Memory</div>
