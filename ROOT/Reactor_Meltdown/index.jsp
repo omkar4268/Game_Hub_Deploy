@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="true"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="true"%>
 <%
     String currentUser = null;
     if (session != null) {
@@ -67,7 +67,7 @@
 
     <div class="hud-stat" style="align-items: flex-end;">
       <span class="hud-label">COOLANT TIME</span>
-      <span class="hud-value glow-warning" id="timeDisplay">10.0s</span>
+      <span class="hud-value glow-warning" id="timeDisplay">20.0s</span>
     </div>
   </div>
 
@@ -156,7 +156,7 @@
       <div style="font-size: 2.2rem; margin-bottom: 4px;">⚡</div>
       <div style="font-size: 1.35rem; font-weight: 900; color: var(--primary); letter-spacing: 1px;">REACTOR EXPANDING!</div>
       <div style="font-size: 0.82rem; color: var(--text-muted); margin: 6px 0;" id="expansionText">Upgrading to 4x4 Core Matrix...</div>
-      <div style="font-size: 0.72rem; color: var(--accent); font-weight: 800; letter-spacing: 1px;">+1.0s COOLANT EXTENSION</div>
+      <div style="font-size: 0.72rem; color: var(--accent); font-weight: 800; letter-spacing: 1px;">+3.0s COOLANT EXTENSION</div>
     </div>
 
   </div>
@@ -177,9 +177,9 @@
     </div>
 
     <div class="intel-item">
-      <div class="intel-head"><span>⏱</span> 10-SECOND TIMER & +1s EXTENSION</div>
+      <div class="intel-head"><span>⏱</span> 20-SECOND TIMER & +3s EXTENSION</div>
       <div class="intel-text">
-        You begin with 10.0 seconds of emergency coolant. Every time you successfully complete a sequence puzzle, 1.0 second is added to your clock! Maintain your tempo to keep the reactor from melting down.
+        You begin with 20.0 seconds of emergency coolant. Every time you successfully complete a sequence puzzle, 3.0 seconds are added to your clock! Maintain your tempo to keep the reactor from melting down.
       </div>
     </div>
 

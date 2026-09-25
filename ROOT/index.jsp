@@ -1140,12 +1140,12 @@
         </div>
 
         <!-- Game 6: Reactor Meltdown -->
-        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Reactor_Meltdown/index.jsp', 'Reactor Meltdown', 'Progressive core memory puzzle inspired by Among Us. Replicate randomized glowing tile sequences under a 10s tension timer (+1s per clear) before containment collapses.')">
+        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Reactor_Meltdown/index.jsp', 'Reactor Meltdown', 'Progressive core memory puzzle inspired by Among Us. Replicate randomized glowing tile sequences under a 20s tension timer (+3s per clear) before containment collapses.')">
           <div class="card-banner banner-reactor">☢️</div>
           <div class="card-body">
             <div class="card-tag">Core Memory</div>
             <div class="card-title">Reactor Meltdown</div>
-            <div class="card-desc">Replicate glowing reactor sequences under a 10s timer. Clear stages to expand from 3x3 to 4x4 matrix.</div>
+            <div class="card-desc">Replicate glowing reactor sequences under a 20s timer. Clear stages to expand from 3x3 to 4x4 matrix.</div>
             <div class="card-footer">
               <div class="card-score-preview">Record: <span id="preview-reactor">0 pts</span></div>
               <div class="launch-arrow">➔</div>
@@ -1296,7 +1296,7 @@
           </div>
           <div class="stat-row">
             <span class="stat-label">Coolant System</span>
-            <span class="stat-val" style="color: var(--accent);">10s (+1s/Clear)</span>
+            <span class="stat-val" style="color: var(--accent);">20s (+3s/Clear)</span>
           </div>
           <div class="stat-row">
             <span class="stat-label">Top Global Operator</span>

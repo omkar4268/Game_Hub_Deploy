@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    AUDIO SYNTHESIZER (WEB AUDIO API - ZERO ASSETS)
    ========================================================= */
 let audioCtx = null;
@@ -142,8 +142,8 @@ let currentSequence = []; // Array of tile indices [0..(N*N-1)]
 let playerInputIndex = 0; // Current position in sequence user is typing
 
 let score = 0;
-let remainingTime = 10.0; // Starts at 10.0s, +1.0s per puzzle
-let maxTimeRef = 10.0;
+let remainingTime = 20.0; // Starts at 20.0s, +3.0s per puzzle
+let maxTimeRef = 20.0;
 let timerInterval = null;
 
 let shields = 3;          // 3 containment integrity shields
@@ -196,8 +196,8 @@ function initiateGameRun() {
   score = 0;
   currentGridSize = 3;
   sequenceLength = 1;
-  remainingTime = 10.0;
-  maxTimeRef = 10.0;
+  remainingTime = 20.0;
+  maxTimeRef = 20.0;
   shields = 3;
   isGameOver = false;
 
@@ -371,12 +371,12 @@ async function handleSequenceSuccess() {
   playSynth('stage_clear');
 
   if (statusMessage) {
-    statusMessage.innerText = 'STABILIZED! +1.0s EXTENSION';
+    statusMessage.innerText = 'STABILIZED! +3.0s EXTENSION';
     statusMessage.style.color = 'var(--accent)';
   }
 
-  // Add +1 second to timer
-  remainingTime += 1.0;
+  // Add +3 seconds to timer
+  remainingTime += 3.0;
   maxTimeRef = Math.max(maxTimeRef, remainingTime);
 
   // Calculate score
@@ -483,10 +483,10 @@ function updateHUD() {
     const pct = Math.min(100, Math.max(0, (remainingTime / maxTimeRef) * 100));
     timerBar.style.width = pct + '%';
 
-    if (remainingTime <= 3.0) {
+    if (remainingTime <= 5.0) {
       timeDisplay.className = 'hud-value glow-danger';
       timerBar.style.background = 'var(--danger)';
-    } else if (remainingTime <= 6.0) {
+    } else if (remainingTime <= 10.0) {
       timeDisplay.className = 'hud-value glow-warning';
       timerBar.style.background = 'linear-gradient(90deg, var(--danger), var(--warning))';
     } else {
