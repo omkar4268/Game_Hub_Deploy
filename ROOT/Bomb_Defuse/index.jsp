@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="true"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="true"%>
 <%
     String currentUser = null;
     if (session != null) {
@@ -117,7 +117,7 @@
 
         <div class="intel-row">
             <strong>🐍 DATA SERPENT (SNAKE MODULE)</strong>
-            Pilot the cyber serpent to absorb energy bytes. Reach the target score (Easy: 10 pts, Med: 25 pts, Hard: 50 pts) to bypass the module. Crashing costs 1 charge!
+            Pilot the cyber serpent to absorb energy bytes. Reach the target score (Easy: 10 pts, Med: 15 pts, Hard: 20 pts) to bypass the module. Crashing costs 1 charge!
         </div>
 
         <div class="intel-row">
@@ -127,17 +127,17 @@
 
         <div class="intel-row">
             <strong>⚡ FIREWALL MAZE ROUTING</strong>
-            Guide the cyan packet node through the security labyrinth to the glowing green core terminal. Avoid security traps!
+            Guide the cyan packet node through the security labyrinth to the glowing green core terminal. Guaranteed solvable path with braided alternate routes!
         </div>
 
         <div class="intel-row">
             <strong>🍌 BANANA WIRE MATRIX (BOMBANANA SYSTEM)</strong>
-            Inspect physical colored wire bundles. Read the diagnostic directive and snip the exact wire. Wrong snip detonates a charge!
+            Inspect physical colored wire bundles. Extend the Rule Slider manual anytime to consult the 4 canonical rules and snip the target wire. Wrong snip burns 1 charge!
         </div>
 
         <div class="intel-row">
             <strong>📡 FREQUENCY OSCILLOSCOPE TUNER</strong>
-            Modulate Frequency and Phase sliders to align your signal with the golden target carrier wave until resonance locks!
+            Interactive cyber slider & direct canvas dragging! Modulate Frequency and Phase until resonance locks!
         </div>
 
         <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; margin-top: auto;" onclick="closeDefuseIntel(); openLevelSelect();">
@@ -267,22 +267,54 @@
 
                         <!-- 4. BANANA WIRES CONTAINER (BOMBANANA INSPIRED) -->
                         <div class="mg-game-container" id="mgWiresContainer" style="display: none;">
-                            <!-- Diagnostic Manual Rule Readout -->
-                            <div class="wires-manual-box" id="wiresManualBox">
-                                <div class="manual-tag">🍌 BOMBANANA PROTOCOL DIRECTIVE v4.2</div>
-                                <div class="manual-rule" id="wiresRuleText">ANALYZING WIRE CIRCUIT...</div>
+                            <!-- Slide-out Rule Slider Toggle Bar -->
+                            <div class="wires-top-bar">
+                                <button class="rule-slider-toggle-btn" id="ruleSliderToggleBtn" onclick="toggleRuleDrawer()">
+                                    📖 EXTEND RULE SLIDER [4 MANUAL RULES] ❯
+                                </button>
                             </div>
+
                             <!-- Physical Wire Bundle -->
                             <div class="wires-board" id="wiresBoard">
                                 <!-- Dynamic wires injected by JS -->
                             </div>
                             <div class="wires-hint">⚠️ CLICK / TAP WIRE TO SNIP • WRONG CUT BURNS 1 CHARGE</div>
+
+                            <!-- SLIDE-OUT RULE DRAWER / SLIDER -->
+                            <div class="wires-rule-drawer" id="wiresRuleDrawer">
+                                <div class="drawer-header">
+                                    <span class="drawer-title">🍌 BOMBANANA MANUAL</span>
+                                    <button class="drawer-close-btn" onclick="toggleRuleDrawer(false)">✕ CLOSE</button>
+                                </div>
+                                <div class="drawer-body">
+                                    <div class="manual-rule-card" id="mRule1">
+                                        <div class="rule-badge">RULE 1</div>
+                                        <div class="rule-text">If <strong>0 Hazard Ruby</strong> wires <span class="badge-dot ruby"></span> exist → Cut the <strong>2nd wire</strong>.</div>
+                                    </div>
+                                    <div class="manual-rule-card" id="mRule2">
+                                        <div class="rule-badge">RULE 2</div>
+                                        <div class="rule-text">If the <strong>last wire is Radioactive Lime</strong> <span class="badge-dot lime"></span> → Cut the <strong>last wire</strong>.</div>
+                                    </div>
+                                    <div class="manual-rule-card" id="mRule3">
+                                        <div class="rule-badge">RULE 3</div>
+                                        <div class="rule-text">If <strong>≥ 2 Carbon Purple</strong> wires <span class="badge-dot purple"></span> → Cut the <strong>last Purple wire</strong>.</div>
+                                    </div>
+                                    <div class="manual-rule-card" id="mRule4">
+                                        <div class="rule-badge">RULE 4</div>
+                                        <div class="rule-text"><strong>Otherwise</strong> → Cut the <strong>1st Banana Gold</strong> wire <span class="badge-dot gold"></span> (or wire #1 if none).</div>
+                                    </div>
+                                </div>
+                                <div class="drawer-status" id="drawerStatusHint">
+                                    SCANNING CIRCUIT TELEMETRY...
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 5. FREQUENCY TUNER CONTAINER -->
                         <div class="mg-game-container" id="mgFreqContainer" style="display: none;">
                             <div class="freq-screen-wrap">
                                 <canvas id="freqCanvas" width="320" height="130"></canvas>
+                                <div class="freq-canvas-hint">↔ DRAG CANVAS TO SCRUB FREQUENCY & PHASE ↕</div>
                                 <div class="freq-meter-wrap">
                                     <div class="freq-meter-label"><span>RESONANCE MATCH:</span><span id="freqMatchPercent">0%</span></div>
                                     <div class="freq-meter-bar"><div class="freq-meter-fill" id="freqMeterFill"></div></div>
@@ -290,12 +322,20 @@
                             </div>
                             <div class="freq-controls">
                                 <div class="freq-slider-group">
-                                    <label><span>CARRIER FREQUENCY</span><span id="freqValText">1.0x</span></label>
-                                    <input type="range" id="freqSlider" min="1" max="8" step="0.1" value="1" oninput="updateFreqSlider()">
+                                    <label><span>CARRIER FREQUENCY</span><span id="freqValText" class="val-pill">1.0x</span></label>
+                                    <div class="interactive-slider-row">
+                                        <button class="step-btn" onclick="adjustFreq(-0.2)" title="Fine decrease">◀ -</button>
+                                        <input type="range" id="freqSlider" min="1" max="8" step="0.1" value="1" oninput="updateFreqSlider()">
+                                        <button class="step-btn" onclick="adjustFreq(0.2)" title="Fine increase">+ ▶</button>
+                                    </div>
                                 </div>
                                 <div class="freq-slider-group">
-                                    <label><span>PHASE ALIGNMENT</span><span id="phaseValText">0°</span></label>
-                                    <input type="range" id="phaseSlider" min="0" max="360" step="5" value="0" oninput="updatePhaseSlider()">
+                                    <label><span>PHASE ALIGNMENT</span><span id="phaseValText" class="val-pill">0°</span></label>
+                                    <div class="interactive-slider-row">
+                                        <button class="step-btn" onclick="adjustPhase(-10)" title="Phase shift left">◀ -</button>
+                                        <input type="range" id="phaseSlider" min="0" max="360" step="5" value="0" oninput="updatePhaseSlider()">
+                                        <button class="step-btn" onclick="adjustPhase(10)" title="Phase shift right">+ ▶</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

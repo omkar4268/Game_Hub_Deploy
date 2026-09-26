@@ -1,5 +1,5 @@
 // =========================================================
-// DEFUSAL PROTOCOL // TACTICAL CRISIS SIM v3.0
+// DEFUSAL PROTOCOL // TACTICAL CRISIS SIM v3.1
 // Multi-Module Engine & 3-Charge Integrity Containment System
 // =========================================================
 
@@ -263,14 +263,14 @@ const levelData = [
     }
 ];
 
-// Module Metadata dictionary
+// Module Metadata dictionary (Balanced points: 10 to 20 for Snake)
 const MODULE_META = {
     snake: {
         name: "DATA SERPENT",
         icon: "🐍",
         descEasy: "Absorb 10 data bytes to bypass module. Wall hit burns 1 charge.",
-        descMed: "Absorb 25 data bytes to bypass module. Wall hit burns 1 charge.",
-        descHard: "Absorb 50 data bytes to bypass module. Wall hit burns 1 charge."
+        descMed: "Absorb 15 data bytes to bypass module. Wall hit burns 1 charge.",
+        descHard: "Absorb 20 data bytes to bypass module. Wall hit burns 1 charge."
     },
     reactor: {
         name: "REACTOR CORE",
@@ -289,14 +289,14 @@ const MODULE_META = {
     wires: {
         name: "BANANA WIRES",
         icon: "🍌",
-        descEasy: "Inspect 4-wire bundle, apply BOMBANANA directive, and cut target wire.",
-        descMed: "Inspect 5-wire bundle, apply BOMBANANA directive, and cut target wire.",
-        descHard: "Inspect 6-wire bundle, apply BOMBANANA directive, and cut target wire."
+        descEasy: "Inspect 4-wire bundle. Extend Rule Slider to consult the 4 manual rules.",
+        descMed: "Inspect 5-wire bundle. Extend Rule Slider to consult the 4 manual rules.",
+        descHard: "Inspect 6-wire bundle. Extend Rule Slider to consult the 4 manual rules."
     },
     freq: {
         name: "FREQ TUNER",
         icon: "📡",
-        descEasy: "Align frequency & phase sliders to match golden carrier wave (≥90%).",
+        descEasy: "Align frequency & phase using interactive buttons or drag canvas (≥90%).",
         descMed: "Calibrate frequency & phase against shifting carrier wave (≥90%).",
         descHard: "Precision lock oscillating carrier wave within tight tolerance (≥90%)."
     }
@@ -527,6 +527,7 @@ function closeMiniGame(success = false, causedStrike = false) {
     cleanupReactorGame();
     cleanupMazeGame();
     cleanupFreqTuner();
+    toggleRuleDrawer(false);
 
     const overlay = document.getElementById('miniGameOverlay');
     if (overlay) overlay.style.display = 'none';
@@ -557,7 +558,7 @@ function closeMiniGame(success = false, causedStrike = false) {
 
 // =========================================================
 // MINI-GAME 1: DATA SERPENT (SNAKE)
-// Target score: Easy: 10 pts, Med: 25 pts, Hard: 50 pts
+// Rebalanced target score: Easy: 10 pts, Med: 15 pts, Hard: 20 pts
 // Dying costs 1 charge!
 // =========================================================
 let snakeTimer = null;
@@ -571,6 +572,8 @@ let snakeNextDir = { x: 1, y: 0 };
 let snakeFood = { x: 5, y: 5 };
 let snakeCanvas = null;
 let snakeCtx = null;
+let snakeTouchStartX = 0;
+let snakeTouchStartY = 0;
 
 function initSnakeGame(diff) {
     const container = document.getElementById('mgSnakeContainer');
@@ -585,9 +588,10 @@ function initSnakeGame(diff) {
     snakeCanvas.height = 280;
     snakeCellSize = 280 / snakeGridSize; // 20px
 
+    // Balanced 10 to 20 points
     if (diff === 'easy') snakeTargetScore = 10;
-    else if (diff === 'med') snakeTargetScore = 25;
-    else if (diff === 'hard') snakeTargetScore = 50;
+    else if (diff === 'med') snakeTargetScore = 15;
+    else if (diff === 'hard') snakeTargetScore = 20;
 
     snakeScore = 0;
     updateSnakeHud();
@@ -597,9 +601,34 @@ function initSnakeGame(diff) {
     window.removeEventListener('keydown', handleSnakeKey);
     window.addEventListener('keydown', handleSnakeKey);
 
+    // Mobile Swipe Listeners
+    snakeCanvas.removeEventListener('touchstart', handleSnakeTouchStart);
+    snakeCanvas.removeEventListener('touchend', handleSnakeTouchEnd);
+    snakeCanvas.addEventListener('touchstart', handleSnakeTouchStart, { passive: true });
+    snakeCanvas.addEventListener('touchend', handleSnakeTouchEnd, { passive: true });
+
     clearInterval(snakeTimer);
-    const speed = diff === 'hard' ? 100 : (diff === 'med' ? 120 : 135);
+    const speed = diff === 'hard' ? 105 : (diff === 'med' ? 120 : 135);
     snakeTimer = setInterval(snakeLoop, speed);
+}
+
+function handleSnakeTouchStart(e) {
+    if (e.touches && e.touches[0]) {
+        snakeTouchStartX = e.touches[0].clientX;
+        snakeTouchStartY = e.touches[0].clientY;
+    }
+}
+
+function handleSnakeTouchEnd(e) {
+    if (e.changedTouches && e.changedTouches[0]) {
+        const dx = e.changedTouches[0].clientX - snakeTouchStartX;
+        const dy = e.changedTouches[0].clientY - snakeTouchStartY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
+            snakeInput(dx > 0 ? 'RIGHT' : 'LEFT');
+        } else if (Math.abs(dy) > 20) {
+            snakeInput(dy > 0 ? 'DOWN' : 'UP');
+        }
+    }
 }
 
 function spawnSnake() {
@@ -739,12 +768,10 @@ function renderSnakeCanvas() {
     // Draw Snake
     snakeBody.forEach((seg, i) => {
         if (i === 0) {
-            // Head
             ctx.fillStyle = '#38bdf8';
             ctx.shadowColor = '#38bdf8';
             ctx.shadowBlur = 10;
         } else {
-            // Body
             ctx.fillStyle = i % 2 === 0 ? '#0284c7' : '#0369a1';
             ctx.shadowBlur = 0;
         }
@@ -761,6 +788,10 @@ function renderSnakeCanvas() {
 function cleanupSnakeGame() {
     clearInterval(snakeTimer);
     window.removeEventListener('keydown', handleSnakeKey);
+    if (snakeCanvas) {
+        snakeCanvas.removeEventListener('touchstart', handleSnakeTouchStart);
+        snakeCanvas.removeEventListener('touchend', handleSnakeTouchEnd);
+    }
 }
 
 // =========================================================
@@ -859,7 +890,6 @@ function handleReactorTileClick(tileIndex) {
 
     const tile = document.getElementById(`rtile-${tileIndex}`);
     if (tileIndex === reactorSequence[reactorUserIndex]) {
-        // Correct step
         playBeep(450 + tileIndex * 70, 'sine', 0.15, 0.2);
         if (tile) {
             tile.classList.add('correct');
@@ -879,7 +909,6 @@ function handleReactorTileClick(tileIndex) {
             setTimeout(() => closeMiniGame(true), 550);
         }
     } else {
-        // Mis-tap!
         reactorAcceptInput = false;
         if (tile) {
             tile.classList.add('wrong');
@@ -903,7 +932,8 @@ function cleanupReactorGame() {
 }
 
 // =========================================================
-// MINI-GAME 3: FIREWALL MAZE RUNNER
+// MINI-GAME 3: FIREWALL MAZE RUNNER (OVERHAULED & GUARANTEED SOLVABLE)
+// Braided labyrinth + BFS path guarantee + non-blocking traps
 // Labyrinth sizes: Easy: 7x7, Med: 11x11, Hard: 15x15
 // =========================================================
 let mazeGrid = [];
@@ -914,6 +944,8 @@ let mazeGoal = { x: 5, y: 5 };
 let mazeTraps = [];
 let mazeCanvas = null;
 let mazeCtx = null;
+let mazeTouchStartX = 0;
+let mazeTouchStartY = 0;
 
 function initMazeGame(diff) {
     const container = document.getElementById('mgMazeContainer');
@@ -937,20 +969,46 @@ function initMazeGame(diff) {
         mazeRows = 15;
     }
 
-    generateMaze();
+    generateMazeWithGuarantee(diff);
     mazePlayer = { x: 1, y: 1 };
     mazeGoal = { x: mazeCols - 2, y: mazeRows - 2 };
 
-    // Place traps
-    placeMazeTraps(diff);
+    const statusEl = document.getElementById('mazeStatusText');
+    if (statusEl) statusEl.innerText = "NAVIGATE TO GREEN EXIT";
 
     window.removeEventListener('keydown', handleMazeKey);
     window.addEventListener('keydown', handleMazeKey);
 
+    // Mobile swipe
+    mazeCanvas.removeEventListener('touchstart', handleMazeTouchStart);
+    mazeCanvas.removeEventListener('touchend', handleMazeTouchEnd);
+    mazeCanvas.addEventListener('touchstart', handleMazeTouchStart, { passive: true });
+    mazeCanvas.addEventListener('touchend', handleMazeTouchEnd, { passive: true });
+
     renderMazeCanvas();
 }
 
-function generateMaze() {
+function handleMazeTouchStart(e) {
+    if (e.touches && e.touches[0]) {
+        mazeTouchStartX = e.touches[0].clientX;
+        mazeTouchStartY = e.touches[0].clientY;
+    }
+}
+
+function handleMazeTouchEnd(e) {
+    if (e.changedTouches && e.changedTouches[0]) {
+        const dx = e.changedTouches[0].clientX - mazeTouchStartX;
+        const dy = e.changedTouches[0].clientY - mazeTouchStartY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 18) {
+            mazeInput(dx > 0 ? 1 : -1, 0);
+        } else if (Math.abs(dy) > 18) {
+            mazeInput(0, dy > 0 ? 1 : -1);
+        }
+    }
+}
+
+function generateMazeWithGuarantee(diff) {
+    // 1 = Wall, 0 = Passage
     mazeGrid = Array(mazeRows).fill(0).map(() => Array(mazeCols).fill(1));
 
     function carve(x, y) {
@@ -974,20 +1032,78 @@ function generateMaze() {
 
     carve(1, 1);
     mazeGrid[mazeRows - 2][mazeCols - 2] = 0;
-}
 
-function placeMazeTraps(diff) {
+    // Braid maze: randomly remove 25% of interior walls between adjacent paths to create multiple alternate loops!
+    for (let r = 2; r < mazeRows - 2; r += 2) {
+        for (let c = 2; c < mazeCols - 2; c += 2) {
+            if (mazeGrid[r][c] === 1 && Math.random() < 0.25) {
+                const horiz = mazeGrid[r][c - 1] === 0 && mazeGrid[r][c + 1] === 0;
+                const vert = mazeGrid[r - 1][c] === 0 && mazeGrid[r + 1][c] === 0;
+                if (horiz || vert) {
+                    mazeGrid[r][c] = 0;
+                }
+            }
+        }
+    }
+
+    // BFS Pathfinding: finds path avoiding given nodes
+    function findBfsPath(avoidList = []) {
+        const startKey = "1,1";
+        const goalKey = `${mazeCols - 2},${mazeRows - 2}`;
+        const queue = [[1, 1]];
+        const visited = new Set([startKey]);
+        avoidList.forEach(n => visited.add(`${n.x},${n.y}`));
+        const parent = new Map();
+
+        while (queue.length > 0) {
+            const [cx, cy] = queue.shift();
+            if (cx === mazeCols - 2 && cy === mazeRows - 2) {
+                const path = [];
+                let curr = goalKey;
+                while (curr) {
+                    const [px, py] = curr.split(',').map(Number);
+                    path.push({ x: px, y: py });
+                    curr = parent.get(curr);
+                }
+                return path.reverse();
+            }
+
+            const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+            for (const d of dirs) {
+                const nx = cx + d.dx;
+                const ny = cy + d.dy;
+                const key = `${nx},${ny}`;
+                if (nx >= 0 && nx < mazeCols && ny >= 0 && ny < mazeRows && mazeGrid[ny][nx] === 0 && !visited.has(key)) {
+                    visited.add(key);
+                    parent.set(key, `${cx},${cy}`);
+                    queue.push([nx, ny]);
+                }
+            }
+        }
+        return null;
+    }
+
+    // Compute primary critical path
+    const criticalPath = findBfsPath([]) || [];
+    const critSet = new Set(criticalPath.map(p => `${p.x},${p.y}`));
+
+    // Place traps strictly in secondary branches, NEVER on the primary path
     mazeTraps = [];
-    const count = diff === 'hard' ? 3 : (diff === 'med' ? 2 : 1);
+    const trapCount = diff === 'hard' ? 3 : (diff === 'med' ? 2 : 1);
     let attempts = 0;
 
-    while (mazeTraps.length < count && attempts < 100) {
+    while (mazeTraps.length < trapCount && attempts < 250) {
         attempts++;
         const rx = Math.floor(Math.random() * (mazeCols - 2)) + 1;
         const ry = Math.floor(Math.random() * (mazeRows - 2)) + 1;
-        if (mazeGrid[ry][rx] === 0 && !(rx === 1 && ry === 1) && !(rx === mazeCols - 2 && ry === mazeRows - 2)) {
-            if (!mazeTraps.some(t => t.x === rx && t.y === ry)) {
-                mazeTraps.push({ x: rx, y: ry });
+        const key = `${rx},${ry}`;
+
+        if (mazeGrid[ry][rx] === 0 && !critSet.has(key) && !mazeTraps.some(tp => tp.x === rx && tp.y === ry)) {
+            // Verify path remains clear
+            mazeTraps.push({ x: rx, y: ry });
+            const testPath = findBfsPath(mazeTraps);
+            if (!testPath) {
+                mazeTraps.pop(); // discard if somehow blocked
             }
         }
     }
@@ -1018,12 +1134,11 @@ function mazeInput(dx, dy) {
         playBeep(520, 'triangle', 0.04, 0.1);
 
         // Check Trap collision
-        const trapHit = mazeTraps.some(t => t.x === nx && t.y === ny);
-        if (trapHit) {
-            const dead = deductCharge("FIREWALL DEFENSIVE NODE TRIGGERED");
-            if (!dead) {
-                mazePlayer = { x: 1, y: 1 };
-            }
+        const trapHitIndex = mazeTraps.findIndex(t => t.x === nx && t.y === ny);
+        if (trapHitIndex !== -1) {
+            // Remove the triggered trap so player is NOT stuck permanently!
+            mazeTraps.splice(trapHitIndex, 1);
+            deductCharge("FIREWALL DEFENSIVE NODE TRIGGERED - NODE CLEARED");
         }
 
         // Check Goal
@@ -1031,6 +1146,8 @@ function mazeInput(dx, dy) {
             renderMazeCanvas();
             window.removeEventListener('keydown', handleMazeKey);
             playDisarmSuccessSound();
+            const statusEl = document.getElementById('mazeStatusText');
+            if (statusEl) statusEl.innerText = "FIREWALL BYPASSED!";
             setTimeout(() => closeMiniGame(true), 400);
             return;
         }
@@ -1052,50 +1169,53 @@ function renderMazeCanvas() {
     for (let r = 0; r < mazeRows; r++) {
         for (let c = 0; c < mazeCols; c++) {
             if (mazeGrid[r][c] === 1) {
-                ctx.fillStyle = '#0f172a';
+                ctx.fillStyle = '#0b1329';
                 ctx.fillRect(c * cellW, r * cellH, cellW, cellH);
-                ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
                 ctx.strokeRect(c * cellW, r * cellH, cellW, cellH);
             }
         }
     }
 
-    // Draw Traps
+    // Draw Traps (Pulsing Red)
     mazeTraps.forEach(trap => {
         ctx.fillStyle = '#f43f5e';
         ctx.shadowColor = '#f43f5e';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc((trap.x + 0.5) * cellW, (trap.y + 0.5) * cellH, cellW * 0.28, 0, Math.PI * 2);
+        ctx.arc((trap.x + 0.5) * cellW, (trap.y + 0.5) * cellH, cellW * 0.32, 0, Math.PI * 2);
         ctx.fill();
     });
 
     // Draw Goal (Green Exit Terminal)
     ctx.fillStyle = '#22c55e';
     ctx.shadowColor = '#22c55e';
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 14;
     ctx.beginPath();
-    ctx.arc((mazeGoal.x + 0.5) * cellW, (mazeGoal.y + 0.5) * cellH, cellW * 0.35, 0, Math.PI * 2);
+    ctx.arc((mazeGoal.x + 0.5) * cellW, (mazeGoal.y + 0.5) * cellH, cellW * 0.36, 0, Math.PI * 2);
     ctx.fill();
 
     // Draw Player (Cyan Packet Node)
     ctx.fillStyle = '#38bdf8';
     ctx.shadowColor = '#38bdf8';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
     ctx.beginPath();
-    ctx.arc((mazePlayer.x + 0.5) * cellW, (mazePlayer.y + 0.5) * cellH, cellW * 0.32, 0, Math.PI * 2);
+    ctx.arc((mazePlayer.x + 0.5) * cellW, (mazePlayer.y + 0.5) * cellH, cellW * 0.34, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
 }
 
 function cleanupMazeGame() {
     window.removeEventListener('keydown', handleMazeKey);
+    if (mazeCanvas) {
+        mazeCanvas.removeEventListener('touchstart', handleMazeTouchStart);
+        mazeCanvas.removeEventListener('touchend', handleMazeTouchEnd);
+    }
 }
 
 // =========================================================
 // MINI-GAME 4: BANANA WIRE MATRIX (BOMBANANA INSPIRED)
-// Dynamic colored physical wires with deterministic protocol rules
-// Wrong snip burns 1 charge!
+// 4 Clear Canonical Rules + Slide-Out Rule Drawer ("Rule Slider")
 // =========================================================
 const WIRE_PALETTE = [
     { key: 'gold', name: 'Banana Gold', color: '#facc15' },
@@ -1107,6 +1227,7 @@ const WIRE_PALETTE = [
 
 let generatedWires = [];
 let correctWireIndex = 0;
+let matchingRuleId = 'mRule4';
 
 function initBananaWires(diff) {
     const container = document.getElementById('mgWiresContainer');
@@ -1128,43 +1249,70 @@ function initBananaWires(diff) {
 
     evaluateBananaWireRules();
     renderWiresBoard();
+    toggleRuleDrawer(false); // drawer closed by default, user can slide it open
+}
+
+function toggleRuleDrawer(forceState) {
+    const drawer = document.getElementById('wiresRuleDrawer');
+    const toggleBtn = document.getElementById('ruleSliderToggleBtn');
+    if (!drawer) return;
+
+    const isActive = forceState !== undefined ? forceState : !drawer.classList.contains('active');
+    if (isActive) {
+        drawer.classList.add('active');
+        if (toggleBtn) toggleBtn.innerHTML = '📖 SLIDE BACK / HIDE MANUAL ✕';
+        playTapSound();
+    } else {
+        drawer.classList.remove('active');
+        if (toggleBtn) toggleBtn.innerHTML = '📖 EXTEND RULE SLIDER [4 MANUAL RULES] ❯';
+        playTapSound();
+    }
 }
 
 function evaluateBananaWireRules() {
     const counts = { gold: 0, lime: 0, cyan: 0, ruby: 0, purple: 0 };
     generatedWires.forEach(w => counts[w.key]++);
 
-    const ruleEl = document.getElementById('wiresRuleText');
-    let directive = "";
+    // Reset card highlight
+    ['mRule1', 'mRule2', 'mRule3', 'mRule4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('matched');
+    });
 
-    // BOMBANANA Rules Hierarchy
+    // 4 Canonical BOMBANANA Rules:
+    // Rule 1: Zero Hazard Ruby wires exist -> Cut 2nd wire
+    // Rule 2: Last wire is Radioactive Lime -> Cut last wire
+    // Rule 3: 2 or more Carbon Purple wires -> Cut last Purple wire
+    // Rule 4 (Otherwise): Cut 1st Banana Gold wire (or wire #1 if none)
     if (counts.ruby === 0) {
         correctWireIndex = 1;
-        directive = "RULE 1: IF ZERO HAZARD RUBY WIRES EXIST → SEVER THE 2ND WIRE.";
-    } else if (counts.gold === 1 && counts.cyan >= 2) {
-        correctWireIndex = generatedWires.findIndex(w => w.key === 'cyan');
-        directive = "RULE 2: IF EXACTLY 1 BANANA GOLD & ≥2 CYAN PULSE → SEVER THE 1ST CYAN WIRE.";
+        matchingRuleId = 'mRule1';
     } else if (generatedWires[generatedWires.length - 1].key === 'lime') {
         correctWireIndex = generatedWires.length - 1;
-        directive = "RULE 3: IF TERMINAL WIRE IS RADIOACTIVE LIME → SEVER THE LAST WIRE.";
+        matchingRuleId = 'mRule2';
     } else if (counts.purple >= 2) {
         let lastPurple = -1;
         generatedWires.forEach((w, i) => { if (w.key === 'purple') lastPurple = i; });
         correctWireIndex = lastPurple;
-        directive = "RULE 4: IF MULTIPLE CARBON PURPLE PRESENT → SEVER THE LAST PURPLE WIRE.";
-    } else if (counts.gold >= 1) {
-        correctWireIndex = generatedWires.findIndex(w => w.key === 'gold');
-        directive = "RULE 5: IF ANY BANANA GOLD REMAIN → SEVER THE FIRST GOLD WIRE.";
+        matchingRuleId = 'mRule3';
     } else {
-        correctWireIndex = 0;
-        directive = "RULE 6: DEFAULT PROTOCOL → SEVER THE 1ST ANCHOR WIRE.";
+        const firstGold = generatedWires.findIndex(w => w.key === 'gold');
+        correctWireIndex = firstGold !== -1 ? firstGold : 0;
+        matchingRuleId = 'mRule4';
     }
 
     if (correctWireIndex < 0 || correctWireIndex >= generatedWires.length) {
         correctWireIndex = 0;
     }
 
-    if (ruleEl) ruleEl.innerText = directive;
+    // Highlight matching rule in drawer
+    const matchedEl = document.getElementById(matchingRuleId);
+    if (matchedEl) matchedEl.classList.add('matched');
+
+    const statusHint = document.getElementById('drawerStatusHint');
+    if (statusHint) {
+        statusHint.innerHTML = `CIRCUIT READOUT: ${counts.ruby} RUBY • ${counts.lime} LIME • ${counts.purple} PURPLE • ${counts.gold} GOLD<br><span style="color:#22c55e;">→ ${matchingRuleId.toUpperCase()} APPLIES</span>`;
+    }
 }
 
 function renderWiresBoard() {
@@ -1200,8 +1348,8 @@ function snipWire(index) {
 
     if (index === correctWireIndex) {
         playDisarmSuccessSound();
-        const ruleEl = document.getElementById('wiresRuleText');
-        if (ruleEl) ruleEl.innerText = "CIRCUIT SAFELY BYPASSED! SECURING CHARGE...";
+        const toggleBtn = document.getElementById('ruleSliderToggleBtn');
+        if (toggleBtn) toggleBtn.innerText = "✓ CORRECT WIRE CUT! MODULE BYPASSED";
         setTimeout(() => closeMiniGame(true), 550);
     } else {
         const dead = deductCharge("WRONG WIRE SEVERED: CATASTROPHIC SHORT CIRCUIT");
@@ -1215,8 +1363,8 @@ function snipWire(index) {
 }
 
 // =========================================================
-// MINI-GAME 5: FREQUENCY OSCILLOSCOPE TUNER
-// Modulate Frequency & Phase to reach ≥ 90% resonance lock
+// MINI-GAME 5: FREQUENCY OSCILLOSCOPE TUNER (INTERACTIVE SLIDERS & CANVAS SCRUBBING)
+// Tactile step buttons [ - ] [ + ], live slider, plus direct canvas drag scrubbing!
 // =========================================================
 let freqAnimFrame = null;
 let freqTargetF = 3.5;
@@ -1225,6 +1373,9 @@ let freqPlayerF = 1.0;
 let freqPlayerPhase = 0;
 let freqOscTime = 0;
 let freqLocked = false;
+let freqCanvasDragging = false;
+let freqLastDragX = 0;
+let freqLastDragY = 0;
 
 function initFrequencyTuner(diff) {
     const container = document.getElementById('mgFreqContainer');
@@ -1256,8 +1407,80 @@ function initFrequencyTuner(diff) {
     updateFreqSlider();
     updatePhaseSlider();
 
+    // Canvas Interactive Drag Listeners
+    canvas.onpointerdown = handleFreqCanvasPointerDown;
+    window.onpointermove = handleFreqCanvasPointerMove;
+    window.onpointerup = handleFreqCanvasPointerUp;
+
     cancelAnimationFrame(freqAnimFrame);
     freqLoop();
+}
+
+function handleFreqCanvasPointerDown(e) {
+    if (freqLocked) return;
+    freqCanvasDragging = true;
+    freqLastDragX = e.clientX;
+    freqLastDragY = e.clientY;
+    getAudioContext();
+}
+
+function handleFreqCanvasPointerMove(e) {
+    if (!freqCanvasDragging || freqLocked) return;
+    const dx = e.clientX - freqLastDragX;
+    const dy = e.clientY - freqLastDragY;
+    freqLastDragX = e.clientX;
+    freqLastDragY = e.clientY;
+
+    // Horizontal scrub -> Phase
+    if (Math.abs(dx) > 0) {
+        let p = freqPlayerPhase + Math.round(dx * 1.5);
+        if (p < 0) p = 360 + (p % 360);
+        else if (p >= 360) p = p % 360;
+        freqPlayerPhase = p;
+        const pSlider = document.getElementById('phaseSlider');
+        if (pSlider) pSlider.value = p;
+        const label = document.getElementById('phaseValText');
+        if (label) label.innerText = `${p}°`;
+    }
+
+    // Vertical scrub -> Frequency
+    if (Math.abs(dy) > 0) {
+        let f = freqPlayerF - dy * 0.04;
+        f = Math.max(1.0, Math.min(8.0, Math.round(f * 10) / 10));
+        freqPlayerF = f;
+        const fSlider = document.getElementById('freqSlider');
+        if (fSlider) fSlider.value = f.toFixed(1);
+        const label = document.getElementById('freqValText');
+        if (label) label.innerText = `${f.toFixed(1)}x`;
+    }
+}
+
+function handleFreqCanvasPointerUp() {
+    freqCanvasDragging = false;
+}
+
+// Interactive Step Buttons
+function adjustFreq(delta) {
+    getAudioContext();
+    const slider = document.getElementById('freqSlider');
+    if (!slider || freqLocked) return;
+    let val = parseFloat(slider.value) + delta;
+    val = Math.max(1.0, Math.min(8.0, Math.round(val * 10) / 10));
+    slider.value = val.toFixed(1);
+    updateFreqSlider();
+    playBeep(220 + val * 50, 'sine', 0.04, 0.1);
+}
+
+function adjustPhase(delta) {
+    getAudioContext();
+    const slider = document.getElementById('phaseSlider');
+    if (!slider || freqLocked) return;
+    let val = parseInt(slider.value, 10) + delta;
+    if (val < 0) val = 360 + (val % 360);
+    else if (val >= 360) val = val % 360;
+    slider.value = val;
+    updatePhaseSlider();
+    playBeep(320 + (val / 360) * 150, 'sine', 0.04, 0.1);
 }
 
 function updateFreqSlider() {
@@ -1292,6 +1515,7 @@ function freqLoop() {
         if (meter) meter.style.width = `${matchPercent}%`;
         if (text) text.innerText = `${matchPercent}%`;
 
+        // Resonance Lock threshold
         if (matchPercent >= 92) {
             freqLocked = true;
             if (meter) meter.style.width = '100%';
@@ -1375,6 +1599,9 @@ function renderFreqOscilloscope() {
 function cleanupFreqTuner() {
     cancelAnimationFrame(freqAnimFrame);
     freqLocked = false;
+    freqCanvasDragging = false;
+    window.onpointermove = null;
+    window.onpointerup = null;
 }
 
 // =========================================================
@@ -1467,6 +1694,7 @@ function abortToMenu() {
     cleanupReactorGame();
     cleanupMazeGame();
     cleanupFreqTuner();
+    toggleRuleDrawer(false);
 
     document.body.classList.remove('panic-mode');
     document.getElementById('screen-game').classList.remove('active');
