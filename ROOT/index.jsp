@@ -1070,12 +1070,12 @@
       <div class="game-carousel" id="carousel">
         
         <!-- Game 1: Defusal Protocol -->
-        <div class="game-card" style="animation-delay: 0.05s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol', 'High-stakes 3-minute bomb defusal simulation. Complete bypass sequences across modules before the integrity failsafe triggers.')">
+        <div class="game-card" style="animation-delay: 0.05s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol // Crisis Sim', 'Multi-module bomb defusal sim featuring Data Serpent, Reactor Matrix, Firewall Maze, Banana Wires, and Frequency Tuner with a 3-charge containment system.')">
           <div class="card-banner banner-bomb">☢️</div>
           <div class="card-body">
-            <div class="card-tag">Crisis Sim</div>
+            <div class="card-tag">Tactical Sim v3.0</div>
             <div class="card-title">Defusal Protocol</div>
-            <div class="card-desc">Execute override sequences on complex security modules under strict countdown timers. Zero tolerance for errors.</div>
+            <div class="card-desc">Disarm 5 tactical mini-games (Snake, Reactor, Maze, Banana Wires, Freq Tuner) under a 3-minute clock with 3 containment charges.</div>
             <div class="card-footer">
               <div class="card-score-preview">Top: <span id="preview-defuse">0 pts</span></div>
               <div class="launch-arrow">➔</div>
