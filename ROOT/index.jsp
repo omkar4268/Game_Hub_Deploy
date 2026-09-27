@@ -1973,7 +1973,7 @@
                 <span>☣</span> RANS0M Entity Challenge <span style="font-size: 0.68rem; background: #b91c1c; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800;">HORROR</span>
               </div>
               <div style="font-size: 0.8rem; color: #fca5a5; margin-top: 4px; line-height: 1.45;">
-                Hostile malware entity stalks you during games. <strong style="color: #fff;">DO NOT TOUCH IT!</strong> If touched, survive the coin purge or move challenge before system collapse.
+                Hostile ransomware entity flashes a <strong style="color: #fff;">STOP SIGN</strong> (10-30s). <strong style="color: #fff;">FREEZE! DO NOT MAKE ANY INPUT!</strong> Any input triggers an instant jumpscare, a moving 10s countdown box, and relocating tokens!
               </div>
               <button type="button" class="btn-modal btn-cancel" style="flex: initial; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; font-size: 0.74rem; border-color: rgba(239, 68, 68, 0.45); color: #fca5a5; margin-top: 8px; border-radius: 4px;" onclick="openRansomInstructionModal()">
                 📜 View Threat Dossier
@@ -2012,40 +2012,40 @@
 
       <!-- Entity Profile Box -->
       <div style="display: flex; gap: 14px; background: rgba(0,0,0,0.5); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 14px; align-items: center;">
-        <img src="Ransom/assets/sprites/spr_default_ransom.png" style="width: 58px; height: 58px; image-rendering: pixelated; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7)); animation: rhJitter 0.2s infinite;" alt="Entity Avatar">
+        <img src="Ransom/assets/sprites/spr_ransom_attack_face.png" style="width: 58px; height: 58px; image-rendering: pixelated; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7)); animation: rhJitter 0.2s infinite;" alt="Entity Avatar">
         <div style="font-size: 0.78rem; line-height: 1.45; color: #e2e8f0;">
           <strong style="color: #f87171;">IDENTIFIER:</strong> Hostile Sub-Routine Entity (RANS0M.EXE)<br>
-          <strong style="color: #f87171;">BEHAVIOR:</strong> Stalks games in real-time (~40s cycle)<br>
-          <strong style="color: #f87171;">DIRECTIVE:</strong> Force operator panic & corrupt game memory
+          <strong style="color: #f87171;">BEHAVIOR:</strong> Flashes STOP sign (10-30s). Attacks on ANY input.<br>
+          <strong style="color: #f87171;">DIRECTIVE:</strong> Encrypt player items and force system crash
         </div>
       </div>
 
       <!-- Lore Item 1 -->
       <div class="rh-lore-item">
-        <div class="rh-lore-heading"><span>👁</span> THE CARDINAL RULE: DO NOT TOUCH!</div>
+        <div class="rh-lore-heading"><span>🛑</span> THE CARDINAL RULE: FREEZE ON STOP SIGN!</div>
         <div class="rh-lore-body">
-          The entity will drift onto your screen unexpectedly during gameplay. <strong>DO NOT CLICK, TOUCH, OR COLLIDE WITH IT.</strong> If you leave it alone for <strong>7 seconds</strong>, its signal destabilizes and it vanishes harmlessly until the next cycle.
+          A giant flashing <strong>STOP SIGN</strong> will manifest at random intervals (every 10 to 30 seconds). <strong>DO NOT PRESS ANY KEY, DO NOT CLICK, AND DO NOT TOUCH THE SCREEN!</strong> If you remain completely still for <strong>3.5 seconds</strong>, the entity vanishes harmlessly.
         </div>
       </div>
 
       <!-- Lore Item 2 -->
       <div class="rh-lore-item">
-        <div class="rh-lore-heading"><span>⚡</span> CRISIS ACTIVATION: 12-SECOND PURGE</div>
+        <div class="rh-lore-heading"><span>⚡</span> CRISIS ACTIVATION: JUMPSCARE & 10s COUNTDOWN</div>
         <div class="rh-lore-body">
-          If interaction is unavoidable or you touch the entity, it immediately attacks and locks the system into a <strong>12.0-second countdown</strong>:
+          If you make <strong>ANY input</strong> (keyboard, touch, mouse, moving chess piece, snake turn, etc.), RANS0M triggers an <strong>instant jumpscare</strong>, deploys the <strong>retro ransomware encryption box</strong>, and starts a <strong>10-second countdown</strong>:
           <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 0.78rem; line-height: 1.5; color: #cbd5e1;">
-            <li><strong style="color: #86efac;">Action Games (Snake, Maze, Reactor, Bomb Defuse):</strong> 3 glowing golden data coins spawn. Click/tap all 3 coins to purge the malware and claim <strong>+500 bonus points</strong>!</li>
-            <li><strong style="color: #86efac;">Cyber Chess:</strong> Capture ANY opponent piece within <strong>3 moves</strong> to purge.</li>
-            <li><strong style="color: #86efac;">Cipher Guesser:</strong> Narrow down the target key or trigger bypass pins.</li>
+            <li><strong style="color: #fde047;">3 to 7 Gold Tokens:</strong> Randomly spawn across your screen. You must click/tap all of them to pay the ransom in time!</li>
+            <li><strong style="color: #f87171;">Moving Error Box:</strong> The ransomware dialog jumps to a new randomized position <strong>every second</strong>!</li>
+            <li><strong style="color: #fde047;">Relocating Tokens:</strong> All uncollected tokens teleport to new randomized coordinates <strong>every 3 seconds</strong>!</li>
           </ul>
         </div>
       </div>
 
       <!-- Lore Item 3 -->
       <div class="rh-lore-item" style="border-left-color: #dc2626; background: rgba(220, 38, 38, 0.08);">
-        <div class="rh-lore-heading" style="color: #ef4444;"><span>💀</span> THE PENALTY: SYSTEM HACK & GAME OVER</div>
+        <div class="rh-lore-heading" style="color: #ef4444;"><span>💀</span> THE PENALTY: FATAL SCREECH & GAME OVER</div>
         <div class="rh-lore-body">
-          If the 12-second countdown hits 0 or you fail the crisis task, RANS0M unleashes a <strong>screeching audio jumpscare</strong> and instantly forces <strong>GAME OVER</strong> on your active run.
+          If the 10-second countdown hits <strong>00:00</strong> before you collect all tokens, RANS0M unleashes a <strong>violent screeching jumpscare attack</strong> with the screaming face and instantly terminates your active game with <strong>GAME OVER</strong>.
         </div>
       </div>
 

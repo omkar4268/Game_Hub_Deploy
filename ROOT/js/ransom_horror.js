@@ -1,5 +1,5 @@
 // =========================================================
-// RANS0M HORROR PROTOCOL // ATMOSPHERIC CHALLENGE ENGINE
+// RANS0M HORROR PROTOCOL // ROBLOX DOORS INSP. HORROR ENGINE
 // Universal Cyber-Horror Injection for Game Hub
 // =========================================================
 
@@ -12,27 +12,30 @@
     options: {},
     assetBase: '',
     
-    // State flags
-    state: 'idle', // 'idle' | 'lurking' | 'crisis' | 'jumpscare'
-    lurkTimer: null,
-    evasionTimeout: null,
+    // State machine: 'idle' | 'warning' | 'initial_jumpscare' | 'crisis' | 'final_jumpscare'
+    state: 'idle',
+    warningTimer: null,
+    warningDurationTimeout: null,
+    initialJumpscareTimeout: null,
     crisisInterval: null,
+    coinMoveInterval: null,
     noiseInterval: null,
+    _inputHandler: null,
     
-    crisisTimeRemaining: 12.0,
-    coinsNeeded: 3,
+    // Crisis countdown & purge tracking
+    crisisTimeRemaining: 10,
+    coinsNeeded: 5,
     coinsCollected: 0,
-    chessMovesRemaining: 3,
-    guesserProbesRemaining: 2,
     
     // Audio elements
     sounds: {},
 
     // DOM references
-    lurkerEl: null,
-    crisisHudEl: null,
+    stopSignEl: null,
+    initialJumpscareEl: null,
+    ransomWindowEl: null,
     vignetteEl: null,
-    jumpscareEl: null,
+    finalJumpscareEl: null,
     activeCoins: [],
 
     init: function(gameType, options = {}) {
@@ -47,34 +50,45 @@
 
       // Determine asset base path relative to current page location
       const path = window.location.pathname;
-      const isSubDir = path.includes('/Reactor_Meltdown') || path.includes('/Bomb_Defuse') || path.includes('/Ransom');
+      const isSubDir = path.includes('/Snake') || path.includes('/Maze') || path.includes('/Chess') || 
+                       path.includes('/Game1') || path.includes('/Bomb_Defuse') || 
+                       path.includes('/Reactor_Meltdown') || path.includes('/Ransom');
       this.assetBase = isSubDir ? '../Ransom/assets/' : 'Ransom/assets/';
 
       this.preloadAudio();
       this.createVignette();
-      this.scheduleLurk(36000, 44000); // Attacks at random interval every ~40 seconds
+      this.scheduleWarning(10000, 30000); // Stop sign flashes randomly from 10 to 30 seconds
     },
 
     reset: function() {
-      clearTimeout(this.lurkTimer);
-      clearTimeout(this.evasionTimeout);
+      clearTimeout(this.warningTimer);
+      clearTimeout(this.warningDurationTimeout);
+      clearTimeout(this.initialJumpscareTimeout);
       clearInterval(this.crisisInterval);
+      clearInterval(this.coinMoveInterval);
       clearInterval(this.noiseInterval);
 
-      if (this.lurkerEl && this.lurkerEl.parentNode) {
-        this.lurkerEl.parentNode.removeChild(this.lurkerEl);
-      }
-      this.lurkerEl = null;
+      this.removeInputListeners();
 
-      if (this.crisisHudEl && this.crisisHudEl.parentNode) {
-        this.crisisHudEl.parentNode.removeChild(this.crisisHudEl);
+      if (this.stopSignEl && this.stopSignEl.parentNode) {
+        this.stopSignEl.parentNode.removeChild(this.stopSignEl);
       }
-      this.crisisHudEl = null;
+      this.stopSignEl = null;
 
-      if (this.jumpscareEl && this.jumpscareEl.parentNode) {
-        this.jumpscareEl.parentNode.removeChild(this.jumpscareEl);
+      if (this.initialJumpscareEl && this.initialJumpscareEl.parentNode) {
+        this.initialJumpscareEl.parentNode.removeChild(this.initialJumpscareEl);
       }
-      this.jumpscareEl = null;
+      this.initialJumpscareEl = null;
+
+      if (this.ransomWindowEl && this.ransomWindowEl.parentNode) {
+        this.ransomWindowEl.parentNode.removeChild(this.ransomWindowEl);
+      }
+      this.ransomWindowEl = null;
+
+      if (this.finalJumpscareEl && this.finalJumpscareEl.parentNode) {
+        this.finalJumpscareEl.parentNode.removeChild(this.finalJumpscareEl);
+      }
+      this.finalJumpscareEl = null;
 
       if (this.vignetteEl) {
         this.vignetteEl.classList.remove('active');
@@ -83,14 +97,16 @@
       this.clearCoins();
       this.state = 'idle';
       this.coinsCollected = 0;
-      this.chessMovesRemaining = 3;
-      this.guesserProbesRemaining = 2;
+    },
+
+    evadeLurker: function() {
+      this.reset();
     },
 
     preloadAudio: function() {
       const audioFiles = {
         spawn: 'snd_spawn.wav',
-        attack: 'snd_first_jumpscare.wav',
+        first_jumpscare: 'snd_first_jumpscare.wav',
         jumpscare: 'snd_jumpscare.wav',
         purged: 'snd_good_ending.wav'
       };
@@ -134,36 +150,28 @@
 
         if (key === 'spawn') {
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(140, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.6);
-          gain.gain.setValueAtTime(0.12, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+          osc.frequency.setValueAtTime(180, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 0.5);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.5);
           osc.start();
-          osc.stop(ctx.currentTime + 0.6);
-        } else if (key === 'attack') {
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(220, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.4);
+          osc.stop(ctx.currentTime + 0.5);
+        } else if (key === 'first_jumpscare' || key === 'jumpscare') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(950, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(150, ctx.currentTime + 1.2);
+          gain.gain.setValueAtTime(0.6, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+          osc.start();
+          osc.stop(ctx.currentTime + 1.2);
+        } else if (key === 'purged') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1046, ctx.currentTime + 0.4);
           gain.gain.setValueAtTime(0.3, ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.4);
           osc.start();
           osc.stop(ctx.currentTime + 0.4);
-        } else if (key === 'jumpscare') {
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(800, ctx.currentTime);
-          osc.frequency.linearRampToValueAtTime(200, ctx.currentTime + 1.5);
-          gain.gain.setValueAtTime(0.5, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 1.5);
-          osc.start();
-          osc.stop(ctx.currentTime + 1.5);
-        } else if (key === 'purged') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(440, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.5);
-          gain.gain.setValueAtTime(0.25, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.5);
         }
       } catch (e) {}
     },
@@ -176,175 +184,256 @@
       }
     },
 
-    scheduleLurk: function(minMs = 36000, maxMs = 44000) {
+    // -------------------------------------------------------------
+    // PHASE 1: STOP SIGN WARNING (RANDOM 10 TO 30 SECONDS)
+    // -------------------------------------------------------------
+    scheduleWarning: function(minMs = 10000, maxMs = 30000) {
       if (!this.enabled || this.state !== 'idle') return;
-      clearTimeout(this.lurkTimer);
+      clearTimeout(this.warningTimer);
       const delay = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
-      this.lurkTimer = setTimeout(() => {
-        this.spawnLurker();
+      this.warningTimer = setTimeout(() => {
+        this.spawnStopSign();
       }, delay);
     },
 
-    // -------------------------------------------------------------
-    // PHASE 1: LURKING ANOMALY (USER MUST NOT INTERACT!)
-    // -------------------------------------------------------------
-    spawnLurker: function() {
+    spawnStopSign: function() {
       if (!this.enabled || this.state !== 'idle') return;
-      this.state = 'lurking';
+      this.state = 'warning';
 
-      // Play eerie anomaly arrival sound
-      this.playSound('spawn', 0.6);
+      // Play eerie warning buzzer sound
+      this.playSound('spawn', 0.85);
 
-      // Create lurker element
-      const lurker = document.createElement('div');
-      lurker.className = 'rh-lurker';
+      // Create Stop Sign element
+      const wrapper = document.createElement('div');
+      wrapper.className = 'rh-stop-sign-wrapper';
 
-      // Position lurker somewhere interesting on screen (avoid extreme edges)
-      const vpWidth = window.innerWidth;
-      const vpHeight = window.innerHeight;
-      const posX = Math.floor(Math.random() * (vpWidth - 260)) + 60;
-      const posY = Math.floor(Math.random() * (vpHeight - 260)) + 60;
-
-      lurker.style.left = posX + 'px';
-      lurker.style.top = posY + 'px';
-
-      lurker.innerHTML = `
-        <div class="rh-lurker-badge">⚠️ MALWARE ANOMALY // DO NOT TOUCH!</div>
-        <div class="rh-lurker-window">
-          <div class="rh-lurker-header">
-            <span>RANS0M.EXE</span>
-            <span>☣</span>
-          </div>
-          <div class="rh-lurker-body">
-            <img src="${this.assetBase}sprites/spr_default_ransom.png" class="rh-lurker-sprite" alt="Hostile Entity" />
-          </div>
-        </div>
+      wrapper.innerHTML = `
+        <img src="${this.assetBase}sprites/spr_stop_sign.png" class="rh-stop-sign-img" alt="STOP!" />
+        <div class="rh-stop-sign-banner">⚠️ FREEZE! DO NOT MAKE ANY INPUT! ⚠️</div>
       `;
 
-      // Crucial mechanic: touching or clicking the lurker triggers immediate attack!
-      const onTouchOrClick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.triggerAttack('INTERACTION DETECTED // HOSTILE PROVOCATION!');
+      document.body.appendChild(wrapper);
+      this.stopSignEl = wrapper;
+
+      // Listen for ANY user input (Keyboard, Mouse Click, Screen Touch, Mobile Dpad)
+      this.addInputListeners();
+
+      // Safe Evasion Duration: If player provides ZERO input for 3.5 seconds, threat passes!
+      clearTimeout(this.warningDurationTimeout);
+      this.warningDurationTimeout = setTimeout(() => {
+        if (this.state === 'warning') {
+          this.evadeWarning();
+        }
+      }, 3500);
+    },
+
+    addInputListeners: function() {
+      this.removeInputListeners();
+
+      const onInputDetected = (e) => {
+        if (this.state === 'warning') {
+          if (e) {
+            try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+          }
+          this.removeInputListeners();
+          clearTimeout(this.warningDurationTimeout);
+          this.triggerInitialJumpscare();
+        }
       };
 
-      lurker.addEventListener('click', onTouchOrClick);
-      lurker.addEventListener('touchstart', onTouchOrClick, { passive: false });
+      this._inputHandler = onInputDetected;
 
-      document.body.appendChild(lurker);
-      this.lurkerEl = lurker;
-
-      // Safe Evasion Timer: If untouched for 7 seconds, it quietly fades away!
-      clearTimeout(this.evasionTimeout);
-      this.evasionTimeout = setTimeout(() => {
-        if (this.state === 'lurking') {
-          this.evadeLurker();
-        }
-      }, 7000);
+      // Add capture phase listeners so ANY input is caught instantly
+      window.addEventListener('keydown', onInputDetected, true);
+      window.addEventListener('mousedown', onInputDetected, true);
+      window.addEventListener('touchstart', onInputDetected, { capture: true, passive: false });
+      window.addEventListener('pointerdown', onInputDetected, true);
     },
 
-    evadeLurker: function() {
-      if (this.lurkerEl) {
-        this.lurkerEl.style.opacity = '0';
-        this.lurkerEl.style.transform = 'scale(0.7) translateY(-20px)';
+    removeInputListeners: function() {
+      if (this._inputHandler) {
+        window.removeEventListener('keydown', this._inputHandler, true);
+        window.removeEventListener('mousedown', this._inputHandler, true);
+        window.removeEventListener('touchstart', this._inputHandler, { capture: true, passive: false });
+        window.removeEventListener('pointerdown', this._inputHandler, true);
+        this._inputHandler = null;
+      }
+    },
+
+    evadeWarning: function() {
+      this.removeInputListeners();
+      if (this.stopSignEl) {
+        this.stopSignEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        this.stopSignEl.style.opacity = '0';
+        this.stopSignEl.style.transform = 'translate(-50%, -50%) scale(0.4)';
         setTimeout(() => {
-          if (this.lurkerEl && this.lurkerEl.parentNode) {
-            this.lurkerEl.parentNode.removeChild(this.lurkerEl);
+          if (this.stopSignEl && this.stopSignEl.parentNode) {
+            this.stopSignEl.parentNode.removeChild(this.stopSignEl);
           }
-          this.lurkerEl = null;
-        }, 500);
+          this.stopSignEl = null;
+        }, 400);
       }
       this.state = 'idle';
-      this.scheduleLurk(36000, 44000); // Reschedule for next ~40s cycle
+      this.scheduleWarning(10000, 30000); // Reschedule for next random 10-30s cycle
     },
 
     // -------------------------------------------------------------
-    // PHASE 2: CRISIS & ATTACK PHASE
+    // PHASE 2: INITIAL JUMPSCARE (TRIGGERED IMMEDIATELY ON ANY INPUT)
     // -------------------------------------------------------------
-    triggerAttack: function(reason) {
-      if (this.state === 'crisis' || this.state === 'jumpscare') return;
-      this.state = 'crisis';
+    triggerInitialJumpscare: function() {
+      if (this.state === 'initial_jumpscare' || this.state === 'crisis' || this.state === 'final_jumpscare') return;
+      this.state = 'initial_jumpscare';
 
-      clearTimeout(this.evasionTimeout);
-      if (this.lurkerEl) {
-        if (this.lurkerEl.parentNode) this.lurkerEl.parentNode.removeChild(this.lurkerEl);
-        this.lurkerEl = null;
+      // Remove stop sign immediately
+      if (this.stopSignEl && this.stopSignEl.parentNode) {
+        this.stopSignEl.parentNode.removeChild(this.stopSignEl);
+        this.stopSignEl = null;
       }
 
-      // Attack sting sound & red screen border
-      this.playSound('attack', 0.95);
+      // Play terrifying screeching jumpscare audio
+      this.playSound('first_jumpscare', 1.0);
+
+      // Create fullscreen jump flash
+      const jump = document.createElement('div');
+      jump.className = 'rh-initial-jumpscare';
+
+      jump.innerHTML = `
+        <img src="${this.assetBase}sprites/spr_ransom_attack_face.png" class="rh-initial-face" alt="RANS0M Attack" />
+      `;
+
+      document.body.appendChild(jump);
+      this.initialJumpscareEl = jump;
+
+      // Hold jumpscare for 0.9s, then start the 10-second countdown crisis
+      clearTimeout(this.initialJumpscareTimeout);
+      this.initialJumpscareTimeout = setTimeout(() => {
+        if (this.initialJumpscareEl && this.initialJumpscareEl.parentNode) {
+          this.initialJumpscareEl.parentNode.removeChild(this.initialJumpscareEl);
+          this.initialJumpscareEl = null;
+        }
+        this.startCrisisPhase();
+      }, 900);
+    },
+
+    // -------------------------------------------------------------
+    // PHASE 3: CRISIS PHASE (MOVING BOX + 10s COUNTDOWN + COIN PURGE)
+    // -------------------------------------------------------------
+    startCrisisPhase: function() {
+      this.state = 'crisis';
       if (this.vignetteEl) this.vignetteEl.classList.add('active');
 
-      this.crisisTimeRemaining = 12.0;
-      this.renderCrisisHud();
+      // Randomly spawn between 3 and 7 tokens
+      this.coinsNeeded = Math.floor(Math.random() * 5) + 3; // 3, 4, 5, 6, or 7 tokens
+      this.coinsCollected = 0;
+      this.crisisTimeRemaining = 10;
 
-      // Launch game-specific purge tasks
-      if (this.gameType === 'chess') {
-        this.initChessCrisis();
-      } else if (this.gameType === 'number_guess') {
-        this.initGuesserCrisis();
-      } else {
-        // Snake, Maze, Reactor Meltdown, Bomb Defuse
-        this.initActionCrisis();
-      }
+      // Render the Authentic Retro Ransomware Error Box
+      this.renderRansomWindow();
 
-      // Start Countdown Timer
+      // Spawn Coins
+      this.spawnPurgeCoins();
+
+      // Countdown Timer & Box Movement: Ticks every 1 second (1000ms)
       clearInterval(this.crisisInterval);
       this.crisisInterval = setInterval(() => {
-        this.crisisTimeRemaining -= 0.1;
+        this.crisisTimeRemaining--;
+
         if (this.crisisTimeRemaining <= 0) {
           this.crisisTimeRemaining = 0;
-          this.updateCrisisTimerUI();
+          this.updateWindowTimerUI();
           clearInterval(this.crisisInterval);
-          this.triggerJumpscare('TIME EXPIRED // FIREWALL BREACHED');
+          clearInterval(this.coinMoveInterval);
+          this.triggerFinalJumpscare('TIME EXPIRED // YOUR ITEMS HAVE BEEN ENCRYPTED');
         } else {
-          this.updateCrisisTimerUI();
+          this.updateWindowTimerUI();
+          // Move the ransomware box to a new randomized position every second!
+          this.moveRansomWindow();
         }
-      }, 100);
+      }, 1000);
+
+      // Locations of coins also change every 3 seconds randomly on screen!
+      clearInterval(this.coinMoveInterval);
+      this.coinMoveInterval = setInterval(() => {
+        if (this.state === 'crisis') {
+          this.relocateActiveCoins();
+        }
+      }, 3000);
     },
 
-    renderCrisisHud: function() {
-      if (this.crisisHudEl && this.crisisHudEl.parentNode) {
-        this.crisisHudEl.parentNode.removeChild(this.crisisHudEl);
+    renderRansomWindow: function() {
+      if (this.ransomWindowEl && this.ransomWindowEl.parentNode) {
+        this.ransomWindowEl.parentNode.removeChild(this.ransomWindowEl);
       }
 
-      const hud = document.createElement('div');
-      hud.className = 'rh-crisis-hud';
+      const win = document.createElement('div');
+      win.className = 'rh-ransom-window';
 
-      let taskPrompt = 'COLLECT 3 PURGE DATA NODES BEFORE CRASH!';
-      if (this.gameType === 'chess') {
-        taskPrompt = 'TACTICAL PURGE: CAPTURE AN OPPONENT PIECE IN 3 MOVES!';
-      } else if (this.gameType === 'number_guess') {
-        taskPrompt = 'CIPHER OVERRIDE: SUBMIT CLOSER PROBE OR TAP 3 BYPASS NODES!';
-      }
-
-      hud.innerHTML = `
-        <div class="rh-crisis-title">
-          <span>☣ RANS0M SYSTEM COMPROMISE</span>
+      win.innerHTML = `
+        <div class="rh-window-titlebar">
+          <span>RANSOMWARE.EXE</span>
+          <div class="rh-window-controls">
+            <div class="rh-win-btn">_</div>
+            <div class="rh-win-btn">□</div>
+            <div class="rh-win-btn">✕</div>
+          </div>
         </div>
-        <div class="rh-crisis-sub" id="rhTaskDesc">${taskPrompt}</div>
-        <div class="rh-timer-track">
-          <div class="rh-timer-fill" id="rhTimerFill" style="width: 100%;"></div>
+        <div class="rh-window-header-box">
+          <img src="${this.assetBase}sprites/spr_ransom_attack_face.png" class="rh-window-avatar" alt="Avatar" />
+          <div class="rh-window-main-title">
+            YOUR ITEMS<br>HAVE BEEN<br>ENCRYPTED
+          </div>
+        </div>
+        <div class="rh-window-notice">
+          IF YOU DO NOT PAY THIS RANSOM BEFORE THE TIMER ENDS, YOUR ITEMS WILL BE <strong>UNRECOVERABLE BY ANY MEANS</strong>.
+        </div>
+        <div class="rh-window-stats">
+          <div class="rh-stat-coins">
+            <span class="rh-coins-counter" id="rhTokensCount">0 / ${this.coinsNeeded}</span>
+            <img src="${this.assetBase}sprites/spr_good_sign.png" class="rh-coin-icon-small" alt="Token" />
+          </div>
+          <div class="rh-stat-timer">
+            TIME: <span class="rh-timer-display" id="rhTimerVal">00:10</span>
+          </div>
         </div>
       `;
 
-      document.body.appendChild(hud);
-      this.crisisHudEl = hud;
+      document.body.appendChild(win);
+      this.ransomWindowEl = win;
+
+      // Set initial random position on screen
+      this.moveRansomWindow();
     },
 
-    updateCrisisTimerUI: function() {
-      const fill = document.getElementById('rhTimerFill');
-      if (fill) {
-        const pct = Math.max(0, Math.min(100, (this.crisisTimeRemaining / 12.0) * 100));
-        fill.style.width = pct + '%';
+    updateWindowTimerUI: function() {
+      const timerEl = document.getElementById('rhTimerVal');
+      if (timerEl) {
+        const sec = this.crisisTimeRemaining;
+        timerEl.innerText = '00:' + (sec < 10 ? '0' + sec : sec);
       }
     },
 
-    // --- Action Games: Purge Coins Spawner ---
-    initActionCrisis: function() {
-      this.coinsNeeded = 3;
-      this.coinsCollected = 0;
-      this.spawnPurgeCoins();
+    moveRansomWindow: function() {
+      if (!this.ransomWindowEl) return;
+
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
+
+      // Safe bounds so window stays 100% visible on any screen/mobile viewport
+      const minX = 15;
+      const maxX = Math.max(minX + 20, vpW - 400);
+      const minY = 30;
+      const maxY = Math.max(minY + 20, vpH - 320);
+
+      const newX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+      const newY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
+
+      this.ransomWindowEl.style.left = newX + 'px';
+      this.ransomWindowEl.style.top = newY + 'px';
+
+      // Apply quick teleport glitch flash
+      this.ransomWindowEl.classList.remove('rh-box-warping');
+      void this.ransomWindowEl.offsetWidth; // Trigger reflow
+      this.ransomWindowEl.classList.add('rh-box-warping');
     },
 
     spawnPurgeCoins: function() {
@@ -356,15 +445,12 @@
         const coin = document.createElement('div');
         coin.className = 'rh-purge-coin';
         
-        // Distribute coins in distinct quadrants
-        const minX = 40 + (i * Math.floor((vpW - 120) / this.coinsNeeded));
-        const maxX = minX + Math.floor((vpW - 120) / this.coinsNeeded) - 60;
-        const posX = Math.max(20, Math.min(vpW - 80, Math.floor(Math.random() * (maxX - minX + 1)) + minX));
-        const posY = Math.max(80, Math.min(vpH - 120, Math.floor(Math.random() * (vpH - 220)) + 110));
+        const posX = Math.max(25, Math.min(vpW - 75, Math.floor(Math.random() * (vpW - 100)) + 30));
+        const posY = Math.max(70, Math.min(vpH - 85, Math.floor(Math.random() * (vpH - 140)) + 60));
 
         coin.style.left = posX + 'px';
         coin.style.top = posY + 'px';
-        coin.innerHTML = `<img src="${this.assetBase}sprites/spr_good_sign.png" alt="Purge Token">`;
+        coin.innerHTML = `<img src="${this.assetBase}sprites/spr_good_sign.png" alt="Coin Token">`;
 
         const onCollect = (e) => {
           e.preventDefault();
@@ -378,111 +464,89 @@
         document.body.appendChild(coin);
         this.activeCoins.push(coin);
       }
-      this.updateActionTaskPrompt();
+      this.updateCoinsCounterUI();
+    },
+
+    relocateActiveCoins: function() {
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
+
+      this.activeCoins.forEach(coin => {
+        if (!coin || coin.classList.contains('collected') || !coin.parentNode) return;
+
+        coin.classList.add('rh-teleporting');
+        const newX = Math.max(25, Math.min(vpW - 75, Math.floor(Math.random() * (vpW - 100)) + 30));
+        const newY = Math.max(70, Math.min(vpH - 85, Math.floor(Math.random() * (vpH - 140)) + 60));
+
+        setTimeout(() => {
+          coin.style.left = newX + 'px';
+          coin.style.top = newY + 'px';
+          setTimeout(() => {
+            coin.classList.remove('rh-teleporting');
+          }, 150);
+        }, 120);
+      });
     },
 
     collectCoin: function(coin) {
       if (coin.classList.contains('collected')) return;
       coin.classList.add('collected');
       this.coinsCollected++;
-      this.playSound('purged', 0.5);
+      this.playSound('purged', 0.6);
 
-      this.updateActionTaskPrompt();
+      this.updateCoinsCounterUI();
 
       setTimeout(() => {
         if (coin.parentNode) coin.parentNode.removeChild(coin);
-      }, 400);
+        const idx = this.activeCoins.indexOf(coin);
+        if (idx !== -1) this.activeCoins.splice(idx, 1);
+      }, 350);
 
       if (this.coinsCollected >= this.coinsNeeded) {
-        this.purgeSuccess('DATA PURGED // MALWARE EXTINGUISHED (+500 PTS)');
+        this.purgeSuccess('RANSOM PAID // DECRYPTION COMPLETE (+500 BONUS SCORE)');
       }
     },
 
-    updateActionTaskPrompt: function() {
-      const taskEl = document.getElementById('rhTaskDesc');
-      if (taskEl) {
-        taskEl.innerHTML = `COLLECT DATA PURGE NODES: <strong>${this.coinsCollected} / ${this.coinsNeeded}</strong>`;
+    updateCoinsCounterUI: function() {
+      const counterEl = document.getElementById('rhTokensCount');
+      if (counterEl) {
+        counterEl.innerText = `${this.coinsCollected} / ${this.coinsNeeded}`;
       }
     },
 
     clearCoins: function() {
       this.activeCoins.forEach(c => {
-        if (c.parentNode) c.parentNode.removeChild(c);
+        if (c && c.parentNode) c.parentNode.removeChild(c);
       });
       this.activeCoins = [];
     },
 
-    // --- Chess Crisis: Piece Capture Challenge ---
-    initChessCrisis: function() {
-      this.chessMovesRemaining = 3;
-      this.updateChessTaskPrompt();
-    },
-
-    notifyChessMove: function(move) {
-      if (this.state !== 'crisis' || this.gameType !== 'chess') return;
-
-      // Check if move captured an opponent piece
-      if (move && move.captured) {
-        this.purgeSuccess(`TACTICAL SACRIFICE VERIFIED! CAPTURED [${move.captured.toUpperCase()}] (+500 PTS)`);
-        return;
-      }
-
-      this.chessMovesRemaining--;
-      this.updateChessTaskPrompt();
-
-      if (this.chessMovesRemaining <= 0) {
-        this.triggerJumpscare('TACTICAL FAILURE // NO PIECE CAPTURED IN 3 MOVES');
-      }
-    },
-
-    updateChessTaskPrompt: function() {
-      const taskEl = document.getElementById('rhTaskDesc');
-      if (taskEl) {
-        taskEl.innerHTML = `CAPTURE AN OPPONENT PIECE! <strong>[${this.chessMovesRemaining} MOVES REMAINING]</strong>`;
-      }
-    },
-
-    // --- Guesser / Cipher Crisis ---
-    initGuesserCrisis: function() {
-      this.guesserProbesRemaining = 2;
-      // Also spawn 3 bypass nodes as alternative high-speed reflex solution
-      this.coinsNeeded = 3;
-      this.coinsCollected = 0;
-      this.spawnPurgeCoins();
-    },
-
-    notifyGuesserProbe: function(isCorrect, isCloser) {
-      if (this.state !== 'crisis' || this.gameType !== 'number_guess') return;
-
-      if (isCorrect || isCloser) {
-        this.purgeSuccess('CIPHER BYPASS CONFIRMED // SYSTEM SECURED (+500 PTS)');
-        return;
-      }
-
-      this.guesserProbesRemaining--;
-      if (this.guesserProbesRemaining <= 0) {
-        this.triggerJumpscare('CIPHER MISALIGNMENT // MEMORY CORRUPTED');
-      }
-    },
-
     // -------------------------------------------------------------
-    // PHASE 3: PURGE SUCCESS
+    // PHASE 4: SUCCESS // RANSOM PAID & DECRYPTED
     // -------------------------------------------------------------
-    purgeSuccess: function(msg = 'ANOMALY PURGED! SYSTEM RESTORED (+500 BONUS SCORE)') {
+    purgeSuccess: function(msg = 'RANSOM PAID // SYSTEM SECURED (+500 BONUS SCORE)') {
       clearInterval(this.crisisInterval);
+      clearInterval(this.coinMoveInterval);
       this.clearCoins();
       this.state = 'idle';
 
       // Play victory chime
-      this.playSound('purged', 0.9);
+      this.playSound('purged', 0.95);
 
       // Deactivate red vignette
       if (this.vignetteEl) this.vignetteEl.classList.remove('active');
 
-      // Remove crisis HUD
-      if (this.crisisHudEl && this.crisisHudEl.parentNode) {
-        this.crisisHudEl.parentNode.removeChild(this.crisisHudEl);
-        this.crisisHudEl = null;
+      // Collapse and remove ransomware window
+      if (this.ransomWindowEl) {
+        this.ransomWindowEl.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+        this.ransomWindowEl.style.transform = 'scale(0.2) rotate(10deg)';
+        this.ransomWindowEl.style.opacity = '0';
+        setTimeout(() => {
+          if (this.ransomWindowEl && this.ransomWindowEl.parentNode) {
+            this.ransomWindowEl.parentNode.removeChild(this.ransomWindowEl);
+          }
+          this.ransomWindowEl = null;
+        }, 350);
       }
 
       // Show Success Toast
@@ -493,7 +557,7 @@
 
       setTimeout(() => {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
-      }, 3000);
+      }, 3200);
 
       // Award +500 bonus points if host game has score function
       if (this.options.onPurgeBonus && typeof this.options.onPurgeBonus === 'function') {
@@ -504,40 +568,41 @@
         if (scoreDisplay) scoreDisplay.innerText = window.score;
       }
 
-      // Schedule next lurking encounter (~40s cycle)
-      this.scheduleLurk(36000, 44000);
+      // Schedule next Stop Sign encounter in random 10 to 30 seconds
+      this.scheduleWarning(10000, 30000);
     },
 
     // -------------------------------------------------------------
-    // PHASE 4: FAILURE // FULLSCREEN JUMPSCARE & GAME OVER
+    // PHASE 5: FAILURE // FATAL JUMPSCARE & GAME OVER
     // -------------------------------------------------------------
-    triggerJumpscare: function(reason = 'FATAL EXCEPTION') {
-      if (this.state === 'jumpscare') return;
-      this.state = 'jumpscare';
+    triggerFinalJumpscare: function(reason = 'FATAL EXCEPTION') {
+      if (this.state === 'final_jumpscare') return;
+      this.state = 'final_jumpscare';
 
       clearInterval(this.crisisInterval);
+      clearInterval(this.coinMoveInterval);
       this.clearCoins();
 
-      if (this.crisisHudEl && this.crisisHudEl.parentNode) {
-        this.crisisHudEl.parentNode.removeChild(this.crisisHudEl);
-        this.crisisHudEl = null;
+      if (this.ransomWindowEl && this.ransomWindowEl.parentNode) {
+        this.ransomWindowEl.parentNode.removeChild(this.ransomWindowEl);
+        this.ransomWindowEl = null;
       }
 
       // Play screeching jumpscare audio at max volume!
       this.playSound('jumpscare', 1.0);
 
-      // Construct Fullscreen Jumpscare Takeover
+      // Construct Fullscreen Fatal Jumpscare Takeover
       const jump = document.createElement('div');
       jump.className = 'rh-jumpscare-overlay';
 
       jump.innerHTML = `
-        <img src="${this.assetBase}sprites/spr_ransom_jumpscare.png" class="rh-jumpscare-face" alt="Jumpscare" />
+        <img src="${this.assetBase}sprites/spr_ransom_attack_face.png" class="rh-jumpscare-face" alt="Fatal Jumpscare" />
         <div class="rh-jumpscare-static" id="rhNoiseStatic"></div>
-        <div class="rh-jumpscare-glitchtext">SYSTEM COMPROMISED. GOODBYE.</div>
+        <div class="rh-jumpscare-glitchtext">SYSTEM COMPROMISED. YOUR ITEMS ARE CORRUPTED. GAME OVER.</div>
       `;
 
       document.body.appendChild(jump);
-      this.jumpscareEl = jump;
+      this.finalJumpscareEl = jump;
 
       // Noise static frame animation (spr_noise_0 through 5)
       let noiseFrame = 0;
@@ -549,11 +614,11 @@
         }
       }, 50);
 
-      // Hold jumpscare for 2.4 seconds, then trigger Game Over
+      // Hold jumpscare for 2.2 seconds, then trigger host Game Over
       setTimeout(() => {
         clearInterval(this.noiseInterval);
         if (jump.parentNode) jump.parentNode.removeChild(jump);
-        this.jumpscareEl = null;
+        this.finalJumpscareEl = null;
         if (this.vignetteEl) this.vignetteEl.classList.remove('active');
 
         // Trigger host game's game over routine
@@ -564,7 +629,7 @@
             console.error('Error invoking host gameOver:', e);
           }
         }
-      }, 2400);
+      }, 2200);
     }
   };
 

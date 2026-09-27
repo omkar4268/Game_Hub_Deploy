@@ -1,5 +1,5 @@
 /* =========================================================
-   RANS0M HORROR PROTOCOL // ATMOSPHERIC CHALLENGE STYLES
+   RANS0M HORROR PROTOCOL // ROBLOX DOORS INSP. HORROR ENGINE
    Game Hub Cyber-Horror Injection Engine
    ========================================================= */
 
@@ -25,86 +25,277 @@
   100% { box-shadow: inset 0 0 85px rgba(239, 68, 68, 0.5), inset 0 0 20px rgba(255, 0, 0, 0.35); }
 }
 
-/* 2. LURKING ANOMALY ENTITY (DO NOT TOUCH!) */
-.rh-lurker {
+/* 2. THE STOP SIGN WARNING ALERT (FLASHES FOR 3.5s - FREEZE!) */
+.rh-stop-sign-wrapper {
   position: fixed;
-  z-index: 8950;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99100;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  pointer-events: none;
   user-select: none;
-  cursor: not-allowed;
-  transition: opacity 0.5s ease, transform 0.2s ease;
-  filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.8));
-  animation: rhFloatDrift 4s ease-in-out infinite;
+  animation: rhStopSignEntrance 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.rh-lurker-badge {
-  background: rgba(239, 68, 68, 0.92);
+.rh-stop-sign-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: rhStopSignStrobe 0.22s infinite alternate, rhStopSignJitter 0.1s infinite;
+  filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.95));
+}
+
+.rh-stop-sign-banner {
+  background: #990000;
   color: #ffffff;
-  font-family: 'Consolas', monospace;
-  font-size: 0.72rem;
+  font-family: 'Impact', 'Consolas', monospace;
+  font-size: 1.15rem;
   font-weight: 900;
-  letter-spacing: 1px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  border: 1px solid #ff4444;
-  margin-bottom: 6px;
-  white-space: nowrap;
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
-  animation: rhWarningBlink 0.6s infinite alternate;
-}
-
-.rh-lurker-window {
-  width: 140px;
-  background: #0a0a0a;
-  border: 2px solid #ef4444;
+  letter-spacing: 2px;
+  padding: 8px 20px;
   border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9), 0 0 20px rgba(239, 68, 68, 0.4);
+  border: 2px solid #ff3333;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.9), inset 0 0 10px rgba(255, 0, 0, 0.5);
+  margin-top: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  animation: rhWarningTextBlink 0.3s infinite alternate;
 }
 
-.rh-lurker-header {
-  background: #b91c1c;
-  color: #fff;
-  font-family: 'Consolas', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 3px 6px;
+@keyframes rhStopSignEntrance {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes rhStopSignStrobe {
+  0% { transform: scale(0.96); filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.7)); }
+  100% { transform: scale(1.08); filter: drop-shadow(0 0 45px rgba(255, 0, 0, 1)); }
+}
+
+@keyframes rhStopSignJitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+  100% { transform: translate(1px, 2px); }
+}
+
+@keyframes rhWarningTextBlink {
+  0% { background: #770000; color: #ffcccc; transform: scale(0.98); }
+  100% { background: #cc0000; color: #ffffff; transform: scale(1.02); }
+}
+
+/* 3. INITIAL JUMPSCARE FLASH (TRIGGERS IF PLAYER PROVIDES ANY INPUT) */
+.rh-initial-jumpscare {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: radial-gradient(circle, #550000 0%, #150000 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: all;
+  animation: rhFlashingRed 0.08s infinite;
+}
+
+.rh-initial-face {
+  width: 85vw;
+  max-width: 540px;
+  height: auto;
+  max-height: 75vh;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: contrast(1.6) brightness(1.3) drop-shadow(0 0 40px rgba(255, 0, 0, 0.9));
+  animation: rhViolentShake 0.05s infinite;
+}
+
+@keyframes rhFlashingRed {
+  0% { background-color: #000000; }
+  50% { background-color: #660000; }
+  100% { background-color: #0a0000; }
+}
+
+@keyframes rhViolentShake {
+  0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+  20% { transform: scale(1.12) translate(-16px, 12px) rotate(-3deg); }
+  40% { transform: scale(1.06) translate(14px, -14px) rotate(3deg); }
+  60% { transform: scale(1.18) translate(-10px, -16px) rotate(-2deg); }
+  80% { transform: scale(1.08) translate(16px, 10px) rotate(2deg); }
+  100% { transform: scale(1) translate(0, 0) rotate(0deg); }
+}
+
+/* 4. AUTHENTIC RETRO RANSOMWARE ENCRYPTED WINDOW */
+.rh-ransom-window {
+  position: fixed;
+  z-index: 99500;
+  width: 380px;
+  max-width: 92vw;
+  background: #c0c0c0;
+  border: 3px outset #ffffff;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(239, 68, 68, 0.85);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+  touch-action: none;
+  transition: top 0.22s cubic-bezier(0.16, 1, 0.3, 1), left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rh-ransom-window.rh-box-warping {
+  animation: rhBoxTeleportFlash 0.22s ease-out;
+}
+
+@keyframes rhBoxTeleportFlash {
+  0% { filter: brightness(2.5) contrast(1.8) drop-shadow(0 0 30px #f00); transform: scale(1.06); }
+  100% { filter: brightness(1) contrast(1) drop-shadow(0 0 10px #000); transform: scale(1); }
+}
+
+/* Retro Title Bar */
+.rh-window-titlebar {
+  background: linear-gradient(90deg, #800000 0%, #d80000 100%);
+  color: #ffffff;
+  padding: 4px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.82rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
-.rh-lurker-body {
-  height: 90px;
-  background: radial-gradient(circle, #2a0808 0%, #050101 100%);
+.rh-window-controls {
+  display: flex;
+  gap: 3px;
+}
+
+.rh-win-btn {
+  width: 17px;
+  height: 16px;
+  background: #c0c0c0;
+  border: 2px outset #ffffff;
+  color: #000000;
+  font-size: 0.65rem;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
+  cursor: pointer;
+  font-weight: 900;
 }
 
-.rh-lurker-sprite {
-  width: 72px;
-  height: 72px;
+.rh-win-btn:active {
+  border: 2px inset #ffffff;
+}
+
+/* Red Header Section: Avatar + Encrypted Title */
+.rh-window-header-box {
+  background: #cc0000;
+  border: 2px inset #ffffff;
+  margin: 4px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rh-window-avatar {
+  width: 62px;
+  height: 62px;
   object-fit: contain;
   image-rendering: pixelated;
-  animation: rhJitter 0.18s infinite;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.9));
+  animation: rhJitter 0.16s infinite;
+  flex-shrink: 0;
 }
 
-@keyframes rhWarningBlink {
-  from { opacity: 0.75; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1.02); }
+.rh-window-main-title {
+  color: #ffffff;
+  font-family: Impact, 'Arial Black', sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px #000;
+  text-transform: uppercase;
 }
 
-@keyframes rhFloatDrift {
-  0% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-8px) rotate(-1.5deg); }
-  50% { transform: translateY(-3px) rotate(1deg); }
-  75% { transform: translateY(-10px) rotate(-0.5deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+/* Notice Box */
+.rh-window-notice {
+  background: #000000;
+  border: 2px solid #cc0000;
+  margin: 4px;
+  padding: 8px 10px;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.rh-window-notice strong {
+  color: #ff3333;
+  font-weight: 900;
+  text-decoration: underline;
+}
+
+/* Bottom Stats Bar: Coins + Countdown Timer */
+.rh-window-stats {
+  display: flex;
+  gap: 4px;
+  margin: 4px;
+}
+
+.rh-stat-coins {
+  flex: 1;
+  background: #000000;
+  border: 2px solid #eab308;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rh-coins-counter {
+  color: #fde047;
+  font-family: Impact, sans-serif;
+  font-size: 1.55rem;
+  letter-spacing: 1px;
+}
+
+.rh-coin-icon-small {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: rhCoinPulse 1.2s infinite;
+}
+
+.rh-stat-timer {
+  flex: 1.35;
+  background: #cc0000;
+  border: 2px solid #ff4444;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #ffffff;
+  font-family: 'Segoe UI Black', Impact, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.rh-timer-display {
+  font-size: 1.55rem;
+  letter-spacing: 2px;
+  color: #ffff00;
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
 }
 
 @keyframes rhJitter {
@@ -116,105 +307,45 @@
   100% { transform: translate(0, 0); }
 }
 
-/* 3. CRISIS OVERLAY & COUNTDOWN HUD */
-.rh-crisis-hud {
-  position: fixed;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 8980;
-  background: rgba(15, 2, 2, 0.94);
-  border: 1px solid rgba(239, 68, 68, 0.65);
-  border-radius: 12px;
-  padding: 10px 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-width: 290px;
-  max-width: 90vw;
-  box-shadow: 0 0 35px rgba(239, 68, 68, 0.5), inset 0 0 15px rgba(239, 68, 68, 0.25);
-  backdrop-filter: blur(12px);
-  animation: rhSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes rhSlideDown {
-  from { opacity: 0; transform: translate(-50%, -30px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-.rh-crisis-title {
-  color: #ef4444;
-  font-family: 'Consolas', monospace;
-  font-size: 0.85rem;
-  font-weight: 900;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
-}
-
-.rh-crisis-sub {
-  color: #fca5a5;
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: 0.5px;
-}
-
-.rh-timer-track {
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: 2px;
-}
-
-.rh-timer-fill {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
-  border-radius: 3px;
-  transition: width 0.1s linear;
-}
-
-/* 4. DATA PURGE TOKENS / COINS (COLLECTIBLE TO PURGE) */
+/* 5. PURGE TOKENS / COINS (3 TO 7 COINS - RELOCATES EVERY 3 SECONDS) */
 .rh-purge-coin {
   position: fixed;
-  z-index: 8970;
-  width: 48px;
-  height: 48px;
+  z-index: 99400;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle, #22c55e 0%, #15803d 70%, #052e16 100%);
-  border: 2px solid #86efac;
-  box-shadow: 0 0 24px rgba(34, 197, 94, 0.85), inset 0 0 10px rgba(255, 255, 255, 0.6);
+  background: radial-gradient(circle, #fde047 0%, #eab308 65%, #713f12 100%);
+  border: 2px solid #fef08a;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.95), inset 0 0 10px rgba(255, 255, 255, 0.9);
   cursor: pointer;
   user-select: none;
-  animation: rhCoinPulse 1.2s infinite ease-in-out;
   touch-action: manipulation;
-  transition: transform 0.15s ease, opacity 0.2s ease;
+  transition: transform 0.15s ease, opacity 0.2s ease, top 0.25s ease, left 0.25s ease;
+  animation: rhCoinPulse 1.2s infinite ease-in-out;
 }
 
 .rh-purge-coin img {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   pointer-events: none;
   image-rendering: pixelated;
 }
 
 .rh-purge-coin:hover {
-  transform: scale(1.15);
-  box-shadow: 0 0 35px rgba(34, 197, 94, 1), inset 0 0 14px rgba(255, 255, 255, 0.9);
+  transform: scale(1.18);
+  box-shadow: 0 0 35px rgba(245, 158, 11, 1), inset 0 0 14px rgba(255, 255, 255, 1);
 }
 
 .rh-purge-coin:active {
   transform: scale(0.92);
+}
+
+.rh-purge-coin.rh-teleporting {
+  animation: rhCoinTeleport 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .rh-purge-coin.collected {
@@ -223,41 +354,52 @@
 }
 
 @keyframes rhCoinPulse {
-  0% { transform: scale(1) translateY(0); box-shadow: 0 0 18px rgba(34, 197, 94, 0.7); }
-  50% { transform: scale(1.08) translateY(-4px); box-shadow: 0 0 30px rgba(34, 197, 94, 1); }
-  100% { transform: scale(1) translateY(0); box-shadow: 0 0 18px rgba(34, 197, 94, 0.7); }
+  0% { transform: scale(1) translateY(0); box-shadow: 0 0 18px rgba(245, 158, 11, 0.8); }
+  50% { transform: scale(1.08) translateY(-4px); box-shadow: 0 0 32px rgba(245, 158, 11, 1); }
+  100% { transform: scale(1) translateY(0); box-shadow: 0 0 18px rgba(245, 158, 11, 0.8); }
+}
+
+@keyframes rhCoinTeleport {
+  0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+  50% { transform: scale(0.1) rotate(180deg); opacity: 0.1; filter: brightness(3); }
+  100% { transform: scale(1); opacity: 1; filter: brightness(1); }
 }
 
 @keyframes rhCoinVanish {
-  0% { transform: scale(1.2); opacity: 1; filter: brightness(2); }
-  100% { transform: scale(0); opacity: 0; filter: brightness(3); }
+  0% { transform: scale(1.3); opacity: 1; filter: brightness(2.5); }
+  100% { transform: scale(0); opacity: 0; filter: brightness(4); }
 }
 
-/* 5. SUCCESS BANNER */
+/* 6. SUCCESS BANNER */
 .rh-success-banner {
   position: fixed;
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9000;
+  z-index: 99600;
   background: rgba(6, 78, 59, 0.95);
-  border: 1px solid #34d399;
+  border: 2px solid #34d399;
   border-radius: 12px;
-  padding: 12px 24px;
+  padding: 14px 28px;
   color: #ecfdf5;
   font-family: 'Consolas', monospace;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 1px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 0 35px rgba(16, 185, 129, 0.6);
-  backdrop-filter: blur(10px);
+  gap: 12px;
+  box-shadow: 0 0 40px rgba(16, 185, 129, 0.7);
+  backdrop-filter: blur(12px);
   animation: rhSlideDown 0.3s ease-out forwards;
 }
 
-/* 6. FULLSCREEN JUMPSCARE TAKEOVER */
+@keyframes rhSlideDown {
+  from { opacity: 0; transform: translate(-50%, -30px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* 7. FULLSCREEN FATAL JUMPSCARE TAKEOVER */
 .rh-jumpscare-overlay {
   position: fixed;
   inset: 0;
@@ -268,27 +410,27 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  animation: rhJumpscareFlashing 0.08s infinite;
+  animation: rhFlashingRed 0.08s infinite;
   user-select: none;
   pointer-events: all;
 }
 
 .rh-jumpscare-face {
-  width: 85vw;
-  max-width: 600px;
+  width: 88vw;
+  max-width: 620px;
   height: auto;
   max-height: 80vh;
   object-fit: contain;
   image-rendering: pixelated;
-  animation: rhJumpscareShake 0.06s infinite;
-  filter: contrast(1.4) brightness(1.2);
+  animation: rhViolentShake 0.05s infinite;
+  filter: contrast(1.5) brightness(1.25);
 }
 
 .rh-jumpscare-static {
   position: absolute;
   inset: 0;
   background-size: cover;
-  opacity: 0.35;
+  opacity: 0.38;
   pointer-events: none;
   mix-blend-mode: screen;
 }
@@ -297,37 +439,23 @@
   position: absolute;
   bottom: 30px;
   color: #ff0000;
-  font-family: 'Consolas', monospace;
+  font-family: 'Impact', 'Consolas', monospace;
   font-weight: 900;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   letter-spacing: 4px;
-  text-shadow: 0 0 15px #f00, 2px 2px #000;
+  text-shadow: 0 0 18px #f00, 2px 2px #000;
   animation: rhTextGlitch 0.1s infinite;
-}
-
-@keyframes rhJumpscareFlashing {
-  0% { background-color: #000000; }
-  45% { background-color: #1a0000; }
-  50% { background-color: #550000; }
-  55% { background-color: #0a0000; }
-  100% { background-color: #000000; }
-}
-
-@keyframes rhJumpscareShake {
-  0% { transform: scale(1) translate(0, 0) rotate(0deg); }
-  25% { transform: scale(1.15) translate(-14px, 10px) rotate(-2deg); }
-  50% { transform: scale(1.08) translate(12px, -12px) rotate(3deg); }
-  75% { transform: scale(1.22) translate(-8px, -15px) rotate(-1deg); }
-  100% { transform: scale(1.1) translate(15px, 8px) rotate(2deg); }
+  text-align: center;
+  padding: 0 20px;
 }
 
 @keyframes rhTextGlitch {
   0% { transform: translate(0, 0); opacity: 1; }
-  50% { transform: translate(-3px, 2px); opacity: 0.8; }
-  100% { transform: translate(3px, -2px); opacity: 1; }
+  50% { transform: translate(-4px, 2px); opacity: 0.8; }
+  100% { transform: translate(4px, -2px); opacity: 1; }
 }
 
-/* 7. DISTORTED THREAT INTEL INSTRUCTION MODAL */
+/* 8. DISTORTED THREAT INTEL INSTRUCTION MODAL */
 .rh-intel-modal {
   position: fixed;
   inset: 0;
@@ -416,6 +544,11 @@
   font-size: 1.6rem;
   color: #ef4444;
   animation: rhWarningBlink 0.7s infinite alternate;
+}
+
+@keyframes rhWarningBlink {
+  from { opacity: 0.75; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1.02); }
 }
 
 .rh-intel-title {
