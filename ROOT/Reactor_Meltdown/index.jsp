@@ -18,6 +18,7 @@
 <title>Reactor Meltdown | Game Hub</title>
 <!-- Modular External Stylesheet -->
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="../css/ransom_horror.css">
 </head>
 <body>
 
@@ -205,5 +206,6 @@
 
 <!-- Modular External Game Engine -->
 <script src="js/engine.js"></script>
+<script src="../js/ransom_horror.js"></script>
 </body>
 </html>

@@ -366,14 +366,24 @@ body {
     gap: 10px;
 }
 
-/* 1. Snake Module Styles */
-.snake-hud, .reactor-hud, .maze-hud {
+.snake-hud, .reactor-hud {
     display: flex;
     justify-content: space-between;
     width: 100%;
     max-width: 280px;
     font-size: 0.8rem;
     font-weight: 800;
+}
+.maze-hud {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 280px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 6px;
 }
 .hud-tag { color: var(--text-muted); }
 .hud-score { color: var(--neon-green); font-size: 0.95rem; }
@@ -553,11 +563,6 @@ body {
     text-align: left;
     transition: all 0.2s;
 }
-.manual-rule-card.matched {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
-}
 .rule-badge {
     font-size: 0.65rem;
     font-weight: 900;
@@ -565,7 +570,6 @@ body {
     letter-spacing: 1px;
     margin-bottom: 2px;
 }
-.manual-rule-card.matched .rule-badge { color: var(--neon-green); }
 .rule-text {
     font-size: 0.76rem;
     color: #f8fafc;

@@ -203,6 +203,16 @@ function initiateGameRun() {
 
   updateShieldsUI();
   setupStage();
+
+  if (window.RansomHorror) {
+    RansomHorror.init('reactor_meltdown', {
+      onGameOver: () => triggerMeltdown('Fatal RANS0M intrusion: reactor coolant completely drained.'),
+      onPurgeBonus: (bonus) => {
+        score += bonus;
+        if (scoreDisplay) scoreDisplay.innerText = score;
+      }
+    });
+  }
 }
 
 /* =========================================================
@@ -512,6 +522,11 @@ function triggerMeltdown(reason) {
   isGameOver = true;
   stopTimer();
   playSynth('meltdown');
+
+  if (window.RansomHorror) {
+    if (RansomHorror.state === 'lurking') RansomHorror.evadeLurker();
+    clearTimeout(RansomHorror.lurkTimer);
+  }
 
   const fScore = document.getElementById('finalScoreVal');
   const fSec = document.getElementById('finalSectorVal');

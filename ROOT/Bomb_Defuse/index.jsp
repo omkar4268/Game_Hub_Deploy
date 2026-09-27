@@ -18,6 +18,7 @@
     <title>Defusal Protocol // Tactical Crisis Sim</title>
     <!-- Link to the separated CSS file -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/ransom_horror.css">
     <style>
         .intel-modal {
             position: fixed;
@@ -251,8 +252,7 @@
                         <!-- 3. MAZE CONTAINER -->
                         <div class="mg-game-container" id="mgMazeContainer" style="display: none;">
                             <div class="maze-hud">
-                                <span class="hud-tag">PACKET ROUTING:</span>
-                                <span class="hud-score" id="mazeStatusText">NAVIGATE TO GREEN EXIT</span>
+                                <span class="hud-score" id="mazeStatusText" style="color: var(--neon-blue); font-size: 0.85rem; letter-spacing: 0.5px;">NAVIGATE TO GREEN EXIT</span>
                             </div>
                             <div class="maze-canvas-wrap">
                                 <canvas id="mazeCanvas" width="280" height="280"></canvas>
@@ -305,7 +305,7 @@
                                     </div>
                                 </div>
                                 <div class="drawer-status" id="drawerStatusHint">
-                                    SCANNING CIRCUIT TELEMETRY...
+                                    ⚠️ CAREFULLY CONSULT RULES 1–4 IN SEQUENCE • CUT THE TARGET WIRE
                                 </div>
                             </div>
                         </div>
@@ -379,5 +379,6 @@
         if (overlay) overlay.classList.remove('active');
       });
     </script>
+    <script src="../js/ransom_horror.js"></script>
 </body>
 </html>

@@ -403,6 +403,16 @@ function startLevel(levelId) {
     clearInterval(timerInterval);
     timerInterval = setInterval(gameTick, 1000);
     updateTimerDisplay();
+
+    if (window.RansomHorror) {
+        RansomHorror.init('bomb_defuse', {
+            onGameOver: () => triggerExplosion('RANS0M MALWARE BREACH // SYSTEM INTEGRITY COLLAPSED'),
+            onPurgeBonus: () => {
+                remainingCharges = Math.min(3, remainingCharges + 1);
+                updateChargesDisplay();
+            }
+        });
+    }
 }
 
 function renderBriefcaseModules() {
@@ -932,8 +942,8 @@ function cleanupReactorGame() {
 }
 
 // =========================================================
-// MINI-GAME 3: FIREWALL MAZE RUNNER (OVERHAULED & GUARANTEED SOLVABLE)
-// Braided labyrinth + BFS path guarantee + non-blocking traps
+// MINI-GAME 3: FIREWALL MAZE RUNNER (100% SOLVABLE & TRAP-FREE)
+// Braided labyrinth with guaranteed BFS connectivity & touch/swipe/click controls
 // Labyrinth sizes: Easy: 7x7, Med: 11x11, Hard: 15x15
 // =========================================================
 let mazeGrid = [];
@@ -941,7 +951,7 @@ let mazeCols = 7;
 let mazeRows = 7;
 let mazePlayer = { x: 1, y: 1 };
 let mazeGoal = { x: 5, y: 5 };
-let mazeTraps = [];
+let mazeVisited = new Set();
 let mazeCanvas = null;
 let mazeCtx = null;
 let mazeTouchStartX = 0;
@@ -972,6 +982,7 @@ function initMazeGame(diff) {
     generateMazeWithGuarantee(diff);
     mazePlayer = { x: 1, y: 1 };
     mazeGoal = { x: mazeCols - 2, y: mazeRows - 2 };
+    mazeVisited = new Set(['1,1']);
 
     const statusEl = document.getElementById('mazeStatusText');
     if (statusEl) statusEl.innerText = "NAVIGATE TO GREEN EXIT";
@@ -979,13 +990,34 @@ function initMazeGame(diff) {
     window.removeEventListener('keydown', handleMazeKey);
     window.addEventListener('keydown', handleMazeKey);
 
-    // Mobile swipe
+    // Mobile swipe & Canvas Tap
     mazeCanvas.removeEventListener('touchstart', handleMazeTouchStart);
     mazeCanvas.removeEventListener('touchend', handleMazeTouchEnd);
+    mazeCanvas.removeEventListener('click', handleMazeCanvasClick);
+
     mazeCanvas.addEventListener('touchstart', handleMazeTouchStart, { passive: true });
     mazeCanvas.addEventListener('touchend', handleMazeTouchEnd, { passive: true });
+    mazeCanvas.addEventListener('click', handleMazeCanvasClick);
 
     renderMazeCanvas();
+}
+
+function handleMazeCanvasClick(e) {
+    if (!mazeCanvas) return;
+    const rect = mazeCanvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    const cellW = rect.width / mazeCols;
+    const cellH = rect.height / mazeRows;
+    const targetC = Math.floor(clickX / cellW);
+    const targetR = Math.floor(clickY / cellH);
+
+    // If tapped directly adjacent to player, move there
+    const dx = targetC - mazePlayer.x;
+    const dy = targetR - mazePlayer.y;
+    if ((Math.abs(dx) === 1 && dy === 0) || (Math.abs(dy) === 1 && dx === 0)) {
+        mazeInput(dx, dy);
+    }
 }
 
 function handleMazeTouchStart(e) {
@@ -1033,10 +1065,10 @@ function generateMazeWithGuarantee(diff) {
     carve(1, 1);
     mazeGrid[mazeRows - 2][mazeCols - 2] = 0;
 
-    // Braid maze: randomly remove 25% of interior walls between adjacent paths to create multiple alternate loops!
+    // Braid maze: randomly remove 30% of interior walls between adjacent paths to create multiple alternate loops!
     for (let r = 2; r < mazeRows - 2; r += 2) {
         for (let c = 2; c < mazeCols - 2; c += 2) {
-            if (mazeGrid[r][c] === 1 && Math.random() < 0.25) {
+            if (mazeGrid[r][c] === 1 && Math.random() < 0.30) {
                 const horiz = mazeGrid[r][c - 1] === 0 && mazeGrid[r][c + 1] === 0;
                 const vert = mazeGrid[r - 1][c] === 0 && mazeGrid[r + 1][c] === 0;
                 if (horiz || vert) {
@@ -1046,67 +1078,13 @@ function generateMazeWithGuarantee(diff) {
         }
     }
 
-    // BFS Pathfinding: finds path avoiding given nodes
-    function findBfsPath(avoidList = []) {
-        const startKey = "1,1";
-        const goalKey = `${mazeCols - 2},${mazeRows - 2}`;
-        const queue = [[1, 1]];
-        const visited = new Set([startKey]);
-        avoidList.forEach(n => visited.add(`${n.x},${n.y}`));
-        const parent = new Map();
-
-        while (queue.length > 0) {
-            const [cx, cy] = queue.shift();
-            if (cx === mazeCols - 2 && cy === mazeRows - 2) {
-                const path = [];
-                let curr = goalKey;
-                while (curr) {
-                    const [px, py] = curr.split(',').map(Number);
-                    path.push({ x: px, y: py });
-                    curr = parent.get(curr);
-                }
-                return path.reverse();
-            }
-
-            const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
-            for (const d of dirs) {
-                const nx = cx + d.dx;
-                const ny = cy + d.dy;
-                const key = `${nx},${ny}`;
-                if (nx >= 0 && nx < mazeCols && ny >= 0 && ny < mazeRows && mazeGrid[ny][nx] === 0 && !visited.has(key)) {
-                    visited.add(key);
-                    parent.set(key, `${cx},${cy}`);
-                    queue.push([nx, ny]);
-                }
-            }
-        }
-        return null;
-    }
-
-    // Compute primary critical path
-    const criticalPath = findBfsPath([]) || [];
-    const critSet = new Set(criticalPath.map(p => `${p.x},${p.y}`));
-
-    // Place traps strictly in secondary branches, NEVER on the primary path
-    mazeTraps = [];
-    const trapCount = diff === 'hard' ? 3 : (diff === 'med' ? 2 : 1);
-    let attempts = 0;
-
-    while (mazeTraps.length < trapCount && attempts < 250) {
-        attempts++;
-        const rx = Math.floor(Math.random() * (mazeCols - 2)) + 1;
-        const ry = Math.floor(Math.random() * (mazeRows - 2)) + 1;
-        const key = `${rx},${ry}`;
-
-        if (mazeGrid[ry][rx] === 0 && !critSet.has(key) && !mazeTraps.some(tp => tp.x === rx && tp.y === ry)) {
-            // Verify path remains clear
-            mazeTraps.push({ x: rx, y: ry });
-            const testPath = findBfsPath(mazeTraps);
-            if (!testPath) {
-                mazeTraps.pop(); // discard if somehow blocked
-            }
-        }
-    }
+    // Ensure entrance and exit surroundings are wide and clear
+    mazeGrid[1][1] = 0;
+    mazeGrid[1][2] = 0;
+    mazeGrid[2][1] = 0;
+    mazeGrid[mazeRows - 2][mazeCols - 2] = 0;
+    mazeGrid[mazeRows - 2][mazeCols - 3] = 0;
+    mazeGrid[mazeRows - 3][mazeCols - 2] = 0;
 }
 
 function handleMazeKey(e) {
@@ -1131,15 +1109,8 @@ function mazeInput(dx, dy) {
 
     if (nx >= 0 && nx < mazeCols && ny >= 0 && ny < mazeRows && mazeGrid[ny][nx] === 0) {
         mazePlayer = { x: nx, y: ny };
+        mazeVisited.add(`${nx},${ny}`);
         playBeep(520, 'triangle', 0.04, 0.1);
-
-        // Check Trap collision
-        const trapHitIndex = mazeTraps.findIndex(t => t.x === nx && t.y === ny);
-        if (trapHitIndex !== -1) {
-            // Remove the triggered trap so player is NOT stuck permanently!
-            mazeTraps.splice(trapHitIndex, 1);
-            deductCharge("FIREWALL DEFENSIVE NODE TRIGGERED - NODE CLEARED");
-        }
 
         // Check Goal
         if (mazePlayer.x === mazeGoal.x && mazePlayer.y === mazeGoal.y) {
@@ -1177,14 +1148,15 @@ function renderMazeCanvas() {
         }
     }
 
-    // Draw Traps (Pulsing Red)
-    mazeTraps.forEach(trap => {
-        ctx.fillStyle = '#f43f5e';
-        ctx.shadowColor = '#f43f5e';
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ctx.arc((trap.x + 0.5) * cellW, (trap.y + 0.5) * cellH, cellW * 0.32, 0, Math.PI * 2);
-        ctx.fill();
+    // Draw Breadcrumb Trail in visited passages
+    mazeVisited.forEach(key => {
+        const [vx, vy] = key.split(',').map(Number);
+        if (!(vx === mazePlayer.x && vy === mazePlayer.y) && !(vx === mazeGoal.x && vy === mazeGoal.y)) {
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+            ctx.beginPath();
+            ctx.arc((vx + 0.5) * cellW, (vy + 0.5) * cellH, cellW * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+        }
     });
 
     // Draw Goal (Green Exit Terminal)
@@ -1210,6 +1182,7 @@ function cleanupMazeGame() {
     if (mazeCanvas) {
         mazeCanvas.removeEventListener('touchstart', handleMazeTouchStart);
         mazeCanvas.removeEventListener('touchend', handleMazeTouchEnd);
+        mazeCanvas.removeEventListener('click', handleMazeCanvasClick);
     }
 }
 
@@ -1305,13 +1278,11 @@ function evaluateBananaWireRules() {
         correctWireIndex = 0;
     }
 
-    // Highlight matching rule in drawer
-    const matchedEl = document.getElementById(matchingRuleId);
-    if (matchedEl) matchedEl.classList.add('matched');
-
+    // Do NOT highlight the rule card or reveal which rule applies!
+    // The player must consult the manual and deduce which wire to cut independently.
     const statusHint = document.getElementById('drawerStatusHint');
     if (statusHint) {
-        statusHint.innerHTML = `CIRCUIT READOUT: ${counts.ruby} RUBY • ${counts.lime} LIME • ${counts.purple} PURPLE • ${counts.gold} GOLD<br><span style="color:#22c55e;">→ ${matchingRuleId.toUpperCase()} APPLIES</span>`;
+        statusHint.innerHTML = '⚠️ CAREFULLY CONSULT RULES 1–4 IN SEQUENCE • CUT THE TARGET WIRE';
     }
 }
 
@@ -1611,6 +1582,11 @@ function triggerExplosion(reason) {
     clearInterval(timerInterval);
     playExplosionSound();
 
+    if (window.RansomHorror) {
+        if (RansomHorror.state === 'lurking') RansomHorror.evadeLurker();
+        clearTimeout(RansomHorror.lurkTimer);
+    }
+
     const gameScreen = document.getElementById('screen-game');
     if (gameScreen) gameScreen.classList.remove('active');
     document.body.classList.remove('panic-mode');
@@ -1630,6 +1606,11 @@ function triggerExplosion(reason) {
 function triggerSuccess() {
     clearInterval(timerInterval);
     playDisarmSuccessSound();
+
+    if (window.RansomHorror) {
+        if (RansomHorror.state === 'lurking') RansomHorror.evadeLurker();
+        clearTimeout(RansomHorror.lurkTimer);
+    }
 
     const gameScreen = document.getElementById('screen-game');
     if (gameScreen) gameScreen.classList.remove('active');
