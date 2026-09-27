@@ -15,7 +15,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Cyber Hub // Reactor Meltdown</title>
+<title>Reactor Meltdown | Game Hub</title>
 <!-- Modular External Stylesheet -->
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -36,7 +36,7 @@
     </div>
     <div class="header-controls">
       <button class="btn-icon" id="soundBtn" title="Toggle Sound" onclick="toggleSound()">🔊</button>
-      <button class="btn-hub" onclick="cyberNavigate('../index.jsp')">‹ HUB</button>
+      <button class="btn-hub" onclick="cyberNavigate('../index.jsp')">‹ EXIT TO HUB</button>
     </div>
   </div>
 
@@ -81,11 +81,11 @@
 
     <!-- PRE-GAME STARTUP SCREEN OVERLAY -->
     <div class="overlay-screen" id="startupOverlay">
-      <div class="overlay-tag">CRITICAL ALERT // PROTOCOL ALPHA</div>
+      <div class="overlay-tag">MEMORY & REFLEX TRAINING</div>
       <div class="overlay-icon">☢️</div>
       <div class="overlay-title">REACTOR MELTDOWN</div>
       <div class="overlay-subtitle">
-        Observe the random glowing reactor sequence and replicate it before containment collapses. Starts on 3x3 and progressively auto-expands into larger matrices.
+        Observe the random glowing reactor sequence and replicate it before time runs out. Starts on 3x3 and progressively expands into larger grids.
       </div>
 
       <div class="overlay-stats-card">
@@ -101,14 +101,14 @@
 
       <div class="menu-actions">
         <button class="btn-cyber btn-primary" onclick="initiateGameRun()">
-          ▶ INITIATE OVERRIDE
+          ▶ PLAY NOW
         </button>
         <div class="menu-actions-row">
           <button class="btn-cyber btn-secondary" onclick="openProtocolModal()">
-            ⚙ PROTOCOL & INTEL
+            📖 HOW TO PLAY
           </button>
           <button class="btn-cyber btn-secondary" onclick="cyberNavigate('../index.jsp')">
-            ‹ HUB
+            ‹ EXIT TO HUB
           </button>
         </div>
       </div>
@@ -138,14 +138,14 @@
 
       <div class="menu-actions">
         <button class="btn-cyber btn-primary" onclick="initiateGameRun()">
-          ↻ REBOOT COOLANT
+          ↻ PLAY AGAIN
         </button>
         <div class="menu-actions-row">
           <button class="btn-cyber btn-secondary" onclick="openProtocolModal()">
-            ⚙ PROTOCOL
+            📖 HOW TO PLAY
           </button>
           <button class="btn-cyber btn-secondary" onclick="cyberNavigate('../index.jsp')">
-            ‹ RETURN TO HUB
+            ‹ EXIT TO HUB
           </button>
         </div>
       </div>
@@ -166,7 +166,7 @@
 <div class="modal-wrapper" id="protocolModal">
   <div class="modal-box">
     <div class="modal-title">
-      <span>☢️</span> REACTOR PROTOCOL INTEL
+      <span>☢️</span> HOW TO PLAY REACTOR MELTDOWN
     </div>
 
     <div class="intel-item">
@@ -198,7 +198,7 @@
     </div>
 
     <button class="btn-cyber btn-primary" style="width: 100%; margin-top: 0.8rem;" onclick="closeProtocolModal()">
-      ACKNOWLEDGE & RETURN
+      BACK TO GAME
     </button>
   </div>
 </div>

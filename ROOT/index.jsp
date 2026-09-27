@@ -14,7 +14,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CYBER HUB // ARCADE MATRIX</title>
+<title>Game Hub | Brain & Mind Training Games</title>
 <style>
   :root {
     --bg-base: #03050a;
@@ -677,6 +677,128 @@
     box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6);
   }
 
+  /* Cognitive Radar Chart (Spider Graph) */
+  .radar-card {
+    background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.08) 0%, rgba(15, 23, 42, 0.8) 100%);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(56, 189, 248, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .radar-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .radar-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .radar-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .brain-index-badge {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid var(--primary);
+    padding: 8px 16px;
+    border-radius: 12px;
+    text-align: right;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+  }
+  .brain-index-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: 1.5px;
+  }
+  .brain-index-val {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .radar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .radar-canvas-wrap {
+    width: 290px;
+    height: 270px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #radarChartCanvas {
+    width: 290px;
+    height: 270px;
+    display: block;
+  }
+
+  .radar-metrics-list {
+    flex: 1;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .radar-metric-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s;
+  }
+  .radar-metric-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .metric-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .metric-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #fff;
+    width: 75px;
+  }
+  .metric-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  .metric-val {
+    font-size: 0.95rem;
+    font-weight: 900;
+    font-family: monospace;
+    color: var(--primary);
+  }
+
   /* Score Grid */
   .score-grid {
     display: grid;
@@ -902,6 +1024,279 @@
   }
   .switch-auth-link:hover { color: var(--primary); }
 
+  /* =========================================================
+     DISCORD & GOOGLE PLAY GAMES ACCOUNT LEVELING SYSTEM
+     ========================================================= */
+  .profile-level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #000;
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .player-rank-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #38bdf8;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+  }
+  .profile-xp-box {
+    width: 100%;
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 7px 9px;
+    text-align: left;
+  }
+  .xp-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .xp-header-row .xp-val {
+    color: var(--accent);
+    font-weight: 800;
+  }
+  .xp-bar-track {
+    width: 100%;
+    height: 7px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .xp-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #22c55e, #38bdf8);
+    border-radius: 999px;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .xp-subtext {
+    font-size: 0.64rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Header Level Pill (Desktop & Mobile) */
+  .meta-level-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #facc15;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Navigation Lock Indicators */
+  .nav-lock-badge {
+    font-size: 0.75rem;
+    margin-left: auto;
+    background: rgba(244, 63, 94, 0.18);
+    color: #f43f5e;
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+
+  /* =========================================================
+     LOCKED FEATURE CARDS FOR GUESTS
+     ========================================================= */
+  .locked-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+    border-radius: 18px;
+    padding: 2.4rem 1.8rem;
+    text-align: center;
+    max-width: 620px;
+    margin: 2rem auto;
+    position: relative;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(244, 63, 94, 0.1);
+  }
+  .locked-icon-wrap {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.2rem;
+    background: rgba(244, 63, 94, 0.15);
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    color: #f43f5e;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  }
+  .locked-title {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.6rem;
+  }
+  .locked-subtitle {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    max-width: 480px;
+    margin: 0 auto 1.5rem;
+  }
+  .locked-perks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 1.8rem;
+    text-align: left;
+  }
+  .locked-perk-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.82rem;
+  }
+  .locked-perk-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .locked-perk-title {
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 2px;
+  }
+  .locked-perk-desc {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+  .locked-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-unlock-primary {
+    background: linear-gradient(135deg, var(--primary), #0284c7);
+    color: #000;
+    font-weight: 900;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    transition: all 0.2s;
+  }
+  .btn-unlock-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.7);
+  }
+  .btn-unlock-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-main);
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    transition: all 0.2s;
+  }
+  .btn-unlock-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Player Level Spotlight Card in Brain Stats */
+  .player-spotlight-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 16px;
+    padding: 1.4rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .spotlight-level-emblem {
+    width: 68px;
+    height: 68px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: 900;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
+    flex-shrink: 0;
+  }
+  .spotlight-level-emblem .emblem-lbl {
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .spotlight-level-emblem .emblem-num {
+    font-size: 1.7rem;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .spotlight-info {
+    flex: 1;
+    min-width: 220px;
+  }
+  .spotlight-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .spotlight-username {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--text-main);
+  }
+  .spotlight-tier-tag {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
   /* Mobile Overrides */
   @media (max-width: 768px) {
     body { flex-direction: column; padding-bottom: 80px; }
@@ -956,6 +1351,14 @@
       min-height: 44px;
       padding: 0.7rem 1rem;
     }
+
+    .nav-lock-badge { margin-left: 0; font-size: 0.65rem; padding: 0 4px; }
+    .locked-card { padding: 1.6rem 1.1rem; width: 100%; margin: 1rem auto; }
+    .locked-title { font-size: 1.25rem; }
+    .locked-perks-grid { grid-template-columns: 1fr; }
+    .player-spotlight-card { padding: 1rem; gap: 1rem; }
+    .spotlight-level-emblem { width: 56px; height: 56px; }
+    .spotlight-level-emblem .emblem-num { font-size: 1.4rem; }
   }
 </style>
 </head>
@@ -976,35 +1379,35 @@
        ========================================================= -->
   <div id="landingPortal">
     <div class="portal-content">
-      <div class="portal-tag">SYSTEM ONLINE // SECURE ACCESS v2.5</div>
-      <h1 class="portal-title">CYBER HUB // ARCADE</h1>
+      <div class="portal-tag">🧠 BRAIN TRAINING & LOGIC HUB</div>
+      <h1 class="portal-title">GAME HUB</h1>
       <p class="portal-subtitle">
-        Tactical neural gaming matrix. Engage in timed crisis defusals, engine-analyzed cyber chess, procedural labyrinths, and grid breaches.
+        Simple mind-training & logic puzzles. Boost your memory, focus, problem solving, and reflexes.
       </p>
 
       <div class="portal-actions">
         <% if (isLoggedIn) { %>
-          <button class="btn-portal btn-portal-primary" onclick="triggerFastEnter('OPERATOR: <%= currentUser.toUpperCase() %>', 'ACCESS AUTHORIZED // SYSTEM READY')">
-            <span>⚡ ENTER AS <%= currentUser.toUpperCase() %></span>
+          <button class="btn-portal btn-portal-primary" onclick="triggerFastEnter('<%= currentUser %>', 'Welcome back!')">
+            <span>▶ PLAY NOW (<%= currentUser %>)</span>
           </button>
           <button class="btn-portal btn-portal-secondary" onclick="performLogout()">
-            <span>✕ SIGN OUT</span>
+            <span>✕ LOG OUT</span>
           </button>
         <% } else { %>
           <button class="btn-portal btn-portal-primary" onclick="openLoginModal()">
-            <span>🔐 SIGN IN</span>
+            <span>LOG IN</span>
           </button>
           <button class="btn-portal btn-portal-secondary" onclick="openSignupModal()">
-            <span>⚡ REGISTER CALLSIGN</span>
+            <span>SIGN UP</span>
           </button>
-          <button class="btn-portal btn-portal-guest" onclick="triggerFastEnter('GUEST RECRUIT', 'GUEST ACCESS GRANTED // OVERRIDE ENGAGED')">
-            <span>🎮 CONTINUE AS GUEST</span>
+          <button class="btn-portal btn-portal-guest" onclick="triggerFastEnter('Guest', 'Welcome! Enjoy the games.')">
+            <span>🎮 PLAY AS GUEST</span>
           </button>
         <% } %>
       </div>
 
       <div class="portal-footer-note">
-        CLUSTERS: TOKYO SECURE [TLS] // AP-NORTHEAST-1 // PERSISTENT ARCHIVE
+        Daily brain-training • Free to play • Fast & lightweight
       </div>
     </div>
   </div>
@@ -1014,40 +1417,66 @@
        ========================================================= -->
   <aside>
     <div class="brand" onclick="showPortal()">
-      CYBER <span class="brand-badge">HUB</span>
+      GAME <span class="brand-badge">HUB</span>
     </div>
 
     <div class="auth-widget" id="authWidget">
       <% if (isLoggedIn) { %>
         <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
-        <div class="auth-name"><%= currentUser %></div>
-        <div class="auth-role">PLAYER ONLINE</div>
-        <button class="btn-auth btn-logout" onclick="performLogout()">TERMINATE [LOGOUT]</button>
+        <div class="auth-name">
+          <%= currentUser %>
+          <span class="profile-level-badge" id="profileLevelBadge">LVL 1</span>
+        </div>
+        <div class="player-rank-title" id="profileRankTitle">Novice Thinker</div>
+        <div class="profile-xp-box" id="profileXpBox">
+          <div class="xp-header-row">
+            <span>XP PROGRESS</span>
+            <span class="xp-val" id="profileXpText">0 / 200 XP</span>
+          </div>
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="profileXpFill" style="width: 0%;"></div>
+          </div>
+          <div class="xp-subtext">
+            <span id="profileXpPercent">0%</span>
+            <span id="profileXpRemaining">200 XP to next lvl</span>
+          </div>
+        </div>
+        <button class="btn-auth btn-logout" onclick="performLogout()" style="margin-top: 10px;">Log Out</button>
       <% } else { %>
         <div class="auth-avatar" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">?</div>
-        <div class="auth-name" style="color: var(--text-muted);">GUEST RECRUIT</div>
-        <div class="auth-role" style="color: var(--warning);">UNAUTHENTICATED</div>
-        <button class="btn-auth btn-login" onclick="openLoginModal()">ACCESS TERMINAL</button>
+        <div class="auth-name" style="color: var(--text-muted);">
+          GUEST PLAYER
+          <span class="profile-level-badge" style="background: rgba(255,255,255,0.1); color: var(--text-muted); box-shadow: none;">LVL 0</span>
+        </div>
+        <div class="auth-role" style="color: var(--warning); margin-top: 4px;">PLAYING AS GUEST</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin: 6px 0;">Log in to earn XP & unlock levels</div>
+        <div style="display: flex; gap: 6px; width: 100%; margin-top: 4px;">
+          <button class="btn-auth btn-login" onclick="openLoginModal()" style="flex: 1;">Log In</button>
+          <button class="btn-auth btn-signup" onclick="openSignupModal()" style="flex: 1; background: var(--accent); color: #000; font-weight: 800;">Sign Up</button>
+        </div>
       <% } %>
     </div>
 
     <nav>
       <button class="nav-btn active" onclick="switchTab('library', this)">
-        <span style="font-size: 1.2rem;">📚</span>
-        <span>Library</span>
+        <span style="font-size: 1.2rem;">🎮</span>
+        <span>Games</span>
       </button>
-      <button class="nav-btn" onclick="switchTab('scores', this)">
-        <span style="font-size: 1.2rem;">🏆</span>
-        <span>Records</span>
+      <button class="nav-btn" onclick="switchTab('scores', this)" id="navBtnScores">
+        <span style="font-size: 1.2rem;">🧠</span>
+        <span>Brain Stats</span>
+        <% if (!isLoggedIn) { %>
+          <span class="nav-lock-badge" id="navLockScores">🔒</span>
+        <% } %>
       </button>
-      <button class="nav-btn" onclick="switchTab('settings', this)">
-        <span style="font-size: 1.2rem;">⚙️</span>
-        <span>System</span>
+      <button class="nav-btn" onclick="switchTab('settings', this)" id="navBtnSettings">
+        <span style="font-size: 1.2rem;" id="navSettingsIcon"><%= isLoggedIn ? "⚙️" : "🔒" %></span>
+        <span id="navSettingsText"><%= isLoggedIn ? "Settings" : "Settings (Locked)" %></span>
       </button>
     </nav>
 
     <button class="btn-portal-recall" onclick="showPortal()">
-      <span>🔒 Portal Screen</span>
+      <span>🏠 Welcome Screen</span>
     </button>
   </aside>
 
@@ -1056,8 +1485,16 @@
        ========================================================= -->
   <main>
     <div class="top-meta">
-      <h2 id="viewTitle">Game Library</h2>
-      <div class="sys-status">Live Server</div>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <h2 id="viewTitle">Games</h2>
+        <div class="meta-level-pill" id="metaLevelPill" style="display: <%= isLoggedIn ? "inline-flex" : "none" %>;">
+          <span>⭐</span>
+          <span id="metaLevelText">LVL 1</span>
+          <span style="color: var(--text-muted);">•</span>
+          <span id="metaXpText">0 XP</span>
+        </div>
+      </div>
+      <div class="sys-status">Online</div>
     </div>
 
     <!-- VIEW 1: GAME LIBRARY CAROUSEL -->
@@ -1158,6 +1595,129 @@
 
     <!-- VIEW 2: EXPANDED SCORING & LEADERBOARDS -->
     <section id="scoresView" class="view-panel">
+      <!-- GUEST LOCKED NOTICE FOR BRAIN STATS & RADAR CHART -->
+      <div class="locked-card" id="scoresLockedCard" style="display: <%= isLoggedIn ? "none" : "block" %>;">
+        <div class="locked-icon-wrap">🔒</div>
+        <div class="locked-title">Cognitive Radar Chart Locked</div>
+        <div class="locked-subtitle">
+          Log in or create a free account to unlock your personalized 5-axis cognitive radar chart, earn player XP across all games, and record your high scores on global leaderboards.
+        </div>
+
+        <div class="locked-perks-grid">
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">🧠</span>
+            <div>
+              <div class="locked-perk-title">5-Axis Radar Chart</div>
+              <div class="locked-perk-desc">Live spider graph analyzing Memory, Logic, Speed, Spatial & Strategy</div>
+            </div>
+          </div>
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">⭐</span>
+            <div>
+              <div class="locked-perk-title">Account Level & XP</div>
+              <div class="locked-perk-desc">Level up your profile and earn prestigious cognitive rank titles</div>
+            </div>
+          </div>
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">🏆</span>
+            <div>
+              <div class="locked-perk-title">Global Leaderboards</div>
+              <div class="locked-perk-desc">Compete with players worldwide for top scores across 6 games</div>
+            </div>
+          </div>
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">☁️</span>
+            <div>
+              <div class="locked-perk-title">Cloud Synchronized</div>
+              <div class="locked-perk-desc">Your high scores and agility profile persist across any browser</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="locked-actions">
+          <button class="btn-unlock-primary" onclick="openLoginModal()">Log In to View Stats</button>
+          <button class="btn-unlock-secondary" onclick="openSignupModal()">Create Free Account</button>
+        </div>
+      </div>
+
+      <!-- MEMBER CONTENT (RADAR CHART & METRICS) -->
+      <div id="scoresContentWrap" style="display: <%= isLoggedIn ? "block" : "none" %>;">
+        <!-- DISCORD & GOOGLE PLAY GAMES PLAYER LEVEL CARD -->
+        <div class="player-spotlight-card">
+          <div class="spotlight-level-emblem">
+            <span class="emblem-lbl">LEVEL</span>
+            <span class="emblem-num" id="spotlightLevelNum">1</span>
+          </div>
+          <div class="spotlight-info">
+            <div class="spotlight-name-row">
+              <span class="spotlight-username"><%= isLoggedIn ? currentUser : "Player" %></span>
+              <span class="spotlight-tier-tag" id="spotlightRankTitle">Novice Thinker</span>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+              Total Brain Experience: <strong style="color: var(--accent);" id="spotlightTotalXp">0 XP</strong>
+            </div>
+            <div class="xp-bar-track" style="height: 9px;">
+              <div class="xp-bar-fill" id="spotlightXpBar" style="width: 0%;"></div>
+            </div>
+            <div class="xp-subtext" style="font-size: 0.72rem; margin-top: 5px;">
+              <span id="spotlightXpDetail">0 / 200 XP (0%)</span>
+              <span id="spotlightXpRemaining">200 XP to next level</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- COGNITIVE RADAR CHART (SPIDER GRAPH) -->
+        <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <div class="radar-title">🧠 Cognitive Agility Profile</div>
+            <div class="radar-subtitle">Live brain-training metrics calculated from your game performance</div>
+          </div>
+          <div class="brain-index-badge">
+            <span class="brain-index-label">BRAIN INDEX</span>
+            <span class="brain-index-val" id="overallBrainScore">--</span>
+          </div>
+        </div>
+
+        <div class="radar-content">
+          <div class="radar-canvas-wrap">
+            <canvas id="radarChartCanvas" width="290" height="270"></canvas>
+          </div>
+          <div class="radar-metrics-list">
+            <div class="radar-metric-item">
+              <span class="metric-dot" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></span>
+              <span class="metric-name">Memory</span>
+              <span class="metric-desc">Reactor Meltdown (Sequence recall)</span>
+              <span class="metric-val" id="valMetricMemory">0%</span>
+            </div>
+            <div class="radar-metric-item">
+              <span class="metric-dot" style="background: #facc15; box-shadow: 0 0 8px #facc15;"></span>
+              <span class="metric-name">Logic</span>
+              <span class="metric-desc">Defusal Protocol (Deduction under pressure)</span>
+              <span class="metric-val" id="valMetricLogic">0%</span>
+            </div>
+            <div class="radar-metric-item">
+              <span class="metric-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+              <span class="metric-name">Speed</span>
+              <span class="metric-desc">Cyber Snake (Spatial reflexes & focus)</span>
+              <span class="metric-val" id="valMetricSpeed">0%</span>
+            </div>
+            <div class="radar-metric-item">
+              <span class="metric-dot" style="background: #06b6d4; box-shadow: 0 0 8px #06b6d4;"></span>
+              <span class="metric-name">Spatial</span>
+              <span class="metric-desc">Cyber Maze (Pathfinding & navigation)</span>
+              <span class="metric-val" id="valMetricSpatial">0%</span>
+            </div>
+            <div class="radar-metric-item">
+              <span class="metric-dot" style="background: #ec4899; box-shadow: 0 0 8px #ec4899;"></span>
+              <span class="metric-name">Strategy</span>
+              <span class="metric-desc">Cyber Chess (Tactical calculation)</span>
+              <span class="metric-val" id="valMetricStrategy">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="score-grid">
         
         <!-- 1. Defusal Protocol -->
@@ -1304,49 +1864,98 @@
           </div>
         </div>
 
-      </div>
+      </div> <!-- end score-grid -->
+      </div> <!-- end scoresContentWrap -->
     </section>
 
     <!-- VIEW 3: SYSTEM PREFERENCES -->
     <section id="settingsView" class="view-panel">
-      <div class="settings-box" style="max-width: 520px;">
-        <h3 style="margin-bottom: 1.5rem; color: var(--primary);">System Preferences</h3>
-        
-        <div class="settings-row">
-          <div>
-            <div style="font-weight: 700;">Audio Effects</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Enable interactive feedback soundscapes</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-        
-        <div class="settings-row">
-          <div>
-            <div style="font-weight: 700;">Performance Mode</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Disable background grid animations</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" onchange="togglePerformance(this)">
-            <span class="slider"></span>
-          </label>
+      <!-- GUEST LOCKED NOTICE FOR SETTINGS -->
+      <div class="locked-card" id="settingsLockedCard" style="display: <%= isLoggedIn ? "none" : "block" %>;">
+        <div class="locked-icon-wrap" style="color: var(--warning); border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.15); box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);">🔒</div>
+        <div class="locked-title">Settings Locked</div>
+        <div class="locked-subtitle">
+          Display preferences, audio customization, performance modes, and local cache controls require an active player account. Log in or create an account to unlock full settings access.
         </div>
 
-        <div class="settings-row">
-          <div>
-            <div style="font-weight: 700;">Entry Portal Bypass</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Show landing gateway on initial visits</div>
+        <div class="locked-perks-grid">
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">🔊</span>
+            <div>
+              <div class="locked-perk-title">Audio Customization</div>
+              <div class="locked-perk-desc">Toggle soundscape feedback and ambient effects</div>
+            </div>
           </div>
-          <button class="btn-modal btn-cancel" style="flex: initial; padding: 6px 14px; font-size: 0.8rem;" onclick="showPortal()">
-            Show Portal
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">⚡</span>
+            <div>
+              <div class="locked-perk-title">Performance Turbo</div>
+              <div class="locked-perk-desc">Optimize framerates and background animations</div>
+            </div>
+          </div>
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">🚪</span>
+            <div>
+              <div class="locked-perk-title">Gateway Bypass</div>
+              <div class="locked-perk-desc">Customize direct entry into the arcade game hub</div>
+            </div>
+          </div>
+          <div class="locked-perk-item">
+            <span class="locked-perk-icon">🛡️</span>
+            <div>
+              <div class="locked-perk-title">Data & Cache Tools</div>
+              <div class="locked-perk-desc">Manage local memory and sync with cloud records</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="locked-actions">
+          <button class="btn-unlock-primary" onclick="openLoginModal()">Log In to Unlock Settings</button>
+          <button class="btn-unlock-secondary" onclick="openSignupModal()">Create Free Account</button>
+        </div>
+      </div>
+
+      <!-- MEMBER CONTENT (SETTINGS CONTROLS) -->
+      <div id="settingsContentWrap" style="display: <%= isLoggedIn ? "block" : "none" %>;">
+        <div class="settings-box" style="max-width: 520px;">
+          <h3 style="margin-bottom: 1.5rem; color: var(--primary);">System Preferences</h3>
+          
+          <div class="settings-row">
+            <div>
+              <div style="font-weight: 700;">Audio Effects</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Enable interactive feedback soundscapes</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-row">
+            <div>
+              <div style="font-weight: 700;">Performance Mode</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Disable background grid animations</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" onchange="togglePerformance(this)">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <div>
+              <div style="font-weight: 700;">Entry Portal Bypass</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Show landing gateway on initial visits</div>
+            </div>
+            <button class="btn-modal btn-cancel" style="flex: initial; padding: 6px 14px; font-size: 0.8rem;" onclick="showPortal()">
+              Show Portal
+            </button>
+          </div>
+          
+          <button class="btn-modal btn-cancel" onclick="resetLocalCache()" style="margin-top: 2rem; width:100%; color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.35);">
+            ⚠ Purge Local Score Cache
           </button>
         </div>
-        
-        <button class="btn-modal btn-cancel" onclick="resetLocalCache()" style="margin-top: 2rem; width:100%; color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.35);">
-          ⚠ Purge Local Score Cache
-        </button>
       </div>
     </section>
   </main>
@@ -1356,85 +1965,199 @@
        ========================================================= -->
   <div class="modal-overlay" id="launchModal">
     <div class="modal-box">
-      <h2 id="modalTitle" style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Launch Mission</h2>
+      <h2 id="modalTitle" style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Ready to Play?</h2>
       <p id="modalDesc" style="color:var(--text-muted); font-size:0.92rem; margin-top:0.8rem; line-height: 1.6;"></p>
       <div class="modal-actions">
-        <button class="btn-modal btn-cancel" onclick="closeModal('launchModal')">Abort</button>
-        <button class="btn-modal btn-launch" id="confirmLaunchBtn">Initialize</button>
+        <button class="btn-modal btn-cancel" onclick="closeModal('launchModal')">Back</button>
+        <button class="btn-modal btn-launch" id="confirmLaunchBtn">▶ Play Now</button>
       </div>
     </div>
   </div>
 
   <!-- =========================================================
-       MODAL 2: IDENT SYSTEM // LOGIN (MOBILE FIRST)
+       MODAL 2: LOGIN
        ========================================================= -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
-      <h2 style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">IDENT SYSTEM // LOGIN</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Authorize your terminal credentials</p>
+      <h2 style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Log In</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Welcome back! Log in to save your brain stats.</p>
 
       <div class="auth-msg" id="loginMsg"></div>
 
       <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
         <div class="auth-form-group">
-          <label class="auth-label" for="loginUsername">Callsign [Username]</label>
-          <input type="text" class="auth-input" id="loginUsername" placeholder="e.g. NeoCipher" autocomplete="username" required>
+          <label class="auth-label" for="loginUsername">Username</label>
+          <input type="text" class="auth-input" id="loginUsername" placeholder="Enter your username" autocomplete="username" required>
         </div>
         <div class="auth-form-group">
-          <label class="auth-label" for="loginPassword">Cipher [Password]</label>
+          <label class="auth-label" for="loginPassword">Password</label>
           <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
         </div>
 
         <div class="modal-actions">
           <button type="button" class="btn-modal btn-cancel" onclick="closeModal('loginModal')">Cancel</button>
           <button type="submit" class="btn-modal btn-launch" id="loginSubmitBtn">
-            <span id="loginBtnText">Authenticate</span>
+            <span id="loginBtnText">Log In</span>
           </button>
         </div>
       </form>
 
-      <span class="switch-auth-link" onclick="openSignupModal()">New recruit? Register identity here</span>
+      <span class="switch-auth-link" onclick="openSignupModal()">Don't have an account? Sign up here</span>
     </div>
   </div>
 
   <!-- =========================================================
-       MODAL 3: NEW RECRUIT // ENLIST (MOBILE FIRST)
+       MODAL 3: SIGN UP
        ========================================================= -->
   <div class="modal-overlay" id="signupModal">
     <div class="modal-box">
-      <h2 style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">NEW RECRUIT // ENLIST</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Create persistent cyber identity</p>
+      <h2 style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">Sign Up</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Create a free account to track your progress</p>
 
       <div class="auth-msg" id="signupMsg"></div>
 
       <form id="signupForm" onsubmit="event.preventDefault(); submitSignup();">
         <div class="auth-form-group">
-          <label class="auth-label" for="signupUsername">Choose Callsign [3-20 Alphanumeric]</label>
-          <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. CyberSamurai" autocomplete="username" required>
+          <label class="auth-label" for="signupUsername">Choose Username [3-20 Letters/Numbers]</label>
+          <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. BrainMaster" autocomplete="username" required>
         </div>
         <div class="auth-form-group">
-          <label class="auth-label" for="signupPassword">Create Cipher [Min 6 Chars]</label>
+          <label class="auth-label" for="signupPassword">Password [Min 6 Chars]</label>
           <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••" autocomplete="new-password" required>
         </div>
         <div class="auth-form-group">
-          <label class="auth-label" for="signupPasswordConfirm">Confirm Cipher</label>
+          <label class="auth-label" for="signupPasswordConfirm">Confirm Password</label>
           <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••" autocomplete="new-password" required>
         </div>
 
         <div class="modal-actions">
           <button type="button" class="btn-modal btn-cancel" onclick="closeModal('signupModal')">Cancel</button>
-          <button type="submit" class="btn-modal btn-launch" id="signupSubmitBtn" style="background:var(--accent); box-shadow:0 0 15px rgba(34,197,94,0.4);">
-            <span id="signupBtnText">Enlist</span>
+          <button type="submit" class="btn-modal btn-launch" id="signupSubmitBtn" style="background:var(--accent); color: #000; box-shadow:0 0 15px rgba(34,197,94,0.4);">
+            <span id="signupBtnText">Create Account</span>
           </button>
         </div>
       </form>
 
-      <span class="switch-auth-link" onclick="openLoginModal()">Already enlisted? Sign in</span>
+      <span class="switch-auth-link" onclick="openLoginModal()">Already have an account? Log in</span>
     </div>
   </div>
 
 <script>
+  let isUserLoggedIn = <%= isLoggedIn %>;
+  let currentUsername = "<%= currentUser != null ? currentUser : "" %>";
   let targetUrl = '';
+
+  // =========================================================
+  // DISCORD & GOOGLE PLAY GAMES ACCOUNT LEVELING ENGINE
+  // =========================================================
+  function calculateTotalXP() {
+    const defuseBest = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
+    const chessWins = parseFloat(localStorage.getItem('hub_chess_wins') || '0');
+    const chessRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
+    const snakeBest = parseFloat(localStorage.getItem('hub_snake_high') || '0');
+    const mazeClears = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
+    const reactorBest = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
+
+    // Progressive XP breakdown
+    const xpReactor = Math.round(reactorBest * 2);
+    const xpDefuse = Math.round(defuseBest * 2);
+    const xpSnake = Math.round(snakeBest * 5);
+    const xpMaze = Math.round(mazeClears * 100);
+    const xpChess = Math.round(chessWins * 150 + Math.max(0, chessRating - 1200) * 2);
+
+    return xpReactor + xpDefuse + xpSnake + xpMaze + xpChess;
+  }
+
+  function getLevelData(totalXp) {
+    const tierSteps = [200, 300, 450, 600, 800, 1000, 1250, 1500, 1800, 2100];
+    let level = 1;
+    let threshold = 0;
+    let prevThreshold = 0;
+    let step = 200;
+
+    while (true) {
+      step = (level <= tierSteps.length) ? tierSteps[level - 1] : (2100 + (level - 10) * 350);
+      if (totalXp < threshold + step) {
+        prevThreshold = threshold;
+        break;
+      }
+      threshold += step;
+      level++;
+    }
+
+    const xpInCurrentLevel = Math.max(0, totalXp - prevThreshold);
+    const xpNeededForLevel = step;
+    const percent = Math.min(100, Math.round((xpInCurrentLevel / xpNeededForLevel) * 100));
+
+    const titles = [
+      'Novice Thinker',
+      'Curious Mind',
+      'Apprentice Strategist',
+      'Logic Specialist',
+      'Pattern Analyst',
+      'Puzzle Veteran',
+      'Tactical Operative',
+      'Cognitive Ace',
+      'Mind Maestro',
+      'Grandmaster Mind'
+    ];
+    const rankTitle = (level <= titles.length) ? titles[level - 1] : `Grandmaster Tier ${level - 9}`;
+
+    return {
+      level,
+      totalXp,
+      xpInCurrentLevel,
+      xpNeededForLevel,
+      remainingXp: Math.max(0, xpNeededForLevel - xpInCurrentLevel),
+      percent,
+      rankTitle
+    };
+  }
+
+  function updateAccountLevelUI() {
+    if (!isUserLoggedIn) return;
+
+    const totalXp = calculateTotalXP();
+    const data = getLevelData(totalXp);
+
+    // 1. Sidebar Profile Updates
+    const badge = document.getElementById('profileLevelBadge');
+    const title = document.getElementById('profileRankTitle');
+    const xpText = document.getElementById('profileXpText');
+    const xpFill = document.getElementById('profileXpFill');
+    const xpPct = document.getElementById('profileXpPercent');
+    const xpRem = document.getElementById('profileXpRemaining');
+
+    if (badge) badge.innerText = 'LVL ' + data.level;
+    if (title) title.innerText = data.rankTitle;
+    if (xpText) xpText.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP';
+    if (xpFill) xpFill.style.width = data.percent + '%';
+    if (xpPct) xpPct.innerText = data.percent + '%';
+    if (xpRem) xpRem.innerText = data.remainingXp.toLocaleString() + ' XP to next lvl';
+
+    // 2. Header Meta Pill Updates
+    const metaPill = document.getElementById('metaLevelPill');
+    const metaLvl = document.getElementById('metaLevelText');
+    const metaXp = document.getElementById('metaXpText');
+    if (metaPill) metaPill.style.display = 'inline-flex';
+    if (metaLvl) metaLvl.innerText = 'LVL ' + data.level;
+    if (metaXp) metaXp.innerText = data.totalXp.toLocaleString() + ' XP';
+
+    // 3. Brain Stats Spotlight Card Updates
+    const spotLvl = document.getElementById('spotlightLevelNum');
+    const spotRank = document.getElementById('spotlightRankTitle');
+    const spotTotalXp = document.getElementById('spotlightTotalXp');
+    const spotBar = document.getElementById('spotlightXpBar');
+    const spotDetail = document.getElementById('spotlightXpDetail');
+    const spotRem = document.getElementById('spotlightXpRemaining');
+
+    if (spotLvl) spotLvl.innerText = data.level;
+    if (spotRank) spotRank.innerText = data.rankTitle;
+    if (spotTotalXp) spotTotalXp.innerText = data.totalXp.toLocaleString() + ' XP';
+    if (spotBar) spotBar.style.width = data.percent + '%';
+    if (spotDetail) spotDetail.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP (' + data.percent + '%)';
+    if (spotRem) spotRem.innerText = data.remainingXp.toLocaleString() + ' XP to next level';
+  }
 
   // =========================================================
   // HIGH-SPEED DIGITAL ZOOM-THROUGH & CYBER SHUTTER ENGINE
@@ -1498,7 +2221,7 @@
     if (overlay) overlay.classList.remove('active');
   });
 
-  // --- TAB NAVIGATION ---
+  // --- TAB NAVIGATION (GATED FOR GUESTS) ---
   function switchTab(tab, btn) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -1507,14 +2230,34 @@
     setTimeout(() => {
       if (tab === 'library') {
         document.getElementById('libraryView').classList.add('active');
-        document.getElementById('viewTitle').innerText = 'Game Library';
+        document.getElementById('viewTitle').innerText = 'Games';
       } else if (tab === 'scores') {
         document.getElementById('scoresView').classList.add('active');
-        document.getElementById('viewTitle').innerText = 'System Records';
-        syncCloudScores();
+        document.getElementById('viewTitle').innerText = isUserLoggedIn ? 'Brain Stats & Records' : 'Brain Stats (Locked)';
+        const lockedCard = document.getElementById('scoresLockedCard');
+        const contentWrap = document.getElementById('scoresContentWrap');
+        if (isUserLoggedIn) {
+          if (lockedCard) lockedCard.style.display = 'none';
+          if (contentWrap) contentWrap.style.display = 'block';
+          syncCloudScores();
+          renderCognitiveRadarChart();
+          updateAccountLevelUI();
+        } else {
+          if (lockedCard) lockedCard.style.display = 'block';
+          if (contentWrap) contentWrap.style.display = 'none';
+        }
       } else if (tab === 'settings') {
         document.getElementById('settingsView').classList.add('active');
-        document.getElementById('viewTitle').innerText = 'Terminal Config';
+        document.getElementById('viewTitle').innerText = isUserLoggedIn ? 'Settings' : 'Settings (Locked)';
+        const lockedCard = document.getElementById('settingsLockedCard');
+        const contentWrap = document.getElementById('settingsContentWrap');
+        if (isUserLoggedIn) {
+          if (lockedCard) lockedCard.style.display = 'none';
+          if (contentWrap) contentWrap.style.display = 'block';
+        } else {
+          if (lockedCard) lockedCard.style.display = 'block';
+          if (contentWrap) contentWrap.style.display = 'none';
+        }
       }
     }, 40);
   }
@@ -1577,7 +2320,7 @@
     el.style.display = 'flex';
   }
 
-  // --- ASYNC AUTH HANDLERS WITH BLAST DOORS INTEGRATION ---
+  // --- ASYNC AUTH HANDLERS ---
   async function submitLogin() {
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
@@ -1585,12 +2328,12 @@
     const btnText = document.getElementById('loginBtnText');
 
     if (!u || !p) {
-      setBanner('loginMsg', 'error', 'Callsign and cipher required.');
+      setBanner('loginMsg', 'error', 'Username and password required.');
       return;
     }
 
     btn.disabled = true;
-    btnText.innerHTML = '<span class="spinner"></span> AUTHENTICATING...';
+    btnText.innerHTML = '<span class="spinner"></span> Logging in...';
 
     try {
       const res = await fetch('login.jsp', {
@@ -1607,27 +2350,27 @@
       } catch (jsonErr) {
         setBanner('loginMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
-        btnText.innerText = 'Authenticate';
+        btnText.innerText = 'Log In';
         return;
       }
 
       if (data.status === 'success' || data.success) {
-        setBanner('loginMsg', 'success', 'Access Authorized! Triggering airlock sequence...');
+        setBanner('loginMsg', 'success', 'Welcome back! Entering Game Hub...');
         setTimeout(() => {
           closeModal('loginModal');
-          triggerDoorTransition('OPERATOR: ' + u.toUpperCase(), 'CIPHER VALIDATED // ACCESS GRANTED', () => {
+          triggerDoorTransition(u.toUpperCase(), 'LOGGED IN // WELCOME BACK', () => {
             window.location.reload();
           });
         }, 400);
       } else {
-        setBanner('loginMsg', 'error', data.message || 'Access Denied: Invalid credentials.');
+        setBanner('loginMsg', 'error', data.message || 'Invalid username or password.');
         btn.disabled = false;
-        btnText.innerText = 'Authenticate';
+        btnText.innerText = 'Log In';
       }
     } catch (netErr) {
       setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
       btn.disabled = false;
-      btnText.innerText = 'Authenticate';
+      btnText.innerText = 'Log In';
     }
   }
 
@@ -1639,20 +2382,20 @@
     const btnText = document.getElementById('signupBtnText');
 
     if (!u || !p || !c) {
-      setBanner('signupMsg', 'error', 'All fields required.');
+      setBanner('signupMsg', 'error', 'Please fill in all fields.');
       return;
     }
     if (p !== c) {
-      setBanner('signupMsg', 'error', 'Ciphers do not match.');
+      setBanner('signupMsg', 'error', 'Passwords do not match.');
       return;
     }
     if (p.length < 6) {
-      setBanner('signupMsg', 'error', 'Cipher must be at least 6 characters.');
+      setBanner('signupMsg', 'error', 'Password must be at least 6 characters.');
       return;
     }
 
     btn.disabled = true;
-    btnText.innerHTML = '<span class="spinner"></span> ENLISTING...';
+    btnText.innerHTML = '<span class="spinner"></span> Creating Account...';
 
     try {
       const res = await fetch('register.jsp', {
@@ -1669,27 +2412,27 @@
       } catch (jsonErr) {
         setBanner('signupMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
-        btnText.innerText = 'Enlist';
+        btnText.innerText = 'Sign Up';
         return;
       }
 
       if (data.status === 'success' || data.success) {
-        setBanner('signupMsg', 'success', 'Identity Enlisted! Initializing cyber state...');
+        setBanner('signupMsg', 'success', 'Account created! Entering Game Hub...');
         setTimeout(() => {
           closeModal('signupModal');
-          triggerDoorTransition('NEW RECRUIT: ' + u.toUpperCase(), 'SECURITY CLEARANCE ISSUED // ACCESS GRANTED', () => {
+          triggerDoorTransition(u.toUpperCase(), 'ACCOUNT READY // WELCOME', () => {
             window.location.reload();
           });
         }, 400);
       } else {
         setBanner('signupMsg', 'error', data.message || 'Registration failed.');
         btn.disabled = false;
-        btnText.innerText = 'Enlist';
+        btnText.innerText = 'Sign Up';
       }
     } catch (netErr) {
       setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
       btn.disabled = false;
-      btnText.innerText = 'Enlist';
+      btnText.innerText = 'Sign Up';
     }
   }
 
@@ -1710,16 +2453,54 @@
       const text = await res.text();
       const data = JSON.parse(text);
       if (data.status === 'success' && data.loggedIn) {
-        const u = data.username || data.user_session;
+        isUserLoggedIn = true;
+        currentUsername = data.username || data.user_session;
+        const u = currentUsername;
+
         const widget = document.getElementById('authWidget');
         if (widget) {
           widget.innerHTML = `
             <div class="auth-avatar">${u.substring(0, 1).toUpperCase()}</div>
-            <div class="auth-name">${u}</div>
-            <div class="auth-role">PLAYER ONLINE</div>
-            <button class="btn-auth btn-logout" onclick="performLogout()">TERMINATE [LOGOUT]</button>
+            <div class="auth-name">
+              ${u}
+              <span class="profile-level-badge" id="profileLevelBadge">LVL 1</span>
+            </div>
+            <div class="player-rank-title" id="profileRankTitle">Novice Thinker</div>
+            <div class="profile-xp-box" id="profileXpBox">
+              <div class="xp-header-row">
+                <span>XP PROGRESS</span>
+                <span class="xp-val" id="profileXpText">0 / 200 XP</span>
+              </div>
+              <div class="xp-bar-track">
+                <div class="xp-bar-fill" id="profileXpFill" style="width: 0%;"></div>
+              </div>
+              <div class="xp-subtext">
+                <span id="profileXpPercent">0%</span>
+                <span id="profileXpRemaining">200 XP to next lvl</span>
+              </div>
+            </div>
+            <button class="btn-auth btn-logout" onclick="performLogout()" style="margin-top: 10px;">Log Out</button>
           `;
         }
+
+        // Unlock Nav Buttons & Meta Pill
+        const lockBadge = document.getElementById('navLockScores');
+        if (lockBadge) lockBadge.remove();
+
+        const navSetIcon = document.getElementById('navSettingsIcon');
+        const navSetText = document.getElementById('navSettingsText');
+        if (navSetIcon) navSetIcon.innerText = '⚙️';
+        if (navSetText) navSetText.innerText = 'Settings';
+
+        const metaPill = document.getElementById('metaLevelPill');
+        if (metaPill) metaPill.style.display = 'inline-flex';
+
+        const spotUser = document.querySelector('.spotlight-username');
+        if (spotUser) spotUser.innerText = u;
+
+        updateAccountLevelUI();
+      } else {
+        isUserLoggedIn = false;
       }
     } catch (e) {
       console.warn('Session polling offline:', e);
@@ -1859,6 +2640,145 @@
     } catch (e) {
       console.warn('Cloud score sync offline; relying on local telemetry.');
     }
+    // Update Cognitive Radar Chart & Account Level
+    renderCognitiveRadarChart();
+    updateAccountLevelUI();
+  }
+
+  // --- COGNITIVE RADAR CHART (SPIDER GRAPH) ---
+  function renderCognitiveRadarChart() {
+    const canvas = document.getElementById('radarChartCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Fetch metric baseline values from localStorage
+    const defuseBest = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
+    const chessRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
+    const snakeBest = parseFloat(localStorage.getItem('hub_snake_high') || '0');
+    const mazeClears = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
+    const reactorBest = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
+
+    // Normalized scores between 0.15 and 1.0 (with a baseline so initial display looks great)
+    // 1. Memory: Reactor Meltdown (target ~300 pts)
+    const scoreMemory = Math.min(1.0, Math.max(0.15, reactorBest > 0 ? (reactorBest / 300) : 0.2));
+    // 2. Logic: Defusal Protocol (target ~500 pts)
+    const scoreLogic = Math.min(1.0, Math.max(0.15, defuseBest > 0 ? (defuseBest / 500) : 0.2));
+    // 3. Speed: Cyber Snake (target ~100 pts)
+    const scoreSpeed = Math.min(1.0, Math.max(0.15, snakeBest > 0 ? (snakeBest / 100) : 0.2));
+    // 4. Spatial: Cyber Maze (target ~5 clears)
+    const scoreSpatial = Math.min(1.0, Math.max(0.15, mazeClears > 0 ? (mazeClears / 5) : 0.2));
+    // 5. Strategy: Cyber Chess (1200 -> 0.33, 1600+ -> 1.0)
+    const scoreStrategy = Math.min(1.0, Math.max(0.15, (chessRating - 1000) / 600));
+
+    // Update percentage indicators in DOM
+    const elMem = document.getElementById('valMetricMemory');
+    const elLog = document.getElementById('valMetricLogic');
+    const elSpd = document.getElementById('valMetricSpeed');
+    const elSpa = document.getElementById('valMetricSpatial');
+    const elStr = document.getElementById('valMetricStrategy');
+    const elIndex = document.getElementById('overallBrainScore');
+
+    if (elMem) elMem.innerText = Math.round(scoreMemory * 100) + '%';
+    if (elLog) elLog.innerText = Math.round(scoreLogic * 100) + '%';
+    if (elSpd) elSpd.innerText = Math.round(scoreSpeed * 100) + '%';
+    if (elSpa) elSpa.innerText = Math.round(scoreSpatial * 100) + '%';
+    if (elStr) elStr.innerText = Math.round(scoreStrategy * 100) + '%';
+
+    const avgScore = Math.round(((scoreMemory + scoreLogic + scoreSpeed + scoreSpatial + scoreStrategy) / 5) * 100);
+    if (elIndex) elIndex.innerText = avgScore;
+
+    // Canvas geometry
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2;
+    const cy = h / 2 - 2;
+    const r = Math.min(w, h) * 0.35; // ~95px radius
+    const axes = [
+      { name: 'Memory', score: scoreMemory, color: '#38bdf8' },
+      { name: 'Logic', score: scoreLogic, color: '#facc15' },
+      { name: 'Speed', score: scoreSpeed, color: '#10b981' },
+      { name: 'Spatial', score: scoreSpatial, color: '#06b6d4' },
+      { name: 'Strategy', score: scoreStrategy, color: '#ec4899' }
+    ];
+    const totalAxes = axes.length;
+
+    function getCoord(axisIndex, distRatio) {
+      const angle = -Math.PI / 2 + (2 * Math.PI * axisIndex / totalAxes);
+      return {
+        x: cx + Math.cos(angle) * (r * distRatio),
+        y: cy + Math.sin(angle) * (r * distRatio)
+      };
+    }
+
+    // Concentric Web Polygons
+    const levels = [0.25, 0.5, 0.75, 1.0];
+    levels.forEach(lvl => {
+      ctx.beginPath();
+      for (let i = 0; i < totalAxes; i++) {
+        const pt = getCoord(i, lvl);
+        if (i === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = lvl === 1.0 ? 'rgba(56, 189, 248, 0.4)' : 'rgba(148, 163, 184, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Radial Spokes
+    for (let i = 0; i < totalAxes; i++) {
+      const pt = getCoord(i, 1.0);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(pt.x, pt.y);
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Player Polygon Fill & Outline
+    ctx.beginPath();
+    for (let i = 0; i < totalAxes; i++) {
+      const pt = getCoord(i, axes[i].score);
+      if (i === 0) ctx.moveTo(pt.x, pt.y);
+      else ctx.lineTo(pt.x, pt.y);
+    }
+    ctx.closePath();
+
+    const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
+    grad.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+    grad.addColorStop(1, 'rgba(168, 85, 247, 0.2)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Vertex Points
+    for (let i = 0; i < totalAxes; i++) {
+      const pt = getCoord(i, axes[i].score);
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = axes[i].color;
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Axis Labels
+    ctx.font = '600 11px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < totalAxes; i++) {
+      const labelPt = getCoord(i, 1.24);
+      ctx.fillStyle = axes[i].color;
+      ctx.fillText(axes[i].name, labelPt.x, labelPt.y);
+    }
   }
 
   function resetLocalCache() {
@@ -1886,6 +2806,7 @@
   window.addEventListener('DOMContentLoaded', () => {
     checkLiveSession();
     syncCloudScores();
+    if (isUserLoggedIn) updateAccountLevelUI();
   });
 </script>
 </body>

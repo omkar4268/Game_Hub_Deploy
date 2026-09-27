@@ -80,19 +80,19 @@
         <div class="menu-container" style="max-width: 440px; padding: 22px 18px;">
             <div style="font-size: 2.4rem; margin-bottom: 4px;">☢️</div>
             <h1 class="menu-title" style="font-size: 1.6rem; margin-bottom: 4px;">DEFUSAL PROTOCOL</h1>
-            <div style="display:inline-block; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); color:#f43f5e; font-size:0.68rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-bottom: 10px; letter-spacing:1px;">CRISIS SIM v3.0 // MULTI-MODULE</div>
+            <div style="display:inline-block; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); color:#f43f5e; font-size:0.68rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-bottom: 10px; letter-spacing:1px;">CRISIS SIM // MULTI-MODULE</div>
             <p style="color: var(--text-muted); font-size: 0.82rem; line-height: 1.45; margin-bottom: 14px;">
-                High-stakes tactical bomb defusal simulation. Disarm diverse security modules (Snake, Reactor, Maze, Banana Wires, Frequency Tuner) under a 3-minute clock.
+                High-stakes tactical bomb defusal game. Disarm diverse security modules (Snake, Reactor, Maze, Banana Wires, Frequency Tuner) under a 3-minute clock.
             </p>
             <div style="display:flex; justify-content:space-around; background:rgba(0,0,0,0.5); padding:8px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); margin-bottom:14px; font-size:0.8rem;">
                 <div>Record Score<span id="splashDefuseScore" style="display:block; font-size:1.05rem; color:var(--neon-blue); font-weight:bold;">0 pts</span></div>
                 <div>Disarms<span id="splashDefuseDisarms" style="display:block; font-size:1.05rem; color:var(--neon-green); font-weight:bold;">0</span></div>
             </div>
             <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
-                <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; min-height:44px;" onclick="openLevelSelect()">▶ INITIATE RUN</button>
+                <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; min-height:44px;" onclick="openLevelSelect()">▶ PLAY NOW</button>
                 <div style="display:flex; gap:8px; width:100%;">
-                    <button class="level-btn" style="flex:1; min-height:44px; padding:8px 6px; font-size:0.85rem;" onclick="openDefuseIntel()">⚙ PROTOCOL</button>
-                    <button class="btn-abort" style="flex:1; min-height:44px; padding:8px 6px; font-size:0.85rem;" onclick="cyberNavigate('../index.jsp')">‹ HUB</button>
+                    <button class="level-btn" style="flex:1; min-height:44px; padding:8px 6px; font-size:0.85rem;" onclick="openDefuseIntel()">📖 HOW TO PLAY</button>
+                    <button class="btn-abort" style="flex:1; min-height:44px; padding:8px 6px; font-size:0.85rem;" onclick="cyberNavigate('../index.jsp')">‹ EXIT TO HUB</button>
                 </div>
             </div>
         </div>
@@ -101,7 +101,7 @@
     <!-- INTEL & CONTROLS MODAL -->
     <div id="defuseIntelModal" class="intel-modal">
         <div class="intel-title">
-            <span>TACTICAL DIRECTIVE & MODULE INTEL</span>
+            <span>HOW TO PLAY & MODULE GUIDE</span>
             <button class="btn-abort" style="padding: 4px 10px;" onclick="closeDefuseIntel()">✕ Close</button>
         </div>
 
@@ -117,7 +117,7 @@
 
         <div class="intel-row">
             <strong>🐍 DATA SERPENT (SNAKE MODULE)</strong>
-            Pilot the cyber serpent to absorb energy bytes. Reach the target score (Easy: 10 pts, Med: 15 pts, Hard: 20 pts) to bypass the module. Crashing costs 1 charge!
+            Pilot the snake to absorb energy bytes. Reach the target score (Easy: 10 pts, Med: 15 pts, Hard: 20 pts) to bypass the module. Crashing costs 1 charge!
         </div>
 
         <div class="intel-row">
@@ -127,29 +127,29 @@
 
         <div class="intel-row">
             <strong>⚡ FIREWALL MAZE ROUTING</strong>
-            Guide the cyan packet node through the security labyrinth to the glowing green core terminal. Guaranteed solvable path with braided alternate routes!
+            Guide the player node through the maze to the glowing green exit. Guaranteed solvable path with multiple routes!
         </div>
 
         <div class="intel-row">
             <strong>🍌 BANANA WIRE MATRIX (BOMBANANA SYSTEM)</strong>
-            Inspect physical colored wire bundles. Extend the Rule Slider manual anytime to consult the 4 canonical rules and snip the target wire. Wrong snip burns 1 charge!
+            Inspect physical colored wire bundles. Open the Rule Slider anytime to consult the 4 rules and cut the target wire. Wrong cut burns 1 charge!
         </div>
 
         <div class="intel-row">
             <strong>📡 FREQUENCY OSCILLOSCOPE TUNER</strong>
-            Interactive cyber slider & direct canvas dragging! Modulate Frequency and Phase until resonance locks!
+            Interactive slider & direct canvas dragging! Modulate Frequency and Phase until resonance locks!
         </div>
 
         <button class="level-btn" style="background:var(--neon-blue); color:#000; font-weight:bold; border:none; margin-top: auto;" onclick="closeDefuseIntel(); openLevelSelect();">
-            ▶ SELECT SECURITY TIER
+            ▶ SELECT LEVEL
         </button>
     </div>
 
     <!-- MAIN MENU (LEVEL SELECT) -->
     <div id="screen-menu" class="screen">
         <div class="menu-container">
-            <h1 class="menu-title">SECURITY TIERS</h1>
-            <p style="color: var(--text-muted); letter-spacing: 2px;">SELECT SECURITY CLEARANCE LEVEL</p>
+            <h1 class="menu-title">SELECT LEVEL</h1>
+            <p style="color: var(--text-muted); letter-spacing: 2px;">CHOOSE YOUR DIFFICULTY LEVEL</p>
             <div class="level-grid" id="levelGrid">
                 <!-- Generated by JS -->
             </div>
@@ -164,7 +164,7 @@
     <div id="screen-game" class="screen">
         <div class="briefcase">
             <div class="header">
-                <button class="btn-abort" onclick="abortToMenu()">&#9888; ABORT</button>
+                <button class="btn-abort" onclick="abortToMenu()">✕ EXIT</button>
                 <div class="timer-container">
                     <div class="timer-label">DETONATION IN</div>
                     <div class="timer" id="timerDisplay">03:00:00</div>
@@ -270,7 +270,7 @@
                             <!-- Slide-out Rule Slider Toggle Bar -->
                             <div class="wires-top-bar">
                                 <button class="rule-slider-toggle-btn" id="ruleSliderToggleBtn" onclick="toggleRuleDrawer()">
-                                    📖 EXTEND RULE SLIDER [4 MANUAL RULES] ❯
+                                    📖 VIEW RULES MANUAL [4 RULES] ❯
                                 </button>
                             </div>
 
@@ -278,7 +278,7 @@
                             <div class="wires-board" id="wiresBoard">
                                 <!-- Dynamic wires injected by JS -->
                             </div>
-                            <div class="wires-hint">⚠️ CLICK / TAP WIRE TO SNIP • WRONG CUT BURNS 1 CHARGE</div>
+                            <div class="wires-hint">⚠️ CLICK / TAP WIRE TO CUT • WRONG CUT BURNS 1 CHARGE</div>
 
                             <!-- SLIDE-OUT RULE DRAWER / SLIDER -->
                             <div class="wires-rule-drawer" id="wiresRuleDrawer">
@@ -343,7 +343,7 @@
 
                     <!-- Workstation Footer Controls -->
                     <div class="mg-footer" style="display: flex; gap: 10px; margin-top: 4px;">
-                        <button class="btn-abort" style="flex: 1; padding: 10px; min-height: 44px;" onclick="closeMiniGame(false)">‹ CANCEL / SWITCH MODULE</button>
+                        <button class="btn-abort" style="flex: 1; padding: 10px; min-height: 44px;" onclick="closeMiniGame(false)">‹ BACK TO BRIEFCASE</button>
                     </div>
                 </div>
             </div>
@@ -355,7 +355,7 @@
         <div class="ending-box" id="resultBox">
             <h1 id="resultTitle" style="font-size: 3.5rem; margin: 0;"></h1>
             <p id="resultSub" style="margin: 15px 0 25px 0; font-size: 1.1rem; line-height: 1.5;"></p>
-            <button class="btn-abort" style="margin-top: 10px; min-height: 44px; padding: 12px 24px;" onclick="abortToMenu()">RETURN TO TIERS</button>
+            <button class="btn-abort" style="margin-top: 10px; min-height: 44px; padding: 12px 24px;" onclick="abortToMenu()">RETURN TO LEVELS</button>
         </div>
     </div>
 
