@@ -563,6 +563,8 @@
      ========================================================= */
   main {
     flex: 1;
+    min-width: 0;
+    width: calc(100vw - 250px);
     height: 100vh;
     height: 100dvh;
     max-height: 100vh;
@@ -570,9 +572,6 @@
     flex-direction: column;
     padding: 0.9rem 1.8rem;
     overflow: hidden !important;
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
     box-sizing: border-box;
     position: relative;
     z-index: 10;
@@ -627,6 +626,8 @@
     flex-direction: column;
     flex: 1;
     min-height: 0;
+    width: 100%;
+    min-width: 0;
     overflow: hidden !important;
   }
   #libraryView.active {
@@ -675,6 +676,8 @@
   .game-carousel {
     flex: 1;
     min-height: 0;
+    width: 100%;
+    min-width: 0;
     display: flex;
     gap: 1.3rem;
     overflow-x: auto;
@@ -782,6 +785,10 @@
     color: var(--primary);
     background: rgba(0, 240, 255, 0.08);
     border: 1px solid rgba(0, 240, 255, 0.25);
+    padding: 3px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+  }
   .card-title {
     font-size: 1.12rem;
     font-weight: 800;
@@ -1551,7 +1558,7 @@
       box-shadow: none; border-top: 2px solid var(--primary);
     }
 
-    main { padding: 1.2rem 1rem; }
+    main { width: 100vw; height: calc(100vh - 75px); height: calc(100dvh - 75px); padding: 1.2rem 1rem; }
     .top-meta h2 { font-size: 1.5rem; }
     .carousel-controls { display: none; }
     
@@ -1649,7 +1656,7 @@
 
   <!-- =========================================================
        SIDEBAR & PROFILE STATE
-       ========================================================= */
+       ========================================================= -->
   <aside>
     <div class="brand" onclick="showPortal()">
       <span class="brand-glyph">⬡</span> GAME <span class="brand-badge">CORE v3.5</span>
