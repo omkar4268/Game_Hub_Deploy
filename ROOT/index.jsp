@@ -181,19 +181,42 @@
     justify-content: center;
     padding: 1.5rem;
     text-align: center;
-    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.28s ease, filter 0.28s ease, visibility 0.28s ease;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease, visibility 0.35s ease;
     overflow: hidden !important;
   }
   #landingPortal.zoom-through {
-    transform: scale(1.12);
+    transform: scale(1.15);
     opacity: 0;
-    filter: blur(8px);
+    filter: blur(12px);
     pointer-events: none;
   }
   #landingPortal.dismissed {
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
+    display: none !important;
+  }
+
+  /* Completely hide gallery and sidebar behind portal until user enters! */
+  #landingPortal:not(.dismissed) ~ aside,
+  #landingPortal:not(.dismissed) ~ main {
+    display: none !important;
+  }
+
+  /* Staggered Framer-Motion Spring Entrance when entering dashboard */
+  body.portal-entered aside {
+    animation: sidebarSpringIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  body.portal-entered main {
+    animation: mainSpringIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes sidebarSpringIn {
+    0% { opacity: 0; transform: translateX(-35px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes mainSpringIn {
+    0% { opacity: 0; transform: translateY(25px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   .portal-content {
@@ -1735,10 +1758,10 @@
             <span>✕ LOG OUT</span>
           </button>
         <% } else { %>
-          <button class="btn-portal btn-portal-primary" onclick="openLoginModal()">
+          <button class="btn-portal btn-portal-primary" onclick="window.location.href='auth.jsp?mode=login'">
             <span>LOG IN</span>
           </button>
-          <button class="btn-portal btn-portal-secondary" onclick="openSignupModal()">
+          <button class="btn-portal btn-portal-secondary" onclick="window.location.href='auth.jsp?mode=signup'">
             <span>SIGN UP</span>
           </button>
           <button class="btn-portal btn-portal-guest" onclick="triggerFastEnter('Guest', 'Welcome! Enjoy the games.')">
@@ -2713,9 +2736,10 @@
       if (cyberShutter) {
         cyberShutter.classList.remove('active');
       }
+      document.body.classList.add('portal-entered');
       sessionStorage.setItem('hub_portal_passed', 'true');
       if (onCompleteCallback) onCompleteCallback();
-    }, 260);
+    }, 420);
   }
 
   // Backward-compatible alias
@@ -2724,15 +2748,13 @@
   }
 
   function showPortal() {
-    if (portal) {
-      portal.classList.remove('dismissed');
-      portal.classList.remove('zoom-through');
-    }
+    window.location.href = 'auth.jsp';
   }
 
   // Auto-dismiss portal if user already completed entrance in this browser tab
   if (sessionStorage.getItem('hub_portal_passed') === 'true') {
     if (portal) portal.classList.add('dismissed');
+    document.body.classList.add('portal-entered');
   }
 
   // Cyber-Scanner Navigation Wipe Handler
@@ -2826,21 +2848,11 @@
   }
 
   function openLoginModal() {
-    closeModal('signupModal');
-    const msg = document.getElementById('loginMsg');
-    msg.className = 'auth-msg';
-    msg.innerHTML = '';
-    msg.style.display = 'none';
-    openModal('loginModal');
+    window.location.href = 'auth.jsp?mode=login';
   }
 
   function openSignupModal() {
-    closeModal('loginModal');
-    const msg = document.getElementById('signupMsg');
-    msg.className = 'auth-msg';
-    msg.innerHTML = '';
-    msg.style.display = 'none';
-    openModal('signupModal');
+    window.location.href = 'auth.jsp?mode=signup';
   }
 
   function setBanner(elemId, type, text) {
@@ -2975,7 +2987,7 @@
     enforceAccountBoundary('');
     try {
       await fetch('logout.jsp', { headers: { 'Accept': 'application/json' } });
-      window.location.reload();
+      window.location.href = 'auth.jsp';
     } catch (e) {
       window.location.href = 'logout.jsp';
     }
