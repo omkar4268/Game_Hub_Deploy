@@ -124,8 +124,8 @@
     right: 0;
     height: 4px;
     top: -10px;
-    background: linear-gradient(90deg, transparent 0%, #38bdf8 30%, #22c55e 70%, transparent 100%);
-    box-shadow: 0 0 25px #38bdf8, 0 0 40px #22c55e;
+    background: linear-gradient(90deg, transparent 0%, #00f0ff 30%, #38bdf8 70%, transparent 100%);
+    box-shadow: 0 0 25px #00f0ff, 0 0 40px #38bdf8;
   }
   .cyber-shutter.active .cyber-shutter-beam {
     animation: shutterBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
@@ -174,21 +174,20 @@
     position: fixed;
     inset: 0;
     z-index: 5000;
-    background: rgba(2, 4, 10, 0.70);
-    backdrop-filter: blur(12px);
+    background: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
     text-align: center;
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, filter 0.25s ease, visibility 0.28s ease;
+    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.28s ease, filter 0.28s ease, visibility 0.28s ease;
     overflow: hidden !important;
   }
   #landingPortal.zoom-through {
-    transform: scale(1.08);
+    transform: scale(1.12);
     opacity: 0;
-    filter: blur(5px);
+    filter: blur(8px);
     pointer-events: none;
   }
   #landingPortal.dismissed {
@@ -198,30 +197,53 @@
   }
 
   .portal-content {
-    max-width: 540px;
-    width: 100%;
+    max-width: 480px;
+    width: 90vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    z-index: 2;
+    z-index: 10;
+    background: rgba(4, 9, 22, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    border-radius: 28px;
+    padding: 2.5rem 2.2rem;
+    box-shadow: 0 0 60px rgba(0, 240, 255, 0.20), 0 30px 80px rgba(0, 0, 0, 0.95);
+    animation: portalSpringIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    box-sizing: border-box;
+  }
+  .portal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    box-shadow: 0 0 16px var(--primary);
+  }
+  @keyframes portalSpringIn {
+    0% { transform: scale(0.92) translateY(24px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
   }
 
   .portal-tag {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(56, 189, 248, 0.1);
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.3);
     padding: 6px 16px;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 2px;
     color: var(--primary);
     text-transform: uppercase;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    margin-bottom: 1rem;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
   }
   .portal-tag::before {
     content: '';
@@ -238,23 +260,23 @@
   }
 
   .portal-title {
-    font-size: clamp(2.2rem, 6vw, 3.2rem);
+    font-size: clamp(2.2rem, 5vw, 3rem);
     font-weight: 900;
-    letter-spacing: 2.5px;
+    letter-spacing: 2px;
     line-height: 1.1;
-    margin-bottom: 0.6rem;
-    background: linear-gradient(135deg, #ffffff 30%, var(--primary) 70%, var(--neon-purple) 100%);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ffffff 40%, var(--primary) 80%, #38bdf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+    text-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
   }
 
   .portal-subtitle {
-    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+    font-size: clamp(0.82rem, 2vw, 0.9rem);
     color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    max-width: 460px;
+    line-height: 1.5;
+    margin-bottom: 1.8rem;
+    max-width: 400px;
   }
 
   .portal-actions {
@@ -267,8 +289,8 @@
 
   .btn-portal {
     min-height: 48px;
-    padding: 0.8rem 1.4rem;
-    border-radius: 12px;
+    padding: 0.85rem 1.4rem;
+    border-radius: 14px;
     font-size: 0.92rem;
     font-weight: 800;
     letter-spacing: 1px;
@@ -278,9 +300,27 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-decoration: none;
     box-sizing: border-box;
+  }
+  .btn-portal:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+  .btn-portal:active {
+    transform: scale(0.96) !important;
+  }
+
+  .portal-kinetic-hint {
+    margin-top: 1.3rem;
+    font-size: 0.72rem;
+    font-family: monospace;
+    letter-spacing: 1.2px;
+    color: var(--primary);
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .btn-portal-primary {
@@ -1066,13 +1106,13 @@
   input:checked + .slider:before { transform: translateX(20px); }
   #toggleRansomHorror:checked + .slider { background-color: var(--danger) !important; box-shadow: 0 0 14px rgba(239, 68, 68, 0.8) !important; }
 
-  /* Modals */
+  /* Modals with Framer Motion Spring Physics & UI/UX Pro Max Glass */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(3, 5, 10, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(2, 4, 10, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1081,25 +1121,27 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     opacity: 0;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.28s ease;
   }
   .modal-overlay.active { display: flex; opacity: 1; }
   
   .modal-box {
-    background: linear-gradient(170deg, rgba(8, 16, 32, 0.96) 0%, rgba(2, 6, 16, 0.98) 100%);
-    border: 1px solid rgba(0, 240, 255, 0.35);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 240, 255, 0.2);
-    border-radius: 18px;
-    padding: 1.8rem 1.6rem;
-    width: 90vw;
-    max-width: 420px;
+    background: rgba(4, 9, 22, 0.90);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(0, 240, 255, 0.38);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 55px rgba(0, 240, 255, 0.22);
+    border-radius: 26px;
+    padding: 2.2rem 1.9rem;
+    width: 92vw;
+    max-width: 440px;
     max-height: 88vh;
     max-height: 88dvh;
     overflow-y: auto;
     margin: auto;
     text-align: center;
-    transform: scale(0.94);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
     position: relative;
     box-sizing: border-box;
   }
@@ -1107,13 +1149,47 @@
     content: '';
     position: absolute;
     top: 0;
-    left: 15%;
-    right: 15%;
+    left: 12%;
+    right: 12%;
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    box-shadow: 0 0 12px var(--primary);
+    box-shadow: 0 0 16px var(--primary);
   }
-  .modal-overlay.active .modal-box { transform: scale(1); }
+  .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+
+  /* Framer Motion Style Modal Tabs */
+  .auth-modal-tabs {
+    display: flex;
+    background: rgba(1, 4, 12, 0.7);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 12px;
+    padding: 3px;
+    margin: 1.2rem 0 1rem 0;
+    gap: 4px;
+  }
+  .auth-modal-tab {
+    flex: 1;
+    padding: 0.55rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .auth-modal-tab.active {
+    background: var(--primary);
+    color: #030712;
+    font-weight: 900;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  }
+  .auth-modal-tab:hover:not(.active) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+  }
   
   .modal-actions {
     display: flex;
@@ -1122,9 +1198,9 @@
     margin-top: 1.4rem;
   }
   .btn-modal {
-    min-height: 46px;
-    padding: 0.75rem 1.2rem;
-    border-radius: 10px;
+    min-height: 48px;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
     border: none;
     cursor: pointer;
     font-weight: 800;
@@ -1133,21 +1209,26 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.2s ease;
+    transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     flex: 1;
     letter-spacing: 0.5px;
   }
+  .btn-modal:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+  }
+  .btn-modal:active:not(:disabled) {
+    transform: scale(0.96) !important;
+  }
   .btn-modal:disabled { opacity: 0.65; cursor: not-allowed; filter: grayscale(0.5); }
   .btn-launch { 
-    background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+    background: linear-gradient(135deg, var(--primary), #0284c7); 
     color: #030712; 
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); 
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.45); 
     font-weight: 900;
   }
   .btn-launch:hover:not(:disabled) { 
     background: linear-gradient(135deg, #7dd3fc, var(--primary)); 
-    box-shadow: 0 0 28px rgba(0, 240, 255, 0.7); 
-    transform: translateY(-2px); 
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); 
   }
   .btn-cancel { 
     background: rgba(255, 255, 255, 0.05); 
@@ -1156,8 +1237,8 @@
   }
   .btn-cancel:hover:not(:disabled) { 
     background: rgba(255, 255, 255, 0.1); 
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff; 
+    border-color: rgba(255, 255, 255, 0.3); 
   }
 
   .auth-form-group { text-align: left; margin-top: 1rem; }
@@ -1170,24 +1251,42 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
+  .auth-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .auth-input-icon {
+    position: absolute;
+    left: 14px;
+    font-size: 1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: color 0.2s;
+  }
   .auth-input {
     width: 100%;
-    height: 46px;
-    min-height: 44px;
-    padding: 0 1rem;
-    background: rgba(3, 7, 18, 0.85);
+    height: 48px;
+    min-height: 48px;
+    padding: 0 1rem 0 2.6rem;
+    background: rgba(6, 13, 28, 0.85);
     border: 1px solid rgba(0, 240, 255, 0.25);
-    border-radius: 10px;
+    border-radius: 12px;
     color: var(--text-main);
-    font-size: 16px !important; /* Critical: blocks iOS Safari auto-zoom */
+    font-size: 15px !important;
     outline: none;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     box-sizing: border-box;
   }
   .auth-input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
-    background: rgba(4, 10, 24, 0.95);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.45);
+    background: rgba(8, 18, 38, 0.95);
+    transform: translateY(-1px);
+  }
+  .auth-input:focus + .auth-input-icon, .auth-input-wrap:focus-within .auth-input-icon {
+    color: var(--primary);
   }
 
   @keyframes bannerSlideIn {
@@ -1646,6 +1745,10 @@
             <span>🎮 PLAY AS GUEST</span>
           </button>
         <% } %>
+      </div>
+
+      <div class="portal-kinetic-hint">
+        <span>⚡ KINETIC GRID ACTIVE • MOVE CURSOR & CLICK ANYWHERE</span>
       </div>
 
       <div class="portal-footer-note">
@@ -2333,19 +2436,31 @@
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
       <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--primary); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">[ OPERATIVE AUTHENTICATION ]</div>
-      <h2 style="color: #fff; font-weight: 900; letter-spacing: 1.5px; font-size: 1.5rem;">ACCESS TERMINAL</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.35rem;">Enter callsign and security cipher to synchronize telemetry.</p>
+      <h2 style="color: #fff; font-weight: 900; letter-spacing: 1.5px; font-size: 1.5rem; margin: 0;">ACCESS TERMINAL</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.35rem; margin-bottom: 0;">Enter callsign and security cipher to synchronize telemetry.</p>
+
+      <!-- Framer-Motion style tab switcher -->
+      <div class="auth-modal-tabs">
+        <button type="button" class="auth-modal-tab active">LOG IN</button>
+        <button type="button" class="auth-modal-tab" onclick="closeModal('loginModal'); openSignupModal();">SIGN UP</button>
+      </div>
 
       <div class="auth-msg" id="loginMsg"></div>
 
       <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
         <div class="auth-form-group">
           <label class="auth-label" for="loginUsername">Operative Callsign</label>
-          <input type="text" class="auth-input" id="loginUsername" placeholder="Enter your callsign" autocomplete="username" required>
+          <div class="auth-input-wrap">
+            <span class="auth-input-icon">👤</span>
+            <input type="text" class="auth-input" id="loginUsername" placeholder="e.g. CyberNinja" autocomplete="username" required>
+          </div>
         </div>
         <div class="auth-form-group">
           <label class="auth-label" for="loginPassword">Security Cipher</label>
-          <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+          <div class="auth-input-wrap">
+            <span class="auth-input-icon">🔒</span>
+            <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••••••" autocomplete="current-password" required>
+          </div>
         </div>
 
         <div class="modal-actions">
@@ -2356,7 +2471,7 @@
         </div>
       </form>
 
-      <span class="switch-auth-link" onclick="openSignupModal()">New Operative? Enlist profile credentials</span>
+      <span class="switch-auth-link" onclick="closeModal('loginModal'); openSignupModal();">New Operative? Enlist profile credentials</span>
     </div>
   </div>
 
@@ -2366,23 +2481,38 @@
   <div class="modal-overlay" id="signupModal">
     <div class="modal-box">
       <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--accent); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">[ OPERATIVE ENLISTMENT ]</div>
-      <h2 style="color: #fff; font-weight: 900; letter-spacing: 1.5px; font-size: 1.5rem;">NEW PROFILE</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.35rem;">Register a permanent operative callsign to track XP and rank.</p>
+      <h2 style="color: #fff; font-weight: 900; letter-spacing: 1.5px; font-size: 1.5rem; margin: 0;">NEW PROFILE</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.35rem; margin-bottom: 0;">Register a permanent operative callsign to track XP and rank.</p>
+
+      <!-- Framer-Motion style tab switcher -->
+      <div class="auth-modal-tabs">
+        <button type="button" class="auth-modal-tab" onclick="closeModal('signupModal'); openLoginModal();">LOG IN</button>
+        <button type="button" class="auth-modal-tab active">SIGN UP</button>
+      </div>
 
       <div class="auth-msg" id="signupMsg"></div>
 
       <form id="signupForm" onsubmit="event.preventDefault(); submitSignup();">
         <div class="auth-form-group">
           <label class="auth-label" for="signupUsername">Operative Callsign [3-20 Letters/Numbers]</label>
-          <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. BrainMaster" autocomplete="username" required>
+          <div class="auth-input-wrap">
+            <span class="auth-input-icon">👤</span>
+            <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. BrainMaster" autocomplete="username" required>
+          </div>
         </div>
         <div class="auth-form-group">
           <label class="auth-label" for="signupPassword">Security Cipher [Min 6 Chars]</label>
-          <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••" autocomplete="new-password" required>
+          <div class="auth-input-wrap">
+            <span class="auth-input-icon">🔒</span>
+            <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••••••" autocomplete="new-password" required>
+          </div>
         </div>
         <div class="auth-form-group">
           <label class="auth-label" for="signupPasswordConfirm">Confirm Security Cipher</label>
-          <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••" autocomplete="new-password" required>
+          <div class="auth-input-wrap">
+            <span class="auth-input-icon">🛡️</span>
+            <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••••••" autocomplete="new-password" required>
+          </div>
         </div>
 
         <div class="modal-actions">
@@ -2393,7 +2523,7 @@
         </div>
       </form>
 
-      <span class="switch-auth-link" onclick="openLoginModal()">Existing Operative? Access terminal</span>
+      <span class="switch-auth-link" onclick="closeModal('signupModal'); openLoginModal();">Existing Operative? Access terminal</span>
     </div>
   </div>
 
@@ -3355,11 +3485,11 @@
     const DOT_SPACING = 30;
     const LERP_SPEED = 0.08;
 
-    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.10 };
-    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.85 };
+    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.18 };
+    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.95 };
     const NODE_ACTIVE = { r: 74, g: 158, b: 255, a: 1.0 };
-    const NODE_BASE_RADIUS = 1.6;
-    const NODE_ACTIVE_RADIUS = 3.0;
+    const NODE_BASE_RADIUS = 1.8;
+    const NODE_ACTIVE_RADIUS = 3.5;
 
     const mouse = { x: -9999, y: -9999 };
     const targetMouse = { x: -9999, y: -9999 };
@@ -3547,7 +3677,7 @@
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
-        ctx.lineWidth = lerpN(0.7, 1.6, t);
+        ctx.lineWidth = lerpN(0.9, 2.0, t);
         ctx.stroke();
       }
 
@@ -3570,11 +3700,11 @@
           const t = pr * pr * (3 - 2 * pr);
           const r = lerpN(NODE_BASE_RADIUS, NODE_ACTIVE_RADIUS, t);
 
-          if (t > 0.3) {
-            const glowR = r + lerpN(0, 7, (t - 0.3) / 0.7);
+          if (t > 0.25) {
+            const glowR = r + lerpN(0, 8, (t - 0.25) / 0.75);
             const grd = ctx.createRadialGradient(p.x, p.y, r * 0.5, p.x, p.y, glowR);
-            grd.addColorStop(0, 'rgba(74, 158, 255, ' + (t * 0.35).toFixed(3) + ')');
-            grd.addColorStop(1, 'rgba(74, 158, 255, 0)');
+            grd.addColorStop(0, 'rgba(0, 240, 255, ' + (t * 0.45).toFixed(3) + ')');
+            grd.addColorStop(1, 'rgba(0, 240, 255, 0)');
             ctx.beginPath();
             ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
             ctx.fillStyle = grd;
@@ -3583,7 +3713,7 @@
 
           ctx.beginPath();
           ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = lerpColor({ r: 0, g: 240, b: 255, a: 0.18 }, NODE_ACTIVE, t);
+          ctx.fillStyle = lerpColor({ r: 0, g: 240, b: 255, a: 0.28 }, NODE_ACTIVE, t);
           ctx.fill();
         }
       }
@@ -3594,8 +3724,14 @@
         const safeRadius = Math.max(0, r.radius);
         ctx.beginPath();
         ctx.arc(r.x, r.y, safeRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(100, 180, 255, ' + (r.opacity * 0.3).toFixed(3) + ')';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(0, 240, 255, ' + (r.opacity * 0.6).toFixed(3) + ')';
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, Math.max(0, safeRadius - 16), 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, ' + (r.opacity * 0.35).toFixed(3) + ')';
+        ctx.lineWidth = 1.2;
         ctx.stroke();
       }
 
