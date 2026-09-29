@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Game Hub Deploy Architecture",
+    "output": "gamehub-architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "users", "type": "external", "label": "Users", "sublabel": "Web Browser", "pos": [60, 260], "size": [120, 60] },
+    { "id": "frontend", "type": "frontend", "label": "Game Hub Frontend", "sublabel": "JSP, HTML5, CSS3, JavaScript", "pos": [240, 260], "size": [160, 80] },
+    { "id": "auth", "type": "backend", "label": "Auth Service", "sublabel": "Session login/logout", "pos": [240, 100], "size": [140, 70] },
+    { "id": "game-lib", "type": "backend", "label": "Game Library", "sublabel": "Metadata & routing", "pos": [240, 420], "size": [140, 70] },
+    { "id": "score-svc", "type": "backend", "label": "Score & XP Service", "sublabel": "Leaderboards, leveling", "pos": [500, 260], "size": [140, 70] },
+    { "id": "data-store", "type": "database", "label": "Data Store", "sublabel": "Profiles, scores, state", "pos": [760, 260], "size": [140, 70] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Presentation Layer", "wraps": ["frontend"] },
+    { "kind": "region", "label": "Application Services", "wraps": ["auth", "game-lib", "score-svc"] },
+    { "kind": "region", "label": "Data Layer", "wraps": ["data-store"] }
+  ],
+  "connections": [
+    { "id": "users-to-frontend", "from": "users", "to": "frontend", "label": "HTTP/HTTPS", "variant": "emphasis" },
+    { "id": "frontend-to-auth", "from": "frontend", "to": "auth", "label": "Authenticate", "variant": "default" },
+    { "id": "frontend-to-gamelib", "from": "frontend", "to": "game-lib", "label": "Browse Games", "variant": "default" },
+    { "id": "frontend-to-scoresvc", "from": "frontend", "to": "score-svc", "label": "Fetch Scores/XP", "variant": "default" },
+    { "id": "auth-to-datastore", "from": "auth", "to": "data-store", "label": "Read/Write Profile", "variant": "default" },
+    { "id": "gamelib-to-datastore", "from": "game-lib", "to": "data-store", "label": "Get Game Metadata", "variant": "default" },
+    { "id": "scoresvc-to-datastore", "from": "score-svc", "to": "data-store", "label": "Store Scores/XP", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "User Access", "items": ["Browser-based access", "Responsive cyberpunk UI", "Landing portal with login/guest options"] },
+    { "dot": "emerald", "title": "Core Services", "items": ["Authentication & session management", "Game library & routing", "Score tracking & XP system", "Leaderboards & player leveling"] }
+  ]
+}

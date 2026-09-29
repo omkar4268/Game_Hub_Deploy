@@ -23,6 +23,7 @@
         out.print("{\"success\": false, \"message\": \"Game name and score parameters required.\"}");
         return;
     }
+    gameName = gameName.trim().toLowerCase();
 
     int score = 0;
     try {

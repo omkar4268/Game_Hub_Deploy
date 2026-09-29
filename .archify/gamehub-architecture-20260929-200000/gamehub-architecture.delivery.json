@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "891ac4a2-ecb1-488d-8170-b6725bba57fd",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\git_projects_omkar\\Game_Hub_Deploy\\.archify\\gamehub-architecture-20260929-200000\\candidate.json",
+  "output": "C:\\git_projects_omkar\\Game_Hub_Deploy\\.archify\\gamehub-architecture-20260929-200000\\gamehub-architecture.html",
+  "specification": {
+    "sha256": "5e735f8c5a1197073e8d23f3214ad415a39a02e4df163faa05015cad4e57340e",
+    "bytes": 2613
+  },
+  "artifact": {
+    "sha256": "82a0e3c251ef43f8dfd11b9363dd770a96731c2433428755467c38dd61c133b6",
+    "bytes": 757402
+  }
+}

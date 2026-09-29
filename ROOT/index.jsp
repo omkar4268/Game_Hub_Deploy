@@ -18,16 +18,20 @@
 <link rel="stylesheet" href="css/ransom_horror.css">
 <style>
   :root {
-    --bg-base: #03050a;
-    --card-bg: rgba(13, 19, 36, 0.75);
-    --border-glow: rgba(56, 189, 248, 0.35);
-    --primary: #38bdf8;
-    --primary-rgb: 56, 189, 248;
-    --accent: #22c55e;
-    --accent-glow: rgba(34, 197, 94, 0.4);
+    --bg-base: #02040a;
+    --card-bg: rgba(6, 12, 24, 0.85);
+    --border-glow: rgba(0, 240, 255, 0.4);
+    --border-cyan: rgba(0, 240, 255, 0.25);
+    --primary: #00f0ff;
+    --primary-rgb: 0, 240, 255;
+    --primary-glow: rgba(0, 240, 255, 0.45);
+    --secondary: #0284c7;
+    --secondary-glow: rgba(2, 132, 199, 0.35);
+    --accent: #10e6a8;
+    --accent-glow: rgba(16, 230, 168, 0.4);
     --neon-pink: #f43f5e;
     --neon-purple: #a855f7;
-    --warning: #f59e0b;
+    --warning: #facc15;
     --danger: #ef4444;
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
@@ -41,37 +45,46 @@
     -webkit-tap-highlight-color: transparent; 
   }
 
-  body {
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    overflow: hidden !important;
+    margin: 0;
+    padding: 0;
     background-color: var(--bg-base);
     color: var(--text-main);
-    min-height: 100vh;
-    min-height: 100dvh;
     display: flex;
-    overflow-x: hidden;
-    position: relative;
+    position: fixed;
+    inset: 0;
   }
 
-  @keyframes backgroundDrift {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
+  /* Rising Cyber Laser Rays & Particle Floor Horizon Canvas */
+  #techRaysCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
   }
-  
-  body::before {
+
+  /* Subtle CRT Scanline Mesh */
+  body::after {
     content: '';
     position: fixed;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
-    background: 
-      radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.09) 0%, transparent 30%),
-      radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.09) 0%, transparent 30%),
-      radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.04) 0%, transparent 35%),
-      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
-    z-index: -1;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.12),
+      rgba(0, 0, 0, 0.12) 1px,
+      transparent 1px,
+      transparent 2px
+    );
     pointer-events: none;
-    animation: backgroundDrift 100s linear infinite;
+    z-index: 99;
+    opacity: 0.45;
   }
 
   /* =========================================================
@@ -161,7 +174,8 @@
     position: fixed;
     inset: 0;
     z-index: 5000;
-    background: radial-gradient(circle at center, #091122 0%, #020408 100%);
+    background: rgba(2, 4, 10, 0.70);
+    backdrop-filter: blur(12px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -169,8 +183,7 @@
     padding: 1.5rem;
     text-align: center;
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, filter 0.25s ease, visibility 0.28s ease;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden !important;
   }
   #landingPortal.zoom-through {
     transform: scale(1.08);
@@ -316,82 +329,131 @@
      MAIN APPLICATION LAYOUT & SIDEBAR
      ========================================================= */
   aside {
-    width: 260px;
-    background: rgba(8, 12, 23, 0.85);
+    width: 250px;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    background: rgba(3, 7, 18, 0.94);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(0, 240, 255, 0.2);
     display: flex;
     flex-direction: column;
-    padding: 2rem 1.3rem;
+    padding: 1.2rem 1.1rem;
     flex-shrink: 0;
     z-index: 100;
-    box-shadow: 5px 0 35px rgba(0,0,0,0.6);
+    overflow: hidden;
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.8);
+    box-sizing: border-box;
   }
 
   .brand {
-    font-size: 1.45rem;
+    font-size: 1.3rem;
     font-weight: 900;
-    letter-spacing: 2.5px;
+    letter-spacing: 2px;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 2rem;
-    text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
     cursor: pointer;
   }
+  .brand-glyph {
+    color: var(--primary);
+    filter: drop-shadow(0 0 8px var(--primary));
+  }
   .brand-badge {
-    background: linear-gradient(135deg, var(--primary), var(--neon-purple));
-    font-size: 0.68rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    font-size: 0.65rem;
     padding: 3px 8px;
     border-radius: 6px;
-    color: #000;
+    color: #030712;
     font-weight: 900;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    letter-spacing: 1px;
   }
 
   /* User Auth Widget in Sidebar */
   .auth-widget {
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(56, 189, 248, 0.25);
-    border-radius: 14px;
-    padding: 1.1rem;
-    margin-bottom: 2rem;
+    background: linear-gradient(170deg, rgba(8, 16, 32, 0.9) 0%, rgba(3, 7, 18, 0.95) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-radius: 16px;
+    padding: 0.9rem;
+    margin-bottom: 1.2rem;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 240, 255, 0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .auth-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    box-shadow: 0 0 10px var(--primary);
+  }
+  .auth-avatar-wrap {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 0.65rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .auth-avatar {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    margin: 0 auto 0.6rem auto;
-    background: linear-gradient(135deg, var(--primary), var(--neon-purple));
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
-    color: #000;
+    font-size: 1.35rem;
+    color: #030712;
     font-weight: 900;
-    box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    border: 2px solid #ffffff;
+    z-index: 2;
+  }
+  .auth-avatar-pulse {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0, 240, 255, 0.6);
+    animation: rotatePulse 12s linear infinite;
+  }
+  @keyframes rotatePulse {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
   .auth-name {
     font-size: 0.98rem;
     font-weight: 800;
-    color: var(--primary);
+    color: #fff;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .auth-role {
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 0.9rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+  }
+  .auth-role {
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: 800;
   }
   .auth-role::before {
     content: '';
@@ -399,7 +461,7 @@
     height: 6px;
     border-radius: 50%;
     background: currentColor;
-    box-shadow: 0 0 6px currentColor;
+    box-shadow: 0 0 8px currentColor;
   }
 
   .btn-auth {
@@ -408,31 +470,36 @@
     justify-content: center;
     gap: 6px;
     width: 100%;
-    padding: 0.6rem;
-    border-radius: 8px;
+    padding: 0.65rem;
+    border-radius: 10px;
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     border: none;
     transition: all 0.2s ease;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
   }
   .btn-login {
-    background: var(--primary);
-    color: #000;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #030712;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
   }
   .btn-login:hover {
-    background: #7dd3fc;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    background: linear-gradient(135deg, #7dd3fc, var(--primary));
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+    transform: translateY(-1px);
   }
   .btn-logout {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
-    border: 1px solid rgba(239, 68, 68, 0.35);
+    background: rgba(244, 63, 94, 0.12);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.35);
   }
   .btn-logout:hover {
-    background: rgba(239, 68, 68, 0.3);
+    background: rgba(244, 63, 94, 0.25);
     color: #fff;
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+    transform: translateY(-1px);
   }
 
   nav { display: flex; flex-direction: column; gap: 0.8rem; }
@@ -446,8 +513,9 @@
     color: var(--text-muted);
     border: 1px solid transparent;
     cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     text-align: left;
     position: relative;
@@ -455,26 +523,28 @@
   }
   
   .nav-btn:hover { 
-    color: var(--text-main); 
-    background: rgba(255, 255, 255, 0.04); 
+    color: #fff; 
+    background: rgba(0, 240, 255, 0.05); 
+    border-color: rgba(0, 240, 255, 0.2);
     transform: translateX(4px);
   }
   
   .nav-btn.active {
-    background: linear-gradient(90deg, rgba(56, 189, 248, 0.12), transparent);
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.15) 0%, rgba(2, 132, 199, 0.05) 100%);
     color: var(--primary);
-    border-color: rgba(56, 189, 248, 0.25);
-    box-shadow: inset 4px 0 0 var(--primary);
+    border-color: rgba(0, 240, 255, 0.35);
+    box-shadow: inset 4px 0 0 var(--primary), 0 0 20px rgba(0, 240, 255, 0.12);
   }
 
   .btn-portal-recall {
     margin-top: auto;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 240, 255, 0.04);
+    border: 1px solid rgba(0, 240, 255, 0.15);
     color: var(--text-muted);
-    padding: 0.6rem;
+    padding: 0.65rem;
     border-radius: 10px;
     font-size: 0.8rem;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -483,171 +553,252 @@
     transition: 0.2s;
   }
   .btn-portal-recall:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-main);
+    background: rgba(0, 240, 255, 0.12);
+    border-color: rgba(0, 240, 255, 0.4);
+    color: #fff;
   }
 
   /* =========================================================
-     FEATURE 2: BALANCED UI PROPORTIONS & GRID SCALING
+     FEATURE 2: BALANCED UI PROPORTIONS - 100% SINGLE PAGE (NO OVERFLOW)
      ========================================================= */
   main {
     flex: 1;
-    padding: 2.2rem 2.5rem;
-    overflow-y: auto;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0.9rem 1.8rem;
+    overflow: hidden !important;
     width: 100%;
-    max-width: 1500px;
+    max-width: 1600px;
     margin: 0 auto;
     box-sizing: border-box;
+    position: relative;
+    z-index: 10;
   }
 
   .top-meta {
+    height: 44px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+    margin-bottom: 0.6rem;
+    flex-shrink: 0;
   }
   .top-meta h2 { 
-    font-size: clamp(1.8rem, 4vw, 2.3rem); 
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem); 
     font-weight: 900; 
-    background: linear-gradient(to right, #fff, #94a3b8);
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, var(--primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .sys-status {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     color: var(--accent);
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(34, 197, 94, 0.1);
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(34, 197, 94, 0.25);
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+    gap: 6px;
+    background: rgba(16, 230, 168, 0.1);
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(16, 230, 168, 0.35);
+    box-shadow: 0 0 15px rgba(16, 230, 168, 0.2);
   }
   .sys-status::before {
     content: '';
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
     animation: pulseDot 2s infinite;
   }
 
-  .view-panel { display: none; opacity: 0; transition: opacity 0.35s ease; }
-  .view-panel.active { display: block; opacity: 1; }
+  .view-panel { display: none; opacity: 0; transition: opacity 0.25s ease; flex: 1; min-height: 0; }
+  .view-panel.active { display: flex; flex-direction: column; opacity: 1; }
+
+  #libraryView {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden !important;
+  }
+  #libraryView.active {
+    display: flex;
+  }
+
+  #scoresView.active, #settingsView.active {
+    display: block;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    padding-right: 0.6rem;
+    scrollbar-width: thin;
+  }
 
   .carousel-controls {
     display: flex;
     justify-content: flex-end;
-    gap: 0.8rem;
-    margin-bottom: 1.2rem;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+    flex-shrink: 0;
   }
   .scroll-btn {
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-main);
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
+    background: rgba(8, 16, 32, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: var(--primary);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 900;
     transition: all 0.2s;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
   }
   .scroll-btn:hover {
     background: var(--primary);
-    color: #000;
+    color: #030712;
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+    transform: translateY(-2px);
   }
 
   .game-carousel {
+    flex: 1;
+    min-height: 0;
     display: flex;
-    gap: 1.6rem;
+    gap: 1.3rem;
     overflow-x: auto;
-    padding: 0.8rem 0.5rem 2.5rem 0.5rem;
+    overflow-y: hidden !important; /* STRICTLY PREVENT VERTICAL SCROLL */
+    padding: 0.2rem 0.2rem 0.8rem 0.2rem;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    align-items: stretch;
   }
-  .game-carousel::-webkit-scrollbar { height: 8px; }
-  .game-carousel::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-  .game-carousel::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
+  .game-carousel::-webkit-scrollbar { height: 6px; }
+  .game-carousel::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 3px; }
+  .game-carousel::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 3px; }
   .game-carousel::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   .game-card {
-    min-width: 290px;
-    max-width: 320px;
-    width: 300px;
-    background: var(--card-bg);
-    backdrop-filter: blur(14px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    flex: 0 0 270px;
+    width: 270px;
+    height: 100%;
+    max-height: calc(100vh - 165px);
+    background: linear-gradient(170deg, rgba(8, 16, 32, 0.92) 0%, rgba(2, 6, 16, 0.98) 100%);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 240, 255, 0.22);
     overflow: hidden;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     scroll-snap-align: center;
     flex-shrink: 0;
     opacity: 0;
-    animation: fadeInUp 0.5s ease forwards;
+    animation: fadeInUp 0.4s ease forwards;
     position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    box-sizing: border-box;
   }
 
   .game-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(var(--primary-rgb), 0.5);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(var(--primary-rgb), 0.25);
+    transform: translateY(-6px) scale(1.015);
+    border-color: var(--primary);
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 240, 255, 0.35);
   }
 
-  .banner-bomb    { background: linear-gradient(135deg, #7f1d1d, #ea580c); }
-  .banner-chess   { background: linear-gradient(135deg, #4c1d95, #ec4899); }
-  .banner-snake   { background: linear-gradient(135deg, #064e3b, #10b981); }
-  .banner-maze    { background: linear-gradient(135deg, #0c4a6e, #38bdf8); }
-  .banner-guesser { background: linear-gradient(135deg, #312e81, #6366f1); }
-  .banner-reactor { background: linear-gradient(135deg, #1e293b, #0284c7 50%, #f43f5e 100%); }
-
   .card-banner {
-    height: 140px;
+    height: clamp(85px, 16vh, 115px);
+    min-height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3.6rem;
     position: relative;
     overflow: hidden;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+    flex-shrink: 0;
+  }
+  .card-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events: none;
+  }
+  .banner-icon {
+    font-size: clamp(2.2rem, 4vh, 2.7rem);
+    filter: drop-shadow(0 0 15px var(--banner-glow, rgba(0, 240, 255, 0.6)));
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+  }
+  .game-card:hover .banner-icon {
+    transform: scale(1.12) translateY(-2px);
   }
 
+  .banner-bomb    { --banner-glow: rgba(245, 158, 11, 0.7); background: radial-gradient(circle at center, rgba(234, 88, 12, 0.22) 0%, rgba(8, 14, 28, 0.96) 100%); }
+  .banner-chess   { --banner-glow: rgba(168, 85, 247, 0.7); background: radial-gradient(circle at center, rgba(168, 85, 247, 0.22) 0%, rgba(8, 14, 28, 0.96) 100%); }
+  .banner-snake   { --banner-glow: rgba(16, 185, 129, 0.7); background: radial-gradient(circle at center, rgba(16, 185, 129, 0.22) 0%, rgba(8, 14, 28, 0.96) 100%); }
+  .banner-maze    { --banner-glow: rgba(0, 240, 255, 0.7); background: radial-gradient(circle at center, rgba(56, 189, 248, 0.22) 0%, rgba(8, 14, 28, 0.96) 100%); }
+  .banner-guesser { --banner-glow: rgba(99, 102, 241, 0.7); background: radial-gradient(circle at center, rgba(99, 102, 241, 0.22) 0%, rgba(8, 14, 28, 0.96) 100%); }
+  .banner-reactor { --banner-glow: rgba(0, 240, 255, 0.7); background: radial-gradient(circle at center, rgba(2, 132, 199, 0.25) 0%, rgba(8, 14, 28, 0.96) 100%); }
+
   .card-body {
-    padding: 1.3rem;
+    padding: 0.9rem;
     display: flex;
     flex-direction: column;
     flex: 1;
-    background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.85) 100%);
+    min-height: 0;
+    justify-content: space-between;
+    background: transparent;
   }
   .card-tag {
-    font-size: 0.68rem;
-    letter-spacing: 1.5px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.62rem;
+    letter-spacing: 1.2px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--primary);
-    margin-bottom: 0.35rem;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+  .card-title {
+    font-size: 1.12rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 4px 0;
+    letter-spacing: 0.5px;
   }
-  .card-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.35rem; }
-  .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.2rem; }
+  .card-desc {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
   .card-footer {
     margin-top: auto;
@@ -655,47 +806,70 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 0.85rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(0, 240, 255, 0.12);
   }
-  .card-score-preview { font-size: 0.82rem; color: var(--text-muted); }
-  .card-score-preview span { color: var(--primary); font-weight: 800; }
+  .card-score-preview {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    font-family: 'Consolas', monospace;
+  }
+  .card-score-preview span {
+    color: var(--primary);
+    font-weight: 900;
+  }
   
   .launch-arrow {
     width: 36px;
     height: 36px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary);
-    font-size: 1.1rem;
-    transition: all 0.3s;
+    font-size: 1.05rem;
+    transition: all 0.25s ease;
   }
   .game-card:hover .launch-arrow {
     background: var(--primary);
-    color: #000;
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6);
+    color: #030712;
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.7);
+    border-color: var(--primary);
   }
 
   /* Cognitive Radar Chart (Spider Graph) */
   .radar-card {
-    background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.08) 0%, rgba(15, 23, 42, 0.8) 100%);
+    background: linear-gradient(170deg, rgba(8, 16, 32, 0.92) 0%, rgba(2, 6, 16, 0.96) 100%);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(0, 240, 255, 0.28);
     border-radius: 20px;
     padding: 1.8rem;
     margin-bottom: 2rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(56, 189, 248, 0.05);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8), inset 0 0 35px rgba(0, 240, 255, 0.04);
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .radar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    box-shadow: 0 0 10px var(--primary);
   }
   .radar-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
     padding-bottom: 1rem;
     flex-wrap: wrap;
     gap: 1rem;
@@ -708,6 +882,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
   }
   .radar-subtitle {
     font-size: 0.82rem;
@@ -715,12 +890,12 @@
     margin-top: 4px;
   }
   .brain-index-badge {
-    background: rgba(56, 189, 248, 0.12);
+    background: rgba(0, 240, 255, 0.08);
     border: 1px solid var(--primary);
     padding: 8px 16px;
     border-radius: 12px;
     text-align: right;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
   }
   .brain-index-label {
     display: block;
@@ -734,6 +909,7 @@
     font-weight: 900;
     color: #fff;
     font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
   }
 
   .radar-content {
@@ -807,20 +983,29 @@
     gap: 1.4rem;
   }
   .score-card, .settings-box {
-    background: var(--card-bg);
+    background: linear-gradient(170deg, rgba(8, 16, 32, 0.92) 0%, rgba(2, 6, 16, 0.96) 100%);
     backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(0, 240, 255, 0.22);
     border-radius: 18px;
     padding: 1.6rem;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     position: relative;
     overflow: hidden;
   }
+  .score-card::before, .settings-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.5), transparent);
+  }
   .score-card:hover { 
     transform: translateY(-4px); 
-    border-color: rgba(56, 189, 248, 0.3); 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    border-color: var(--primary); 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.85), 0 0 25px rgba(0, 240, 255, 0.25);
   }
   
   .score-card-header {
@@ -829,7 +1014,7 @@
     justify-content: space-between;
     margin-bottom: 1.1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
   }
   .score-card-title {
     font-size: 1.2rem;
@@ -894,15 +1079,15 @@
   .modal-overlay.active { display: flex; opacity: 1; }
   
   .modal-box {
-    background: #0d1324;
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.25);
+    background: linear-gradient(170deg, rgba(8, 16, 32, 0.96) 0%, rgba(2, 6, 16, 0.98) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 240, 255, 0.2);
     border-radius: 18px;
-    padding: 1.8rem 1.5rem;
+    padding: 1.8rem 1.6rem;
     width: 90vw;
-    max-width: 410px;
-    max-height: 85vh;
-    max-height: 85dvh;
+    max-width: 420px;
+    max-height: 88vh;
+    max-height: 88dvh;
     overflow-y: auto;
     margin: auto;
     text-align: center;
@@ -910,6 +1095,16 @@
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     box-sizing: border-box;
+  }
+  .modal-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    box-shadow: 0 0 12px var(--primary);
   }
   .modal-overlay.active .modal-box { transform: scale(1); }
   
@@ -933,21 +1128,39 @@
     gap: 8px;
     transition: all 0.2s ease;
     flex: 1;
+    letter-spacing: 0.5px;
   }
   .btn-modal:disabled { opacity: 0.65; cursor: not-allowed; filter: grayscale(0.5); }
-  .btn-launch { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4); }
-  .btn-launch:hover:not(:disabled) { background: #0ea5e9; box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6); transform: translateY(-2px); }
-  .btn-cancel { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
-  .btn-cancel:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); }
+  .btn-launch { 
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+    color: #030712; 
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); 
+    font-weight: 900;
+  }
+  .btn-launch:hover:not(:disabled) { 
+    background: linear-gradient(135deg, #7dd3fc, var(--primary)); 
+    box-shadow: 0 0 28px rgba(0, 240, 255, 0.7); 
+    transform: translateY(-2px); 
+  }
+  .btn-cancel { 
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    color: var(--text-muted); 
+  }
+  .btn-cancel:hover:not(:disabled) { 
+    background: rgba(255, 255, 255, 0.1); 
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
 
   .auth-form-group { text-align: left; margin-top: 1rem; }
   .auth-label {
     display: block;
     font-size: 0.74rem;
-    color: var(--text-muted);
+    color: var(--primary);
     margin-bottom: 0.35rem;
-    font-weight: 700;
-    letter-spacing: 0.8px;
+    font-weight: 800;
+    letter-spacing: 1px;
     text-transform: uppercase;
   }
   .auth-input {
@@ -955,8 +1168,8 @@
     height: 46px;
     min-height: 44px;
     padding: 0 1rem;
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    background: rgba(3, 7, 18, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.25);
     border-radius: 10px;
     color: var(--text-main);
     font-size: 16px !important; /* Critical: blocks iOS Safari auto-zoom */
@@ -966,8 +1179,8 @@
   }
   .auth-input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-    background: rgba(15, 23, 42, 1);
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
+    background: rgba(4, 10, 24, 0.95);
   }
 
   @keyframes bannerSlideIn {
@@ -1033,50 +1246,52 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: #000;
-    font-size: 0.72rem;
+    background: linear-gradient(135deg, #facc15 0%, #ca8a04 100%);
+    color: #030712;
+    font-size: 0.7rem;
     font-weight: 900;
     padding: 2px 7px;
     border-radius: 6px;
     letter-spacing: 0.5px;
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.45);
     margin-left: 6px;
     vertical-align: middle;
   }
   .player-rank-title {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #38bdf8;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--primary);
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-top: 2px;
+    letter-spacing: 1.2px;
+    margin-top: 3px;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
   }
   .profile-xp-box {
     width: 100%;
-    margin-top: 8px;
-    background: rgba(0, 0, 0, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 7px 9px;
+    margin-top: 10px;
+    background: rgba(3, 7, 18, 0.7);
+    border: 1px solid rgba(0, 240, 255, 0.18);
+    border-radius: 10px;
+    padding: 8px 10px;
     text-align: left;
   }
   .xp-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 0.68rem;
+    font-weight: 800;
     color: var(--text-muted);
+    letter-spacing: 0.8px;
     margin-bottom: 5px;
   }
   .xp-header-row .xp-val {
-    color: var(--accent);
-    font-weight: 800;
+    color: var(--primary);
+    font-weight: 900;
   }
   .xp-bar-track {
     width: 100%;
-    height: 7px;
+    height: 6px;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 999px;
     overflow: hidden;
@@ -1085,17 +1300,18 @@
   .xp-bar-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #22c55e, #38bdf8);
+    background: linear-gradient(90deg, #0284c7 0%, var(--primary) 100%);
     border-radius: 999px;
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
     transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .xp-subtext {
-    font-size: 0.64rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     margin-top: 4px;
     display: flex;
     justify-content: space-between;
+    font-weight: 700;
   }
 
   /* Header Level Pill (Desktop & Mobile) */
@@ -1103,14 +1319,15 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(245, 158, 11, 0.12);
-    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: rgba(250, 204, 21, 0.12);
+    border: 1px solid rgba(250, 204, 21, 0.4);
     color: #facc15;
     font-size: 0.75rem;
-    font-weight: 800;
-    padding: 4px 10px;
+    font-weight: 900;
+    padding: 4px 12px;
     border-radius: 999px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.25);
   }
 
   /* Navigation Lock Indicators */
@@ -1238,8 +1455,8 @@
 
   /* Player Level Spotlight Card in Brain Stats */
   .player-spotlight-card {
-    background: var(--card-bg);
-    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: linear-gradient(170deg, rgba(8, 16, 32, 0.92) 0%, rgba(2, 6, 16, 0.96) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.28);
     border-radius: 16px;
     padding: 1.4rem;
     margin-bottom: 1.5rem;
@@ -1247,22 +1464,35 @@
     align-items: center;
     gap: 1.4rem;
     flex-wrap: wrap;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 240, 255, 0.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .player-spotlight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    box-shadow: 0 0 8px var(--primary);
   }
   .spotlight-level-emblem {
     width: 68px;
     height: 68px;
     border-radius: 16px;
-    background: linear-gradient(135deg, #f59e0b, #b45309);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: #030712;
     font-weight: 900;
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
     flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
   .spotlight-level-emblem .emblem-lbl {
     font-size: 0.62rem;
@@ -1366,6 +1596,9 @@
 </head>
 <body>
 
+  <!-- Rising Cyber Laser Rays & Particle Floor Horizon Canvas -->
+  <canvas id="techRaysCanvas"></canvas>
+
   <!-- Universal Cyber-Scanner Wipe Transition -->
   <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
     <div class="cyber-wipe-beam"></div>
@@ -1416,15 +1649,18 @@
 
   <!-- =========================================================
        SIDEBAR & PROFILE STATE
-       ========================================================= -->
+       ========================================================= */
   <aside>
     <div class="brand" onclick="showPortal()">
-      GAME <span class="brand-badge">HUB</span>
+      <span class="brand-glyph">⬡</span> GAME <span class="brand-badge">CORE v3.5</span>
     </div>
 
     <div class="auth-widget" id="authWidget">
       <% if (isLoggedIn) { %>
-        <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
+        <div class="auth-avatar-wrap">
+          <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
+          <div class="auth-avatar-pulse"></div>
+        </div>
         <div class="auth-name">
           <%= currentUser %>
           <span class="profile-level-badge" id="profileLevelBadge">LVL 1</span>
@@ -1432,7 +1668,7 @@
         <div class="player-rank-title" id="profileRankTitle">Novice Thinker</div>
         <div class="profile-xp-box" id="profileXpBox">
           <div class="xp-header-row">
-            <span>XP PROGRESS</span>
+            <span>// XP PROGRESS</span>
             <span class="xp-val" id="profileXpText">0 / 200 XP</span>
           </div>
           <div class="xp-bar-track">
@@ -1443,36 +1679,40 @@
             <span id="profileXpRemaining">200 XP to next lvl</span>
           </div>
         </div>
-        <button class="btn-auth btn-logout" onclick="performLogout()" style="margin-top: 10px;">Log Out</button>
+        <button class="btn-auth btn-logout" onclick="performLogout()" style="margin-top: 12px;">
+          <span>⏻ DISCONNECT</span>
+        </button>
       <% } else { %>
-        <div class="auth-avatar" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">?</div>
+        <div class="auth-avatar-wrap">
+          <div class="auth-avatar" style="background: rgba(255,255,255,0.08); color: var(--text-muted); box-shadow: none; border-color: rgba(255,255,255,0.2);">?</div>
+        </div>
         <div class="auth-name" style="color: var(--text-muted);">
-          GUEST PLAYER
+          GUEST OPERATIVE
           <span class="profile-level-badge" style="background: rgba(255,255,255,0.1); color: var(--text-muted); box-shadow: none;">LVL 0</span>
         </div>
-        <div class="auth-role" style="color: var(--warning); margin-top: 4px;">PLAYING AS GUEST</div>
-        <div style="font-size: 0.72rem; color: var(--text-muted); margin: 6px 0;">Log in to earn XP & unlock levels</div>
-        <div style="display: flex; gap: 6px; width: 100%; margin-top: 4px;">
-          <button class="btn-auth btn-login" onclick="openLoginModal()" style="flex: 1;">Log In</button>
-          <button class="btn-auth btn-signup" onclick="openSignupModal()" style="flex: 1; background: var(--accent); color: #000; font-weight: 800;">Sign Up</button>
+        <div class="auth-role" style="color: var(--warning); margin-top: 4px;">UNREGISTERED GUEST</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin: 6px 0;">Sign in to earn XP & save stats</div>
+        <div style="display: flex; gap: 6px; width: 100%; margin-top: 6px;">
+          <button class="btn-auth btn-login" onclick="openLoginModal()" style="flex: 1; padding: 0.5rem;">Log In</button>
+          <button class="btn-auth btn-signup" onclick="openSignupModal()" style="flex: 1; padding: 0.5rem; background: var(--accent); color: #030712; font-weight: 800;">Sign Up</button>
         </div>
       <% } %>
     </div>
 
     <nav>
       <button class="nav-btn active" onclick="switchTab('library', this)">
-        <span style="font-size: 1.2rem;">🎮</span>
+        <span style="font-size: 1.15rem; color: var(--primary);">⬡</span>
         <span>Games</span>
       </button>
       <button class="nav-btn" onclick="switchTab('scores', this)" id="navBtnScores">
-        <span style="font-size: 1.2rem;">🧠</span>
+        <span style="font-size: 1.15rem; color: #a855f7;">◈</span>
         <span>Brain Stats</span>
         <% if (!isLoggedIn) { %>
           <span class="nav-lock-badge" id="navLockScores">🔒</span>
         <% } %>
       </button>
       <button class="nav-btn" onclick="switchTab('settings', this)" id="navBtnSettings">
-        <span style="font-size: 1.2rem;" id="navSettingsIcon"><%= isLoggedIn ? "⚙️" : "🔒" %></span>
+        <span style="font-size: 1.15rem;" id="navSettingsIcon"><%= isLoggedIn ? "⚙️" : "🔒" %></span>
         <span id="navSettingsText"><%= isLoggedIn ? "Settings" : "Settings (Locked)" %></span>
       </button>
     </nav>
@@ -1488,15 +1728,15 @@
   <main>
     <div class="top-meta">
       <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-        <h2 id="viewTitle">Games</h2>
+        <h2 id="viewTitle">GAMES GALLERY</h2>
         <div class="meta-level-pill" id="metaLevelPill" style="display: <%= isLoggedIn ? "inline-flex" : "none" %>;">
           <span>⭐</span>
           <span id="metaLevelText">LVL 1</span>
-          <span style="color: var(--text-muted);">•</span>
+          <span style="color: rgba(250, 204, 21, 0.4);">•</span>
           <span id="metaXpText">0 XP</span>
         </div>
       </div>
-      <div class="sys-status">Online</div>
+      <div class="sys-status">System Online</div>
     </div>
 
     <!-- VIEW 1: GAME LIBRARY CAROUSEL -->
@@ -1510,13 +1750,13 @@
         
         <!-- Game 1: Defusal Protocol -->
         <div class="game-card" style="animation-delay: 0.05s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol // Crisis Sim', 'Multi-module bomb defusal sim featuring Data Serpent, Reactor Matrix, Firewall Maze, Banana Wires, and Frequency Tuner with a 3-charge containment system.')">
-          <div class="card-banner banner-bomb">☢️</div>
+          <div class="card-banner banner-bomb"><span class="banner-icon">☢️</span></div>
           <div class="card-body">
-            <div class="card-tag">Tactical Sim v3.0</div>
+            <div class="card-tag">// Tactical Sim v3.0</div>
             <div class="card-title">Defusal Protocol</div>
             <div class="card-desc">Disarm 5 tactical mini-games (Snake, Reactor, Maze, Banana Wires, Freq Tuner) under a 3-minute clock with 3 containment charges.</div>
             <div class="card-footer">
-              <div class="card-score-preview">Top: <span id="preview-defuse">0 pts</span></div>
+              <div class="card-score-preview">Record: <span id="preview-defuse">0 pts</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
@@ -1524,9 +1764,9 @@
 
         <!-- Game 2: Cyber Chess -->
         <div class="game-card" style="animation-delay: 0.1s;" onclick="openLaunchModal('Chess/index.jsp', 'Cyber Chess', 'Experience grandmaster AI chess with Stockfish depth evaluation, move history analysis, and dynamic tactical rating.')">
-          <div class="card-banner banner-chess">♟️</div>
+          <div class="card-banner banner-chess"><span class="banner-icon">♟️</span></div>
           <div class="card-body">
-            <div class="card-tag">AI Strategy</div>
+            <div class="card-tag">// AI Strategy</div>
             <div class="card-title">Cyber Chess</div>
             <div class="card-desc">Challenge deep neural chess engines with move evaluation, rating progression, and PGN game export.</div>
             <div class="card-footer">
@@ -1538,9 +1778,9 @@
 
         <!-- Game 3: Cyber Snake -->
         <div class="game-card" style="animation-delay: 0.15s;" onclick="openLaunchModal('Snake/index.jsp', 'Cyber Snake', 'Steer your serpent through the cyber grid, devour rogue data packets, and breach node high scores.')">
-          <div class="card-banner banner-snake">🐍</div>
+          <div class="card-banner banner-snake"><span class="banner-icon">🐍</span></div>
           <div class="card-body">
-            <div class="card-tag">Arcade Classic</div>
+            <div class="card-tag">// Arcade Classic</div>
             <div class="card-title">Cyber Snake</div>
             <div class="card-desc">Balanced, fluid snake arcade experience with adjustable tick clocks, touch D-pads, and node tracking.</div>
             <div class="card-footer">
@@ -1552,9 +1792,9 @@
 
         <!-- Game 4: Cyber Maze -->
         <div class="game-card" style="animation-delay: 0.2s;" onclick="openLaunchModal('Maze/index.jsp', 'Cyber Maze Runner', 'Solve procedurally generated labyrinth nodes with recursive backtracking algorithms and locate extraction portals.')">
-          <div class="card-banner banner-maze">⚡</div>
+          <div class="card-banner banner-maze"><span class="banner-icon">⚡</span></div>
           <div class="card-body">
-            <div class="card-tag">Procedural Puzzle</div>
+            <div class="card-tag">// Procedural Labyrinth</div>
             <div class="card-title">Cyber Maze</div>
             <div class="card-desc">Navigate randomized labyrinth architectures and locate extraction gates before system telemetry resets.</div>
             <div class="card-footer">
@@ -1566,9 +1806,9 @@
 
         <!-- Game 5: Number Guesser -->
         <div class="game-card" style="animation-delay: 0.25s;" onclick="openLaunchModal('Game1/index.jsp', 'Cipher Guesser', 'Crack the secret integer generated by the server session in minimal probe attempts.')">
-          <div class="card-banner banner-guesser">🔢</div>
+          <div class="card-banner banner-guesser"><span class="banner-icon">🔢</span></div>
           <div class="card-body">
-            <div class="card-tag">Session Puzzle</div>
+            <div class="card-tag">// Quantum Decryption</div>
             <div class="card-title">Cipher Guesser</div>
             <div class="card-desc">Crack the server-side encrypted integer between 1 and 100 in minimal probe iterations.</div>
             <div class="card-footer">
@@ -1580,25 +1820,13 @@
 
         <!-- Game 6: Reactor Meltdown -->
         <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Reactor_Meltdown/index.jsp', 'Reactor Meltdown', 'Progressive core memory puzzle inspired by Among Us. Replicate randomized glowing tile sequences under a 20s tension timer (+3s per clear) before containment collapses.')">
-          <div class="card-banner banner-reactor">☢️</div>
+          <div class="card-banner banner-reactor"><span class="banner-icon">☢️</span></div>
           <div class="card-body">
-            <div class="card-tag">Core Memory</div>
+            <div class="card-tag">// Core Memory</div>
             <div class="card-title">Reactor Meltdown</div>
             <div class="card-desc">Replicate glowing reactor sequences under a 20s timer. Clear stages to expand from 3x3 to 4x4 matrix.</div>
             <div class="card-footer">
               <div class="card-score-preview">Record: <span id="preview-reactor">0 pts</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        <!-- Game 7: RANS0M Crisis -->
-        <div class="game-card" style="animation-delay: 0.35s;" onclick="openLaunchModal('Ransom/index.jsp', 'RANS0M // Cyber Threat Simulator', 'Simulated desktop ransomware infection. Purge virus popup swarms, decipher the override key, and halt the system purge.')">
-          <div class="card-banner" style="background: linear-gradient(135deg, #450a0a, #dc2626); font-size: 38px;">🛑</div>
-          <div class="card-body">
-            <div class="card-tag">Crisis Sim</div>
-            <div class="card-title">RANS0M</div>
-            <div class="card-desc">Fight off a desktop ransomware attack: close malicious popups, track clues, and decrypt the cipher before the purge timer reaches zero.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Top: <span id="preview-ransom">0 pts</span></div>
               <div class="launch-arrow">➔</div>
             </div>
           </div>
@@ -1966,23 +2194,39 @@
             </button>
           </div>
 
-          <!-- RANS0M ENTITY CHALLENGE (HORROR EXPERIENCE) -->
-          <div class="settings-row" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.35); border-left: 4px solid var(--danger); padding: 14px 16px; border-radius: 10px; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
-            <div style="flex: 1; min-width: 240px; padding-right: 12px;">
-              <div style="font-weight: 700; color: #f87171; display: flex; align-items: center; gap: 8px;">
-                <span>☣</span> RANS0M Entity Challenge <span style="font-size: 0.68rem; background: #b91c1c; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800;">HORROR</span>
+          <!-- RANS0M ENTITY CHALLENGE & SIMULATOR (GAME INSIDE SETTINGS) -->
+          <div class="settings-row" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1px solid rgba(239, 68, 68, 0.4); border-left: 4px solid var(--danger); padding: 16px; border-radius: 12px; margin-top: 14px; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <div style="font-weight: 800; color: #f87171; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                <span>☣</span> RANS0M // Cyber Threat Simulator
+                <span style="font-size: 0.65rem; background: #b91c1c; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 900; letter-spacing: 0.5px;">HORROR MINIGAME</span>
               </div>
-              <div style="font-size: 0.8rem; color: #fca5a5; margin-top: 4px; line-height: 1.45;">
-                Hostile ransomware entity flashes a <strong style="color: #fff;">STOP SIGN</strong> (10-30s). <strong style="color: #fff;">FREEZE! DO NOT MAKE ANY INPUT!</strong> Any input triggers an instant jumpscare, a moving 10s countdown box, and relocating tokens!
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.72rem; color: #fca5a5; font-weight: 700;">Horror Intrusion:</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggleRansomHorror" onchange="toggleRansomHorrorMode(this)">
+                  <span class="slider"></span>
+                </label>
               </div>
-              <button type="button" class="btn-modal btn-cancel" style="flex: initial; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; font-size: 0.74rem; border-color: rgba(239, 68, 68, 0.45); color: #fca5a5; margin-top: 8px; border-radius: 4px;" onclick="openRansomInstructionModal()">
-                📜 View Threat Dossier
-              </button>
             </div>
-            <label class="switch" style="align-self: center;">
-              <input type="checkbox" id="toggleRansomHorror" onchange="toggleRansomHorrorMode(this)">
-              <span class="slider"></span>
-            </label>
+
+            <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.5;">
+              Simulated ransomware crisis minigame. When armed, a flashing <strong style="color: #fff;">STOP SIGN</strong> appears randomly during gameplay (10-30s). <strong style="color: #ef4444;">FREEZE! ANY INPUT TRIGGERS AN ATTACK!</strong> Or launch the standalone Crisis Simulation to decrypt popups and recover encrypted files before the purge timer reaches zero.
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px dashed rgba(239, 68, 68, 0.25); flex-wrap: wrap; gap: 10px;">
+              <div style="font-size: 0.78rem; color: var(--text-muted);">
+                Containment Record: <strong id="statRansomBestSettings" style="color: #f87171; font-size: 0.92rem; margin-left: 4px;">0 pts</strong>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn-modal btn-cancel" style="flex: initial; padding: 6px 12px; font-size: 0.75rem; border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;" onclick="openRansomInstructionModal()">
+                  📜 Threat Dossier
+                </button>
+                <button type="button" class="btn-modal btn-launch" style="flex: initial; padding: 6px 14px; font-size: 0.75rem; background: linear-gradient(135deg, #ef4444, #991b1b); color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);" onclick="openLaunchModal('Ransom/index.jsp', 'RANS0M // Cyber Threat Simulator', 'Simulated desktop ransomware infection. Purge virus popup swarms, decipher the override key, and halt the system purge.')">
+                  ▶ Play Crisis Sim
+                </button>
+              </div>
+            </div>
           </div>
           
           <button class="btn-modal btn-cancel" onclick="resetLocalCache()" style="margin-top: 2rem; width:100%; color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.35);">
@@ -2066,11 +2310,12 @@
        ========================================================= -->
   <div class="modal-overlay" id="launchModal">
     <div class="modal-box">
-      <h2 id="modalTitle" style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Ready to Play?</h2>
-      <p id="modalDesc" style="color:var(--text-muted); font-size:0.92rem; margin-top:0.8rem; line-height: 1.6;"></p>
+      <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--primary); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">[ MISSION BRIEFING // INITIALIZE PROTOCOL ]</div>
+      <h2 id="modalTitle" style="color: #fff; font-weight: 900; letter-spacing: 1px; font-size: 1.45rem;">Ready to Play?</h2>
+      <p id="modalDesc" style="color:var(--text-muted); font-size:0.88rem; margin-top:0.8rem; line-height: 1.6;"></p>
       <div class="modal-actions">
-        <button class="btn-modal btn-cancel" onclick="closeModal('launchModal')">Back</button>
-        <button class="btn-modal btn-launch" id="confirmLaunchBtn">▶ Play Now</button>
+        <button class="btn-modal btn-cancel" onclick="closeModal('launchModal')">✕ ABORT</button>
+        <button class="btn-modal btn-launch" id="confirmLaunchBtn">▶ ENGAGE SIM</button>
       </div>
     </div>
   </div>
@@ -2080,30 +2325,31 @@
        ========================================================= -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
-      <h2 style="color: var(--primary); font-weight: 900; letter-spacing: 1px;">Log In</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Welcome back! Log in to save your brain stats.</p>
+      <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--primary); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">[ OPERATIVE AUTHENTICATION ]</div>
+      <h2 style="color: #fff; font-weight: 900; letter-spacing: 1.5px; font-size: 1.5rem;">ACCESS TERMINAL</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.35rem;">Enter callsign and security cipher to synchronize telemetry.</p>
 
       <div class="auth-msg" id="loginMsg"></div>
 
       <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
         <div class="auth-form-group">
-          <label class="auth-label" for="loginUsername">Username</label>
-          <input type="text" class="auth-input" id="loginUsername" placeholder="Enter your username" autocomplete="username" required>
+          <label class="auth-label" for="loginUsername">Operative Callsign</label>
+          <input type="text" class="auth-input" id="loginUsername" placeholder="Enter your callsign" autocomplete="username" required>
         </div>
         <div class="auth-form-group">
-          <label class="auth-label" for="loginPassword">Password</label>
+          <label class="auth-label" for="loginPassword">Security Cipher</label>
           <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn-modal btn-cancel" onclick="closeModal('loginModal')">Cancel</button>
+          <button type="button" class="btn-modal btn-cancel" onclick="closeModal('loginModal')">✕ ABORT</button>
           <button type="submit" class="btn-modal btn-launch" id="loginSubmitBtn">
-            <span id="loginBtnText">Log In</span>
+            <span id="loginBtnText">⚡ AUTHENTICATE</span>
           </button>
         </div>
       </form>
 
-      <span class="switch-auth-link" onclick="openSignupModal()">Don't have an account? Sign up here</span>
+      <span class="switch-auth-link" onclick="openSignupModal()">New Operative? Enlist profile credentials</span>
     </div>
   </div>
 
@@ -2112,34 +2358,35 @@
        ========================================================= -->
   <div class="modal-overlay" id="signupModal">
     <div class="modal-box">
-      <h2 style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">Sign Up</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">Create a free account to track your progress</p>
+      <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--accent); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">[ OPERATIVE ENLISTMENT ]</div>
+      <h2 style="color: #fff; font-weight: 900; letter-spacing: 1.5px; font-size: 1.5rem;">NEW PROFILE</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.35rem;">Register a permanent operative callsign to track XP and rank.</p>
 
       <div class="auth-msg" id="signupMsg"></div>
 
       <form id="signupForm" onsubmit="event.preventDefault(); submitSignup();">
         <div class="auth-form-group">
-          <label class="auth-label" for="signupUsername">Choose Username [3-20 Letters/Numbers]</label>
+          <label class="auth-label" for="signupUsername">Operative Callsign [3-20 Letters/Numbers]</label>
           <input type="text" class="auth-input" id="signupUsername" placeholder="e.g. BrainMaster" autocomplete="username" required>
         </div>
         <div class="auth-form-group">
-          <label class="auth-label" for="signupPassword">Password [Min 6 Chars]</label>
+          <label class="auth-label" for="signupPassword">Security Cipher [Min 6 Chars]</label>
           <input type="password" class="auth-input" id="signupPassword" placeholder="••••••••" autocomplete="new-password" required>
         </div>
         <div class="auth-form-group">
-          <label class="auth-label" for="signupPasswordConfirm">Confirm Password</label>
+          <label class="auth-label" for="signupPasswordConfirm">Confirm Security Cipher</label>
           <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="••••••••" autocomplete="new-password" required>
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn-modal btn-cancel" onclick="closeModal('signupModal')">Cancel</button>
-          <button type="submit" class="btn-modal btn-launch" id="signupSubmitBtn" style="background:var(--accent); color: #000; box-shadow:0 0 15px rgba(34,197,94,0.4);">
-            <span id="signupBtnText">Create Account</span>
+          <button type="button" class="btn-modal btn-cancel" onclick="closeModal('signupModal')">✕ ABORT</button>
+          <button type="submit" class="btn-modal btn-launch" id="signupSubmitBtn" style="background: linear-gradient(135deg, var(--accent), #059669); color: #030712; box-shadow: 0 0 20px rgba(16, 230, 168, 0.4);">
+            <span id="signupBtnText">⚡ ENLIST PROFILE</span>
           </button>
         </div>
       </form>
 
-      <span class="switch-auth-link" onclick="openLoginModal()">Already have an account? Log in</span>
+      <span class="switch-auth-link" onclick="openLoginModal()">Existing Operative? Access terminal</span>
     </div>
   </div>
 
@@ -2149,24 +2396,71 @@
   let targetUrl = '';
 
   // =========================================================
+  // ACCOUNT BOUNDARY & TELEMETRY ISOLATION ENGINE
+  // Authoritative verified scores cache populated strictly from the cloud database
+  let verifiedCloudScores = {
+    snake: 0,
+    defuse: 0,
+    chessRating: 1200,
+    chessWins: 0,
+    chessPlayed: false,
+    reactor: 0,
+    maze: 0,
+    guess: 0,
+    ransom: 0
+  };
+  let scoresFetchedFromCloud = false;
+
+  // =========================================================
+  function enforceAccountBoundary(user) {
+    const current = (user !== undefined && user !== null) ? user.trim() : '';
+    const stored = localStorage.getItem('hub_active_user') || '';
+    
+    if (stored !== current || !current) {
+      // Identity switch or guest detected: purge cached telemetry
+      localStorage.clear();
+      if (current) {
+        localStorage.setItem('hub_active_user', current);
+      }
+      verifiedCloudScores = {
+        snake: 0,
+        defuse: 0,
+        chessRating: 1200,
+        chessWins: 0,
+        chessPlayed: false,
+        reactor: 0,
+        maze: 0,
+        guess: 0,
+        ransom: 0
+      };
+      scoresFetchedFromCloud = false;
+    }
+  }
+
+  // =========================================================
   // DISCORD & GOOGLE PLAY GAMES ACCOUNT LEVELING ENGINE
   // =========================================================
   function calculateTotalXP() {
-    const defuseBest = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
-    const chessWins = parseFloat(localStorage.getItem('hub_chess_wins') || '0');
-    const chessRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
-    const snakeBest = parseFloat(localStorage.getItem('hub_snake_high') || '0');
-    const mazeClears = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
-    const reactorBest = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
+    if (!isUserLoggedIn) return 0;
+    if (!scoresFetchedFromCloud) return 0;
 
-    // Progressive XP breakdown
+    const defuseBest = verifiedCloudScores.defuse || 0;
+    const snakeBest = verifiedCloudScores.snake || 0;
+    const mazeClears = verifiedCloudScores.maze || 0;
+    const reactorBest = verifiedCloudScores.reactor || 0;
+    const ransomBest = verifiedCloudScores.ransom || 0;
+    const chessWins = verifiedCloudScores.chessPlayed ? (verifiedCloudScores.chessWins || 0) : 0;
+    const chessRating = verifiedCloudScores.chessPlayed ? (verifiedCloudScores.chessRating || 1200) : 1200;
+
+    // Progressive XP breakdown (strictly 0 if games never played)
     const xpReactor = Math.round(reactorBest * 2);
     const xpDefuse = Math.round(defuseBest * 2);
     const xpSnake = Math.round(snakeBest * 5);
     const xpMaze = Math.round(mazeClears * 100);
-    const xpChess = Math.round(chessWins * 150 + Math.max(0, chessRating - 1200) * 2);
+    const xpChess = verifiedCloudScores.chessPlayed ? Math.round(chessWins * 150 + Math.max(0, chessRating - 1200) * 2) : 0;
+    const xpRansom = Math.round(ransomBest * 3);
 
-    return xpReactor + xpDefuse + xpSnake + xpMaze + xpChess;
+    return xpReactor + xpDefuse + xpSnake + xpMaze + xpChess + xpRansom;
   }
 
   function getLevelData(totalXp) {
@@ -2457,6 +2751,7 @@
 
       if (data.status === 'success' || data.success) {
         setBanner('loginMsg', 'success', 'Welcome back! Entering Game Hub...');
+        enforceAccountBoundary(u);
         setTimeout(() => {
           closeModal('loginModal');
           triggerDoorTransition(u.toUpperCase(), 'LOGGED IN // WELCOME BACK', () => {
@@ -2466,12 +2761,12 @@
       } else {
         setBanner('loginMsg', 'error', data.message || 'Invalid username or password.');
         btn.disabled = false;
-        btnText.innerText = 'Log In';
+        btnText.innerText = '⚡ AUTHENTICATE';
       }
     } catch (netErr) {
       setBanner('loginMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
       btn.disabled = false;
-      btnText.innerText = 'Log In';
+      btnText.innerText = '⚡ AUTHENTICATE';
     }
   }
 
@@ -2496,7 +2791,7 @@
     }
 
     btn.disabled = true;
-    btnText.innerHTML = '<span class="spinner"></span> Creating Account...';
+    btnText.innerHTML = '<span class="spinner"></span> Enlisting Profile...';
 
     try {
       const res = await fetch('register.jsp', {
@@ -2513,12 +2808,13 @@
       } catch (jsonErr) {
         setBanner('signupMsg', 'error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
         btn.disabled = false;
-        btnText.innerText = 'Sign Up';
+        btnText.innerText = '⚡ ENLIST PROFILE';
         return;
       }
 
       if (data.status === 'success' || data.success) {
-        setBanner('signupMsg', 'success', 'Account created! Entering Game Hub...');
+        setBanner('signupMsg', 'success', 'Profile enlisted! Entering Game Hub...');
+        enforceAccountBoundary(u);
         setTimeout(() => {
           closeModal('signupModal');
           triggerDoorTransition(u.toUpperCase(), 'ACCOUNT READY // WELCOME', () => {
@@ -2528,17 +2824,18 @@
       } else {
         setBanner('signupMsg', 'error', data.message || 'Registration failed.');
         btn.disabled = false;
-        btnText.innerText = 'Sign Up';
+        btnText.innerText = '⚡ ENLIST PROFILE';
       }
     } catch (netErr) {
       setBanner('signupMsg', 'error', 'Gateway unreachable. Verify connection or wait if Render is waking up.');
       btn.disabled = false;
-      btnText.innerText = 'Sign Up';
+      btnText.innerText = '⚡ ENLIST PROFILE';
     }
   }
 
   async function performLogout() {
     sessionStorage.removeItem('hub_portal_passed');
+    enforceAccountBoundary('');
     try {
       await fetch('logout.jsp', { headers: { 'Accept': 'application/json' } });
       window.location.reload();
@@ -2558,10 +2855,15 @@
         currentUsername = data.username || data.user_session;
         const u = currentUsername;
 
+        enforceAccountBoundary(u);
+
         const widget = document.getElementById('authWidget');
         if (widget) {
           widget.innerHTML = `
-            <div class="auth-avatar">${u.substring(0, 1).toUpperCase()}</div>
+            <div class="auth-avatar-wrap">
+              <div class="auth-avatar">${u.substring(0, 1).toUpperCase()}</div>
+              <div class="auth-avatar-pulse"></div>
+            </div>
             <div class="auth-name">
               ${u}
               <span class="profile-level-badge" id="profileLevelBadge">LVL 1</span>
@@ -2569,7 +2871,7 @@
             <div class="player-rank-title" id="profileRankTitle">Novice Thinker</div>
             <div class="profile-xp-box" id="profileXpBox">
               <div class="xp-header-row">
-                <span>XP PROGRESS</span>
+                <span>// XP PROGRESS</span>
                 <span class="xp-val" id="profileXpText">0 / 200 XP</span>
               </div>
               <div class="xp-bar-track">
@@ -2580,7 +2882,9 @@
                 <span id="profileXpRemaining">200 XP to next lvl</span>
               </div>
             </div>
-            <button class="btn-auth btn-logout" onclick="performLogout()" style="margin-top: 10px;">Log Out</button>
+            <button class="btn-auth btn-logout" onclick="performLogout()" style="margin-top: 12px;">
+              <span>⏻ DISCONNECT</span>
+            </button>
           `;
         }
 
@@ -2610,11 +2914,13 @@
 
   // --- MULTI-GAME TELEMETRY SYNC ---
   async function syncCloudScores() {
+    const isGuest = !isUserLoggedIn;
+
     // 1. Defusal Protocol Metrics
-    const localDefuse = localStorage.getItem('hub_defuse_high') || '0';
-    const localDefuseLvl = localStorage.getItem('hub_defuse_level') || '1';
-    const localDefuseDisarms = localStorage.getItem('hub_defuse_disarms') || '0';
-    const localDefuseStrikes = localStorage.getItem('hub_defuse_strikes_avoided') || '0';
+    const localDefuse = isGuest ? (localStorage.getItem('hub_defuse_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.defuse || 0) : '0');
+    const localDefuseLvl = isGuest ? (localStorage.getItem('hub_defuse_level') || '1') : '1';
+    const localDefuseDisarms = isGuest ? (localStorage.getItem('hub_defuse_disarms') || '0') : '0';
+    const localDefuseStrikes = isGuest ? (localStorage.getItem('hub_defuse_strikes_avoided') || '0') : '0';
 
     const pDefuse = document.getElementById('preview-defuse');
     const sDefuseBest = document.getElementById('statDefuseBest');
@@ -2629,9 +2935,9 @@
     if (sDefuseStrikes) sDefuseStrikes.innerText = localDefuseStrikes;
 
     // 2. Cyber Chess Metrics
-    const localChessRating = localStorage.getItem('hub_chess_rating') || '1200';
-    const localChessWins = parseInt(localStorage.getItem('hub_chess_wins') || '0', 10);
-    const localChessLosses = parseInt(localStorage.getItem('hub_chess_losses') || '0', 10);
+    const localChessRating = isGuest ? (localStorage.getItem('hub_chess_rating') || '1200') : (scoresFetchedFromCloud ? (verifiedCloudScores.chessPlayed ? verifiedCloudScores.chessRating : '1200 (Unranked)') : '1200 (Unranked)');
+    const localChessWins = isGuest ? parseInt(localStorage.getItem('hub_chess_wins') || '0', 10) : (scoresFetchedFromCloud ? verifiedCloudScores.chessWins : 0);
+    const localChessLosses = isGuest ? parseInt(localStorage.getItem('hub_chess_losses') || '0', 10) : 0;
     const totalMatches = localChessWins + localChessLosses;
     const winRatio = totalMatches > 0 ? Math.round((localChessWins / totalMatches) * 100) : 0;
 
@@ -2648,8 +2954,8 @@
     if (sChessRatio) sChessRatio.innerText = winRatio + '%';
 
     // 3. Cyber Snake Metrics
-    const localSnake = localStorage.getItem('hub_snake_high') || '0';
-    const localSnakeNodes = localStorage.getItem('hub_snake_nodes') || '0';
+    const localSnake = isGuest ? (localStorage.getItem('hub_snake_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.snake || 0) : '0');
+    const localSnakeNodes = isGuest ? (localStorage.getItem('hub_snake_nodes') || '0') : '0';
 
     const pSnake = document.getElementById('preview-snake');
     const sSnakeBest = document.getElementById('statSnakeBest');
@@ -2660,8 +2966,8 @@
     if (sSnakeNodes) sSnakeNodes.innerText = localSnakeNodes;
 
     // 4. Cyber Maze Metrics
-    const localMazeClears = localStorage.getItem('hub_maze_clears') || '0';
-    const localMazeBestTime = localStorage.getItem('hub_maze_best_time') || '0';
+    const localMazeClears = isGuest ? (localStorage.getItem('hub_maze_clears') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.maze || 0) : '0');
+    const localMazeBestTime = isGuest ? (localStorage.getItem('hub_maze_best_time') || '0') : '0';
 
     const pMaze = document.getElementById('preview-maze');
     const sMazeClears = document.getElementById('statMazeClears');
@@ -2672,7 +2978,7 @@
     if (sMazeBestTime) sMazeBestTime.innerText = localMazeBestTime > 0 ? localMazeBestTime + 's' : '--';
 
     // 5. Cipher Guesser Metrics
-    const localGuess = localStorage.getItem('hub_guess_best') || '--';
+    const localGuess = isGuest ? (localStorage.getItem('hub_guess_best') || '--') : (scoresFetchedFromCloud ? ((verifiedCloudScores.guess > 0) ? verifiedCloudScores.guess : '--') : '--');
     const pGuess = document.getElementById('preview-guess');
     const sGuessBest = document.getElementById('statGuessBest');
 
@@ -2680,8 +2986,8 @@
     if (sGuessBest) sGuessBest.innerText = (localGuess !== '--') ? localGuess + ' tries' : '--';
 
     // 6. Reactor Meltdown Metrics
-    const localReactor = localStorage.getItem('hub_reactor_high') || '0';
-    const localReactorStage = localStorage.getItem('hub_reactor_stage') || 'Sector 1';
+    const localReactor = isGuest ? (localStorage.getItem('hub_reactor_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.reactor || 0) : '0');
+    const localReactorStage = isGuest ? (localStorage.getItem('hub_reactor_stage') || 'Sector 1') : 'Sector 1';
 
     const pReactor = document.getElementById('preview-reactor');
     const sReactorBest = document.getElementById('statReactorBest');
@@ -2691,42 +2997,88 @@
     if (sReactorBest) sReactorBest.innerText = localReactor + ' pts';
     if (sReactorStage) sReactorStage.innerText = localReactorStage;
 
+    // 7. RANS0M Crisis Metrics (Inside Settings)
+    const localRansom = isGuest ? (localStorage.getItem('hub_ransom_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.ransom || 0) : '0');
+    const sRansomSettings = document.getElementById('statRansomBestSettings');
+    if (sRansomSettings) sRansomSettings.innerText = localRansom + ' pts';
+
     // Query Database High Scores & Global Leaderboards
     try {
       const res = await fetch('get_scores.jsp');
       if (res.ok) {
         const data = await res.json();
-        if (data.userScores) {
-          if (data.userScores.snake !== undefined) {
-            const dbSnake = data.userScores.snake;
-            if (pSnake) pSnake.innerText = dbSnake + ' pts';
-            if (sSnakeBest) sSnakeBest.innerText = dbSnake + ' pts';
-            localStorage.setItem('hub_snake_high', dbSnake);
+        if (data && data.userScores && isUserLoggedIn) {
+          const uScores = data.userScores;
+
+          // Database is authoritative for logged-in accounts (defaulting unplayed to 0)
+          const dbSnake = uScores.snake !== undefined ? Number(uScores.snake) : 0;
+          const dbDefuse = uScores.bomb_defuse !== undefined ? Number(uScores.bomb_defuse) : 0;
+          const dbReactor = uScores.reactor_meltdown !== undefined ? Number(uScores.reactor_meltdown) : 0;
+          const dbMaze = (uScores.maze !== undefined) ? Number(uScores.maze) : ((uScores.cyber_maze !== undefined) ? Number(uScores.cyber_maze) : 0);
+          const dbGuess = (uScores.number_guess !== undefined) ? Number(uScores.number_guess) : ((uScores.guess !== undefined) ? Number(uScores.guess) : 0);
+          const dbRansom = uScores.ransom !== undefined ? Number(uScores.ransom) : 0;
+
+          verifiedCloudScores.snake = dbSnake;
+          verifiedCloudScores.defuse = dbDefuse;
+          verifiedCloudScores.reactor = dbReactor;
+          verifiedCloudScores.maze = dbMaze;
+          verifiedCloudScores.guess = dbGuess;
+          verifiedCloudScores.ransom = dbRansom;
+
+          if (uScores.chess !== undefined) {
+            verifiedCloudScores.chessRating = Number(uScores.chess);
+            verifiedCloudScores.chessPlayed = true;
+            verifiedCloudScores.chessWins = Math.max(0, Math.floor((verifiedCloudScores.chessRating - 1200) / 25));
+          } else {
+            verifiedCloudScores.chessRating = 1200;
+            verifiedCloudScores.chessPlayed = false;
+            verifiedCloudScores.chessWins = 0;
           }
-          if (data.userScores.bomb_defuse !== undefined) {
-            const dbDefuse = data.userScores.bomb_defuse;
-            if (pDefuse) pDefuse.innerText = dbDefuse + ' pts';
-            if (sDefuseBest) sDefuseBest.innerText = dbDefuse + ' pts';
-            localStorage.setItem('hub_defuse_high', dbDefuse);
+
+          scoresFetchedFromCloud = true;
+
+          // Store verified values in localStorage
+          localStorage.setItem('hub_snake_high', dbSnake);
+          localStorage.setItem('hub_defuse_high', dbDefuse);
+          localStorage.setItem('hub_chess_rating', verifiedCloudScores.chessRating);
+          localStorage.setItem('hub_chess_wins', verifiedCloudScores.chessWins);
+          localStorage.setItem('hub_reactor_high', dbReactor);
+          localStorage.setItem('hub_maze_clears', dbMaze);
+          localStorage.setItem('hub_ransom_high', dbRansom);
+          if (dbGuess > 0) {
+            localStorage.setItem('hub_guess_best', dbGuess);
+          } else {
+            localStorage.removeItem('hub_guess_best');
           }
-          if (data.userScores.chess !== undefined) {
-            const dbChess = data.userScores.chess;
-            if (pChess) pChess.innerText = dbChess;
-            if (sChessRating) sChessRating.innerText = dbChess;
-            localStorage.setItem('hub_chess_rating', dbChess);
-          }
-          if (data.userScores.reactor_meltdown !== undefined) {
-            const dbReactor = data.userScores.reactor_meltdown;
-            if (pReactor) pReactor.innerText = dbReactor + ' pts';
-            if (sReactorBest) sReactorBest.innerText = dbReactor + ' pts';
-            localStorage.setItem('hub_reactor_high', dbReactor);
-          }
+
+          // Authoritative DOM updates for carousel cards
+          if (pSnake) pSnake.innerText = dbSnake + ' pts';
+          if (pDefuse) pDefuse.innerText = dbDefuse + ' pts';
+          if (pChess) pChess.innerText = verifiedCloudScores.chessPlayed ? verifiedCloudScores.chessRating : '1200 (Unranked)';
+          if (pReactor) pReactor.innerText = dbReactor + ' pts';
+          if (pMaze) pMaze.innerText = dbMaze;
+          if (pGuess) pGuess.innerText = (dbGuess > 0) ? dbGuess + ' tries' : '--';
+
+          // Authoritative DOM updates for stats view & settings
+          if (sSnakeBest) sSnakeBest.innerText = dbSnake + ' pts';
+          if (sDefuseBest) sDefuseBest.innerText = dbDefuse + ' pts';
+          if (sChessRating) sChessRating.innerText = verifiedCloudScores.chessPlayed ? verifiedCloudScores.chessRating : '1200 (Unranked)';
+          if (sChessWins) sChessWins.innerText = verifiedCloudScores.chessWins;
+          if (sReactorBest) sReactorBest.innerText = dbReactor + ' pts';
+          if (sMazeClears) sMazeClears.innerText = dbMaze;
+          if (sGuessBest) sGuessBest.innerText = (dbGuess > 0) ? dbGuess + ' tries' : '--';
+          if (sRansomSettings) sRansomSettings.innerText = dbRansom + ' pts';
+
+          // Re-render UI with authoritative cloud values
+          updateAccountLevelUI();
+          renderCognitiveRadarChart();
         }
 
-        if (data.leaders) {
+        if (data && data.leaders) {
           const lSnake = document.getElementById('statSnakeLeader');
           const lDefuse = document.getElementById('statDefuseLeader');
           const lReactor = document.getElementById('statReactorLeader');
+          const lRansom = document.getElementById('statRansomLeader');
           if (lSnake && data.leaders.snake) {
             lSnake.innerText = data.leaders.snake.username + ' (' + data.leaders.snake.score + ' pts)';
           }
@@ -2735,6 +3087,9 @@
           }
           if (lReactor && data.leaders.reactor_meltdown) {
             lReactor.innerText = data.leaders.reactor_meltdown.username + ' (' + data.leaders.reactor_meltdown.score + ' pts)';
+          }
+          if (lRansom && data.leaders.ransom) {
+            lRansom.innerText = data.leaders.ransom.username + ' (' + data.leaders.ransom.score + ' pts)';
           }
         }
       }
@@ -2753,24 +3108,45 @@
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Fetch metric baseline values from localStorage
-    const defuseBest = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
-    const chessRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
-    const snakeBest = parseFloat(localStorage.getItem('hub_snake_high') || '0');
-    const mazeClears = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
-    const reactorBest = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
+    let defuseBest = 0;
+    let chessRating = 1200;
+    let chessPlayed = false;
+    let snakeBest = 0;
+    let mazeClears = 0;
+    let reactorBest = 0;
 
-    // Normalized scores between 0.15 and 1.0 (with a baseline so initial display looks great)
-    // 1. Memory: Reactor Meltdown (target ~300 pts)
-    const scoreMemory = Math.min(1.0, Math.max(0.15, reactorBest > 0 ? (reactorBest / 300) : 0.2));
-    // 2. Logic: Defusal Protocol (target ~500 pts)
-    const scoreLogic = Math.min(1.0, Math.max(0.15, defuseBest > 0 ? (defuseBest / 500) : 0.2));
-    // 3. Speed: Cyber Snake (target ~100 pts)
-    const scoreSpeed = Math.min(1.0, Math.max(0.15, snakeBest > 0 ? (snakeBest / 100) : 0.2));
-    // 4. Spatial: Cyber Maze (target ~5 clears)
-    const scoreSpatial = Math.min(1.0, Math.max(0.15, mazeClears > 0 ? (mazeClears / 5) : 0.2));
-    // 5. Strategy: Cyber Chess (1200 -> 0.33, 1600+ -> 1.0)
-    const scoreStrategy = Math.min(1.0, Math.max(0.15, (chessRating - 1000) / 600));
+    if (isUserLoggedIn) {
+      if (scoresFetchedFromCloud) {
+        defuseBest = verifiedCloudScores.defuse || 0;
+        chessRating = verifiedCloudScores.chessRating || 1200;
+        chessPlayed = verifiedCloudScores.chessPlayed;
+        snakeBest = verifiedCloudScores.snake || 0;
+        mazeClears = verifiedCloudScores.maze || 0;
+        reactorBest = verifiedCloudScores.reactor || 0;
+      }
+    } else {
+      defuseBest = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
+      chessRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
+      chessPlayed = localStorage.getItem('hub_chess_rating') !== null;
+      snakeBest = parseFloat(localStorage.getItem('hub_snake_high') || '0');
+      mazeClears = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
+      reactorBest = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
+    }
+
+    const hasAnyScore = (defuseBest > 0 || reactorBest > 0 || snakeBest > 0 || mazeClears > 0 || (chessPlayed && chessRating > 1200));
+
+    // Normalized scores between 0.08 and 1.0
+    const pctMemory = reactorBest > 0 ? Math.min(100, Math.round((reactorBest / 300) * 100)) : 0;
+    const pctLogic = defuseBest > 0 ? Math.min(100, Math.round((defuseBest / 500) * 100)) : 0;
+    const pctSpeed = snakeBest > 0 ? Math.min(100, Math.round((snakeBest / 100) * 100)) : 0;
+    const pctSpatial = mazeClears > 0 ? Math.min(100, Math.round((mazeClears / 5) * 100)) : 0;
+    const pctStrategy = (chessPlayed && chessRating > 1200) ? Math.min(100, Math.round(((chessRating - 1200) / 600) * 100)) : 0;
+
+    const scoreMemory = Math.min(1.0, Math.max(0.08, pctMemory / 100));
+    const scoreLogic = Math.min(1.0, Math.max(0.08, pctLogic / 100));
+    const scoreSpeed = Math.min(1.0, Math.max(0.08, pctSpeed / 100));
+    const scoreSpatial = Math.min(1.0, Math.max(0.08, pctSpatial / 100));
+    const scoreStrategy = Math.min(1.0, Math.max(0.08, pctStrategy / 100));
 
     // Update percentage indicators in DOM
     const elMem = document.getElementById('valMetricMemory');
@@ -2780,14 +3156,20 @@
     const elStr = document.getElementById('valMetricStrategy');
     const elIndex = document.getElementById('overallBrainScore');
 
-    if (elMem) elMem.innerText = Math.round(scoreMemory * 100) + '%';
-    if (elLog) elLog.innerText = Math.round(scoreLogic * 100) + '%';
-    if (elSpd) elSpd.innerText = Math.round(scoreSpeed * 100) + '%';
-    if (elSpa) elSpa.innerText = Math.round(scoreSpatial * 100) + '%';
-    if (elStr) elStr.innerText = Math.round(scoreStrategy * 100) + '%';
+    if (elMem) elMem.innerText = pctMemory + '%';
+    if (elLog) elLog.innerText = pctLogic + '%';
+    if (elSpd) elSpd.innerText = pctSpeed + '%';
+    if (elSpa) elSpa.innerText = pctSpatial + '%';
+    if (elStr) elStr.innerText = pctStrategy + '%';
 
-    const avgScore = Math.round(((scoreMemory + scoreLogic + scoreSpeed + scoreSpatial + scoreStrategy) / 5) * 100);
-    if (elIndex) elIndex.innerText = avgScore;
+    if (elIndex) {
+      if (!hasAnyScore) {
+        elIndex.innerText = '--';
+      } else {
+        const avgScore = Math.round((pctMemory + pctLogic + pctSpeed + pctSpatial + pctStrategy) / 5);
+        elIndex.innerText = avgScore;
+      }
+    }
 
     // Canvas geometry
     const w = canvas.width;
@@ -2801,7 +3183,7 @@
       { name: 'Memory', score: scoreMemory, color: '#38bdf8' },
       { name: 'Logic', score: scoreLogic, color: '#facc15' },
       { name: 'Speed', score: scoreSpeed, color: '#10b981' },
-      { name: 'Spatial', score: scoreSpatial, color: '#06b6d4' },
+      { name: 'Spatial', score: scoreSpatial, color: '#00f0ff' },
       { name: 'Strategy', score: scoreStrategy, color: '#ec4899' }
     ];
     const totalAxes = axes.length;
@@ -2824,7 +3206,7 @@
         else ctx.lineTo(pt.x, pt.y);
       }
       ctx.closePath();
-      ctx.strokeStyle = lvl === 1.0 ? 'rgba(56, 189, 248, 0.4)' : 'rgba(148, 163, 184, 0.15)';
+      ctx.strokeStyle = lvl === 1.0 ? 'rgba(0, 240, 255, 0.4)' : 'rgba(0, 240, 255, 0.12)';
       ctx.lineWidth = 1;
       ctx.stroke();
     });
@@ -2835,40 +3217,42 @@
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(pt.x, pt.y);
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.18)';
       ctx.lineWidth = 1;
       ctx.stroke();
     }
 
-    // Player Polygon Fill & Outline
-    ctx.beginPath();
-    for (let i = 0; i < totalAxes; i++) {
-      const pt = getCoord(i, axes[i].score);
-      if (i === 0) ctx.moveTo(pt.x, pt.y);
-      else ctx.lineTo(pt.x, pt.y);
-    }
-    ctx.closePath();
-
-    const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
-    grad.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
-    grad.addColorStop(1, 'rgba(168, 85, 247, 0.2)');
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.strokeStyle = '#38bdf8';
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-
-    // Vertex Points
-    for (let i = 0; i < totalAxes; i++) {
-      const pt = getCoord(i, axes[i].score);
+    // Only draw player polygon if at least one game was played
+    if (hasAnyScore) {
       ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
-      ctx.fillStyle = axes[i].color;
+      for (let i = 0; i < totalAxes; i++) {
+        const pt = getCoord(i, axes[i].score);
+        if (i === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.closePath();
+
+      const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
+      grad.addColorStop(0, 'rgba(0, 240, 255, 0.45)');
+      grad.addColorStop(1, 'rgba(2, 132, 199, 0.15)');
+      ctx.fillStyle = grad;
       ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.5;
+
+      ctx.strokeStyle = '#00f0ff';
+      ctx.lineWidth = 2.5;
       ctx.stroke();
+
+      // Vertex Points
+      for (let i = 0; i < totalAxes; i++) {
+        const pt = getCoord(i, axes[i].score);
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = axes[i].color;
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
     }
 
     // Axis Labels
@@ -2945,7 +3329,206 @@
     });
   });
 
+  // =========================================================
+  // RISING TECH LASER RAYS & PARTICLE HORIZON ENGINE
+  // =========================================================
+  (function initTechRaysEngine() {
+    const canvas = document.getElementById('techRaysCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let horizonY = 0;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      horizonY = Math.round(height * 0.76);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // 1. Vertical Laser Beams Rising from Horizon
+    const RAY_COUNT = 85;
+    const rays = [];
+    for (let i = 0; i < RAY_COUNT; i++) {
+      const isBright = Math.random() < 0.22;
+      rays.push({
+        xPct: Math.random(),
+        maxHeight: isBright ? (0.45 + Math.random() * 0.50) : (0.2 + Math.random() * 0.42),
+        width: isBright ? (1.8 + Math.random() * 2.0) : (0.8 + Math.random() * 1.3),
+        alphaBase: isBright ? (0.65 + Math.random() * 0.35) : (0.22 + Math.random() * 0.38),
+        pulseSpeed: 0.015 + Math.random() * 0.03,
+        pulseOffset: Math.random() * Math.PI * 2,
+        colorType: Math.random() < 0.58 ? 'cyan' : (Math.random() < 0.85 ? 'blue' : 'white')
+      });
+    }
+
+    // 2. Rising Glowing Particles / Floating Dust
+    const PARTICLE_COUNT = 100;
+    const particles = [];
+    function createParticle(initialSpawn) {
+      return {
+        x: Math.random() * (width || window.innerWidth),
+        y: initialSpawn ? (horizonY - Math.random() * (horizonY * 0.85)) : (horizonY + Math.random() * 20),
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: -(0.5 + Math.random() * 1.4),
+        size: 0.9 + Math.random() * 2.0,
+        alpha: 0.12 + Math.random() * 0.75,
+        maxLife: 130 + Math.random() * 170,
+        life: initialSpawn ? Math.random() * 200 : 0,
+        color: Math.random() < 0.62 ? '#00f0ff' : (Math.random() < 0.88 ? '#38bdf8' : '#ffffff')
+      };
+    }
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(createParticle(true));
+    }
+
+    const FLOOR_LINE_COUNT = 24;
+    let time = 0;
+
+    function renderRays() {
+      time += 1;
+      ctx.clearRect(0, 0, width, height);
+
+      // Dark Cyber Base Gradient
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      bgGrad.addColorStop(0, '#010307');
+      bgGrad.addColorStop(0.65, '#020713');
+      bgGrad.addColorStop(horizonY / height, '#040d24');
+      bgGrad.addColorStop(1, '#01040a');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // A. Reflective Floor (Below Horizon)
+      const floorHeight = height - horizonY;
+      if (floorHeight > 0) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+        ctx.lineWidth = 1;
+        const vpX = width / 2;
+        for (let i = -FLOOR_LINE_COUNT; i <= FLOOR_LINE_COUNT; i++) {
+          const spreadX = vpX + (i * (width / FLOOR_LINE_COUNT) * 1.35);
+          ctx.beginPath();
+          ctx.moveTo(vpX + (i * 12), horizonY);
+          ctx.lineTo(spreadX, height);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        for (let yStep = 0; yStep < 6; yStep++) {
+          const p = Math.pow(yStep / 5, 2.2);
+          const y = horizonY + p * floorHeight;
+          ctx.fillStyle = `rgba(0, 240, 255, ${0.04 + p * 0.06})`;
+          ctx.fillRect(0, y, width, 1);
+        }
+      }
+
+      // B. Vertical Laser Rays (Shooting UP from Horizon)
+      for (let i = 0; i < rays.length; i++) {
+        const r = rays[i];
+        const x = r.xPct * width;
+        const pulse = Math.sin(time * r.pulseSpeed + r.pulseOffset);
+        const currentAlpha = Math.max(0.1, Math.min(1.0, r.alphaBase + pulse * 0.25));
+        const rayLen = r.maxHeight * horizonY * (0.88 + pulse * 0.12);
+        const topY = horizonY - rayLen;
+
+        let coreColor, outerColor;
+        if (r.colorType === 'cyan') {
+          coreColor = `rgba(180, 255, 255, ${currentAlpha})`;
+          outerColor = `rgba(0, 240, 255, ${currentAlpha * 0.75})`;
+        } else if (r.colorType === 'blue') {
+          coreColor = `rgba(140, 220, 255, ${currentAlpha})`;
+          outerColor = `rgba(2, 132, 199, ${currentAlpha * 0.7})`;
+        } else {
+          coreColor = `rgba(255, 255, 255, ${currentAlpha})`;
+          outerColor = `rgba(0, 240, 255, ${currentAlpha * 0.85})`;
+        }
+
+        const rayGrad = ctx.createLinearGradient(x, horizonY, x, topY);
+        rayGrad.addColorStop(0, coreColor);
+        rayGrad.addColorStop(0.2, outerColor);
+        rayGrad.addColorStop(0.7, outerColor.replace(/[\d\.]+\)$/, (currentAlpha * 0.3) + ')'));
+        rayGrad.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = rayGrad;
+        ctx.fillRect(x - r.width / 2, topY, r.width, rayLen);
+
+        // Downward Floor Reflection
+        if (floorHeight > 0) {
+          const reflLen = Math.min(floorHeight * 0.75, rayLen * 0.4);
+          const reflGrad = ctx.createLinearGradient(x, horizonY, x, horizonY + reflLen);
+          reflGrad.addColorStop(0, coreColor.replace(/[\d\.]+\)$/, (currentAlpha * 0.45) + ')'));
+          reflGrad.addColorStop(0.4, outerColor.replace(/[\d\.]+\)$/, (currentAlpha * 0.2) + ')'));
+          reflGrad.addColorStop(1, 'transparent');
+
+          ctx.fillStyle = reflGrad;
+          ctx.fillRect(x - (r.width * 1.2) / 2, horizonY, r.width * 1.2, reflLen);
+        }
+      }
+
+      // C. Horizon Glow & Laser Line
+      const horizGrad = ctx.createRadialGradient(width / 2, horizonY, 20, width / 2, horizonY, width * 0.65);
+      horizGrad.addColorStop(0, 'rgba(0, 240, 255, 0.45)');
+      horizGrad.addColorStop(0.35, 'rgba(2, 132, 199, 0.25)');
+      horizGrad.addColorStop(0.75, 'rgba(0, 100, 200, 0.08)');
+      horizGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = horizGrad;
+      ctx.fillRect(0, horizonY - 45, width, 90);
+
+      const lineGrad = ctx.createLinearGradient(0, horizonY, width, horizonY);
+      lineGrad.addColorStop(0, 'rgba(0, 240, 255, 0.1)');
+      lineGrad.addColorStop(0.15, 'rgba(0, 240, 255, 0.85)');
+      lineGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.98)');
+      lineGrad.addColorStop(0.85, 'rgba(0, 240, 255, 0.85)');
+      lineGrad.addColorStop(1, 'rgba(0, 240, 255, 0.1)');
+
+      ctx.fillStyle = lineGrad;
+      ctx.fillRect(0, horizonY - 1, width, 2.5);
+
+      // D. Rising Particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx + Math.sin((time + i * 20) * 0.02) * 0.35;
+        p.y += p.vy;
+        p.life++;
+
+        const lifeRatio = p.life / p.maxLife;
+        let alpha = p.alpha;
+        if (lifeRatio > 0.7) {
+          alpha *= (1 - (lifeRatio - 0.7) / 0.3);
+        }
+
+        if (p.life >= p.maxLife || p.y < 0) {
+          particles[i] = createParticle(false);
+          continue;
+        }
+
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (p.size > 1.8) {
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.25)';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1.0;
+
+      requestAnimationFrame(renderRays);
+    }
+
+    renderRays();
+  })();
+
   window.addEventListener('DOMContentLoaded', () => {
+    enforceAccountBoundary(currentUsername);
     checkLiveSession();
     syncCloudScores();
     if (isUserLoggedIn) updateAccountLevelUI();
