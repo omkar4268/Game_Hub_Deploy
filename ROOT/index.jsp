@@ -155,16 +155,17 @@
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
-    box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.12) 60%, rgba(0, 240, 255, 0.5) 92%, #00f0ff 98%, #ffffff 100%);
+    box-shadow: 12px 0 45px rgba(0, 240, 255, 0.85), 2px 0 20px #00f0ff;
     transform: translate3d(0, 0, 0);
   }
   .cyber-wipe-overlay.active .cyber-wipe-beam {
-    animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: cyberBeamSweep 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   @keyframes cyberBeamSweep {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(200vw); }
+    0% { transform: translateX(0); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translateX(200vw); opacity: 1; }
   }
 
   /* =========================================================
@@ -681,8 +682,17 @@
     animation: pulseDot 2s infinite;
   }
 
-  .view-panel { display: none; opacity: 0; transition: opacity 0.25s ease; flex: 1; min-height: 0; }
-  .view-panel.active { display: flex; flex-direction: column; opacity: 1; }
+  .view-panel { display: none; opacity: 0; flex: 1; min-height: 0; }
+  .view-panel.active { 
+    display: flex; 
+    flex-direction: column; 
+    opacity: 1; 
+    animation: panelSpringGlide 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes panelSpringGlide {
+    0% { opacity: 0; transform: translateX(20px); filter: blur(4px); }
+    100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+  }
 
   #libraryView {
     display: none;
@@ -775,20 +785,72 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.25s ease;
     scroll-snap-align: center;
     flex-shrink: 0;
     opacity: 0;
-    animation: fadeInUp 0.4s ease forwards;
+    animation: gameCardSpringIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     position: relative;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     box-sizing: border-box;
   }
 
+  .game-card:nth-child(1) { animation-delay: 0.04s; }
+  .game-card:nth-child(2) { animation-delay: 0.10s; }
+  .game-card:nth-child(3) { animation-delay: 0.16s; }
+  .game-card:nth-child(4) { animation-delay: 0.22s; }
+  .game-card:nth-child(5) { animation-delay: 0.28s; }
+  .game-card:nth-child(6) { animation-delay: 0.34s; }
+
+  @keyframes gameCardSpringIn {
+    0% { opacity: 0; transform: translateY(35px) scale(0.94); filter: blur(4px); }
+    70% { opacity: 1; transform: translateY(-4px) scale(1.01); filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+
+  /* Shimmer Beam Sweep on Hover */
+  .game-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(0, 240, 255, 0.18) 50%, transparent 65%);
+    transform: translateX(-100%);
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    border-radius: 16px;
+    z-index: 5;
+  }
+  .game-card:hover::after {
+    transform: translateX(100%);
+  }
+
   .game-card:hover {
-    transform: translateY(-6px) scale(1.015);
+    transform: translateY(-10px) scale(1.028);
     border-color: var(--primary);
-    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 240, 255, 0.35);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 240, 255, 0.45);
+  }
+
+  .game-card:active {
+    transform: translateY(-2px) scale(0.96);
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Interactive Shockwave Pulse On Click */
+  .card-click-ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.8) 0%, rgba(0, 240, 255, 0) 70%);
+    border: 2px solid #00f0ff;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: none;
+    z-index: 15;
+    animation: cardRippleExpand 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes cardRippleExpand {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(22); opacity: 0; }
   }
 
   .card-banner {
@@ -893,7 +955,7 @@
   .launch-arrow {
     width: 36px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: 10px;
     background: rgba(0, 240, 255, 0.08);
     border: 1px solid rgba(0, 240, 255, 0.25);
     display: flex;
@@ -901,13 +963,17 @@
     justify-content: center;
     color: var(--primary);
     font-size: 1.05rem;
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   .game-card:hover .launch-arrow {
     background: var(--primary);
     color: #030712;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.7);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.85);
     border-color: var(--primary);
+    transform: scale(1.12) translateX(3px);
+  }
+  .launch-arrow:active {
+    transform: scale(0.92);
   }
 
   /* Cognitive Radar Chart (Spider Graph) */
@@ -2764,7 +2830,7 @@
       overlay.classList.add('active');
       setTimeout(() => {
         window.location.href = url;
-      }, 220);
+      }, 280);
     } else {
       window.location.href = url;
     }
@@ -2773,6 +2839,33 @@
   window.addEventListener('pageshow', () => {
     const overlay = document.getElementById('cyberWipeOverlay');
     if (overlay) overlay.classList.remove('active');
+    const shutter = document.getElementById('cyberShutter');
+    if (shutter) shutter.classList.remove('active');
+
+    const mainEl = document.querySelector('main');
+    const asideEl = document.querySelector('aside');
+    if (mainEl) {
+      mainEl.style.filter = 'none';
+      mainEl.style.opacity = '1';
+    }
+    if (asideEl) {
+      asideEl.style.filter = 'none';
+      asideEl.style.opacity = '1';
+    }
+
+    const modalBox = document.querySelector('#launchModal .modal-box');
+    if (modalBox) {
+      modalBox.style.transform = '';
+      modalBox.style.filter = '';
+      modalBox.style.opacity = '';
+    }
+
+    // Staggered Spring Cascade for returning to Games Gallery
+    document.querySelectorAll('.game-card').forEach((card, i) => {
+      card.style.animation = 'none';
+      void card.offsetWidth;
+      card.style.animation = 'gameCardSpringIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ' + (0.04 + i * 0.06) + 's forwards';
+    });
   });
 
   // --- TAB NAVIGATION (GATED FOR GUESTS) ---
@@ -2820,11 +2913,42 @@
     document.getElementById('carousel').scrollBy({ left: dist, behavior: 'smooth' });
   }
 
+  function triggerGameLaunch(url) {
+    const modalBox = document.querySelector('#launchModal .modal-box');
+    const shutter = document.getElementById('cyberShutter');
+    const mainEl = document.querySelector('main');
+    const asideEl = document.querySelector('aside');
+
+    if (modalBox) {
+      modalBox.style.transform = 'scale(0.93)';
+      modalBox.style.filter = 'blur(6px)';
+      modalBox.style.opacity = '0.35';
+      modalBox.style.transition = 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+    }
+
+    if (shutter) {
+      shutter.classList.add('active');
+    }
+
+    if (mainEl) {
+      mainEl.style.filter = 'blur(8px)';
+      mainEl.style.opacity = '0.5';
+      mainEl.style.transition = 'all 0.3s ease';
+    }
+    if (asideEl) {
+      asideEl.style.filter = 'blur(8px)';
+      asideEl.style.opacity = '0.5';
+      asideEl.style.transition = 'all 0.3s ease';
+    }
+
+    cyberNavigate(url);
+  }
+
   function openLaunchModal(url, title, desc) {
     targetUrl = url;
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalDesc').innerText = desc;
-    document.getElementById('confirmLaunchBtn').onclick = () => cyberNavigate(targetUrl);
+    document.getElementById('confirmLaunchBtn').onclick = () => triggerGameLaunch(targetUrl);
     openModal('launchModal');
   }
 
@@ -3800,6 +3924,21 @@
     syncCloudScores();
     if (isUserLoggedIn) updateAccountLevelUI();
     updateRansomIndicator();
+
+    // Tactile Click Shockwave for Game Cards
+    document.querySelectorAll('.game-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rip = document.createElement('span');
+        rip.className = 'card-click-ripple';
+        rip.style.left = x + 'px';
+        rip.style.top = y + 'px';
+        card.appendChild(rip);
+        setTimeout(() => rip.remove(), 600);
+      });
+    });
   });
 </script>
 </body>
