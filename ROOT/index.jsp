@@ -3337,176 +3337,295 @@
   });
 
   // =========================================================
-  // RISING TECH LASER RAYS & PARTICLE HORIZON ENGINE
+  // INTERACTIVE KINETIC GRID & CYBER HORIZON ENGINE
+  // (Full Kinetic Grid Gravitational Warp + Click Shockwave Ripples + Cyber Rays)
   // =========================================================
-  (function initTechRaysEngine() {
+  (function initKineticGridEngine() {
     const canvas = document.getElementById('techRaysCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = 0;
-    let height = 0;
-    let horizonY = 0;
+    let W = 0, H = 0, horizonY = 0;
+
+    // Kinetic Grid Constants
+    const CELL_SIZE = 55;
+    const INFLUENCE_RADIUS = 260;
+    const MAX_WARP = 24;
+    const DOT_SPACING = 30;
+    const LERP_SPEED = 0.08;
+
+    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.10 };
+    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.85 };
+    const NODE_ACTIVE = { r: 74, g: 158, b: 255, a: 1.0 };
+    const NODE_BASE_RADIUS = 1.6;
+    const NODE_ACTIVE_RADIUS = 3.0;
+
+    const mouse = { x: -9999, y: -9999 };
+    const targetMouse = { x: -9999, y: -9999 };
+    const ripples = [];
 
     function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      horizonY = Math.round(height * 0.76);
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      horizonY = Math.round(H * 0.78);
     }
     window.addEventListener('resize', resize);
     resize();
 
-    // 1. Vertical Laser Beams Rising from Horizon
-    const RAY_COUNT = 85;
+    window.addEventListener('mousemove', (e) => {
+      targetMouse.x = e.clientX;
+      targetMouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      targetMouse.x = -9999;
+      targetMouse.y = -9999;
+    });
+
+    window.addEventListener('click', (e) => {
+      ripples.push({
+        x: e.clientX,
+        y: e.clientY,
+        radius: 0,
+        opacity: 1,
+        born: performance.now()
+      });
+      if (ripples.length > 8) ripples.shift();
+    });
+
+    function lerpN(a, b, t) { return a + (b - a) * t; }
+    function lerpColor(base, active, t) {
+      const r = Math.round(lerpN(base.r, active.r, t));
+      const g = Math.round(lerpN(base.g, active.g, t));
+      const b = Math.round(lerpN(base.b, active.b, t));
+      const a = lerpN(base.a, active.a, t);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
+    }
+
+    function getWarpedPoint(gx, gy, col, row, m, rips, cols, rows) {
+      const edgeMargin = 1.5;
+      const colPin = Math.min(col / edgeMargin, (cols - 1 - col) / edgeMargin, 1);
+      const rowPin = Math.min(row / edgeMargin, (rows - 1 - row) / edgeMargin, 1);
+      const pinFactor = colPin * colPin * rowPin * rowPin;
+
+      const dx = gx - m.x;
+      const dy = gy - m.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const proximity = Math.max(0, 1 - dist / INFLUENCE_RADIUS) * pinFactor;
+
+      let rx = 0, ry = 0;
+      for (let i = 0; i < rips.length; i++) {
+        const r = rips[i];
+        const rdx = gx - r.x;
+        const rdy = gy - r.y;
+        const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
+        const waveWidth = 55;
+        const diff = rdist - r.radius;
+        if (Math.abs(diff) < waveWidth) {
+          const strength = (1 - Math.abs(diff) / waveWidth) * r.opacity * 18 * pinFactor;
+          const angle = Math.atan2(rdy, rdx);
+          const sign = diff < 0 ? -1 : 1;
+          rx += Math.cos(angle) * strength * sign * -1;
+          ry += Math.sin(angle) * strength * sign * -1;
+        }
+      }
+
+      if (dist < INFLUENCE_RADIUS && dist > 0 && pinFactor > 0) {
+        const t = dist / INFLUENCE_RADIUS;
+        const eased = t < 0.01 ? 0 : (1 - t) * (1 - t) * Math.min(1, dist / 60);
+        const warpAmt = eased * MAX_WARP * pinFactor;
+        const angle = Math.atan2(dy, dx);
+        return {
+          pt: { x: gx - Math.cos(angle) * warpAmt + rx, y: gy - Math.sin(angle) * warpAmt + ry },
+          proximity: proximity
+        };
+      }
+
+      return { pt: { x: gx + rx, y: gy + ry }, proximity: proximity };
+    }
+
+    // Rising laser rays & particles
+    const RAY_COUNT = 60;
     const rays = [];
     for (let i = 0; i < RAY_COUNT; i++) {
-      const isBright = Math.random() < 0.22;
+      const isBright = Math.random() < 0.25;
       rays.push({
         xPct: Math.random(),
-        maxHeight: isBright ? (0.45 + Math.random() * 0.50) : (0.2 + Math.random() * 0.42),
-        width: isBright ? (1.8 + Math.random() * 2.0) : (0.8 + Math.random() * 1.3),
-        alphaBase: isBright ? (0.65 + Math.random() * 0.35) : (0.22 + Math.random() * 0.38),
+        maxHeight: isBright ? (0.35 + Math.random() * 0.45) : (0.15 + Math.random() * 0.35),
+        width: isBright ? (1.5 + Math.random() * 2.0) : (0.7 + Math.random() * 1.2),
+        alphaBase: isBright ? (0.55 + Math.random() * 0.35) : (0.15 + Math.random() * 0.3),
         pulseSpeed: 0.015 + Math.random() * 0.03,
         pulseOffset: Math.random() * Math.PI * 2,
-        colorType: Math.random() < 0.58 ? 'cyan' : (Math.random() < 0.85 ? 'blue' : 'white')
+        colorType: Math.random() < 0.65 ? 'cyan' : 'blue'
       });
     }
 
-    // 2. Rising Glowing Particles / Floating Dust
-    const PARTICLE_COUNT = 100;
+    const PARTICLE_COUNT = 70;
     const particles = [];
-    function createParticle(initialSpawn) {
+    function createParticle(initial) {
       return {
-        x: Math.random() * (width || window.innerWidth),
-        y: initialSpawn ? (horizonY - Math.random() * (horizonY * 0.85)) : (horizonY + Math.random() * 20),
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: -(0.5 + Math.random() * 1.4),
-        size: 0.9 + Math.random() * 2.0,
-        alpha: 0.12 + Math.random() * 0.75,
-        maxLife: 130 + Math.random() * 170,
-        life: initialSpawn ? Math.random() * 200 : 0,
-        color: Math.random() < 0.62 ? '#00f0ff' : (Math.random() < 0.88 ? '#38bdf8' : '#ffffff')
+        x: Math.random() * (W || window.innerWidth),
+        y: initial ? Math.random() * (H || window.innerHeight) : (horizonY + Math.random() * 20),
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: -(0.4 + Math.random() * 1.1),
+        size: 0.8 + Math.random() * 1.6,
+        alpha: 0.15 + Math.random() * 0.6,
+        maxLife: 140 + Math.random() * 160,
+        life: initial ? Math.random() * 180 : 0,
+        color: Math.random() < 0.7 ? '#00f0ff' : '#38bdf8'
       };
     }
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(createParticle(true));
-    }
+    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(createParticle(true));
 
-    const FLOOR_LINE_COUNT = 24;
     let time = 0;
 
-    function renderRays() {
-      time += 1;
-      ctx.clearRect(0, 0, width, height);
+    function render(now) {
+      time++;
+      if (mouse.x === -9999) {
+        mouse.x = targetMouse.x;
+        mouse.y = targetMouse.y;
+      } else {
+        mouse.x = lerpN(mouse.x, targetMouse.x, LERP_SPEED);
+        mouse.y = lerpN(mouse.y, targetMouse.y, LERP_SPEED);
+      }
 
-      // Dark Cyber Base Gradient
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-      bgGrad.addColorStop(0, '#010307');
-      bgGrad.addColorStop(0.65, '#020713');
-      bgGrad.addColorStop(horizonY / height, '#040d24');
+      ctx.clearRect(0, 0, W, H);
+
+      // Deep Space Base
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, '#010308');
+      bgGrad.addColorStop(0.65, '#020614');
+      bgGrad.addColorStop(horizonY / H, '#030c22');
       bgGrad.addColorStop(1, '#01040a');
       ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, width, height);
+      ctx.fillRect(0, 0, W, H);
 
-      // A. Reflective Floor (Below Horizon)
-      const floorHeight = height - horizonY;
-      if (floorHeight > 0) {
-        ctx.save();
-        ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
-        ctx.lineWidth = 1;
-        const vpX = width / 2;
-        for (let i = -FLOOR_LINE_COUNT; i <= FLOOR_LINE_COUNT; i++) {
-          const spreadX = vpX + (i * (width / FLOOR_LINE_COUNT) * 1.35);
+      // 1. Static Dot Matrix
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.04)';
+      for (let x = DOT_SPACING / 2; x < W; x += DOT_SPACING) {
+        for (let y = DOT_SPACING / 2; y < H; y += DOT_SPACING) {
           ctx.beginPath();
-          ctx.moveTo(vpX + (i * 12), horizonY);
-          ctx.lineTo(spreadX, height);
-          ctx.stroke();
-        }
-        ctx.restore();
-
-        for (let yStep = 0; yStep < 6; yStep++) {
-          const p = Math.pow(yStep / 5, 2.2);
-          const y = horizonY + p * floorHeight;
-          ctx.fillStyle = `rgba(0, 240, 255, ${0.04 + p * 0.06})`;
-          ctx.fillRect(0, y, width, 1);
+          ctx.arc(x, y, 0.65, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 
-      // B. Vertical Laser Rays (Shooting UP from Horizon)
+      // 2. Update Shockwave Ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        const age = (now - r.born) / 1000;
+        r.radius = Math.max(0, age * 400);
+        r.opacity = Math.max(0, 1 - age * 1.2);
+        if (r.opacity <= 0) ripples.splice(i, 1);
+      }
+
+      // 3. Build Warped Grid
+      const cols = Math.max(2, Math.ceil(W / CELL_SIZE)) + 1;
+      const rows = Math.max(2, Math.ceil(H / CELL_SIZE)) + 1;
+      const cellW = W / (cols - 1);
+      const cellH = H / (rows - 1);
+
+      const pts = [];
+      const prox = [];
+
+      for (let row = 0; row < rows; row++) {
+        pts[row] = [];
+        prox[row] = [];
+        for (let col = 0; col < cols; col++) {
+          const res = getWarpedPoint(col * cellW, row * cellH, col, row, mouse, ripples, cols, rows);
+          pts[row][col] = res.pt;
+          prox[row][col] = res.proximity;
+        }
+      }
+
+      // Draw Grid Lines
+      function drawSeg(p1, p2, pr1, pr2) {
+        const avg = (pr1 + pr2) / 2;
+        const t = avg * avg * (3 - 2 * avg);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
+        ctx.lineWidth = lerpN(0.7, 1.6, t);
+        ctx.stroke();
+      }
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols - 1; col++) {
+          drawSeg(pts[row][col], pts[row][col + 1], prox[row][col], prox[row][col + 1]);
+        }
+      }
+      for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows - 1; row++) {
+          drawSeg(pts[row][col], pts[row + 1][col], prox[row][col], prox[row + 1][col]);
+        }
+      }
+
+      // Draw Intersection Nodes
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const p = pts[row][col];
+          const pr = prox[row][col];
+          const t = pr * pr * (3 - 2 * pr);
+          const r = lerpN(NODE_BASE_RADIUS, NODE_ACTIVE_RADIUS, t);
+
+          if (t > 0.3) {
+            const glowR = r + lerpN(0, 7, (t - 0.3) / 0.7);
+            const grd = ctx.createRadialGradient(p.x, p.y, r * 0.5, p.x, p.y, glowR);
+            grd.addColorStop(0, 'rgba(74, 158, 255, ' + (t * 0.35).toFixed(3) + ')');
+            grd.addColorStop(1, 'rgba(74, 158, 255, 0)');
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
+            ctx.fillStyle = grd;
+            ctx.fill();
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = lerpColor({ r: 0, g: 240, b: 255, a: 0.18 }, NODE_ACTIVE, t);
+          ctx.fill();
+        }
+      }
+
+      // Draw Ripple Rings
+      for (let i = 0; i < ripples.length; i++) {
+        const r = ripples[i];
+        const safeRadius = Math.max(0, r.radius);
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, safeRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(100, 180, 255, ' + (r.opacity * 0.3).toFixed(3) + ')';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // 4. Horizon Laser Pillars & Beams
       for (let i = 0; i < rays.length; i++) {
-        const r = rays[i];
-        const x = r.xPct * width;
-        const pulse = Math.sin(time * r.pulseSpeed + r.pulseOffset);
-        const currentAlpha = Math.max(0.1, Math.min(1.0, r.alphaBase + pulse * 0.25));
-        const rayLen = r.maxHeight * horizonY * (0.88 + pulse * 0.12);
+        const ray = rays[i];
+        const x = ray.xPct * W;
+        const pulse = Math.sin(time * ray.pulseSpeed + ray.pulseOffset);
+        const curAlpha = Math.max(0.08, Math.min(0.85, ray.alphaBase + pulse * 0.2));
+        const rayLen = ray.maxHeight * horizonY * (0.85 + pulse * 0.15);
         const topY = horizonY - rayLen;
 
-        let coreColor, outerColor;
-        if (r.colorType === 'cyan') {
-          coreColor = `rgba(180, 255, 255, ${currentAlpha})`;
-          outerColor = `rgba(0, 240, 255, ${currentAlpha * 0.75})`;
-        } else if (r.colorType === 'blue') {
-          coreColor = `rgba(140, 220, 255, ${currentAlpha})`;
-          outerColor = `rgba(2, 132, 199, ${currentAlpha * 0.7})`;
-        } else {
-          coreColor = `rgba(255, 255, 255, ${currentAlpha})`;
-          outerColor = `rgba(0, 240, 255, ${currentAlpha * 0.85})`;
-        }
-
         const rayGrad = ctx.createLinearGradient(x, horizonY, x, topY);
-        rayGrad.addColorStop(0, coreColor);
-        rayGrad.addColorStop(0.2, outerColor);
-        rayGrad.addColorStop(0.7, outerColor.replace(/[\d\.]+\)$/, (currentAlpha * 0.3) + ')'));
+        rayGrad.addColorStop(0, 'rgba(0, 240, 255, ' + curAlpha + ')');
+        rayGrad.addColorStop(0.3, 'rgba(2, 132, 199, ' + (curAlpha * 0.6) + ')');
         rayGrad.addColorStop(1, 'transparent');
-
         ctx.fillStyle = rayGrad;
-        ctx.fillRect(x - r.width / 2, topY, r.width, rayLen);
-
-        // Downward Floor Reflection
-        if (floorHeight > 0) {
-          const reflLen = Math.min(floorHeight * 0.75, rayLen * 0.4);
-          const reflGrad = ctx.createLinearGradient(x, horizonY, x, horizonY + reflLen);
-          reflGrad.addColorStop(0, coreColor.replace(/[\d\.]+\)$/, (currentAlpha * 0.45) + ')'));
-          reflGrad.addColorStop(0.4, outerColor.replace(/[\d\.]+\)$/, (currentAlpha * 0.2) + ')'));
-          reflGrad.addColorStop(1, 'transparent');
-
-          ctx.fillStyle = reflGrad;
-          ctx.fillRect(x - (r.width * 1.2) / 2, horizonY, r.width * 1.2, reflLen);
-        }
+        ctx.fillRect(x - ray.width / 2, topY, ray.width, rayLen);
       }
 
-      // C. Horizon Glow & Laser Line
-      const horizGrad = ctx.createRadialGradient(width / 2, horizonY, 20, width / 2, horizonY, width * 0.65);
-      horizGrad.addColorStop(0, 'rgba(0, 240, 255, 0.45)');
-      horizGrad.addColorStop(0.35, 'rgba(2, 132, 199, 0.25)');
-      horizGrad.addColorStop(0.75, 'rgba(0, 100, 200, 0.08)');
-      horizGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = horizGrad;
-      ctx.fillRect(0, horizonY - 45, width, 90);
-
-      const lineGrad = ctx.createLinearGradient(0, horizonY, width, horizonY);
-      lineGrad.addColorStop(0, 'rgba(0, 240, 255, 0.1)');
-      lineGrad.addColorStop(0.15, 'rgba(0, 240, 255, 0.85)');
-      lineGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.98)');
-      lineGrad.addColorStop(0.85, 'rgba(0, 240, 255, 0.85)');
-      lineGrad.addColorStop(1, 'rgba(0, 240, 255, 0.1)');
-
-      ctx.fillStyle = lineGrad;
-      ctx.fillRect(0, horizonY - 1, width, 2.5);
-
-      // D. Rising Particles
+      // 5. Rising Floating Particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
-        p.x += p.vx + Math.sin((time + i * 20) * 0.02) * 0.35;
+        p.x += p.vx + Math.sin((time + i * 15) * 0.02) * 0.25;
         p.y += p.vy;
         p.life++;
 
         const lifeRatio = p.life / p.maxLife;
         let alpha = p.alpha;
-        if (lifeRatio > 0.7) {
-          alpha *= (1 - (lifeRatio - 0.7) / 0.3);
-        }
+        if (lifeRatio > 0.7) alpha *= (1 - (lifeRatio - 0.7) / 0.3);
 
         if (p.life >= p.maxLife || p.y < 0) {
           particles[i] = createParticle(false);
@@ -3518,20 +3637,13 @@
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-
-        if (p.size > 1.8) {
-          ctx.fillStyle = 'rgba(0, 240, 255, 0.25)';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
-          ctx.fill();
-        }
       }
       ctx.globalAlpha = 1.0;
 
-      requestAnimationFrame(renderRays);
+      requestAnimationFrame(render);
     }
 
-    renderRays();
+    requestAnimationFrame(render);
   })();
 
   window.addEventListener('DOMContentLoaded', () => {

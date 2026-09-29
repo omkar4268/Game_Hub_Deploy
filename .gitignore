@@ -1,0 +1,4 @@
+.agents/
+.archify/
+node_modules/
+.DS_Store
