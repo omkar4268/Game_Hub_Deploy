@@ -664,36 +664,39 @@
     transform: translateY(-2px);
   }
 
-  /* Universal Cyber-Scanner Wipe Transition */
-  .cyber-wipe-overlay {
+  /* Framer Motion Kinetic Camera Depth Curtain */
+  .motion-page-curtain, .cyber-wipe-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 99999;
     opacity: 0;
-    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 13, 28, 0.94) 0%, rgba(2, 4, 10, 0.98) 100%);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    transform: scale(1.02);
+    transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-wipe-overlay.active {
+  .motion-page-curtain.active, .cyber-wipe-overlay.active {
     pointer-events: all;
     opacity: 1;
+    transform: scale(1);
   }
-  .cyber-wipe-beam {
+  .motion-page-curtain .curtain-velocity-bar, .cyber-wipe-beam {
     position: absolute;
     top: 0;
-    left: -100vw;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
-    box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
-    transform: translate3d(0, 0, 0);
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.3) 15%, #00f0ff 50%, rgba(0, 240, 255, 0.3) 85%, transparent 100%);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.8), 0 0 32px rgba(0, 240, 255, 0.4);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-wipe-overlay.active .cyber-wipe-beam {
-    animation: cyberBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-  @keyframes cyberBeamSweep {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(200vw); }
+  .motion-page-curtain.active .curtain-velocity-bar, .cyber-wipe-overlay.active .cyber-wipe-beam {
+    transform: scaleX(1);
+    opacity: 1;
   }
 
   /* Protocol & Intel Modal */
@@ -2017,9 +2020,14 @@
     protocolModal.classList.remove('active');
   }
 
-  /* Cyber-Scanner Navigation Wipe Handler */
+  /* Kinetic Camera Depth Navigation Transition Handler */
   function cyberNavigate(url) {
     const overlay = document.getElementById('cyberWipeOverlay');
+    document.body.style.transform = 'scale(0.975)';
+    document.body.style.filter = 'blur(4px)';
+    document.body.style.opacity = '0.6';
+    document.body.style.transition = 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+
     if (overlay) {
       overlay.classList.add('active');
       setTimeout(() => {
@@ -2033,6 +2041,9 @@
   window.addEventListener('pageshow', () => {
     const overlay = document.getElementById('cyberWipeOverlay');
     if (overlay) overlay.classList.remove('active');
+    document.body.style.transform = '';
+    document.body.style.filter = '';
+    document.body.style.opacity = '';
   });
 </script>
 </body>

@@ -20,6 +20,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Game Hub | Cognitive Portal & Operative Enlistment</title>
 <link rel="stylesheet" href="css/ransom_horror.css">
+<!-- Framer Motion Browser Engine -->
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <style>
   :root {
     --bg-base: #02040a;
@@ -85,42 +87,39 @@
     opacity: 0.45;
   }
 
-  /* High-Speed Cyber Shutter Flash (Framer-Motion Hyperspace Warp) */
-  .cyber-shutter {
+  /* Framer Motion Kinetic Camera Depth Curtain & Transitions */
+  .motion-page-curtain, .cyber-shutter {
     position: fixed;
     inset: 0;
     z-index: 9000;
     pointer-events: none;
     opacity: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 13, 28, 0.94) 0%, rgba(2, 4, 10, 0.98) 100%);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    transform: scale(1.02);
+    transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-shutter.active {
-    animation: shutterWarp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .motion-page-curtain.active, .cyber-shutter.active {
+    pointer-events: all;
+    opacity: 1;
+    transform: scale(1);
   }
-  .cyber-shutter-beam {
+  .motion-page-curtain .curtain-velocity-bar, .cyber-shutter-beam {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #00f0ff 25%, #fff 50%, #00f0ff 75%, transparent);
-    box-shadow: 0 0 40px #00f0ff, 0 0 80px #00f0ff;
-    transform: translateY(-50%) scaleX(0);
-    opacity: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.3) 15%, #00f0ff 50%, rgba(0, 240, 255, 0.3) 85%, transparent 100%);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.8), 0 0 32px rgba(0, 240, 255, 0.4);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-shutter.active .cyber-shutter-beam {
-    animation: shutterBeam 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  @keyframes shutterWarp {
-    0% { opacity: 0; background: rgba(0, 240, 255, 0); }
-    30% { opacity: 1; background: rgba(0, 240, 255, 0.18); }
-    70% { opacity: 1; background: rgba(2, 4, 10, 0.95); }
-    100% { opacity: 1; background: #02040a; }
-  }
-  @keyframes shutterBeam {
-    0% { transform: translateY(-50%) scaleX(0); opacity: 0; }
-    35% { transform: translateY(-50%) scaleX(1); opacity: 1; height: 6px; }
-    70% { transform: translateY(-50%) scaleX(1.4); opacity: 0.8; height: 18px; filter: blur(6px); }
-    100% { transform: translateY(-50%) scaleX(2); opacity: 0; height: 0; }
+  .motion-page-curtain.active .curtain-velocity-bar, .cyber-shutter.active .cyber-shutter-beam {
+    transform: scaleX(1);
+    opacity: 1;
   }
 
   /* Main Floating Space Terminal Auth Card */
@@ -572,13 +571,25 @@
     alertBox.style.display = 'block';
   }
 
-  // Framer-Motion Hyperspace Warp Transition to Dashboard
+  // Framer Motion Kinetic Transition to Dashboard
   function triggerWarpToDashboard(callsign) {
     const card = document.getElementById('authCard');
     const shutter = document.getElementById('cyberShutter');
+    const Motion = (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
 
-    if (card) card.classList.add('warp-out');
-    if (shutter) shutter.classList.add('active');
+    if (card) {
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(card, { opacity: [1, 0], scale: [1, 0.95], y: [0, -16], filter: ['blur(0px)', 'blur(8px)'] }, { duration: 0.25, ease: [0.16, 1, 0.3, 1] });
+      } else {
+        card.classList.add('warp-out');
+      }
+    }
+    if (shutter) {
+      shutter.classList.add('active');
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(shutter, { opacity: [0, 1], scale: [1.02, 1] }, { duration: 0.24, ease: [0.16, 1, 0.3, 1] });
+      }
+    }
 
     sessionStorage.setItem('hub_portal_passed', 'true');
     sessionStorage.setItem('hub_session_user', callsign || 'Operative');
@@ -586,7 +597,7 @@
     // Smooth transition into index.jsp
     setTimeout(() => {
       window.location.href = 'index.jsp';
-    }, 600);
+    }, 240);
   }
 
   // Guest Bypass

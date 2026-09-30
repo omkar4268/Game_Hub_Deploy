@@ -16,6 +16,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Game Hub | Brain & Mind Training Games</title>
 <link rel="stylesheet" href="css/ransom_horror.css">
+<!-- Framer Motion Browser Engine (Motion One / Framer Motion Runtime) -->
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <style>
   :root {
     --bg-base: #02040a;
@@ -88,84 +90,105 @@
   }
 
   /* =========================================================
-     FEATURE 1: HIGH-SPEED DIGITAL ZOOM-THROUGH & CYBER SHUTTER
+     FRAMER MOTION KINETIC CAMERA DEPTH CURTAIN & TRANSITIONS
+     (UI/UX Pro Max: No strobe flashes, no laser wipes)
      ========================================================= */
-  .cyber-shutter {
+  .motion-page-curtain {
     position: fixed;
     inset: 0;
-    z-index: 5500;
+    z-index: 99999;
     pointer-events: none;
     opacity: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 13, 28, 0.92) 0%, rgba(2, 4, 10, 0.98) 100%);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    transform: scale(1.02);
+    transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-shutter.active {
+  .motion-page-curtain.active {
     pointer-events: all;
     opacity: 1;
-    animation: cyberShutterAnim 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  @keyframes cyberShutterAnim {
-    0% {
-      background: rgba(56, 189, 248, 0.25);
-      box-shadow: inset 0 0 100px rgba(56, 189, 248, 0.5);
-      backdrop-filter: blur(2px);
-    }
-    50% {
-      background: rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(0px);
-    }
-    100% {
-      background: transparent;
-      opacity: 0;
-    }
+    transform: scale(1);
   }
 
-  .cyber-shutter-beam {
+  /* Precision luminous velocity bar at the top edge */
+  .motion-page-curtain .curtain-velocity-bar {
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    top: -10px;
-    background: linear-gradient(90deg, transparent 0%, #00f0ff 30%, #38bdf8 70%, transparent 100%);
-    box-shadow: 0 0 25px #00f0ff, 0 0 40px #38bdf8;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.3) 15%, #00f0ff 50%, rgba(0, 240, 255, 0.3) 85%, transparent 100%);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.8), 0 0 32px rgba(0, 240, 255, 0.4);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-shutter.active .cyber-shutter-beam {
-    animation: shutterBeamSweep 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-  @keyframes shutterBeamSweep {
-    0% { top: 0%; opacity: 1; }
-    100% { top: 100%; opacity: 0; }
+  .motion-page-curtain.active .curtain-velocity-bar {
+    transform: scaleX(1);
   }
 
-  /* Universal Cyber-Scanner Wipe Transition */
-  .cyber-wipe-overlay {
+  /* Subtle tactical pulse ring */
+  .motion-page-curtain .curtain-pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    margin: -24px 0 0 -24px;
+    border: 2px solid rgba(0, 240, 255, 0.12);
+    border-top: 2px solid #00f0ff;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: curtainSpin 0.9s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+  }
+  .motion-page-curtain.active .curtain-pulse-ring {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  @keyframes curtainSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Camera Depth Recession for main hub viewport during transitions */
+  .camera-receding {
+    transform: scale(0.972) translateY(6px) !important;
+    filter: blur(6px) brightness(0.82) !important;
+    opacity: 0.55 !important;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.24s ease,
+                opacity 0.24s ease !important;
+  }
+  .camera-restoring {
+    transform: scale(1) translateY(0) !important;
+    filter: blur(0px) brightness(1) !important;
+    opacity: 1 !important;
+    transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.32s ease,
+                opacity 0.32s ease !important;
+  }
+
+  /* Backward compatibility shims for any remaining .cyber-shutter / .cyber-wipe-overlay */
+  .cyber-shutter, .cyber-wipe-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 99999;
     opacity: 0;
-    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 13, 28, 0.92) 0%, rgba(2, 4, 10, 0.98) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cyber-wipe-overlay.active {
+  .cyber-shutter.active, .cyber-wipe-overlay.active {
     pointer-events: all;
     opacity: 1;
   }
-  .cyber-wipe-beam {
-    position: absolute;
-    top: 0;
-    left: -100vw;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.12) 60%, rgba(0, 240, 255, 0.5) 92%, #00f0ff 98%, #ffffff 100%);
-    box-shadow: 12px 0 45px rgba(0, 240, 255, 0.85), 2px 0 20px #00f0ff;
-    transform: translate3d(0, 0, 0);
-  }
-  .cyber-wipe-overlay.active .cyber-wipe-beam {
-    animation: cyberBeamSweep 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  @keyframes cyberBeamSweep {
-    0% { transform: translateX(0); opacity: 0; }
-    30% { opacity: 1; }
-    100% { transform: translateX(200vw); opacity: 1; }
+  .cyber-shutter-beam, .cyber-wipe-beam {
+    display: none !important;
   }
 
   /* =========================================================
@@ -1794,15 +1817,14 @@
   <!-- Rising Cyber Laser Rays & Particle Floor Horizon Canvas -->
   <canvas id="techRaysCanvas"></canvas>
 
-  <!-- Universal Cyber-Scanner Wipe Transition -->
-  <div id="cyberWipeOverlay" class="cyber-wipe-overlay">
-    <div class="cyber-wipe-beam"></div>
+  <!-- Framer Motion Kinetic Camera Depth Curtain -->
+  <div id="motionCurtain" class="motion-page-curtain" aria-hidden="true">
+    <div class="curtain-velocity-bar"></div>
+    <div class="curtain-pulse-ring"></div>
   </div>
-
-  <!-- High-Speed Cyber Shutter Flash -->
-  <div id="cyberShutter" class="cyber-shutter">
-    <div class="cyber-shutter-beam"></div>
-  </div>
+  <!-- Legacy DOM hooks for seamless backward compatibility -->
+  <div id="cyberWipeOverlay" class="legacy-curtain-alias" style="display:none;" aria-hidden="true"></div>
+  <div id="cyberShutter" class="legacy-curtain-alias" style="display:none;" aria-hidden="true"></div>
 
   <!-- =========================================================
        LANDING PORTAL OVERLAY
@@ -2781,31 +2803,77 @@
   }
 
   // =========================================================
-  // HIGH-SPEED DIGITAL ZOOM-THROUGH & CYBER SHUTTER ENGINE
+  // FRAMER MOTION KINETIC ENGINE & CAMERA DEPTH TRANSITION
   // =========================================================
   const portal = document.getElementById('landingPortal');
-  const cyberShutter = document.getElementById('cyberShutter');
+  const motionCurtain = document.getElementById('motionCurtain');
+
+  function getMotionEngine() {
+    return (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
+  }
+
+  function kineticNavigate(url) {
+    if (!url) return;
+    const curtain = document.getElementById('motionCurtain') || document.getElementById('cyberWipeOverlay');
+    const mainEl = document.querySelector('main');
+    const asideEl = document.querySelector('aside');
+
+    // 1. Camera depth recession on page content
+    if (mainEl) {
+      mainEl.classList.remove('camera-restoring');
+      mainEl.classList.add('camera-receding');
+    }
+    if (asideEl) {
+      asideEl.classList.remove('camera-restoring');
+      asideEl.classList.add('camera-receding');
+    }
+
+    // 2. Framer Motion Spring Transition for the Curtain
+    const Motion = getMotionEngine();
+    if (curtain) {
+      curtain.classList.add('active');
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(curtain, { opacity: [0, 1], scale: [1.02, 1] }, { duration: 0.24, ease: [0.16, 1, 0.3, 1] });
+      }
+    }
+
+    // 3. Responsive, snappy exit navigation (<230ms)
+    setTimeout(() => {
+      window.location.href = url;
+    }, 220);
+  }
+
+  // Universal alias for all buttons and legacy handlers
+  function cyberNavigate(url) {
+    kineticNavigate(url);
+  }
 
   function triggerFastEnter(targetIdentity, completionMsg, onCompleteCallback) {
-    if (cyberShutter) {
-      cyberShutter.classList.add('active');
-    }
+    const Motion = getMotionEngine();
     if (portal) {
-      portal.classList.add('zoom-through');
-    }
-
-    setTimeout(() => {
-      if (portal) {
-        portal.classList.add('dismissed');
-        portal.classList.remove('zoom-through');
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(portal, { opacity: [1, 0], scale: [1, 1.12], filter: ['blur(0px)', 'blur(10px)'] }, { duration: 0.30, ease: [0.16, 1, 0.3, 1] })
+          .then(() => {
+            portal.classList.add('dismissed');
+            document.body.classList.add('portal-entered');
+            sessionStorage.setItem('hub_portal_passed', 'true');
+            if (onCompleteCallback) onCompleteCallback();
+          });
+      } else {
+        portal.classList.add('zoom-through');
+        setTimeout(() => {
+          portal.classList.add('dismissed');
+          portal.classList.remove('zoom-through');
+          document.body.classList.add('portal-entered');
+          sessionStorage.setItem('hub_portal_passed', 'true');
+          if (onCompleteCallback) onCompleteCallback();
+        }, 320);
       }
-      if (cyberShutter) {
-        cyberShutter.classList.remove('active');
-      }
+    } else {
       document.body.classList.add('portal-entered');
       sessionStorage.setItem('hub_portal_passed', 'true');
       if (onCompleteCallback) onCompleteCallback();
-    }, 420);
+    }
   }
 
   // Backward-compatible alias
@@ -2814,7 +2882,7 @@
   }
 
   function showPortal() {
-    window.location.href = 'auth.jsp';
+    kineticNavigate('auth.jsp');
   }
 
   // Auto-dismiss portal if user already completed entrance in this browser tab
@@ -2823,35 +2891,23 @@
     document.body.classList.add('portal-entered');
   }
 
-  // Cyber-Scanner Navigation Wipe Handler
-  function cyberNavigate(url) {
-    const overlay = document.getElementById('cyberWipeOverlay');
-    if (overlay) {
-      overlay.classList.add('active');
-      setTimeout(() => {
-        window.location.href = url;
-      }, 280);
-    } else {
-      window.location.href = url;
-    }
-  }
-
   window.addEventListener('pageshow', () => {
-    const overlay = document.getElementById('cyberWipeOverlay');
-    if (overlay) overlay.classList.remove('active');
-    const shutter = document.getElementById('cyberShutter');
-    if (shutter) shutter.classList.remove('active');
+    const curtain = document.getElementById('motionCurtain');
+    if (curtain) curtain.classList.remove('active');
+    const legacyOverlay = document.getElementById('cyberWipeOverlay');
+    if (legacyOverlay) legacyOverlay.classList.remove('active');
+    const legacyShutter = document.getElementById('cyberShutter');
+    if (legacyShutter) legacyShutter.classList.remove('active');
 
+    // Camera Restoration with Spring Physics
     const mainEl = document.querySelector('main');
     const asideEl = document.querySelector('aside');
-    if (mainEl) {
-      mainEl.style.filter = 'none';
-      mainEl.style.opacity = '1';
-    }
-    if (asideEl) {
-      asideEl.style.filter = 'none';
-      asideEl.style.opacity = '1';
-    }
+    [mainEl, asideEl].forEach(el => {
+      if (!el) return;
+      el.classList.remove('camera-receding');
+      el.classList.add('camera-restoring');
+      setTimeout(() => el.classList.remove('camera-restoring'), 380);
+    });
 
     const modalBox = document.querySelector('#launchModal .modal-box');
     if (modalBox) {
@@ -2860,12 +2916,24 @@
       modalBox.style.opacity = '';
     }
 
-    // Staggered Spring Cascade for returning to Games Gallery
-    document.querySelectorAll('.game-card').forEach((card, i) => {
-      card.style.animation = 'none';
-      void card.offsetWidth;
-      card.style.animation = 'gameCardSpringIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ' + (0.04 + i * 0.06) + 's forwards';
-    });
+    // Framer Motion Staggered Card Cascade
+    const Motion = getMotionEngine();
+    const cards = document.querySelectorAll('.game-card');
+    if (cards.length > 0) {
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(
+          cards,
+          { opacity: [0, 1], transform: ['translateY(16px) scale(0.96)', 'translateY(0) scale(1)'] },
+          { delay: Motion.stagger ? Motion.stagger(0.04, { startDelay: 0.05 }) : 0.04, duration: 0.42, ease: [0.16, 1, 0.3, 1] }
+        );
+      } else {
+        cards.forEach((card, i) => {
+          card.style.animation = 'none';
+          void card.offsetWidth;
+          card.style.animation = 'gameCardSpringIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) ' + (0.03 + i * 0.045) + 's forwards';
+        });
+      }
+    }
   });
 
   // --- TAB NAVIGATION (GATED FOR GUESTS) ---
@@ -2915,33 +2983,20 @@
 
   function triggerGameLaunch(url) {
     const modalBox = document.querySelector('#launchModal .modal-box');
-    const shutter = document.getElementById('cyberShutter');
-    const mainEl = document.querySelector('main');
-    const asideEl = document.querySelector('aside');
+    const Motion = getMotionEngine();
 
     if (modalBox) {
-      modalBox.style.transform = 'scale(0.93)';
-      modalBox.style.filter = 'blur(6px)';
-      modalBox.style.opacity = '0.35';
-      modalBox.style.transition = 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(modalBox, { scale: [1, 0.94], filter: ['blur(0px)', 'blur(5px)'], opacity: [1, 0.4] }, { duration: 0.22, ease: [0.16, 1, 0.3, 1] });
+      } else {
+        modalBox.style.transform = 'scale(0.94)';
+        modalBox.style.filter = 'blur(5px)';
+        modalBox.style.opacity = '0.4';
+        modalBox.style.transition = 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+      }
     }
 
-    if (shutter) {
-      shutter.classList.add('active');
-    }
-
-    if (mainEl) {
-      mainEl.style.filter = 'blur(8px)';
-      mainEl.style.opacity = '0.5';
-      mainEl.style.transition = 'all 0.3s ease';
-    }
-    if (asideEl) {
-      asideEl.style.filter = 'blur(8px)';
-      asideEl.style.opacity = '0.5';
-      asideEl.style.transition = 'all 0.3s ease';
-    }
-
-    cyberNavigate(url);
+    kineticNavigate(url);
   }
 
   function openLaunchModal(url, title, desc) {
@@ -2958,6 +3013,17 @@
     modal.style.display = 'flex';
     void modal.offsetWidth;
     modal.classList.add('active');
+
+    const modalBox = modal.querySelector('.modal-box');
+    const Motion = getMotionEngine();
+    if (modalBox && Motion && typeof Motion.animate === 'function') {
+      Motion.animate(
+        modalBox,
+        { opacity: [0, 1], scale: [0.93, 1], y: [16, 0] },
+        { duration: 0.3, ease: [0.16, 1, 0.3, 1] }
+      );
+    }
+
     if (window.innerWidth > 768) {
       const input = modal.querySelector('input');
       if (input) input.focus();
@@ -2967,8 +3033,25 @@
   function closeModal(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
-    modal.classList.remove('active');
-    setTimeout(() => { modal.style.display = 'none'; }, 250);
+    const modalBox = modal.querySelector('.modal-box');
+    const Motion = getMotionEngine();
+
+    // UI/UX Pro Max rule: Exit faster than enter (snappy 160ms deceleration)
+    if (modalBox && Motion && typeof Motion.animate === 'function') {
+      Motion.animate(
+        modalBox,
+        { opacity: [1, 0], scale: [1, 0.94], y: [0, 8] },
+        { duration: 0.16, ease: [0.7, 0, 0.84, 0] }
+      ).then(() => {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        modalBox.style.opacity = '';
+        modalBox.style.transform = '';
+      });
+    } else {
+      modal.classList.remove('active');
+      setTimeout(() => { modal.style.display = 'none'; }, 160);
+    }
   }
 
   function openLoginModal() {

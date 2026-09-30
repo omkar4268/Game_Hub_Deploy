@@ -595,9 +595,14 @@ function closeProtocolModal() {
   if (protocolModal) protocolModal.classList.remove('active');
 }
 
-/* Cyber-Scanner Navigation Wipe Handler */
+/* Kinetic Camera Depth Navigation Transition Handler */
 function cyberNavigate(url) {
   const overlay = document.getElementById('cyberWipeOverlay');
+  document.body.style.transform = 'scale(0.975)';
+  document.body.style.filter = 'blur(4px)';
+  document.body.style.opacity = '0.6';
+  document.body.style.transition = 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+
   if (overlay) {
     overlay.classList.add('active');
     setTimeout(() => {
@@ -611,4 +616,7 @@ function cyberNavigate(url) {
 window.addEventListener('pageshow', () => {
   const overlay = document.getElementById('cyberWipeOverlay');
   if (overlay) overlay.classList.remove('active');
+  document.body.style.transform = '';
+  document.body.style.filter = '';
+  document.body.style.opacity = '';
 });
