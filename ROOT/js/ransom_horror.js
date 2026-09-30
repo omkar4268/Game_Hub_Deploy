@@ -277,6 +277,14 @@
       this.scheduleWarning(10000, 30000); // Reschedule for next random 10-30s cycle
     },
 
+    notifyChessMove: function(move) {
+      if (this.state === 'warning') {
+        this.removeInputListeners();
+        clearTimeout(this.warningDurationTimeout);
+        this.triggerInitialJumpscare();
+      }
+    },
+
     // -------------------------------------------------------------
     // PHASE 2: INITIAL JUMPSCARE (TRIGGERED IMMEDIATELY ON ANY INPUT)
     // -------------------------------------------------------------

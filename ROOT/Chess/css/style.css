@@ -89,6 +89,9 @@
             border-radius: 6px;
             box-shadow: 0 0 35px var(--board-glow);
             background: #2b2b2b;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .status-box {
@@ -380,7 +383,7 @@
             height: 100vh;
             height: 100dvh;
             background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.1) 60%, rgba(56, 189, 248, 0.5) 92%, #38bdf8 98%, #ffffff 100%);
-            box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #22c55e;
+            box-shadow: 12px 0 35px rgba(56, 189, 248, 0.8), 2px 0 15px #00f0ff;
             transform: translate3d(0, 0, 0);
         }
         .cyber-wipe-overlay.active .cyber-wipe-beam {

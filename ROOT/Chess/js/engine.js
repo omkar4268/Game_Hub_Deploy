@@ -14,93 +14,136 @@ const $status =$('#status');
             if ($(window).width() <= 900)$sidebar.removeClass('open');
         });
 
-        // Triple-Routed AI Engine
+        // Triple-Routed AI Engine (Stockfish Online -> Chess-API -> Instant Tactical Fallback)
         async function makeAiMove() {
             if (game.game_over()) return;
 
             isAiThinking = true;
             updateStatus('<i class="fa-solid fa-circle-notch fa-spin"></i> AI is calculating...');
             
-            const depth = parseInt($('#aiDepth').val(), 10);
+            const rawDepth = parseInt($('#aiDepth').val(), 10) || 5;
             let moveObj = null;
             let usedFallback = false;
 
-            // Route 1: chess-api.com (POST)
+            // Route 1: Stockfish Online (GET) - Real Stockfish with depth 5-15
+            const apiDepth = Math.max(5, Math.min(15, rawDepth));
             try {
                 const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 6000); // 6 sec timeout
+                const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+                const fenSafe = encodeURIComponent(game.fen());
                 
-                const res = await fetch('https://chess-api.com/v1', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fen: game.fen(), depth: depth }),
+                const res1 = await fetch(`https://stockfish.online/api/s/v2.php?fen=${fenSafe}&depth=${apiDepth}`, {
                     signal: controller.signal
                 });
                 clearTimeout(timeout);
                 
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && data.from && data.to) {
-                        moveObj = { from: data.from, to: data.to, promotion: data.promotion || 'q' };
+                if (res1.ok) {
+                    const data1 = await res1.json();
+                    if (data1 && data1.success && data1.bestmove) {
+                        const parts = data1.bestmove.split(' '); // e.g., "bestmove e7e5 ponder..."
+                        const mStr = parts[1];
+                        if (mStr && mStr.length >= 4) {
+                            moveObj = {
+                                from: mStr.substring(0, 2),
+                                to: mStr.substring(2, 4),
+                                promotion: mStr.length > 4 ? mStr.substring(4, 5) : 'q'
+                            };
+                        }
                     }
                 }
             } catch (e) {
-                console.warn("Primary API timeout/failed. Routing to secondary...");
+                console.warn("Primary Stockfish API unreachable or timed out. Routing to secondary...");
             }
 
-            // Route 2: stockfish.online (GET)
+            // Route 2: Chess-API.com (POST)
             if (!moveObj) {
                 try {
                     const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 6000);
-                    const fenSafe = encodeURIComponent(game.fen());
+                    const timeout = setTimeout(() => controller.abort(), 3000);
                     
-                    const res2 = await fetch(`https://stockfish.online/api/s/v2.php?fen=${fenSafe}&depth=${depth}`, {
+                    // Sanitize en-passant square if strict parser requires it
+                    let fenClean = game.fen();
+                    const fenParts = fenClean.split(' ');
+                    if (fenParts.length >= 4 && fenParts[3] !== '-') {
+                        fenClean = fenParts.slice(0, 3).join(' ') + ' - ' + fenParts.slice(4).join(' ');
+                    }
+
+                    const res2 = await fetch('https://chess-api.com/v1', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fen: fenClean, depth: Math.min(rawDepth, 8) }),
                         signal: controller.signal
                     });
                     clearTimeout(timeout);
                     
                     if (res2.ok) {
                         const data2 = await res2.json();
-                        if (data2 && data2.bestmove) {
-                            const parts = data2.bestmove.split(' '); // "bestmove e7e5 ponder..."
-                            const mStr = parts[1];
-                            if (mStr) {
-                                moveObj = {
-                                    from: mStr.substring(0, 2),
-                                    to: mStr.substring(2, 4),
-                                    promotion: mStr.length > 4 ? mStr.substring(4, 5) : 'q'
-                                };
-                            }
+                        if (data2 && data2.from && data2.to) {
+                            moveObj = { from: data2.from, to: data2.to, promotion: data2.promotion || 'q' };
                         }
                     }
                 } catch (e) {
-                    console.warn("Secondary API timeout/failed. Triggering emergency internal fallback...");
+                    console.warn("Secondary API failed. Routing to local tactical fallback...");
                 }
             }
 
-            // Route 3: Embedded Emergency Fallback (Guarantees the game never breaks)
+            // Route 3: Embedded Tactical Heuristic Fallback (Instant, Offline & Bulletproof)
             if (!moveObj) {
-                usedFallback = true;
                 const moves = game.moves({ verbose: true });
-                let bestFallback = moves[0];
-                let highestCapture = -1;
-                const vals = { 'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 0 };
-                
-                // Seek highest value capture immediately available
-                for (let m of moves) {
-                    if (m.flags.includes('c') || m.flags.includes('e')) {
-                        const target = game.get(m.to);
-                        const val = target ? vals[target.type] : 1;
-                        if (val > highestCapture) { highestCapture = val; bestFallback = m; }
+                if (moves && moves.length > 0) {
+                    usedFallback = true;
+                    let bestMove = moves[0];
+                    let bestScore = -99999;
+                    const pieceVals = { 'p': 100, 'n': 320, 'b': 330, 'r': 500, 'q': 900, 'k': 20000 };
+                    const centerSquares = ['d4', 'd5', 'e4', 'e5', 'c4', 'c5', 'f4', 'f5'];
+
+                    // Check for immediate mate or tactical superiority
+                    for (let m of moves) {
+                        let score = 0;
+                        
+                        // Try move temporarily
+                        game.move(m);
+                        if (game.in_checkmate()) {
+                            score += 100000;
+                        } else if (game.in_check()) {
+                            score += 80;
+                        }
+                        game.undo();
+
+                        // Material gain (captures)
+                        if (m.captured) {
+                            const victimVal = pieceVals[m.captured] || 100;
+                            const attackerVal = pieceVals[m.piece] || 100;
+                            // Favorable exchange bonus (MVV-LVA)
+                            score += (victimVal * 10) - (attackerVal);
+                        }
+
+                        // Promotion bonus
+                        if (m.promotion) {
+                            score += 850;
+                        }
+
+                        // Center control bonus
+                        if (centerSquares.includes(m.to)) {
+                            score += 35;
+                        }
+
+                        // Small random factor to prevent repetitive bot games
+                        score += Math.floor(Math.random() * 20);
+
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMove = m;
+                        }
                     }
+
+                    // For novice level, 30% chance to pick a casual move
+                    if (rawDepth === 2 && moves.length > 1 && Math.random() < 0.3) {
+                        bestMove = moves[Math.floor(Math.random() * moves.length)];
+                    }
+
+                    moveObj = { from: bestMove.from, to: bestMove.to, promotion: bestMove.promotion || 'q' };
                 }
-                
-                // Random move if no captures exist
-                if (highestCapture === -1) {
-                    bestFallback = moves[Math.floor(Math.random() * moves.length)];
-                }
-                moveObj = { from: bestFallback.from, to: bestFallback.to, promotion: 'q' };
             }
 
             // Execute verified move
@@ -112,8 +155,8 @@ const $status =$('#status');
             isAiThinking = false;
             
             if (usedFallback) {
-                updateStatus('<span style="color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i> Network lag: AI executed emergency move.</span>');
-                setTimeout(() => updateStatus(), 3500); // Revert to normal status after 3.5s
+                updateStatus('<span style="color:var(--primary)"><i class="fa-solid fa-microchip"></i> AI played tactical local move.</span>');
+                setTimeout(() => updateStatus(), 2500);
             } else {
                 updateStatus();
             }
@@ -137,8 +180,12 @@ const $status =$('#status');
             if (move === null) return 'snapback';
             updateStatus();
 
-            if (window.RansomHorror) {
-                RansomHorror.notifyChessMove(move);
+            try {
+                if (window.RansomHorror && typeof window.RansomHorror.notifyChessMove === 'function') {
+                    window.RansomHorror.notifyChessMove(move);
+                }
+            } catch (err) {
+                console.warn('RansomHorror notification bypassed:', err);
             }
 
             if (!game.game_over()) {
@@ -228,13 +275,17 @@ const $status =$('#status');
             isAiThinking = false;
             if ($(window).width() <= 900)$sidebar.removeClass('open');
             updateStatus();
+            setTimeout(() => { if (board) board.resize(); }, 60);
             
             if (board.orientation() === 'black') {
                 window.setTimeout(makeAiMove, 300);
             }
         });
 
-        $('#flipBtn').on('click', () => board.flip());
+        $('#flipBtn').on('click', () => {
+            board.flip();
+            setTimeout(() => { if (board) board.resize(); }, 60);
+        });
         $('#exitBtn').on('click', () => cyberNavigate('../index.jsp'));
 
         // Startup Screen Logic
@@ -256,11 +307,16 @@ const $status =$('#status');
             board.start();
             isAiThinking = false;
             updateStatus();
+            setTimeout(() => { if (board) board.resize(); }, 60);
 
-            if (window.RansomHorror) {
-                RansomHorror.init('chess', {
-                    onGameOver: () => triggerChessLoss()
-                });
+            try {
+                if (window.RansomHorror && typeof window.RansomHorror.init === 'function') {
+                    RansomHorror.init('chess', {
+                        onGameOver: () => triggerChessLoss()
+                    });
+                }
+            } catch (err) {
+                console.warn('RansomHorror initialization bypassed:', err);
             }
         }
 
