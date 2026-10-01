@@ -3,25 +3,27 @@
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+const DOORWAY_Z = -8.0;
+
 export default function CameraRig() {
   useFrame((state) => {
-    // Smooth cinematic parallax following the pointer
-    const targetX = 0.15 + state.pointer.x * 0.75;
-    const targetY = -2.35 + state.pointer.y * 0.5;
+    // Parallax tracking pointer while keeping center white doorway aligned
+    const targetX = state.pointer.x * 0.55;
+    const targetY = state.pointer.y * 0.38;
 
     state.camera.position.x = THREE.MathUtils.lerp(
       state.camera.position.x,
       targetX,
-      0.05
+      0.04
     );
     state.camera.position.y = THREE.MathUtils.lerp(
       state.camera.position.y,
       targetY,
-      0.05
+      0.04
     );
 
-    // Look toward center of the voxel wall
-    state.camera.lookAt(0, 0, 0);
+    // Look straight towards the central glowing doorway
+    state.camera.lookAt(0, 0, DOORWAY_Z);
   });
 
   return null;

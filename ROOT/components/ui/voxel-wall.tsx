@@ -57,12 +57,12 @@ export default function VoxelWallScene({
         <Canvas
           dpr={[1, 2]}
           shadows
-          camera={{ position: [0.15, -2.35, 4.2], fov: 52, near: 0.1, far: 40 }}
+          camera={{ position: [0, 0, 7.8], fov: 54, near: 0.1, far: 45 }}
           gl={{
             antialias: false,
             alpha: false,
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.05,
+            toneMappingExposure: 1.15,
           }}
           style={{ width: "100%", height: "100%" }}
         >

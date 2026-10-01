@@ -2776,26 +2776,64 @@
     border-radius: 999px;
   }
 
-  /* Live Orb Companion Mouse Follower */
-  .live-orb-follower {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 46px;
-    height: 46px;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate3d(-100px, -100px, 0);
-    will-change: transform;
-    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 10px var(--orb-glow, rgba(0, 240, 255, 0.35)));
-    transition: opacity 0.25s ease;
+  /* Stationary Companion Orb in Profile Widget & Landing Card */
+  .auth-avatar-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 auto 8px auto;
   }
-  .live-orb-follower canvas {
-    width: 100%;
-    height: 100%;
+  .sidebar-orb-station {
+    width: 48px;
+    height: 48px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, rgba(20, 35, 60, 0.9), rgba(4, 9, 20, 0.98));
+    border: 1.5px solid rgba(0, 240, 255, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8), 0 0 14px var(--orb-glow, rgba(0, 240, 255, 0.3));
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   }
-  .live-orb-follower.hidden {
+  .sidebar-orb-station:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9), 0 0 22px var(--orb-glow, rgba(0, 240, 255, 0.5));
+  }
+  .sidebar-orb-station canvas {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .portal-orb-station {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 40% 40%, rgba(20, 35, 60, 0.9), rgba(4, 9, 20, 0.98));
+    border: 1.5px solid rgba(0, 240, 255, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 16px var(--orb-glow, rgba(0, 240, 255, 0.35));
+    z-index: 20;
+    pointer-events: none;
+  }
+  .portal-orb-station canvas {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: block;
+  }
+
+  /* Live Orb Follower Disabled (Stationary Only) */
+  .live-orb-follower {
     display: none !important;
   }
 
@@ -3110,6 +3148,10 @@
        ========================================================= -->
   <div id="landingPortal">
     <div class="portal-content">
+      <!-- Stationary Operative Companion Orb (Tracking cursor from fixed post) -->
+      <div class="portal-orb-station" id="portalOrbStation" title="Operative Companion Orb">
+        <canvas id="portalOrbCanvas" width="96" height="96"></canvas>
+      </div>
       <div class="portal-tag">🧠 BRAIN TRAINING & LOGIC HUB</div>
       <h1 class="portal-title">GAME HUB</h1>
       <p class="portal-subtitle">
@@ -3138,7 +3180,7 @@
       </div>
 
       <div class="portal-kinetic-hint">
-        <span>⚡ VOXEL WALL 3D ACTIVE • HOVER & MOVE CURSOR TO RIPPLE VOXELS</span>
+        <span>⚡ MONOCHROME VOXEL TUNNEL • CENTRED GATEWAY ACTIVE</span>
       </div>
 
       <div class="portal-footer-note">
@@ -3157,9 +3199,14 @@
 
     <div class="auth-widget" id="authWidget">
       <% if (isLoggedIn) { %>
-        <div class="auth-avatar-wrap">
-          <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
-          <div class="auth-avatar-pulse"></div>
+        <div class="auth-avatar-row">
+          <div class="auth-avatar-wrap" style="margin: 0;">
+            <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
+            <div class="auth-avatar-pulse"></div>
+          </div>
+          <div class="sidebar-orb-station" id="sidebarOrbStation" title="Operative Companion Orb (Stationary eye-tracking)">
+            <canvas id="sidebarOrbCanvas" width="96" height="96"></canvas>
+          </div>
         </div>
         <div class="auth-name">
           <%= currentUser %>
@@ -3183,8 +3230,13 @@
           <span>⏻ DISCONNECT</span>
         </button>
       <% } else { %>
-        <div class="auth-avatar-wrap">
-          <div class="auth-avatar" style="background: rgba(255,255,255,0.08); color: var(--text-muted); box-shadow: none; border-color: rgba(255,255,255,0.2);">?</div>
+        <div class="auth-avatar-row">
+          <div class="auth-avatar-wrap" style="margin: 0;">
+            <div class="auth-avatar" style="background: rgba(255,255,255,0.08); color: var(--text-muted); box-shadow: none; border-color: rgba(255,255,255,0.2);">?</div>
+          </div>
+          <div class="sidebar-orb-station" id="sidebarOrbStationGuest" title="Operative Companion Orb (Stationary eye-tracking)">
+            <canvas id="sidebarOrbCanvasGuest" width="96" height="96"></canvas>
+          </div>
         </div>
         <div class="auth-name" style="color: var(--text-muted);">
           GUEST OPERATIVE
@@ -5875,8 +5927,8 @@
   }
 
   // ---------------------------------------------------------
-  // 1. 3D ATMOSPHERIC VOXEL WALL (Sign-In & Landing Portal)
-  // (Full Three.js port of voxel-wall.tsx + camera-rig + light-rays)
+  // 1. MONOCHROME VOXEL TUNNEL & GLOWING PORTAL (Landing / Sign-in)
+  // Exact 3D recreation of the cinematic dark voxel corridor & white doorway
   // ---------------------------------------------------------
   function setupVoxelWall() {
     const canvas = document.getElementById('voxelWallCanvas') || document.getElementById('kineticGridCanvas');
@@ -5886,7 +5938,7 @@
     let animId = null;
 
     if (typeof THREE === 'undefined') {
-      console.warn('Three.js not found, voxel wall unavailable.');
+      console.warn('Three.js not found, voxel portal unavailable.');
       return null;
     }
 
@@ -5894,17 +5946,17 @@
       let width = window.innerWidth;
       let height = window.innerHeight;
 
-      // 1. Scene & Atmosphere (background #000000, fog [#000000, 6, 22])
+      // 1. Scene & Deep Black Void
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x000000);
-      scene.fog = new THREE.Fog(0x000000, 6, 22);
+      scene.fog = new THREE.FogExp2(0x000000, 0.042);
 
-      // Camera: position [0.15, -2.35, 4.2], fov: 52, near: 0.1, far: 40
-      const camera = new THREE.PerspectiveCamera(52, width / height, 0.1, 40);
-      camera.position.set(0.15, -2.35, 4.2);
-      camera.lookAt(0, 0, 0);
+      // Camera: positioned directly looking into the tunnel towards the center portal
+      const camera = new THREE.PerspectiveCamera(54, width / height, 0.1, 45);
+      camera.position.set(0, 0, 7.8);
+      camera.lookAt(0, 0, -8.0);
 
-      // WebGL Renderer: antialias: false, alpha: false, ACESFilmicToneMapping, exposure: 1.05
+      // WebGL Renderer with High-Performance Filmic Tone Mapping
       const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: false,
@@ -5914,122 +5966,217 @@
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.05;
-      if (renderer.shadowMap) {
-        renderer.shadowMap.enabled = true;
-      }
+      renderer.toneMappingExposure = 1.15;
 
-      // 2. Scene Lights (SceneLights)
-      const ambientLight = new THREE.AmbientLight(0x081426, 0.45);
+      // 2. Lighting: Intense Pure White Backlight from the Center Doorway
+      const ambientLight = new THREE.AmbientLight(0x141414, 0.7);
       scene.add(ambientLight);
 
-      const sunLight = new THREE.DirectionalLight(0x00f0ff, 2.8);
-      sunLight.position.set(3.2, 4.0, 4.0);
-      sunLight.castShadow = true;
-      if (sunLight.shadow && sunLight.shadow.mapSize) {
-        sunLight.shadow.mapSize.width = 1024;
-        sunLight.shadow.mapSize.height = 1024;
+      // Main Point Light located right inside the glowing doorway
+      const portalLight = new THREE.PointLight(0xffffff, 5.2, 28, 1.2);
+      portalLight.position.set(0, 0, -7.6);
+      scene.add(portalLight);
+
+      // Secondary forward fill light for subtle silhouette definition
+      const frontRimLight = new THREE.DirectionalLight(0x2a2a2a, 0.4);
+      frontRimLight.position.set(0, -4, 4);
+      scene.add(frontRimLight);
+
+      // 3. Central Brilliant White Glowing Gateway
+      const DOORWAY_Z = -8.0;
+      const doorwayGroup = new THREE.Group();
+      doorwayGroup.position.set(0, 0, DOORWAY_Z);
+
+      // Core Pure White Doorway Mesh
+      const doorWidth = 3.6;
+      const doorHeight = 2.8;
+      const doorGeo = new THREE.PlaneGeometry(doorWidth, doorHeight);
+      const doorMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const doorMesh = new THREE.Mesh(doorGeo, doorMat);
+      doorwayGroup.add(doorMesh);
+
+      // Procedural Volumetric Light Bloom & Radiating Rays Texture
+      const glowCanvas = document.createElement('canvas');
+      glowCanvas.width = 512;
+      glowCanvas.height = 512;
+      const gctx = glowCanvas.getContext('2d');
+      if (gctx) {
+        const cx = 256, cy = 256;
+        gctx.clearRect(0, 0, 512, 512);
+
+        // Radial bloom glow
+        const radGrad = gctx.createRadialGradient(cx, cy, 30, cx, cy, 250);
+        radGrad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+        radGrad.addColorStop(0.18, 'rgba(255, 255, 255, 0.85)');
+        radGrad.addColorStop(0.45, 'rgba(220, 235, 255, 0.35)');
+        radGrad.addColorStop(0.75, 'rgba(180, 210, 255, 0.10)');
+        radGrad.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
+        gctx.fillStyle = radGrad;
+        gctx.fillRect(0, 0, 512, 512);
+
+        // 16 radiating white light rays / god-ray streaks
+        gctx.save();
+        gctx.translate(cx, cy);
+        for (let i = 0; i < 16; i++) {
+          gctx.rotate((Math.PI * 2) / 16);
+          const rayGrad = gctx.createLinearGradient(0, 0, 240, 0);
+          rayGrad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+          rayGrad.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
+          rayGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          gctx.fillStyle = rayGrad;
+          gctx.beginPath();
+          gctx.moveTo(0, -6);
+          gctx.lineTo(240, -18);
+          gctx.lineTo(240, 18);
+          gctx.lineTo(0, 6);
+          gctx.fill();
+        }
+        gctx.restore();
       }
-      scene.add(sunLight);
 
-      const fillLight = new THREE.DirectionalLight(0x3b82f6, 1.1);
-      fillLight.position.set(-4.0, -3.0, 2.0);
-      scene.add(fillLight);
+      const glowTexture = new THREE.CanvasTexture(glowCanvas);
+      glowTexture.generateMipmaps = false;
+      glowTexture.minFilter = THREE.LinearFilter;
 
-      const pointLight = new THREE.PointLight(0x00f0ff, 1.2, 8);
-      pointLight.position.set(0, 0, 3.5);
-      scene.add(pointLight);
-
-      // 3. Sun Beacon (LightSource)
-      const sunGeo = new THREE.SphereGeometry(0.35, 24, 24);
-      const sunMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
-      const sunMesh = new THREE.Mesh(sunGeo, sunMat);
-      sunMesh.position.set(3.2, 4.0, 3.5);
-      scene.add(sunMesh);
-
-      // Volumetric Light Cone (LightEffects)
-      const coneGeo = new THREE.ConeGeometry(4.5, 12, 32, 1, true);
-      const coneMat = new THREE.MeshBasicMaterial({
-        color: 0x00f0ff,
+      // Inner intense bloom plane
+      const innerGlowGeo = new THREE.PlaneGeometry(8.2, 6.8);
+      const innerGlowMat = new THREE.MeshBasicMaterial({
+        map: glowTexture,
         transparent: true,
-        opacity: 0.08,
+        blending: THREE.AdditiveBlending,
+        opacity: 0.95,
+        depthWrite: false
+      });
+      const innerGlowMesh = new THREE.Mesh(innerGlowGeo, innerGlowMat);
+      innerGlowMesh.position.set(0, 0, 0.08);
+      doorwayGroup.add(innerGlowMesh);
+
+      // Outer soft atmosphere halo
+      const outerGlowGeo = new THREE.PlaneGeometry(16.0, 13.0);
+      const outerGlowMat = new THREE.MeshBasicMaterial({
+        map: glowTexture,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        opacity: 0.32,
+        depthWrite: false
+      });
+      const outerGlowMesh = new THREE.Mesh(outerGlowGeo, outerGlowMat);
+      outerGlowMesh.position.set(0, 0, 0.15);
+      doorwayGroup.add(outerGlowMesh);
+
+      // Volumetric Light Ray Tunnel Cone projecting from doorway toward camera
+      const rayConeGeo = new THREE.CylinderGeometry(1.6, 7.5, 14.5, 32, 1, true);
+      const rayConeMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.055,
         blending: THREE.AdditiveBlending,
         side: THREE.DoubleSide,
         depthWrite: false
       });
-      const lightCone = new THREE.Mesh(coneGeo, coneMat);
-      lightCone.position.copy(sunMesh.position);
-      scene.add(lightCone);
+      const rayConeMesh = new THREE.Mesh(rayConeGeo, rayConeMat);
+      rayConeMesh.rotation.x = Math.PI / 2;
+      rayConeMesh.position.set(0, 0, 6.5);
+      doorwayGroup.add(rayConeMesh);
 
-      // 4. Instanced Voxel Wall (VoxelWall)
-      const COLS = 34;
-      const ROWS = 22;
-      const TOTAL_VOXELS = COLS * ROWS;
-      const VOXEL_SIZE = 0.36;
-      const GAP = 0.05;
-      const STEP = VOXEL_SIZE + GAP;
+      scene.add(doorwayGroup);
 
-      const boxGeo = new THREE.BoxGeometry(VOXEL_SIZE, VOXEL_SIZE, 0.6);
+      // 4. Dark Monochrome Floating Voxel Tunnel (Surrounding the Doorway)
+      const VOXEL_COUNT = 520;
+      const boxGeo = new THREE.BoxGeometry(1, 1, 1);
       const boxMat = new THREE.MeshStandardMaterial({
-        roughness: 0.25,
-        metalness: 0.4
+        color: 0x181818,
+        roughness: 0.35,
+        metalness: 0.22
       });
 
-      const voxelMesh = new THREE.InstancedMesh(boxGeo, boxMat, TOTAL_VOXELS);
-      voxelMesh.castShadow = true;
-      voxelMesh.receiveShadow = true;
-
+      const voxelMesh = new THREE.InstancedMesh(boxGeo, boxMat, VOXEL_COUNT);
       const dummy = new THREE.Object3D();
-      const tempCol = new THREE.Color();
-      const gridItems = [];
+      const voxelData = [];
 
-      const offsetX = ((COLS - 1) * STEP) / 2;
-      const offsetY = ((ROWS - 1) * STEP) / 2;
+      for (let i = 0; i < VOXEL_COUNT; i++) {
+        // Distribute along depth Z from doorway (-7.8) to near camera (6.5)
+        const progress = i / VOXEL_COUNT;
+        const z = -7.8 + progress * 14.3;
 
-      for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-          const x = c * STEP - offsetX;
-          const y = r * STEP - offsetY;
-          const distCenter = Math.hypot(x, y);
-          gridItems.push({
-            x: x,
-            y: y,
-            baseZ: -Math.cos(distCenter * 0.4) * 0.3,
-            phase: (x * 0.5 + y * 0.3)
-          });
-        }
+        // Tunnel radius expands from doorway outward toward camera
+        const pNorm = (z - (-7.8)) / 14.3; // 0 to 1
+        const rMin = 1.95 + pNorm * 2.6;
+        const rMax = 3.6 + pNorm * 4.6;
+        const r = rMin + Math.random() * (rMax - rMin);
+
+        // Circular/elliptical angle around center axis
+        const angle = Math.random() * Math.PI * 2;
+        const x = Math.cos(angle) * r + (Math.random() - 0.5) * 0.45;
+        // 0.72 factor matches wide 16:9 screen and rectangular portal
+        const y = Math.sin(angle) * (r * 0.72) + (Math.random() - 0.5) * 0.45;
+
+        // Varied cubic scales matching reference image
+        const baseSize = 0.32 + Math.random() * 0.45;
+        const sx = baseSize * (0.85 + Math.random() * 0.3);
+        const sy = baseSize * (0.85 + Math.random() * 0.3);
+        const sz = baseSize * (0.85 + Math.random() * 0.3);
+
+        // Slight zero-gravity tilts
+        const rx = (Math.random() - 0.5) * 0.65;
+        const ry = (Math.random() - 0.5) * 0.65;
+        const rz = (Math.random() - 0.5) * 0.65;
+
+        voxelData.push({
+          x, y, z,
+          baseY: y,
+          sx, sy, sz,
+          rx, ry, rz,
+          floatPhase: Math.random() * Math.PI * 2,
+          floatSpeed: 0.6 + Math.random() * 0.8
+        });
+
+        dummy.position.set(x, y, z);
+        dummy.rotation.set(rx, ry, rz);
+        dummy.scale.set(sx, sy, sz);
+        dummy.updateMatrix();
+        voxelMesh.setMatrixAt(i, dummy.matrix);
+
+        // Tone color: dark charcoal, cubes closer to the doorway catch more white light
+        const distToDoor = Math.hypot(x, y, z - DOORWAY_Z);
+        const lightRatio = Math.max(0, 1 - distToDoor / 14);
+        const grayVal = 0.06 + lightRatio * 0.16;
+        const col = new THREE.Color().setRGB(grayVal, grayVal, grayVal);
+        voxelMesh.setColorAt(i, col);
       }
+      voxelMesh.instanceMatrix.needsUpdate = true;
+      if (voxelMesh.instanceColor) voxelMesh.instanceColor.needsUpdate = true;
       scene.add(voxelMesh);
 
-      // 5. Atmospheric Dust Motes (DustMotes)
-      const DUST_COUNT = 180;
+      // 5. Atmospheric Floating Dust Particles in the Light Shaft
+      const DUST_COUNT = 140;
       const dustPositions = new Float32Array(DUST_COUNT * 3);
       const dustVelocities = new Float32Array(DUST_COUNT * 3);
 
       for (let i = 0; i < DUST_COUNT; i++) {
-        dustPositions[i * 3] = (Math.random() - 0.5) * 14;
-        dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-        dustPositions[i * 3 + 2] = Math.random() * 4.5 + 0.2;
+        dustPositions[i * 3] = (Math.random() - 0.5) * 6.5;
+        dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 4.8;
+        dustPositions[i * 3 + 2] = -7.5 + Math.random() * 14;
 
-        dustVelocities[i * 3] = (Math.random() - 0.5) * 0.004;
-        dustVelocities[i * 3 + 1] = Math.random() * 0.006 + 0.002;
-        dustVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.003;
+        dustVelocities[i * 3] = (Math.random() - 0.5) * 0.003;
+        dustVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.003;
+        dustVelocities[i * 3 + 2] = 0.006 + Math.random() * 0.008; // slow drift forward
       }
 
       const dustGeo = new THREE.BufferGeometry();
       dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
       const dustMat = new THREE.PointsMaterial({
-        size: 0.045,
-        color: 0x38bdf8,
+        size: 0.038,
+        color: 0xffffff,
         transparent: true,
-        opacity: 0.65,
+        opacity: 0.75,
         blending: THREE.AdditiveBlending,
         depthWrite: false
       });
       const dustPoints = new THREE.Points(dustGeo, dustMat);
       scene.add(dustPoints);
 
-      // 6. Camera Rig & Mouse Tracking (CameraRig)
+      // 6. Camera Rig with Parallax Interaction
       const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
       function onMouseMove(e) {
         pointer.targetX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -6061,67 +6208,49 @@
 
         const time = clock.getElapsedTime();
 
-        // Lerp pointer for smooth parallax
-        pointer.x += (pointer.targetX - pointer.x) * 0.06;
-        pointer.y += (pointer.targetY - pointer.y) * 0.06;
+        // Smooth parallax pointer lerp
+        pointer.x += (pointer.targetX - pointer.x) * 0.05;
+        pointer.y += (pointer.targetY - pointer.y) * 0.05;
 
-        // Camera Rig Parallax tracking pointer
-        const camTargetX = 0.15 + pointer.x * 0.75;
-        const camTargetY = -2.35 + pointer.y * 0.5;
-        camera.position.x += (camTargetX - camera.position.x) * 0.05;
-        camera.position.y += (camTargetY - camera.position.y) * 0.05;
-        camera.lookAt(0, 0, 0);
+        // Camera Rig Parallax (keeping center white doorway perfectly aligned behind sign-in card)
+        const camTargetX = pointer.x * 0.55;
+        const camTargetY = pointer.y * 0.38;
+        camera.position.x += (camTargetX - camera.position.x) * 0.04;
+        camera.position.y += (camTargetY - camera.position.y) * 0.04;
+        camera.lookAt(0, 0, DOORWAY_Z);
 
-        // Volumetric Light Cone slow rotation
-        lightCone.rotation.z = time * 0.05;
+        // Subtle rotation of light cone and outer halo
+        rayConeMesh.rotation.z = time * 0.03;
+        outerGlowMesh.rotation.z = -time * 0.015;
 
-        // Voxel Wall Dynamic Update
-        const ptrX = (pointer.x * (COLS * STEP)) / 2;
-        const ptrY = (pointer.y * (ROWS * STEP)) / 2;
-
-        for (let i = 0; i < gridItems.length; i++) {
-          const item = gridItems[i];
-          const wave =
-            Math.sin(time * 1.6 + item.phase) * 0.25 +
-            Math.cos(time * 0.9 - item.y * 0.6) * 0.15;
-
-          const dx = item.x - ptrX;
-          const dy = item.y - ptrY;
-          const mouseDist = Math.hypot(dx, dy);
-          const mouseInfluence = Math.max(0, 1 - mouseDist / 2.8);
-          const mouseElevation = Math.sin(mouseInfluence * Math.PI) * 0.75;
-
-          const z = item.baseZ + wave + mouseElevation;
-
-          dummy.position.set(item.x, item.y, z);
-          const scaleZ = 1 + mouseElevation * 1.2;
-          dummy.scale.set(1, 1, Math.max(0.4, scaleZ));
+        // Gentle zero-gravity floating breathing of cubes
+        for (let i = 0; i < VOXEL_COUNT; i++) {
+          const v = voxelData[i];
+          const floatY = v.baseY + Math.sin(time * v.floatSpeed + v.floatPhase) * 0.06;
+          dummy.position.set(v.x, floatY, v.z);
+          dummy.rotation.set(
+            v.rx + Math.sin(time * 0.4 + v.floatPhase) * 0.05,
+            v.ry + Math.cos(time * 0.3 + v.floatPhase) * 0.05,
+            v.rz
+          );
+          dummy.scale.set(v.sx, v.sy, v.sz);
           dummy.updateMatrix();
           voxelMesh.setMatrixAt(i, dummy.matrix);
-
-          // Height + Cursor Reactive Ambient Glow
-          const elevationRatio = (z + 0.5) / 1.5;
-          const r = THREE.MathUtils.lerp(0.04, 0.0, elevationRatio);
-          const g = THREE.MathUtils.lerp(0.12, 0.85, Math.max(0, mouseInfluence));
-          const b = THREE.MathUtils.lerp(0.24, 1.0, elevationRatio);
-          tempCol.setRGB(r, g, b);
-          voxelMesh.setColorAt(i, tempCol);
         }
         voxelMesh.instanceMatrix.needsUpdate = true;
-        if (voxelMesh.instanceColor) {
-          voxelMesh.instanceColor.needsUpdate = true;
-        }
 
-        // Dust Motes update
+        // Dust particle forward drift update
         const pArr = dustGeo.attributes.position.array;
         for (let i = 0; i < DUST_COUNT; i++) {
           pArr[i * 3] += dustVelocities[i * 3];
           pArr[i * 3 + 1] += dustVelocities[i * 3 + 1];
           pArr[i * 3 + 2] += dustVelocities[i * 3 + 2];
 
-          if (pArr[i * 3 + 1] > 6) {
-            pArr[i * 3 + 1] = -5;
-            pArr[i * 3] = (Math.random() - 0.5) * 14;
+          // Recycle particles reaching the front
+          if (pArr[i * 3 + 2] > 7.0) {
+            pArr[i * 3 + 2] = -7.5;
+            pArr[i * 3] = (Math.random() - 0.5) * 6.5;
+            pArr[i * 3 + 1] = (Math.random() - 0.5) * 4.8;
           }
         }
         dustGeo.attributes.position.needsUpdate = true;
@@ -6657,8 +6786,9 @@
   ];
 
   let currentOrbSkinId = localStorage.getItem('hub_orb_skin') || 'default_white';
-  let isOrbFollowerActive = localStorage.getItem('hub_orb_active') !== 'false';
-  let followerOrbInstance = null;
+  let isOrbEyeActive = localStorage.getItem('hub_orb_active') !== 'false';
+  let sidebarOrbInstance = null;
+  let portalOrbInstance = null;
   let spotlightOrbInstance = null;
 
   function createOrbGlEngine(canvas, initialOptions) {
@@ -6720,112 +6850,116 @@
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    let raf = 0;
+    let blinkVal = 0.0;
+    let nextBlink = performance.now() + 2500 + Math.random() * 3000;
+    let isBlinking = false;
+    let blinkProgress = 0;
+    let startT = performance.now();
     let running = true;
-    const start = performance.now();
-    let nextBlink = start + 1800 + Math.random() * 2400;
-    let blinkAt = -10000;
+    let raf = null;
 
-    function hexToRgbArr(hex) {
-      const h = (hex || '#F4F4F5').replace('#', '').trim();
-      const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h.padEnd(6, '0').slice(0, 6);
-      const n = parseInt(full, 16);
-      if (isNaN(n)) return [0.96, 0.96, 0.96];
-      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
-    }
-
-    function render(now) {
+    function renderOrb(now) {
       if (!running) return;
+      raf = requestAnimationFrame(renderOrb);
 
-      const time = (now - start) / 1000;
-      look.x += (targetLook.x - look.x) * 0.16;
-      look.y += (targetLook.y - look.y) * 0.16;
-
-      if (options.blink && now >= nextBlink) {
-        blinkAt = now;
-        nextBlink = now + 2200 + Math.random() * 3800;
-      }
-      const bt = (now - blinkAt) / 1000;
-      let b = 0;
-      if (options.blink) {
-        if (bt < 0.055) b = bt / 0.055;
-        else if (bt < 0.1) b = 1;
-        else if (bt < 0.18) b = 1 - (bt - 0.1) / 0.08;
-      }
-
-      let mode = options.variant === 'webgl' ? 1.0 : 0.0;
-      let bodyRgb = hexToRgbArr(options.color);
-      let eyeRgb = hexToRgbArr(options.eyeColor);
-      let palette = (options.colors && options.colors.length >= 3 ? options.colors : ['#7C6AF7', '#7DD3C7', '#E8B4D4']).map(hexToRgbArr);
-
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      gl.viewport(0, 0, w, h);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
-      gl.uniform2f(uResolution, canvas.width, canvas.height);
-      gl.uniform1f(uTime, time);
-      gl.uniform1f(uSpeed, 0.55);
+      // Smooth look lerp
+      look.x += (targetLook.x - look.x) * 0.14;
+      look.y += (targetLook.y - look.y) * 0.14;
+
+      // Natural periodic blinking
+      if (options.blink) {
+        if (!isBlinking && now > nextBlink) {
+          isBlinking = true;
+          blinkProgress = 0;
+        }
+        if (isBlinking) {
+          blinkProgress += 0.15;
+          blinkVal = Math.sin(Math.min(Math.PI, blinkProgress));
+          if (blinkProgress >= Math.PI) {
+            isBlinking = false;
+            blinkVal = 0;
+            nextBlink = now + 2400 + Math.random() * 4000;
+          }
+        }
+      } else {
+        blinkVal = 0.0;
+      }
+
+      gl.useProgram(program);
+      gl.uniform2f(uResolution, w, h);
+      gl.uniform1f(uTime, (now - startT) / 1000.0);
+      gl.uniform1f(uSpeed, 1.0);
       gl.uniform2f(uLook, look.x, look.y);
-      gl.uniform1f(uBlink, b);
+      gl.uniform1f(uBlink, blinkVal);
+
+      // Mode: 0=white, 1=black, 2=webgl wash, 3=custom
+      let mode = 0;
+      if (options.variant === 'black') mode = 1;
+      else if (options.variant === 'webgl') mode = 2;
+      else if (options.variant === 'custom') mode = 3;
       gl.uniform1f(uMode, mode);
+
+      const bodyRgb = hexToRgb(options.color || '#F4F4F5');
+      const eyeRgb = hexToRgb(options.eyeColor || '#09090B');
       gl.uniform3f(uBody, bodyRgb[0], bodyRgb[1], bodyRgb[2]);
       gl.uniform3f(uEye, eyeRgb[0], eyeRgb[1], eyeRgb[2]);
-      gl.uniform3f(uC1, palette[0][0], palette[0][1], palette[0][2]);
-      gl.uniform3f(uC2, palette[1][0], palette[1][1], palette[1][2]);
-      gl.uniform3f(uC3, palette[2][0], palette[2][1], palette[2][2]);
+
+      const c = options.colors || ['#7C6AF7', '#7DD3C7', '#E8B4D4'];
+      const c1 = hexToRgb(c[0] || '#7C6AF7');
+      const c2 = hexToRgb(c[1] || '#7DD3C7');
+      const c3 = hexToRgb(c[2] || '#E8B4D4');
+      gl.uniform3f(uC1, c1[0], c1[1], c1[2]);
+      gl.uniform3f(uC2, c2[0], c2[1], c2[2]);
+      gl.uniform3f(uC3, c3[0], c3[1], c3[2]);
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
-      raf = requestAnimationFrame(render);
     }
 
-    raf = requestAnimationFrame(render);
+    raf = requestAnimationFrame(renderOrb);
 
     return {
       setOptions(newOpts) {
-        Object.assign(options, newOpts);
+        options = Object.assign(options, newOpts);
       },
       setTargetLook(x, y) {
-        targetLook.x = Math.max(-1, Math.min(1, x));
-        targetLook.y = Math.max(-1, Math.min(1, y));
+        if (!options.interactive || !isOrbEyeActive) return;
+        targetLook.x = Math.max(-0.45, Math.min(0.45, x));
+        targetLook.y = Math.max(-0.45, Math.min(0.45, y));
       },
       destroy() {
         running = false;
-        cancelAnimationFrame(raf);
+        if (raf) cancelAnimationFrame(raf);
       }
     };
   }
 
-  let mouseFollowerX = window.innerWidth / 2;
-  let mouseFollowerY = window.innerHeight / 2;
-  let rawMouseX = mouseFollowerX;
-  let rawMouseY = mouseFollowerY;
+  function applyEquippedSkin(skin) {
+    if (!skin) return;
+    const orbNameEl = document.getElementById('spotlightOrbName');
+    if (orbNameEl) orbNameEl.innerText = skin.name;
 
-  window.addEventListener('mousemove', (e) => {
-    rawMouseX = e.clientX;
-    rawMouseY = e.clientY;
-  }, { passive: true });
+    const opts = {
+      variant: skin.variant,
+      color: skin.color,
+      eyeColor: skin.eyeColor,
+      colors: skin.colors
+    };
 
-  function tickOrbFollower() {
-    requestAnimationFrame(tickOrbFollower);
-    if (!isOrbFollowerActive) return;
+    if (sidebarOrbInstance) sidebarOrbInstance.setOptions(opts);
+    if (portalOrbInstance) portalOrbInstance.setOptions(opts);
+    if (spotlightOrbInstance) spotlightOrbInstance.setOptions(opts);
 
-    // Follow cursor with silky smooth spring damping, trailing slightly to top-right
-    const targetX = rawMouseX + 22;
-    const targetY = rawMouseY - 22;
-
-    mouseFollowerX += (targetX - mouseFollowerX) * 0.12;
-    mouseFollowerY += (targetY - mouseFollowerY) * 0.12;
-
-    const el = document.getElementById('liveOrbFollower');
-    if (el) {
-      el.style.transform = 'translate3d(' + Math.round(mouseFollowerX) + 'px, ' + Math.round(mouseFollowerY) + 'px, 0)';
-    }
-
-    if (followerOrbInstance) {
-      const dx = (rawMouseX - mouseFollowerX) / 35;
-      const dy = (mouseFollowerY - rawMouseY) / 35;
-      followerOrbInstance.setTargetLook(dx, dy);
-    }
+    // Update glow variable on stations
+    const glow = skin.glow || 'rgba(0, 240, 255, 0.4)';
+    document.querySelectorAll('.sidebar-orb-station, .portal-orb-station').forEach(el => {
+      el.style.setProperty('--orb-glow', glow);
+    });
   }
 
   function equipOrbSkin(skinId) {
@@ -6841,47 +6975,17 @@
 
     currentOrbSkinId = skinId;
     localStorage.setItem('hub_orb_skin', skinId);
-
     applyEquippedSkin(skin);
     renderOrbSkinsGrid(userLvl);
   }
 
-  function applyEquippedSkin(skin) {
-    if (!skin) return;
-    const followerEl = document.getElementById('liveOrbFollower');
-    if (followerEl) {
-      followerEl.style.setProperty('--orb-glow', skin.glow || 'rgba(0, 240, 255, 0.4)');
-    }
-
-    const orbNameEl = document.getElementById('spotlightOrbName');
-    if (orbNameEl) orbNameEl.innerText = skin.name;
-
-    const opts = {
-      variant: skin.variant,
-      color: skin.color,
-      eyeColor: skin.eyeColor,
-      colors: skin.colors
-    };
-
-    if (followerOrbInstance) followerOrbInstance.setOptions(opts);
-    if (spotlightOrbInstance) spotlightOrbInstance.setOptions(opts);
-  }
-
   function toggleOrbFollower() {
-    isOrbFollowerActive = !isOrbFollowerActive;
-    localStorage.setItem('hub_orb_active', isOrbFollowerActive ? 'true' : 'false');
-    const el = document.getElementById('liveOrbFollower');
-    if (el) {
-      if (isOrbFollowerActive) {
-        el.classList.remove('hidden');
-      } else {
-        el.classList.add('hidden');
-      }
-    }
+    isOrbEyeActive = !isOrbEyeActive;
+    localStorage.setItem('hub_orb_active', isOrbEyeActive ? 'true' : 'false');
     const label = document.getElementById('orbToggleLabel');
     const icon = document.getElementById('orbToggleIcon');
-    if (label) label.innerText = isOrbFollowerActive ? 'Orb: Active' : 'Orb: Muted';
-    if (icon) icon.innerText = isOrbFollowerActive ? '👁️' : '💤';
+    if (label) label.innerText = isOrbEyeActive ? 'Orb: Tracking' : 'Orb: Resting';
+    if (icon) icon.innerText = isOrbEyeActive ? '👁️' : '💤';
   }
 
   function renderOrbSkinsGrid(userLevel) {
@@ -6934,12 +7038,62 @@
     renderOrbSkinsGrid(userLevel);
   }
 
+  // Real-time eye tracking from stationary stations towards cursor
+  function updateStationaryOrbsGaze(clientX, clientY) {
+    if (!isOrbEyeActive) return;
+
+    // Sidebar stationary orb
+    const sideCanvas = document.getElementById('sidebarOrbCanvas') || document.getElementById('sidebarOrbCanvasGuest');
+    if (sideCanvas && sidebarOrbInstance) {
+      const r = sideCanvas.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = (clientX - cx) / 45;
+        const dy = (cy - clientY) / 45;
+        sidebarOrbInstance.setTargetLook(dx, dy);
+      }
+    }
+
+    // Landing portal card stationary orb
+    const portCanvas = document.getElementById('portalOrbCanvas');
+    if (portCanvas && portalOrbInstance) {
+      const r = portCanvas.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = (clientX - cx) / 45;
+        const dy = (cy - clientY) / 45;
+        portalOrbInstance.setTargetLook(dx, dy);
+      }
+    }
+
+    // Spotlight showcase orb
+    const spotCanvas = document.getElementById('spotlightOrbCanvas');
+    if (spotCanvas && spotlightOrbInstance) {
+      const r = spotCanvas.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = (clientX - cx) / 50;
+        const dy = (cy - clientY) / 50;
+        spotlightOrbInstance.setTargetLook(dx, dy);
+      }
+    }
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    updateStationaryOrbsGaze(e.clientX, e.clientY);
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches[0]) {
+      updateStationaryOrbsGaze(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
   function initLiveOrbSystem() {
-    const followerCanvas = document.getElementById('liveOrbCanvas');
-    const spotlightCanvas = document.getElementById('spotlightOrbCanvas');
-
     const activeSkin = ORB_SKINS.find(s => s.id === currentOrbSkinId) || ORB_SKINS[0];
-
     const skinOpts = {
       variant: activeSkin.variant,
       color: activeSkin.color,
@@ -6947,48 +7101,30 @@
       colors: activeSkin.colors
     };
 
-    if (followerCanvas) {
-      followerOrbInstance = createOrbGlEngine(followerCanvas, skinOpts);
+    const sideCanvas = document.getElementById('sidebarOrbCanvas') || document.getElementById('sidebarOrbCanvasGuest');
+    if (sideCanvas) {
+      sidebarOrbInstance = createOrbGlEngine(sideCanvas, skinOpts);
     }
+
+    const portCanvas = document.getElementById('portalOrbCanvas');
+    if (portCanvas) {
+      portalOrbInstance = createOrbGlEngine(portCanvas, skinOpts);
+    }
+
+    const spotlightCanvas = document.getElementById('spotlightOrbCanvas');
     if (spotlightCanvas) {
       spotlightOrbInstance = createOrbGlEngine(spotlightCanvas, skinOpts);
     }
 
-    const followerEl = document.getElementById('liveOrbFollower');
-    if (followerEl) {
-      if (!isOrbFollowerActive) {
-        followerEl.classList.add('hidden');
-      } else {
-        followerEl.classList.remove('hidden');
-      }
-      followerEl.style.setProperty('--orb-glow', activeSkin.glow || 'rgba(0, 240, 255, 0.4)');
-    }
-
     const label = document.getElementById('orbToggleLabel');
     const icon = document.getElementById('orbToggleIcon');
-    if (label) label.innerText = isOrbFollowerActive ? 'Orb: Active' : 'Orb: Muted';
-    if (icon) icon.innerText = isOrbFollowerActive ? '👁️' : '💤';
-
-    window.addEventListener('mousemove', (e) => {
-      if (spotlightOrbInstance) {
-        const c = document.getElementById('spotlightOrbCanvas');
-        if (c) {
-          const rect = c.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            const dx = (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2);
-            const dy = ((rect.top + rect.height / 2) - e.clientY) / (window.innerHeight / 2);
-            spotlightOrbInstance.setTargetLook(dx, dy);
-          }
-        }
-      }
-    }, { passive: true });
+    if (label) label.innerText = isOrbEyeActive ? 'Orb: Tracking' : 'Orb: Resting';
+    if (icon) icon.innerText = isOrbEyeActive ? '👁️' : '💤';
 
     const totalXp = calculateTotalXP();
     const currentLevel = getLevelData(totalXp).level;
     renderOrbSkinsGrid(currentLevel);
     applyEquippedSkin(activeSkin);
-
-    tickOrbFollower();
   }
 
   window.addEventListener('DOMContentLoaded', () => {

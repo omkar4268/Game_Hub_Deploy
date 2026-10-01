@@ -4,76 +4,74 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const COLS = 34;
-const ROWS = 22;
-const VOXEL_SIZE = 0.36;
-const GAP = 0.05;
-const STEP = VOXEL_SIZE + GAP;
+const VOXEL_COUNT = 520;
+const DOORWAY_Z = -8.0;
 
 export default function VoxelWall() {
   const meshRef = useRef<THREE.InstancedMesh>(null!);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const tempColor = useMemo(() => new THREE.Color(), []);
 
-  // Compute grid initial layout
-  const grid = useMemo(() => {
-    const items: { x: number; y: number; baseZ: number; phase: number }[] = [];
-    const offsetX = ((COLS - 1) * STEP) / 2;
-    const offsetY = ((ROWS - 1) * STEP) / 2;
+  // Compute 3D perspective tunnel layout
+  const voxels = useMemo(() => {
+    const list = [];
+    for (let i = 0; i < VOXEL_COUNT; i++) {
+      const progress = i / VOXEL_COUNT;
+      const z = -7.8 + progress * 14.3;
 
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const x = c * STEP - offsetX;
-        const y = r * STEP - offsetY;
-        const distCenter = Math.hypot(x, y);
-        items.push({
-          x,
-          y,
-          baseZ: -Math.cos(distCenter * 0.4) * 0.3,
-          phase: (x * 0.5 + y * 0.3),
-        });
-      }
+      const pNorm = (z - (-7.8)) / 14.3; // 0 to 1
+      const rMin = 1.95 + pNorm * 2.6;
+      const rMax = 3.6 + pNorm * 4.6;
+      const r = rMin + Math.random() * (rMax - rMin);
+
+      const angle = Math.random() * Math.PI * 2;
+      const x = Math.cos(angle) * r + (Math.random() - 0.5) * 0.45;
+      const y = Math.sin(angle) * (r * 0.72) + (Math.random() - 0.5) * 0.45;
+
+      const baseSize = 0.32 + Math.random() * 0.45;
+      const sx = baseSize * (0.85 + Math.random() * 0.3);
+      const sy = baseSize * (0.85 + Math.random() * 0.3);
+      const sz = baseSize * (0.85 + Math.random() * 0.3);
+
+      const rx = (Math.random() - 0.5) * 0.65;
+      const ry = (Math.random() - 0.5) * 0.65;
+      const rz = (Math.random() - 0.5) * 0.65;
+
+      list.push({
+        x, y, z,
+        baseY: y,
+        sx, sy, sz,
+        rx, ry, rz,
+        floatPhase: Math.random() * Math.PI * 2,
+        floatSpeed: 0.6 + Math.random() * 0.8
+      });
     }
-    return items;
+    return list;
   }, []);
 
   useFrame((state) => {
     if (!meshRef.current) return;
     const time = state.clock.getElapsedTime();
-    const ptrX = (state.pointer.x * (COLS * STEP)) / 2;
-    const ptrY = (state.pointer.y * (ROWS * STEP)) / 2;
 
-    for (let i = 0; i < grid.length; i++) {
-      const item = grid[i];
+    for (let i = 0; i < voxels.length; i++) {
+      const v = voxels[i];
+      const floatY = v.baseY + Math.sin(time * v.floatSpeed + v.floatPhase) * 0.06;
 
-      // Procedural undulating wave
-      const wave =
-        Math.sin(time * 1.6 + item.phase) * 0.25 +
-        Math.cos(time * 0.9 - item.y * 0.6) * 0.15;
-
-      // Pointer interactive ripple displacement
-      const dx = item.x - ptrX;
-      const dy = item.y - ptrY;
-      const mouseDist = Math.hypot(dx, dy);
-      const mouseInfluence = Math.max(0, 1 - mouseDist / 2.8);
-      const mouseElevation = Math.sin(mouseInfluence * Math.PI) * 0.75;
-
-      const z = item.baseZ + wave + mouseElevation;
-
-      tempObject.position.set(item.x, item.y, z);
-      
-      // Dynamic scaling on elevation
-      const scaleZ = 1 + mouseElevation * 1.2;
-      tempObject.scale.set(1, 1, Math.max(0.4, scaleZ));
+      tempObject.position.set(v.x, floatY, v.z);
+      tempObject.rotation.set(
+        v.rx + Math.sin(time * 0.4 + v.floatPhase) * 0.05,
+        v.ry + Math.cos(time * 0.3 + v.floatPhase) * 0.05,
+        v.rz
+      );
+      tempObject.scale.set(v.sx, v.sy, v.sz);
       tempObject.updateMatrix();
       meshRef.current.setMatrixAt(i, tempObject.matrix);
 
-      // Subtle dynamic color accent based on height & cursor interaction
-      const elevationRatio = (z + 0.5) / 1.5;
-      const r = THREE.MathUtils.lerp(0.04, 0.0, elevationRatio);
-      const g = THREE.MathUtils.lerp(0.12, 0.85, Math.max(0, mouseInfluence));
-      const b = THREE.MathUtils.lerp(0.24, 1.0, elevationRatio);
-      tempColor.setRGB(r, g, b);
+      // Monochrome lighting gradient
+      const distToDoor = Math.hypot(v.x, v.y, v.z - DOORWAY_Z);
+      const lightRatio = Math.max(0, 1 - distToDoor / 14);
+      const grayVal = 0.06 + lightRatio * 0.16;
+      tempColor.setRGB(grayVal, grayVal, grayVal);
       meshRef.current.setColorAt(i, tempColor);
     }
 
@@ -86,15 +84,15 @@ export default function VoxelWall() {
   return (
     <instancedMesh
       ref={meshRef}
-      args={[undefined, undefined, COLS * ROWS]}
+      args={[undefined, undefined, VOXEL_COUNT]}
       castShadow
       receiveShadow
     >
-      <boxGeometry args={[VOXEL_SIZE, VOXEL_SIZE, 0.6]} />
+      <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial
-        roughness={0.25}
-        metalness={0.4}
-        envMapIntensity={0.8}
+        color="#181818"
+        roughness={0.35}
+        metalness={0.22}
       />
     </instancedMesh>
   );
