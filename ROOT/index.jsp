@@ -421,13 +421,13 @@
     align-items: center;
     position: relative;
     z-index: 10;
-    background: rgba(4, 9, 22, 0.88);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(0, 240, 255, 0.35);
-    border-radius: 28px;
-    padding: 2.5rem 2.2rem;
-    box-shadow: 0 0 60px rgba(0, 240, 255, 0.20), 0 30px 80px rgba(0, 0, 0, 0.95);
+    background: rgba(8, 9, 14, 0.88);
+    backdrop-filter: blur(28px) saturate(110%);
+    -webkit-backdrop-filter: blur(28px) saturate(110%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 26px;
+    padding: 2.3rem 2.1rem;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     animation: portalSpringIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     box-sizing: border-box;
   }
@@ -438,8 +438,8 @@
     left: 15%;
     right: 15%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    box-shadow: 0 0 16px var(--primary);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
   }
   @keyframes portalSpringIn {
     0% { transform: scale(0.92) translateY(24px); opacity: 0; }
@@ -450,25 +450,25 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 240, 255, 0.08);
-    border: 1px solid rgba(0, 240, 255, 0.3);
-    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    padding: 5px 15px;
     border-radius: 9999px;
-    font-size: 0.72rem;
+    font-size: 0.70rem;
     font-weight: 800;
     letter-spacing: 2px;
-    color: var(--primary);
+    color: #f1f5f9;
     text-transform: uppercase;
-    margin-bottom: 1rem;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    margin-bottom: 0.9rem;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
   }
   .portal-tag::before {
     content: '';
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 10px var(--accent);
+    background: #ffffff;
+    box-shadow: 0 0 10px #ffffff;
     animation: pulseDot 1.8s infinite;
   }
   @keyframes pulseDot {
@@ -479,20 +479,21 @@
   .portal-title {
     font-size: clamp(2.2rem, 5vw, 3rem);
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 3.5px;
     line-height: 1.1;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #ffffff 40%, var(--primary) 80%, #38bdf8 100%);
+    color: #ffffff;
+    background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+    text-shadow: 0 2px 20px rgba(255, 255, 255, 0.35);
   }
 
   .portal-subtitle {
     font-size: clamp(0.82rem, 2vw, 0.9rem);
-    color: var(--text-muted);
+    color: #94a3b8;
     line-height: 1.5;
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.6rem;
     max-width: 400px;
   }
 
@@ -507,8 +508,8 @@
   .btn-portal {
     min-height: 48px;
     padding: 0.85rem 1.4rem;
-    border-radius: 14px;
-    font-size: 0.92rem;
+    border-radius: 13px;
+    font-size: 0.88rem;
     font-weight: 800;
     letter-spacing: 1px;
     cursor: pointer;
@@ -530,10 +531,10 @@
 
   .portal-kinetic-hint {
     margin-top: 1.3rem;
-    font-size: 0.72rem;
+    font-size: 0.70rem;
     font-family: monospace;
     letter-spacing: 1.2px;
-    color: var(--primary);
+    color: #94a3b8;
     opacity: 0.85;
     display: flex;
     align-items: center;
@@ -541,43 +542,46 @@
   }
 
   .btn-portal-primary {
-    background: linear-gradient(135deg, var(--primary), #0284c7);
-    color: #000;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    background: #ffffff;
+    color: #000000;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.5), 0 4px 14px rgba(0, 0, 0, 0.4);
   }
   .btn-portal-primary:hover {
-    background: linear-gradient(135deg, #7dd3fc, var(--primary));
-    box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
-    transform: translateY(-2px);
+    background: #f1f5f9;
+    box-shadow: 0 0 36px rgba(255, 255, 255, 0.8), 0 6px 20px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px) scale(1.02);
   }
 
   .btn-portal-secondary {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
-    border: 1px solid rgba(34, 197, 94, 0.4);
-    color: #86efac;
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #f8fafc;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   }
   .btn-portal-secondary:hover {
-    background: rgba(34, 197, 94, 0.25);
-    border-color: var(--accent);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #ffffff;
     transform: translateY(-2px);
   }
 
   .btn-portal-guest {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--text-muted);
+    color: #94a3b8;
   }
   .btn-portal-guest:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-main);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   .portal-footer-note {
-    margin-top: 1.8rem;
-    font-size: 0.72rem;
+    margin-top: 1.6rem;
+    font-size: 0.70rem;
     color: #64748b;
     letter-spacing: 0.8px;
   }
@@ -655,16 +659,16 @@
   }
   .auth-avatar-wrap {
     position: relative;
-    width: 52px;
-    height: 52px;
-    margin: 0 auto 0.65rem auto;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 0.75rem auto;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .auth-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     display: flex;
@@ -679,10 +683,11 @@
   }
   .auth-avatar-pulse {
     position: absolute;
-    inset: -3px;
+    inset: -4px;
     border-radius: 50%;
-    border: 1px dashed rgba(0, 240, 255, 0.6);
+    border: 1.5px dashed rgba(0, 240, 255, 0.65);
     animation: rotatePulse 12s linear infinite;
+    pointer-events: none;
   }
   @keyframes rotatePulse {
     from { transform: rotate(0deg); }
@@ -2781,30 +2786,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
     margin: 0 auto 8px auto;
   }
   .sidebar-orb-station {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: radial-gradient(circle at 40% 40%, rgba(20, 35, 60, 0.9), rgba(4, 9, 20, 0.98));
-    border: 1.5px solid rgba(0, 240, 255, 0.35);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8), 0 0 14px var(--orb-glow, rgba(0, 240, 255, 0.3));
+    background: radial-gradient(circle at 40% 40%, rgba(20, 35, 60, 0.95), rgba(4, 9, 20, 0.98));
+    border: 2px solid rgba(0, 240, 255, 0.45);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 16px var(--orb-glow, rgba(0, 240, 255, 0.4));
     flex-shrink: 0;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    z-index: 2;
+    overflow: hidden;
   }
   .sidebar-orb-station:hover {
     transform: scale(1.06);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9), 0 0 22px var(--orb-glow, rgba(0, 240, 255, 0.5));
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9), 0 0 24px var(--orb-glow, rgba(0, 240, 255, 0.6));
   }
   .sidebar-orb-station canvas {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: block;
   }
@@ -2819,9 +2825,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 40% 40%, rgba(20, 35, 60, 0.9), rgba(4, 9, 20, 0.98));
-    border: 1.5px solid rgba(0, 240, 255, 0.35);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 16px var(--orb-glow, rgba(0, 240, 255, 0.35));
+    background: radial-gradient(circle at 40% 40%, rgba(30, 32, 42, 0.95), rgba(6, 7, 12, 0.98));
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 16px rgba(255, 255, 255, 0.15);
     z-index: 20;
     pointer-events: none;
   }
@@ -3199,13 +3205,10 @@
 
     <div class="auth-widget" id="authWidget">
       <% if (isLoggedIn) { %>
-        <div class="auth-avatar-row">
-          <div class="auth-avatar-wrap" style="margin: 0;">
-            <div class="auth-avatar"><%= currentUser.substring(0, 1).toUpperCase() %></div>
-            <div class="auth-avatar-pulse"></div>
-          </div>
+        <div class="auth-avatar-wrap" id="authAvatarWrap">
+          <div class="auth-avatar-pulse"></div>
           <div class="sidebar-orb-station" id="sidebarOrbStation" title="Operative Companion Orb (Stationary eye-tracking)">
-            <canvas id="sidebarOrbCanvas" width="96" height="96"></canvas>
+            <canvas id="sidebarOrbCanvas" width="128" height="128"></canvas>
           </div>
         </div>
         <div class="auth-name">
@@ -3230,12 +3233,10 @@
           <span>⏻ DISCONNECT</span>
         </button>
       <% } else { %>
-        <div class="auth-avatar-row">
-          <div class="auth-avatar-wrap" style="margin: 0;">
-            <div class="auth-avatar" style="background: rgba(255,255,255,0.08); color: var(--text-muted); box-shadow: none; border-color: rgba(255,255,255,0.2);">?</div>
-          </div>
+        <div class="auth-avatar-wrap" id="authAvatarWrap">
+          <div class="auth-avatar-pulse"></div>
           <div class="sidebar-orb-station" id="sidebarOrbStationGuest" title="Operative Companion Orb (Stationary eye-tracking)">
-            <canvas id="sidebarOrbCanvasGuest" width="96" height="96"></canvas>
+            <canvas id="sidebarOrbCanvasGuest" width="128" height="128"></canvas>
           </div>
         </div>
         <div class="auth-name" style="color: var(--text-muted);">
@@ -5402,9 +5403,11 @@
         const widget = document.getElementById('authWidget');
         if (widget) {
           widget.innerHTML = `
-            <div class="auth-avatar-wrap">
-              <div class="auth-avatar">${u.substring(0, 1).toUpperCase()}</div>
+            <div class="auth-avatar-wrap" id="authAvatarWrap">
               <div class="auth-avatar-pulse"></div>
+              <div class="sidebar-orb-station" id="sidebarOrbStation" title="Operative Companion Orb (Stationary eye-tracking)">
+                <canvas id="sidebarOrbCanvas" width="128" height="128"></canvas>
+              </div>
             </div>
             <div class="auth-name">
               ${u}
@@ -5428,6 +5431,7 @@
               <span>⏻ DISCONNECT</span>
             </button>
           `;
+          initLiveOrbSystem();
         }
 
         // Unlock Nav Buttons & Meta Pill
@@ -5969,16 +5973,16 @@
       renderer.toneMappingExposure = 1.15;
 
       // 2. Lighting: Intense Pure White Backlight from the Center Doorway
-      const ambientLight = new THREE.AmbientLight(0x141414, 0.7);
+      const ambientLight = new THREE.AmbientLight(0x111114, 0.65);
       scene.add(ambientLight);
 
       // Main Point Light located right inside the glowing doorway
-      const portalLight = new THREE.PointLight(0xffffff, 5.2, 28, 1.2);
-      portalLight.position.set(0, 0, -7.6);
+      const portalLight = new THREE.PointLight(0xffffff, 6.2, 32, 1.15);
+      portalLight.position.set(0, 0, -7.5);
       scene.add(portalLight);
 
       // Secondary forward fill light for subtle silhouette definition
-      const frontRimLight = new THREE.DirectionalLight(0x2a2a2a, 0.4);
+      const frontRimLight = new THREE.DirectionalLight(0x28282e, 0.45);
       frontRimLight.position.set(0, -4, 4);
       scene.add(frontRimLight);
 
@@ -5988,8 +5992,8 @@
       doorwayGroup.position.set(0, 0, DOORWAY_Z);
 
       // Core Pure White Doorway Mesh
-      const doorWidth = 3.6;
-      const doorHeight = 2.8;
+      const doorWidth = 3.4;
+      const doorHeight = 2.5;
       const doorGeo = new THREE.PlaneGeometry(doorWidth, doorHeight);
       const doorMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
       const doorMesh = new THREE.Mesh(doorGeo, doorMat);
@@ -6005,30 +6009,31 @@
         gctx.clearRect(0, 0, 512, 512);
 
         // Radial bloom glow
-        const radGrad = gctx.createRadialGradient(cx, cy, 30, cx, cy, 250);
+        const radGrad = gctx.createRadialGradient(cx, cy, 25, cx, cy, 250);
         radGrad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
-        radGrad.addColorStop(0.18, 'rgba(255, 255, 255, 0.85)');
-        radGrad.addColorStop(0.45, 'rgba(220, 235, 255, 0.35)');
-        radGrad.addColorStop(0.75, 'rgba(180, 210, 255, 0.10)');
+        radGrad.addColorStop(0.18, 'rgba(255, 255, 255, 0.90)');
+        radGrad.addColorStop(0.45, 'rgba(230, 240, 255, 0.40)');
+        radGrad.addColorStop(0.75, 'rgba(180, 205, 245, 0.12)');
         radGrad.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
         gctx.fillStyle = radGrad;
         gctx.fillRect(0, 0, 512, 512);
 
-        // 16 radiating white light rays / god-ray streaks
+        // 20 radiating white light rays / god-ray streaks
         gctx.save();
         gctx.translate(cx, cy);
-        for (let i = 0; i < 16; i++) {
-          gctx.rotate((Math.PI * 2) / 16);
-          const rayGrad = gctx.createLinearGradient(0, 0, 240, 0);
-          rayGrad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
-          rayGrad.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
+        for (let i = 0; i < 20; i++) {
+          gctx.rotate((Math.PI * 2) / 20);
+          const rayGrad = gctx.createLinearGradient(0, 0, 250, 0);
+          rayGrad.addColorStop(0, 'rgba(255, 255, 255, 0.65)');
+          rayGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.22)');
+          rayGrad.addColorStop(0.75, 'rgba(255, 255, 255, 0.04)');
           rayGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
           gctx.fillStyle = rayGrad;
           gctx.beginPath();
-          gctx.moveTo(0, -6);
-          gctx.lineTo(240, -18);
-          gctx.lineTo(240, 18);
-          gctx.lineTo(0, 6);
+          gctx.moveTo(0, -7);
+          gctx.lineTo(250, -24);
+          gctx.lineTo(250, 24);
+          gctx.lineTo(0, 7);
           gctx.fill();
         }
         gctx.restore();
@@ -6039,12 +6044,12 @@
       glowTexture.minFilter = THREE.LinearFilter;
 
       // Inner intense bloom plane
-      const innerGlowGeo = new THREE.PlaneGeometry(8.2, 6.8);
+      const innerGlowGeo = new THREE.PlaneGeometry(8.5, 7.0);
       const innerGlowMat = new THREE.MeshBasicMaterial({
         map: glowTexture,
         transparent: true,
         blending: THREE.AdditiveBlending,
-        opacity: 0.95,
+        opacity: 0.98,
         depthWrite: false
       });
       const innerGlowMesh = new THREE.Mesh(innerGlowGeo, innerGlowMat);
@@ -6052,12 +6057,12 @@
       doorwayGroup.add(innerGlowMesh);
 
       // Outer soft atmosphere halo
-      const outerGlowGeo = new THREE.PlaneGeometry(16.0, 13.0);
+      const outerGlowGeo = new THREE.PlaneGeometry(16.5, 13.5);
       const outerGlowMat = new THREE.MeshBasicMaterial({
         map: glowTexture,
         transparent: true,
         blending: THREE.AdditiveBlending,
-        opacity: 0.32,
+        opacity: 0.35,
         depthWrite: false
       });
       const outerGlowMesh = new THREE.Mesh(outerGlowGeo, outerGlowMat);
@@ -6065,11 +6070,11 @@
       doorwayGroup.add(outerGlowMesh);
 
       // Volumetric Light Ray Tunnel Cone projecting from doorway toward camera
-      const rayConeGeo = new THREE.CylinderGeometry(1.6, 7.5, 14.5, 32, 1, true);
+      const rayConeGeo = new THREE.CylinderGeometry(1.4, 7.8, 14.5, 32, 1, true);
       const rayConeMat = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         transparent: true,
-        opacity: 0.055,
+        opacity: 0.070,
         blending: THREE.AdditiveBlending,
         side: THREE.DoubleSide,
         depthWrite: false
@@ -6081,69 +6086,134 @@
 
       scene.add(doorwayGroup);
 
-      // 4. Dark Monochrome Floating Voxel Tunnel (Surrounding the Doorway)
-      const VOXEL_COUNT = 520;
+      // 4. Dark Monochrome Architectural Stepped Voxel Corridor (Surrounding the Doorway)
+      // Generates Floor, Ceiling, Left Wall, Right Wall receding in deep perspective toward the white doorway
+      const VOXEL_COUNT = 820;
       const boxGeo = new THREE.BoxGeometry(1, 1, 1);
       const boxMat = new THREE.MeshStandardMaterial({
-        color: 0x181818,
-        roughness: 0.35,
-        metalness: 0.22
+        color: 0x141416,
+        roughness: 0.38,
+        metalness: 0.2
       });
 
       const voxelMesh = new THREE.InstancedMesh(boxGeo, boxMat, VOXEL_COUNT);
       const dummy = new THREE.Object3D();
       const voxelData = [];
 
-      for (let i = 0; i < VOXEL_COUNT; i++) {
-        // Distribute along depth Z from doorway (-7.8) to near camera (6.5)
-        const progress = i / VOXEL_COUNT;
-        const z = -7.8 + progress * 14.3;
+      let cubeIdx = 0;
 
-        // Tunnel radius expands from doorway outward toward camera
-        const pNorm = (z - (-7.8)) / 14.3; // 0 to 1
-        const rMin = 1.95 + pNorm * 2.6;
-        const rMax = 3.6 + pNorm * 4.6;
-        const r = rMin + Math.random() * (rMax - rMin);
-
-        // Circular/elliptical angle around center axis
-        const angle = Math.random() * Math.PI * 2;
-        const x = Math.cos(angle) * r + (Math.random() - 0.5) * 0.45;
-        // 0.72 factor matches wide 16:9 screen and rectangular portal
-        const y = Math.sin(angle) * (r * 0.72) + (Math.random() - 0.5) * 0.45;
-
-        // Varied cubic scales matching reference image
-        const baseSize = 0.32 + Math.random() * 0.45;
-        const sx = baseSize * (0.85 + Math.random() * 0.3);
-        const sy = baseSize * (0.85 + Math.random() * 0.3);
-        const sz = baseSize * (0.85 + Math.random() * 0.3);
-
-        // Slight zero-gravity tilts
-        const rx = (Math.random() - 0.5) * 0.65;
-        const ry = (Math.random() - 0.5) * 0.65;
-        const rz = (Math.random() - 0.5) * 0.65;
-
+      function addVoxel(x, y, z, sx, sy, sz, rx, ry, rz) {
+        if (cubeIdx >= VOXEL_COUNT) return;
         voxelData.push({
           x, y, z,
           baseY: y,
           sx, sy, sz,
           rx, ry, rz,
           floatPhase: Math.random() * Math.PI * 2,
-          floatSpeed: 0.6 + Math.random() * 0.8
+          floatSpeed: 0.5 + Math.random() * 0.7
         });
 
         dummy.position.set(x, y, z);
         dummy.rotation.set(rx, ry, rz);
         dummy.scale.set(sx, sy, sz);
         dummy.updateMatrix();
-        voxelMesh.setMatrixAt(i, dummy.matrix);
+        voxelMesh.setMatrixAt(cubeIdx, dummy.matrix);
 
-        // Tone color: dark charcoal, cubes closer to the doorway catch more white light
+        // Calculate illumination from doorway at (0, 0, DOORWAY_Z)
         const distToDoor = Math.hypot(x, y, z - DOORWAY_Z);
-        const lightRatio = Math.max(0, 1 - distToDoor / 14);
-        const grayVal = 0.06 + lightRatio * 0.16;
+        const normDist = Math.max(0, 1 - distToDoor / 15.0);
+        // High-contrast filmic cube shading: cubes closer to doorway catch bright white rim light
+        const grayVal = 0.05 + Math.pow(normDist, 1.8) * 0.28;
         const col = new THREE.Color().setRGB(grayVal, grayVal, grayVal);
-        voxelMesh.setColorAt(i, col);
+        voxelMesh.setColorAt(cubeIdx, col);
+
+        cubeIdx++;
       }
+
+      // Structured depth slices from doorway (z = -7.8) to foreground (z = 5.5)
+      const DEPTH_STEPS = 28;
+      for (let s = 0; s < DEPTH_STEPS; s++) {
+        const p = s / (DEPTH_STEPS - 1);
+        const z = -7.8 + p * 13.5;
+
+        // Tunnel corridor expands outward in perspective towards camera
+        const halfW = 1.8 + p * 2.8;
+        const halfH = 1.35 + p * 2.2;
+
+        // 1. Floor cubes
+        const floorCubes = 8;
+        for (let fx = 0; fx < floorCubes; fx++) {
+          const fxNorm = (fx / (floorCubes - 1)) * 2 - 1;
+          const x = fxNorm * (halfW + 0.6) + (Math.random() - 0.5) * 0.35;
+          const y = -halfH - 0.25 - Math.random() * 0.55;
+          const sz = 0.38 + Math.random() * 0.42;
+          const sx = 0.42 + Math.random() * 0.45;
+          const sy = 0.38 + Math.random() * 0.42;
+          const rx = (Math.random() - 0.5) * 0.15;
+          const ry = (Math.random() - 0.5) * 0.15;
+          const rz = (Math.random() - 0.5) * 0.12;
+          addVoxel(x, y, z, sx, sy, sz, rx, ry, rz);
+        }
+
+        // 2. Ceiling cubes
+        const ceilCubes = 7;
+        for (let cx = 0; cx < ceilCubes; cx++) {
+          const cxNorm = (cx / (ceilCubes - 1)) * 2 - 1;
+          const x = cxNorm * (halfW + 0.6) + (Math.random() - 0.5) * 0.35;
+          const y = halfH + 0.25 + Math.random() * 0.55;
+          const sz = 0.38 + Math.random() * 0.42;
+          const sx = 0.42 + Math.random() * 0.45;
+          const sy = 0.38 + Math.random() * 0.42;
+          const rx = (Math.random() - 0.5) * 0.15;
+          const ry = (Math.random() - 0.5) * 0.15;
+          const rz = (Math.random() - 0.5) * 0.12;
+          addVoxel(x, y, z, sx, sy, sz, rx, ry, rz);
+        }
+
+        // 3. Left Wall cubes
+        const wallCubes = 7;
+        for (let wy = 0; wy < wallCubes; wy++) {
+          const wyNorm = (wy / (wallCubes - 1)) * 2 - 1;
+          const y = wyNorm * (halfH + 0.2) + (Math.random() - 0.5) * 0.3;
+          const x = -halfW - 0.25 - Math.random() * 0.55;
+          const sz = 0.38 + Math.random() * 0.42;
+          const sx = 0.38 + Math.random() * 0.42;
+          const sy = 0.42 + Math.random() * 0.45;
+          const rx = (Math.random() - 0.5) * 0.15;
+          const ry = (Math.random() - 0.5) * 0.15;
+          const rz = (Math.random() - 0.5) * 0.12;
+          addVoxel(x, y, z, sx, sy, sz, rx, ry, rz);
+        }
+
+        // 4. Right Wall cubes
+        for (let wy = 0; wy < wallCubes; wy++) {
+          const wyNorm = (wy / (wallCubes - 1)) * 2 - 1;
+          const y = wyNorm * (halfH + 0.2) + (Math.random() - 0.5) * 0.3;
+          const x = halfW + 0.25 + Math.random() * 0.55;
+          const sz = 0.38 + Math.random() * 0.42;
+          const sx = 0.38 + Math.random() * 0.42;
+          const sy = 0.42 + Math.random() * 0.45;
+          const rx = (Math.random() - 0.5) * 0.15;
+          const ry = (Math.random() - 0.5) * 0.15;
+          const rz = (Math.random() - 0.5) * 0.12;
+          addVoxel(x, y, z, sx, sy, sz, rx, ry, rz);
+        }
+      }
+
+      // Fill any remaining with staggered corner blocks
+      while (cubeIdx < VOXEL_COUNT) {
+        const p = Math.random();
+        const z = -7.5 + p * 13.0;
+        const halfW = 2.0 + p * 2.8;
+        const halfH = 1.5 + p * 2.2;
+        const sideX = Math.random() > 0.5 ? 1 : -1;
+        const sideY = Math.random() > 0.5 ? 1 : -1;
+        const x = sideX * (halfW + 0.2 + Math.random() * 0.8);
+        const y = sideY * (halfH + 0.2 + Math.random() * 0.8);
+        const s = 0.35 + Math.random() * 0.45;
+        addVoxel(x, y, z, s, s, s, (Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.3);
+      }
+
       voxelMesh.instanceMatrix.needsUpdate = true;
       if (voxelMesh.instanceColor) voxelMesh.instanceColor.needsUpdate = true;
       scene.add(voxelMesh);
@@ -6791,6 +6861,133 @@
   let portalOrbInstance = null;
   let spotlightOrbInstance = null;
 
+  function hexToRgb(hex) {
+    if (!hex || typeof hex !== 'string') return [1.0, 1.0, 1.0];
+    let c = hex.replace('#', '').trim();
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const num = parseInt(c, 16);
+    if (isNaN(num)) return [1.0, 1.0, 1.0];
+    return [((num >> 16) & 255) / 255.0, ((num >> 8) & 255) / 255.0, (num & 255) / 255.0];
+  }
+
+  function createOrb2DFallback(canvas, initialOptions) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    let options = Object.assign({
+      variant: 'white',
+      color: '#F4F4F5',
+      eyeColor: '#09090B',
+      colors: ['#7C6AF7', '#7DD3C7', '#E8B4D4'],
+      interactive: true,
+      blink: true
+    }, initialOptions);
+
+    const look = { x: 0, y: 0.08 };
+    const targetLook = { x: 0, y: 0.08 };
+    let running = true;
+    let raf = null;
+    let isBlinking = false;
+    let blinkVal = 0;
+    let blinkProgress = 0;
+    let nextBlink = performance.now() + 2000 + Math.random() * 3000;
+
+    function render2D(now) {
+      if (!running) return;
+      raf = requestAnimationFrame(render2D);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      look.x += (targetLook.x - look.x) * 0.14;
+      look.y += (targetLook.y - look.y) * 0.14;
+
+      if (options.blink) {
+        if (!isBlinking && now > nextBlink) {
+          isBlinking = true;
+          blinkProgress = 0;
+        }
+        if (isBlinking) {
+          blinkProgress += 0.16;
+          blinkVal = Math.sin(Math.min(Math.PI, blinkProgress));
+          if (blinkProgress >= Math.PI) {
+            isBlinking = false;
+            blinkVal = 0;
+            nextBlink = now + 2400 + Math.random() * 3500;
+          }
+        }
+      }
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const r = Math.min(w, h) * 0.44;
+
+      const grad = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.1, cx, cy, r);
+      let bodyCol = options.color || '#F4F4F5';
+      if (options.variant === 'black') bodyCol = '#18181B';
+      else if (options.variant === 'webgl') bodyCol = '#7C6AF7';
+      grad.addColorStop(0, '#FFFFFF');
+      grad.addColorStop(0.35, bodyCol);
+      grad.addColorStop(1, '#09090B');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      const eyeR = r * 0.18;
+      const eyeSpacing = r * 0.38;
+      const eyeOffsetY = -r * 0.05 + look.y * r * 0.35;
+      const eyeOffsetX = look.x * r * 0.42;
+
+      ctx.fillStyle = options.eyeColor || (options.variant === 'black' ? '#FFFFFF' : '#09090B');
+
+      const lEyeX = cx - eyeSpacing / 2 + eyeOffsetX;
+      const lEyeY = cy + eyeOffsetY;
+      const eyeScaleY = Math.max(0.08, 1 - blinkVal);
+
+      ctx.save();
+      ctx.translate(lEyeX, lEyeY);
+      ctx.scale(1, eyeScaleY);
+      ctx.beginPath();
+      ctx.arc(0, 0, eyeR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      const rEyeX = cx + eyeSpacing / 2 + eyeOffsetX;
+      const rEyeY = cy + eyeOffsetY;
+
+      ctx.save();
+      ctx.translate(rEyeX, rEyeY);
+      ctx.scale(1, eyeScaleY);
+      ctx.beginPath();
+      ctx.arc(0, 0, eyeR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    raf = requestAnimationFrame(render2D);
+
+    return {
+      setOptions(newOpts) {
+        options = Object.assign(options, newOpts);
+      },
+      setTargetLook(x, y) {
+        if (!options.interactive || !isOrbEyeActive) return;
+        targetLook.x = Math.max(-0.45, Math.min(0.45, x));
+        targetLook.y = Math.max(-0.45, Math.min(0.45, y));
+      },
+      destroy() {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+      }
+    };
+  }
+
   function createOrbGlEngine(canvas, initialOptions) {
     if (!canvas) return null;
     let options = Object.assign({
@@ -6805,25 +7002,30 @@
     const look = { x: 0, y: 0.08 };
     const targetLook = { x: 0, y: 0.08 };
 
-    const gl = canvas.getContext('webgl', {
-      alpha: true,
-      antialias: false,
-      depth: false,
-      stencil: false,
-      premultipliedAlpha: false,
-      powerPreference: 'high-performance'
-    });
-    if (!gl) return null;
+    let gl = null;
+    try {
+      gl = canvas.getContext('webgl', {
+        alpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        premultipliedAlpha: false,
+        powerPreference: 'high-performance'
+      });
+    } catch (e) {
+      gl = null;
+    }
+    if (!gl) return createOrb2DFallback(canvas, options);
 
     const vs = compileOrbShader(gl, gl.VERTEX_SHADER, VERT_ORB);
     const fs = compileOrbShader(gl, gl.FRAGMENT_SHADER, FRAG_ORB);
-    if (!vs || !fs) return null;
+    if (!vs || !fs) return createOrb2DFallback(canvas, options);
 
     const program = gl.createProgram();
     gl.attachShader(program, vs);
     gl.attachShader(program, fs);
     gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return createOrb2DFallback(canvas, options);
 
     gl.useProgram(program);
 
@@ -7103,16 +7305,19 @@
 
     const sideCanvas = document.getElementById('sidebarOrbCanvas') || document.getElementById('sidebarOrbCanvasGuest');
     if (sideCanvas) {
+      if (sidebarOrbInstance) sidebarOrbInstance.destroy();
       sidebarOrbInstance = createOrbGlEngine(sideCanvas, skinOpts);
     }
 
     const portCanvas = document.getElementById('portalOrbCanvas');
     if (portCanvas) {
+      if (portalOrbInstance) portalOrbInstance.destroy();
       portalOrbInstance = createOrbGlEngine(portCanvas, skinOpts);
     }
 
     const spotlightCanvas = document.getElementById('spotlightOrbCanvas');
     if (spotlightCanvas) {
+      if (spotlightOrbInstance) spotlightOrbInstance.destroy();
       spotlightOrbInstance = createOrbGlEngine(spotlightCanvas, skinOpts);
     }
 

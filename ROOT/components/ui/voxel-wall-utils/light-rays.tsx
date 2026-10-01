@@ -70,7 +70,7 @@ export function DustMotes({ count = 140 }: { count?: number }) {
 export const LightSource = React.forwardRef<THREE.Mesh>((_, ref) => {
   return (
     <mesh ref={ref} position={[0, 0, DOORWAY_Z]}>
-      <planeGeometry args={[3.6, 2.8]} />
+      <planeGeometry args={[3.4, 2.5]} />
       <meshBasicMaterial color="#ffffff" />
     </mesh>
   );
@@ -94,29 +94,30 @@ export function LightEffects({ sun }: { sun: THREE.Mesh }) {
 
     const cx = 256,
       cy = 256;
-    const radGrad = ctx.createRadialGradient(cx, cy, 30, cx, cy, 250);
+    const radGrad = ctx.createRadialGradient(cx, cy, 25, cx, cy, 250);
     radGrad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
-    radGrad.addColorStop(0.18, "rgba(255, 255, 255, 0.85)");
-    radGrad.addColorStop(0.45, "rgba(220, 235, 255, 0.35)");
-    radGrad.addColorStop(0.75, "rgba(180, 210, 255, 0.10)");
+    radGrad.addColorStop(0.18, "rgba(255, 255, 255, 0.90)");
+    radGrad.addColorStop(0.45, "rgba(230, 240, 255, 0.40)");
+    radGrad.addColorStop(0.75, "rgba(180, 205, 245, 0.12)");
     radGrad.addColorStop(1.0, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = radGrad;
     ctx.fillRect(0, 0, 512, 512);
 
     ctx.save();
     ctx.translate(cx, cy);
-    for (let i = 0; i < 16; i++) {
-      ctx.rotate((Math.PI * 2) / 16);
-      const rayGrad = ctx.createLinearGradient(0, 0, 240, 0);
-      rayGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
-      rayGrad.addColorStop(0.4, "rgba(255, 255, 255, 0.15)");
+    for (let i = 0; i < 20; i++) {
+      ctx.rotate((Math.PI * 2) / 20);
+      const rayGrad = ctx.createLinearGradient(0, 0, 250, 0);
+      rayGrad.addColorStop(0, "rgba(255, 255, 255, 0.65)");
+      rayGrad.addColorStop(0.35, "rgba(255, 255, 255, 0.22)");
+      rayGrad.addColorStop(0.75, "rgba(255, 255, 255, 0.04)");
       rayGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
       ctx.fillStyle = rayGrad;
       ctx.beginPath();
-      ctx.moveTo(0, -6);
-      ctx.lineTo(240, -18);
-      ctx.lineTo(240, 18);
-      ctx.lineTo(0, 6);
+      ctx.moveTo(0, -7);
+      ctx.lineTo(250, -24);
+      ctx.lineTo(250, 24);
+      ctx.lineTo(0, 7);
       ctx.fill();
     }
     ctx.restore();

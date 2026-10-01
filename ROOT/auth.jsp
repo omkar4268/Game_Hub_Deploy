@@ -279,15 +279,17 @@
     position: relative;
     z-index: 10;
     width: 92vw;
-    max-width: 450px;
-    max-height: 90dvh;
-    overflow-y: auto;
-    background: rgba(4, 9, 22, 0.90);
+    max-width: 440px;
+    max-height: 96dvh;
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    background: rgba(4, 9, 22, 0.92);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
     border: 1px solid rgba(0, 240, 255, 0.35);
-    border-radius: 28px;
-    padding: 2.2rem 2rem;
+    border-radius: 24px;
+    padding: 1.45rem 1.75rem;
     box-shadow: 0 0 60px rgba(0, 240, 255, 0.18), 0 30px 80px rgba(0, 0, 0, 0.95);
     display: flex;
     flex-direction: column;
@@ -295,6 +297,12 @@
     text-align: center;
     animation: cardSpringIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease;
+    box-sizing: border-box;
+  }
+  .auth-portal-card::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   /* Top Glowing Cyber Beam */
@@ -329,14 +337,14 @@
     gap: 8px;
     background: rgba(0, 240, 255, 0.08);
     border: 1px solid rgba(0, 240, 255, 0.3);
-    padding: 5px 14px;
+    padding: 4px 12px;
     border-radius: 9999px;
-    font-size: 0.72rem;
+    font-size: 0.70rem;
     font-weight: 800;
     letter-spacing: 2px;
     color: var(--primary);
     text-transform: uppercase;
-    margin-bottom: 0.9rem;
+    margin-bottom: 0.55rem;
     box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
   }
   .portal-tag::before {
@@ -354,12 +362,12 @@
   }
 
   .portal-title {
-    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    font-size: clamp(1.6rem, 4.5vw, 2.1rem);
     font-weight: 900;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     color: #ffffff;
     text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
-    margin: 0 0 0.4rem 0;
+    margin: 0 0 0.25rem 0;
     line-height: 1.1;
   }
   .portal-title span {
@@ -368,10 +376,10 @@
   }
 
   .portal-subtitle {
-    font-size: 0.82rem;
-    line-height: 1.45;
+    font-size: 0.78rem;
+    line-height: 1.38;
     color: var(--text-muted);
-    margin-bottom: 1.4rem;
+    margin-bottom: 0.85rem;
     max-width: 360px;
   }
 
@@ -381,20 +389,21 @@
     width: 100%;
     background: rgba(2, 4, 10, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    padding: 4px;
-    margin-bottom: 1.25rem;
+    border-radius: 12px;
+    padding: 3px;
+    margin-bottom: 0.85rem;
     gap: 4px;
+    box-sizing: border-box;
   }
   .auth-tab {
     flex: 1;
-    padding: 9px 12px;
+    padding: 7px 10px;
     background: transparent;
     border: none;
-    border-radius: 10px;
+    border-radius: 9px;
     color: var(--text-muted);
     font-weight: 800;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     letter-spacing: 1.5px;
     cursor: pointer;
     transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -413,7 +422,7 @@
     width: 100%;
     display: none;
     flex-direction: column;
-    gap: 12px;
+    gap: 9px;
   }
   .auth-form-wrap.active {
     display: flex;
@@ -428,10 +437,10 @@
     display: flex;
     flex-direction: column;
     text-align: left;
-    gap: 5px;
+    gap: 3px;
   }
   .auth-input-label {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     font-weight: 700;
@@ -444,8 +453,8 @@
   }
   .auth-input-icon {
     position: absolute;
-    left: 14px;
-    font-size: 0.95rem;
+    left: 13px;
+    font-size: 0.9rem;
     pointer-events: none;
     opacity: 0.8;
   }
@@ -453,12 +462,13 @@
     width: 100%;
     background: rgba(2, 4, 10, 0.85);
     border: 1px solid rgba(0, 240, 255, 0.25);
-    border-radius: 12px;
-    padding: 11px 14px 11px 40px;
+    border-radius: 11px;
+    padding: 9px 12px 9px 38px;
     color: #ffffff;
-    font-size: 15px !important;
+    font-size: 14px !important;
     outline: none;
     transition: all 0.2s ease;
+    box-sizing: border-box;
   }
   .auth-field:focus {
     border-color: var(--primary);
@@ -467,19 +477,19 @@
   }
   .auth-field::placeholder {
     color: rgba(255, 255, 255, 0.25);
-    font-size: 0.82rem;
+    font-size: 0.80rem;
   }
 
   /* Action Buttons with Spring Micro-interactions */
   .btn-submit {
     width: 100%;
-    padding: 13px 18px;
+    padding: 11px 16px;
     border: none;
-    border-radius: 13px;
+    border-radius: 12px;
     background: linear-gradient(135deg, var(--primary), #0284c7);
     color: #02040a;
     font-weight: 900;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     cursor: pointer;
@@ -488,7 +498,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 6px;
+    margin-top: 4px;
     transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
   }
   .btn-submit:hover {
@@ -514,22 +524,22 @@
 
   /* Guest Bypass Button */
   .guest-bypass-box {
-    margin-top: 1.1rem;
-    padding-top: 1.1rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
   .btn-guest {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: var(--text-muted);
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 0.78rem;
+    padding: 8px 14px;
+    border-radius: 11px;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 1px;
     cursor: pointer;
@@ -539,6 +549,7 @@
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
     justify-content: center;
+    box-sizing: border-box;
   }
   .btn-guest:hover {
     background: rgba(0, 240, 255, 0.1);
