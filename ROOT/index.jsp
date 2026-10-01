@@ -877,32 +877,78 @@
     filter: drop-shadow(0 0 16px #00f0ff);
   }
 
-  /* Central Game Hub Squircle Nucleus */
+  /* Central Game Hub Squircle Nucleus (Click to View Master Library) */
   .neural-hub-core {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     z-index: 10;
-    width: 106px;
-    height: 106px;
-    border-radius: 26px;
+    width: 112px;
+    height: 112px;
+    border-radius: 28px;
     background: linear-gradient(135deg, rgba(8, 18, 42, 0.96), rgba(2, 6, 18, 0.98));
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1.5px solid rgba(0, 240, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(0, 240, 255, 0.55);
     box-shadow: 0 0 35px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    cursor: default;
+    cursor: pointer;
     user-select: none;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s,
+                box-shadow 0.28s;
+    overflow: visible;
+    will-change: transform;
+  }
+  .neural-hub-core:hover {
+    transform: translate(-50%, -50%) scale(1.08) translateZ(0);
+    border-color: #00f0ff;
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.7), inset 0 0 30px rgba(0, 240, 255, 0.35);
+  }
+  .neural-hub-core:active {
+    transform: translate(-50%, -50%) scale(0.97) translateZ(0);
+  }
+  .hub-shader-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 28px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.85;
+    transition: opacity 0.25s ease;
+  }
+  .neural-hub-core:hover .hub-shader-canvas {
+    opacity: 1;
+  }
+  .hub-core-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .hub-nexus-svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.85));
+    animation: hubNexusSpin 12s linear infinite;
+  }
+  @keyframes hubNexusSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
   .hub-core-ping {
     position: absolute;
     inset: -8px;
-    border-radius: 32px;
+    border-radius: 34px;
     border: 1.5px solid rgba(0, 240, 255, 0.25);
     animation: hubCorePulse 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
     pointer-events: none;
@@ -912,12 +958,6 @@
     50% { transform: scale(1.1); opacity: 0.15; }
     100% { transform: scale(0.96); opacity: 0.7; }
   }
-  .hub-core-emblem {
-    font-size: 1.5rem;
-    line-height: 1;
-    margin-bottom: 4px;
-    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.8));
-  }
   .hub-core-title {
     font-size: 0.72rem;
     font-weight: 900;
@@ -926,6 +966,7 @@
     text-transform: uppercase;
     text-align: center;
     line-height: 1.1;
+    margin-top: 2px;
   }
   .hub-core-title span {
     color: var(--primary);
@@ -935,7 +976,7 @@
     bottom: -10px;
     background: rgba(2, 6, 18, 0.95);
     border: 1px solid rgba(0, 240, 255, 0.4);
-    padding: 2px 8px;
+    padding: 2px 9px;
     border-radius: 20px;
     font-size: 0.55rem;
     font-weight: 800;
@@ -943,6 +984,20 @@
     color: var(--primary);
     box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
     white-space: nowrap;
+    z-index: 12;
+    transition: all 0.2s ease;
+  }
+  .pulse-lib-hint {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .neural-hub-core:hover .pulse-lib-hint {
+    background: #00f0ff;
+    color: #020612;
+    box-shadow: 0 0 20px #00f0ff;
+    transform: translateY(-2px);
   }
 
   /* Satellite Game Squircles */
@@ -978,13 +1033,42 @@
     transform: translate(-50%, -50%) scale(0.96);
   }
   .neural-node .node-icon {
-    font-size: 1.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     transition: transform 0.25s ease;
   }
-  .neural-node:hover .node-icon {
-    transform: scale(1.1);
+  .node-cyber-svg {
+    width: 36px;
+    height: 36px;
+    display: block;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+  }
+  .neural-node:hover .node-cyber-svg {
+    transform: scale(1.18);
+  }
+  .svg-reactor ellipse {
+    transform-origin: 20px 20px;
+    animation: reactorRingSpin 8s linear infinite;
+  }
+  .svg-reactor ellipse:nth-child(2) {
+    animation-direction: reverse;
+    animation-duration: 6s;
+  }
+  @keyframes reactorRingSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .svg-bomb circle[stroke-dasharray] {
+    transform-origin: 20px 22px;
+    animation: bombBracketSpin 10s linear infinite;
+  }
+  @keyframes bombBracketSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
   .neural-node .node-name {
     font-size: 0.62rem;
@@ -1171,6 +1255,263 @@
     .btn-briefing-launch {
       padding: 8px;
       font-size: 0.8rem;
+    }
+  }
+
+  /* GPU Compositing Performance Enhancements */
+  .neural-bus-container,
+  .neural-node,
+  .neural-hub-core,
+  .neural-briefing-popover,
+  .game-card,
+  .modal-box {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Master Games Library Modal */
+  .master-library-box {
+    max-width: 920px !important;
+    width: 95% !important;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem !important;
+    text-align: left;
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(0, 240, 255, 0.25);
+  }
+  .master-library-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.18);
+    flex-shrink: 0;
+  }
+  .master-tag {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .master-title {
+    font-size: 1.55rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #fff;
+    margin: 0;
+  }
+  .master-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .btn-master-close {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 1rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-master-close:hover {
+    background: rgba(244, 63, 94, 0.25);
+    border-color: #f43f5e;
+    color: #f43f5e;
+    transform: scale(1.05);
+  }
+  .master-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .master-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+  }
+  .master-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .master-search-input {
+    width: 100%;
+    background: rgba(4, 10, 25, 0.8);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 10px;
+    padding: 8px 12px 8px 36px;
+    color: #fff;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+  .master-search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+  }
+  .master-filter-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .master-pill {
+    background: rgba(8, 18, 42, 0.8);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .master-pill:hover, .master-pill.active {
+    background: rgba(0, 240, 255, 0.18);
+    border-color: var(--primary);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+  }
+  .master-games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    overflow-y: auto;
+    padding-right: 4px;
+    max-height: 52vh;
+  }
+  .master-games-grid::-webkit-scrollbar {
+    width: 6px;
+  }
+  .master-games-grid::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.3);
+    border-radius: 3px;
+  }
+  .master-card {
+    background: rgba(6, 14, 32, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    border-radius: 16px;
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s,
+                box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .master-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 240, 255, 0.25);
+  }
+  .master-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.8rem;
+  }
+  .master-card-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(4, 9, 24, 0.9);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .master-card-title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .master-card-category {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+    text-transform: uppercase;
+  }
+  .master-card-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin-bottom: 0.9rem;
+    flex-grow: 1;
+  }
+  .master-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-top: 0.7rem;
+    border-top: 1px solid rgba(0, 240, 255, 0.12);
+  }
+  .master-card-stat {
+    font-size: 0.75rem;
+    font-family: monospace;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+  .master-card-stat span {
+    color: var(--primary);
+  }
+  .btn-master-play {
+    background: linear-gradient(135deg, var(--primary), #0284c7);
+    border: none;
+    color: #030712;
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+  }
+  .btn-master-play:hover {
+    background: linear-gradient(135deg, #7dd3fc, var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+  }
+  @media (max-width: 768px) {
+    .master-library-box {
+      padding: 1.1rem !important;
+      max-height: 92vh;
+    }
+    .master-title {
+      font-size: 1.25rem;
+    }
+    .master-games-grid {
+      grid-template-columns: 1fr;
+      max-height: 56vh;
     }
   }
 
@@ -2468,12 +2809,24 @@
           <path id="trace-pulse-reactor" class="neural-trace-pulse pulse-reactor" d="M 530 310 V 475 Q 530 500 555 500 H 800" />
         </svg>
 
-        <!-- Central Game Hub Squircle Nucleus -->
-        <div class="neural-hub-core" aria-label="Game Hub Core">
+        <!-- Central Game Hub Squircle Nucleus (Click to View Master Library) -->
+        <div class="neural-hub-core" id="neuralHubCore" onclick="openMasterLibraryModal()" tabindex="0" role="button" aria-label="Game Hub Core - Click to view all games" title="Click to browse all games">
           <div class="hub-core-ping"></div>
-          <div class="hub-core-emblem">⚡</div>
-          <div class="hub-core-title">GAME<span>HUB</span></div>
-          <div class="hub-core-status">CORE BUS</div>
+          <!-- Hypnotic WebGL Dithered Plasma Shader Canvas -->
+          <canvas class="hub-shader-canvas" id="hubShaderCanvas" width="96" height="96" aria-hidden="true"></canvas>
+          <div class="hub-core-content">
+            <div class="hub-core-emblem">
+              <svg class="hub-nexus-svg" viewBox="0 0 32 32" fill="none">
+                <polygon points="16,3 28,10 28,22 16,29 4,22 4,10" stroke="#00f0ff" stroke-width="1.8" fill="rgba(0, 240, 255, 0.2)"/>
+                <polygon points="16,8 23,12 23,20 16,24 9,20 9,12" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="3 1.5"/>
+                <circle cx="16" cy="16" r="3.2" fill="#ffffff"/>
+              </svg>
+            </div>
+            <div class="hub-core-title">GAME<span>HUB</span></div>
+          </div>
+          <div class="hub-core-status pulse-lib-hint">
+            <span class="lib-icon">📂</span> ALL GAMES
+          </div>
         </div>
 
         <!-- Satellite 1: Cyber Chess (Top-Left) -->
@@ -2482,7 +2835,20 @@
              onmouseleave="hideNeuralBriefing('chess')"
              onclick="handleNeuralNodeClick('chess', this)"
              tabindex="0" role="button" aria-label="Cyber Chess Node">
-          <div class="node-icon">♟️</div>
+          <div class="node-icon">
+            <svg class="node-cyber-svg svg-chess" viewBox="0 0 40 40" fill="none">
+              <defs>
+                <linearGradient id="gradChess" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38bdf8" />
+                  <stop offset="100%" stop-color="#818cf8" />
+                </linearGradient>
+              </defs>
+              <path d="M12 34 h16 v-3 h-16 v3 z" fill="url(#gradChess)" opacity="0.8" />
+              <path d="M14 31 h12 c0 -3 -2 -5 -3 -7 h1 c1.5 0 2.5 -1.5 2 -3 l-1 -3 c2 -1 3 -3 3 -5 c0 -3 -2.5 -5 -6 -5 c-1.5 0 -3 0.5 -4 1.5 c-3 0 -5 2 -6 5 c-1 3 0 5 2 6.5 c-1 2 -2 4.5 -2 7 c0 2 1 3 3 3 z" fill="url(#gradChess)" />
+              <line x1="20" y1="13" x2="25" y2="14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="21" cy="14" r="1.2" fill="#00f0ff" />
+            </svg>
+          </div>
           <div class="node-name">Chess</div>
         </div>
 
@@ -2492,7 +2858,22 @@
              onmouseleave="hideNeuralBriefing('bomb')"
              onclick="handleNeuralNodeClick('bomb', this)"
              tabindex="0" role="button" aria-label="Defusal Protocol Node">
-          <div class="node-icon">☢️</div>
+          <div class="node-icon">
+            <svg class="node-cyber-svg svg-bomb" viewBox="0 0 40 40" fill="none">
+              <defs>
+                <linearGradient id="gradBomb" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f43f5e" />
+                  <stop offset="100%" stop-color="#fb7185" />
+                </linearGradient>
+              </defs>
+              <circle cx="20" cy="22" r="13" stroke="url(#gradBomb)" stroke-width="1.8" stroke-dasharray="8 3" />
+              <circle cx="20" cy="22" r="9" fill="rgba(244, 63, 94, 0.25)" stroke="#f43f5e" stroke-width="1.5" />
+              <rect x="17.5" y="6" width="5" height="4" rx="1" fill="#fb7185" />
+              <path d="M20 6 C20 3 24 3 24 1" stroke="#facc15" stroke-width="1.8" stroke-linecap="round" />
+              <circle cx="24" cy="1" r="1.5" fill="#facc15" />
+              <text x="20" y="23" font-size="5.5" font-weight="900" font-family="monospace" fill="#ffffff" text-anchor="middle" dominant-baseline="central">00:07</text>
+            </svg>
+          </div>
           <div class="node-name">Defusal</div>
         </div>
 
@@ -2502,7 +2883,21 @@
              onmouseleave="hideNeuralBriefing('snake')"
              onclick="handleNeuralNodeClick('snake', this)"
              tabindex="0" role="button" aria-label="Cyber Snake Node">
-          <div class="node-icon">🐍</div>
+          <div class="node-icon">
+            <svg class="node-cyber-svg svg-snake" viewBox="0 0 40 40" fill="none">
+              <defs>
+                <linearGradient id="gradSnake" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#10e6a8" />
+                  <stop offset="100%" stop-color="#34d399" />
+                </linearGradient>
+              </defs>
+              <path d="M28 10 C28 6 22 6 20 9 C18 12 11 12 11 17 C11 22 17 23 20 25 C24 27 27 29 27 33 C27 36 23 37 20 37 C15 37 12 34 12 30" stroke="url(#gradSnake)" stroke-width="3" stroke-linecap="round" fill="none" />
+              <circle cx="28" cy="10" r="3.5" fill="url(#gradSnake)" />
+              <circle cx="29.2" cy="9.2" r="1" fill="#040918" />
+              <circle cx="16" cy="19" r="1.4" fill="#ffffff" />
+              <circle cx="24" cy="29" r="1.4" fill="#ffffff" />
+            </svg>
+          </div>
           <div class="node-name">Snake</div>
         </div>
 
@@ -2512,7 +2907,21 @@
              onmouseleave="hideNeuralBriefing('maze')"
              onclick="handleNeuralNodeClick('maze', this)"
              tabindex="0" role="button" aria-label="Cyber Maze Node">
-          <div class="node-icon">⚡</div>
+          <div class="node-icon">
+            <svg class="node-cyber-svg svg-maze" viewBox="0 0 40 40" fill="none">
+              <defs>
+                <linearGradient id="gradMaze" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#c084fc" />
+                  <stop offset="100%" stop-color="#a855f7" />
+                </linearGradient>
+              </defs>
+              <rect x="7" y="7" width="26" height="26" rx="5" stroke="url(#gradMaze)" stroke-width="2" fill="rgba(168, 85, 247, 0.12)" />
+              <path d="M7 16 H20 V24 H13 V33" stroke="url(#gradMaze)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+              <path d="M26 7 V18 H33" stroke="url(#gradMaze)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+              <path d="M20 28 H27 V33" stroke="url(#gradMaze)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+              <circle cx="20" cy="20" r="2.2" fill="#ffffff" />
+            </svg>
+          </div>
           <div class="node-name">Maze</div>
         </div>
 
@@ -2522,7 +2931,22 @@
              onmouseleave="hideNeuralBriefing('guess')"
              onclick="handleNeuralNodeClick('guess', this)"
              tabindex="0" role="button" aria-label="Cipher Guesser Node">
-          <div class="node-icon">🔢</div>
+          <div class="node-icon">
+            <svg class="node-cyber-svg svg-guess" viewBox="0 0 40 40" fill="none">
+              <defs>
+                <linearGradient id="gradGuess" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#facc15" />
+                  <stop offset="100%" stop-color="#fde047" />
+                </linearGradient>
+              </defs>
+              <rect x="7" y="7" width="26" height="26" rx="5" stroke="url(#gradGuess)" stroke-width="2" fill="rgba(250, 204, 21, 0.12)" />
+              <text x="14" y="16" font-size="7.5" font-weight="900" font-family="monospace" fill="#facc15" text-anchor="middle" dominant-baseline="central">1</text>
+              <text x="26" y="16" font-size="7.5" font-weight="900" font-family="monospace" fill="#ffffff" text-anchor="middle" dominant-baseline="central">0</text>
+              <text x="14" y="27" font-size="7.5" font-weight="900" font-family="monospace" fill="#ffffff" text-anchor="middle" dominant-baseline="central">? </text>
+              <text x="26" y="27" font-size="7.5" font-weight="900" font-family="monospace" fill="#facc15" text-anchor="middle" dominant-baseline="central">7</text>
+              <circle cx="20" cy="20" r="1.5" fill="#fde047" />
+            </svg>
+          </div>
           <div class="node-name">Cipher</div>
         </div>
 
@@ -2532,7 +2956,21 @@
              onmouseleave="hideNeuralBriefing('reactor')"
              onclick="handleNeuralNodeClick('reactor', this)"
              tabindex="0" role="button" aria-label="Reactor Meltdown Node">
-          <div class="node-icon">⚛️</div>
+          <div class="node-icon">
+            <svg class="node-cyber-svg svg-reactor" viewBox="0 0 40 40" fill="none">
+              <defs>
+                <linearGradient id="gradReactor" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00f0ff" />
+                  <stop offset="100%" stop-color="#38bdf8" />
+                </linearGradient>
+              </defs>
+              <ellipse cx="20" cy="20" rx="14" ry="5.5" stroke="url(#gradReactor)" stroke-width="1.8" transform="rotate(-30 20 20)" stroke-dasharray="14 4" />
+              <ellipse cx="20" cy="20" rx="14" ry="5.5" stroke="url(#gradReactor)" stroke-width="1.8" transform="rotate(30 20 20)" stroke-dasharray="14 4" />
+              <ellipse cx="20" cy="20" rx="14" ry="5.5" stroke="#ffffff" stroke-width="1.2" transform="rotate(90 20 20)" stroke-dasharray="10 6" />
+              <circle cx="20" cy="20" r="4.5" fill="#00f0ff" />
+              <circle cx="20" cy="20" r="2.2" fill="#ffffff" />
+            </svg>
+          </div>
           <div class="node-name">Reactor</div>
         </div>
 
@@ -3117,6 +3555,40 @@
           ABORT / SAFE MODE
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 0: MASTER GAMES LIBRARY (CENTRAL PROTOCOLS ARCHIVE)
+       ========================================================= -->
+  <div class="modal-overlay" id="masterLibraryModal">
+    <div class="modal-box master-library-box">
+      <div class="master-library-header">
+        <div>
+          <div class="master-tag">// MASTER PROTOCOLS ARCHIVE</div>
+          <h2 class="master-title">GAME HUB LIBRARY</h2>
+          <div class="master-subtitle">6 operational cyber-simulation modules online. Select a game to view intel or launch.</div>
+        </div>
+        <button type="button" class="btn-master-close" onclick="closeModal('masterLibraryModal')" aria-label="Close Library">✕</button>
+      </div>
+
+      <!-- Search & Category Filters -->
+      <div class="master-toolbar">
+        <div class="master-search-wrap">
+          <span class="master-search-icon">🔍</span>
+          <input type="text" id="masterGameSearch" class="master-search-input" placeholder="Search protocol by name or genre..." oninput="filterMasterGames(this.value)">
+        </div>
+        <div class="master-filter-pills">
+          <button class="master-pill active" onclick="filterMasterCategory('all', this)">ALL</button>
+          <button class="master-pill" onclick="filterMasterCategory('strategy', this)">STRATEGY</button>
+          <button class="master-pill" onclick="filterMasterCategory('tactical', this)">TACTICAL</button>
+          <button class="master-pill" onclick="filterMasterCategory('arcade', this)">ARCADE</button>
+          <button class="master-pill" onclick="filterMasterCategory('puzzle', this)">PUZZLE</button>
+        </div>
+      </div>
+
+      <!-- Master Grid of 6 Games -->
+      <div class="master-games-grid" id="masterGamesGrid"></div>
     </div>
   </div>
 
@@ -3846,6 +4318,403 @@
         openLaunchModal(game.url, game.title, game.desc);
       }
     }
+  }
+
+  // =========================================================
+  // VECTOR CYBER ICONS GENERATOR
+  // =========================================================
+  function getGameIconSvg(key) {
+    switch (key) {
+      case 'chess':
+        return `<svg class="node-cyber-svg svg-chess" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="mGradChess" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="100%" stop-color="#818cf8" />
+            </linearGradient>
+          </defs>
+          <path d="M12 34 h16 v-3 h-16 v3 z" fill="url(#mGradChess)" opacity="0.8" />
+          <path d="M14 31 h12 c0 -3 -2 -5 -3 -7 h1 c1.5 0 2.5 -1.5 2 -3 l-1 -3 c2 -1 3 -3 3 -5 c0 -3 -2.5 -5 -6 -5 c-1.5 0 -3 0.5 -4 1.5 c-3 0 -5 2 -6 5 c-1 3 0 5 2 6.5 c-1 2 -2 4.5 -2 7 c0 2 1 3 3 3 z" fill="url(#mGradChess)" />
+          <line x1="20" y1="13" x2="25" y2="14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+          <circle cx="21" cy="14" r="1.2" fill="#00f0ff" />
+        </svg>`;
+      case 'bomb':
+        return `<svg class="node-cyber-svg svg-bomb" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="mGradBomb" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f43f5e" />
+              <stop offset="100%" stop-color="#fb7185" />
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="22" r="13" stroke="url(#mGradBomb)" stroke-width="1.8" stroke-dasharray="8 3" />
+          <circle cx="20" cy="22" r="9" fill="rgba(244, 63, 94, 0.25)" stroke="#f43f5e" stroke-width="1.5" />
+          <rect x="17.5" y="6" width="5" height="4" rx="1" fill="#fb7185" />
+          <path d="M20 6 C20 3 24 3 24 1" stroke="#facc15" stroke-width="1.8" stroke-linecap="round" />
+          <circle cx="24" cy="1" r="1.5" fill="#facc15" />
+          <text x="20" y="23" font-size="5.5" font-weight="900" font-family="monospace" fill="#ffffff" text-anchor="middle" dominant-baseline="central">00:07</text>
+        </svg>`;
+      case 'snake':
+        return `<svg class="node-cyber-svg svg-snake" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="mGradSnake" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10e6a8" />
+              <stop offset="100%" stop-color="#34d399" />
+            </linearGradient>
+          </defs>
+          <path d="M28 10 C28 6 22 6 20 9 C18 12 11 12 11 17 C11 22 17 23 20 25 C24 27 27 29 27 33 C27 36 23 37 20 37 C15 37 12 34 12 30" stroke="url(#mGradSnake)" stroke-width="3" stroke-linecap="round" fill="none" />
+          <circle cx="28" cy="10" r="3.5" fill="url(#mGradSnake)" />
+          <circle cx="29.2" cy="9.2" r="1" fill="#040918" />
+          <circle cx="16" cy="19" r="1.4" fill="#ffffff" />
+          <circle cx="24" cy="29" r="1.4" fill="#ffffff" />
+        </svg>`;
+      case 'maze':
+        return `<svg class="node-cyber-svg svg-maze" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="mGradMaze" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#c084fc" />
+              <stop offset="100%" stop-color="#a855f7" />
+            </linearGradient>
+          </defs>
+          <rect x="7" y="7" width="26" height="26" rx="5" stroke="url(#mGradMaze)" stroke-width="2" fill="rgba(168, 85, 247, 0.12)" />
+          <path d="M7 16 H20 V24 H13 V33" stroke="url(#mGradMaze)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+          <path d="M26 7 V18 H33" stroke="url(#mGradMaze)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+          <path d="M20 28 H27 V33" stroke="url(#mGradMaze)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+          <circle cx="20" cy="20" r="2.2" fill="#ffffff" />
+        </svg>`;
+      case 'guess':
+        return `<svg class="node-cyber-svg svg-guess" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="mGradGuess" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#facc15" />
+              <stop offset="100%" stop-color="#fde047" />
+            </linearGradient>
+          </defs>
+          <rect x="7" y="7" width="26" height="26" rx="5" stroke="url(#mGradGuess)" stroke-width="2" fill="rgba(250, 204, 21, 0.12)" />
+          <text x="14" y="16" font-size="7.5" font-weight="900" font-family="monospace" fill="#facc15" text-anchor="middle" dominant-baseline="central">1</text>
+          <text x="26" y="16" font-size="7.5" font-weight="900" font-family="monospace" fill="#ffffff" text-anchor="middle" dominant-baseline="central">0</text>
+          <text x="14" y="27" font-size="7.5" font-weight="900" font-family="monospace" fill="#ffffff" text-anchor="middle" dominant-baseline="central">? </text>
+          <text x="26" y="27" font-size="7.5" font-weight="900" font-family="monospace" fill="#facc15" text-anchor="middle" dominant-baseline="central">7</text>
+          <circle cx="20" cy="20" r="1.5" fill="#fde047" />
+        </svg>`;
+      case 'reactor':
+        return `<svg class="node-cyber-svg svg-reactor" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="mGradReactor" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f0ff" />
+              <stop offset="100%" stop-color="#38bdf8" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="20" cy="20" rx="14" ry="5.5" stroke="url(#mGradReactor)" stroke-width="1.8" transform="rotate(-30 20 20)" stroke-dasharray="14 4" />
+          <ellipse cx="20" cy="20" rx="14" ry="5.5" stroke="url(#mGradReactor)" stroke-width="1.8" transform="rotate(30 20 20)" stroke-dasharray="14 4" />
+          <ellipse cx="20" cy="20" rx="14" ry="5.5" stroke="#ffffff" stroke-width="1.2" transform="rotate(90 20 20)" stroke-dasharray="10 6" />
+          <circle cx="20" cy="20" r="4.5" fill="#00f0ff" />
+          <circle cx="20" cy="20" r="2.2" fill="#ffffff" />
+        </svg>`;
+      default:
+        return '';
+    }
+  }
+
+  // =========================================================
+  // MASTER GAMES LIBRARY CONTROLLER
+  // =========================================================
+  let activeMasterCategory = 'all';
+
+  function openMasterLibraryModal() {
+    renderMasterGamesList('', activeMasterCategory);
+    openModal('masterLibraryModal');
+  }
+
+  function renderMasterGamesList(filterText = '', filterCat = 'all') {
+    const grid = document.getElementById('masterGamesGrid');
+    if (!grid) return;
+
+    const query = filterText.toLowerCase().trim();
+
+    const games = [
+      {
+        key: 'chess',
+        title: 'Cyber Chess',
+        category: 'strategy',
+        categoryLabel: 'AI Strategy',
+        desc: 'Deep neural chess engine with Stockfish evaluation, rating progression, and PGN export.',
+        url: 'Chess/index.jsp',
+        iconSvg: getGameIconSvg('chess'),
+        statLabel: 'AI Rating',
+        statVal: getNeuralGameStatValue('chess')
+      },
+      {
+        key: 'bomb',
+        title: 'Defusal Protocol',
+        category: 'tactical',
+        categoryLabel: 'Crisis Sim',
+        desc: 'Disarm 5 tactical mini-games under a 3-minute clock with 3 containment charges.',
+        url: 'Bomb_Defuse/index.jsp',
+        iconSvg: getGameIconSvg('bomb'),
+        statLabel: 'Record',
+        statVal: getNeuralGameStatValue('bomb')
+      },
+      {
+        key: 'snake',
+        title: 'Cyber Snake',
+        category: 'arcade',
+        categoryLabel: 'Arcade Classic',
+        desc: 'Fluid neon serpent arcade experience with dynamic tick rates, touch D-pads, and node tracking.',
+        url: 'Snake/index.jsp',
+        iconSvg: getGameIconSvg('snake'),
+        statLabel: 'Best Score',
+        statVal: getNeuralGameStatValue('snake')
+      },
+      {
+        key: 'maze',
+        title: 'Cyber Maze',
+        category: 'puzzle',
+        categoryLabel: 'Labyrinth',
+        desc: 'Procedurally generated randomized labyrinth nodes with recursive backtracking algorithms.',
+        url: 'Maze/index.jsp',
+        iconSvg: getGameIconSvg('maze'),
+        statLabel: 'Cleared',
+        statVal: getNeuralGameStatValue('maze')
+      },
+      {
+        key: 'guess',
+        title: 'Cipher Guesser',
+        category: 'puzzle',
+        categoryLabel: 'Decryption',
+        desc: 'Crack the encrypted integer between 1 and 100 in minimal probe iterations.',
+        url: 'Game1/index.jsp',
+        iconSvg: getGameIconSvg('guess'),
+        statLabel: 'Fewest',
+        statVal: getNeuralGameStatValue('guess')
+      },
+      {
+        key: 'reactor',
+        title: 'Reactor Meltdown',
+        category: 'tactical',
+        categoryLabel: 'Core Memory',
+        desc: 'Replicate glowing reactor sequences under a 20s timer. Clear stages to expand grid size.',
+        url: 'Reactor_Meltdown/index.jsp',
+        iconSvg: getGameIconSvg('reactor'),
+        statLabel: 'Core Record',
+        statVal: getNeuralGameStatValue('reactor')
+      }
+    ];
+
+    grid.innerHTML = '';
+    const filtered = games.filter(g => {
+      const matchCat = filterCat === 'all' || g.category === filterCat;
+      const matchText = !query || g.title.toLowerCase().includes(query) || g.desc.toLowerCase().includes(query) || g.categoryLabel.toLowerCase().includes(query);
+      return matchCat && matchText;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.9rem;">No simulation protocols matched your query.</div>';
+      return;
+    }
+
+    filtered.forEach(g => {
+      const card = document.createElement('div');
+      card.className = 'master-card';
+      card.innerHTML = `
+        <div>
+          <div class="master-card-top">
+            <div class="master-card-icon-wrap">` + g.iconSvg + `</div>
+            <div>
+              <div class="master-card-category">// ` + g.categoryLabel + `</div>
+              <div class="master-card-title">` + g.title + `</div>
+            </div>
+          </div>
+          <div class="master-card-desc">` + g.desc + `</div>
+        </div>
+        <div class="master-card-footer">
+          <div class="master-card-stat">` + g.statLabel + `: <span>` + g.statVal + `</span></div>
+          <button class="btn-master-play" onclick="closeModal('masterLibraryModal'); triggerGameLaunch('` + g.url + `')">
+            <span>▶</span> PLAY
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function filterMasterCategory(cat, btn) {
+    activeMasterCategory = cat;
+    document.querySelectorAll('.master-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const input = document.getElementById('masterGameSearch');
+    renderMasterGamesList(input ? input.value : '', activeMasterCategory);
+  }
+
+  function filterMasterGames(val) {
+    renderMasterGamesList(val, activeMasterCategory);
+  }
+
+  // =========================================================
+  // ANIMATED SHADER ENGINE FOR GAME HUB CORE
+  // Hypnotic Dithered Plasma Vortex (Sphere/Swirl/Ripple)
+  // =========================================================
+  function initHubShaderEngine() {
+    const canvas = document.getElementById('hubShaderCanvas');
+    if (!canvas) return;
+
+    let speedMultiplier = 1.0;
+    const hubCore = document.getElementById('neuralHubCore');
+    if (hubCore) {
+      hubCore.addEventListener('mouseenter', () => { speedMultiplier = 2.4; });
+      hubCore.addEventListener('mouseleave', () => { speedMultiplier = 1.0; });
+    }
+
+    const gl = canvas.getContext('webgl', { alpha: true, antialias: false, powerPreference: 'low-power' });
+    if (!gl) {
+      initFallback2DShader(canvas);
+      return;
+    }
+
+    const vsSource = `
+      attribute vec2 a_pos;
+      void main() {
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+      }
+    `;
+
+    const fsSource = `
+      precision mediump float;
+      uniform vec2 u_res;
+      uniform float u_time;
+      uniform float u_speed;
+
+      float bayer4(vec2 p) {
+        vec2 m = floor(mod(p, 4.0));
+        float i = m.x + m.y * 4.0;
+        if (i == 0.0) return 0.0/16.0; if (i == 1.0) return 8.0/16.0;
+        if (i == 2.0) return 2.0/16.0; if (i == 3.0) return 10.0/16.0;
+        if (i == 4.0) return 12.0/16.0; if (i == 5.0) return 4.0/16.0;
+        if (i == 6.0) return 14.0/16.0; if (i == 7.0) return 6.0/16.0;
+        if (i == 8.0) return 3.0/16.0; if (i == 9.0) return 11.0/16.0;
+        if (i == 10.0) return 1.0/16.0; if (i == 11.0) return 9.0/16.0;
+        if (i == 12.0) return 15.0/16.0; if (i == 13.0) return 7.0/16.0;
+        if (i == 14.0) return 13.0/16.0; return 5.0/16.0;
+      }
+
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_res) / min(u_res.x, u_res.y);
+        float r = length(uv);
+        float a = atan(uv.y, uv.x);
+
+        float t = u_time * u_speed;
+        float swirl = sin(a * 4.0 + r * 14.0 - t * 2.5) * 0.5 + 0.5;
+        float ripple = sin(r * 20.0 - t * 3.2) * 0.5 + 0.5;
+        float sphere = smoothstep(0.48, 0.16, r);
+        float val = (swirl * 0.65 + ripple * 0.35) * sphere;
+
+        float dither = bayer4(gl_FragCoord.xy / 2.0);
+        float threshold = step(dither, val);
+
+        vec3 frontColor = vec3(0.0, 0.94, 1.0);
+        vec3 backColor = vec3(0.01, 0.06, 0.18);
+        vec3 col = mix(backColor, frontColor, threshold);
+
+        float alpha = smoothstep(0.49, 0.44, r) * (threshold * 0.85 + 0.15);
+        gl_FragColor = vec4(col * alpha, alpha);
+      }
+    `;
+
+    function compileShader(src, type) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.warn('Shader compile err:', gl.getShaderInfoLog(s));
+        return null;
+      }
+      return s;
+    }
+
+    const vs = compileShader(vsSource, gl.VERTEX_SHADER);
+    const fs = compileShader(fsSource, gl.FRAGMENT_SHADER);
+    if (!vs || !fs) {
+      initFallback2DShader(canvas);
+      return;
+    }
+
+    const prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const posBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      -1, -1,
+       1, -1,
+      -1,  1,
+       1,  1
+    ]), gl.STATIC_DRAW);
+
+    const aPos = gl.getAttribLocation(prog, 'a_pos');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes = gl.getUniformLocation(prog, 'u_res');
+    const uTime = gl.getUniformLocation(prog, 'u_time');
+    const uSpeed = gl.getUniformLocation(prog, 'u_speed');
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+
+    let startTime = performance.now();
+    let currentSpeed = 1.0;
+
+    function renderShader(now) {
+      if (!document.getElementById('hubShaderCanvas')) return;
+      currentSpeed += (speedMultiplier - currentSpeed) * 0.08;
+      const elapsed = (now - startTime) / 1000;
+      gl.uniform1f(uTime, elapsed);
+      gl.uniform1f(uSpeed, currentSpeed);
+
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+      requestAnimationFrame(renderShader);
+    }
+    requestAnimationFrame(renderShader);
+  }
+
+  function initFallback2DShader(canvas) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let t = 0;
+    function render2D() {
+      t += 0.03;
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2, r = w * 0.42;
+
+      const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, r);
+      grad.addColorStop(0, 'rgba(0, 240, 255, 0.6)');
+      grad.addColorStop(0.5, 'rgba(2, 132, 199, 0.35)');
+      grad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(t * 1.5);
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.75, 0, Math.PI * 1.2);
+      ctx.stroke();
+      ctx.restore();
+
+      requestAnimationFrame(render2D);
+    }
+    requestAnimationFrame(render2D);
   }
 
   function triggerGameLaunch(url) {
@@ -4581,10 +5450,29 @@
     const targetMouse = { x: -9999, y: -9999 };
     const ripples = [];
 
+    // Performance Optimization: Offscreen Pre-rendered Dot Matrix
+    const dotCanvas = document.createElement('canvas');
+    const dotCtx = dotCanvas.getContext('2d');
+
+    function rebuildDotMatrix() {
+      dotCanvas.width = W;
+      dotCanvas.height = H;
+      dotCtx.clearRect(0, 0, W, H);
+      dotCtx.fillStyle = 'rgba(0, 240, 255, 0.04)';
+      for (let x = DOT_SPACING / 2; x < W; x += DOT_SPACING) {
+        for (let y = DOT_SPACING / 2; y < H; y += DOT_SPACING) {
+          dotCtx.beginPath();
+          dotCtx.arc(x, y, 0.65, 0, Math.PI * 2);
+          dotCtx.fill();
+        }
+      }
+    }
+
     function resize() {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
       horizonY = Math.round(H * 0.78);
+      rebuildDotMatrix();
     }
     window.addEventListener('resize', resize);
     resize();
@@ -4717,14 +5605,9 @@
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
 
-      // 1. Static Dot Matrix
-      ctx.fillStyle = 'rgba(0, 240, 255, 0.04)';
-      for (let x = DOT_SPACING / 2; x < W; x += DOT_SPACING) {
-        for (let y = DOT_SPACING / 2; y < H; y += DOT_SPACING) {
-          ctx.beginPath();
-          ctx.arc(x, y, 0.65, 0, Math.PI * 2);
-          ctx.fill();
-        }
+      // 1. Static Dot Matrix (Pre-rendered single blit optimization)
+      if (dotCanvas.width > 0) {
+        ctx.drawImage(dotCanvas, 0, 0);
       }
 
       // 2. Update Shockwave Ripples
@@ -4755,26 +5638,55 @@
         }
       }
 
-      // Draw Grid Lines
-      function drawSeg(p1, p2, pr1, pr2) {
-        const avg = (pr1 + pr2) / 2;
-        const t = avg * avg * (3 - 2 * avg);
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
-        ctx.lineWidth = lerpN(0.9, 2.0, t);
-        ctx.stroke();
-      }
-
+      // Batched Base Lines (Massive draw call reduction)
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.16)';
+      ctx.lineWidth = 0.9;
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols - 1; col++) {
-          drawSeg(pts[row][col], pts[row][col + 1], prox[row][col], prox[row][col + 1]);
+          if ((prox[row][col] + prox[row][col + 1]) < 0.03) {
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
+          }
         }
       }
       for (let col = 0; col < cols; col++) {
         for (let row = 0; row < rows - 1; row++) {
-          drawSeg(pts[row][col], pts[row + 1][col], prox[row][col], prox[row + 1][col]);
+          if ((prox[row][col] + prox[row + 1][col]) < 0.03) {
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      // Active Warped Segments (only drawn where proximity > 0)
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols - 1; col++) {
+          const avg = (prox[row][col] + prox[row][col + 1]) / 2;
+          if (avg >= 0.015) {
+            const t = avg * avg * (3 - 2 * avg);
+            ctx.beginPath();
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
+            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
+            ctx.lineWidth = lerpN(0.9, 2.2, t);
+            ctx.stroke();
+          }
+        }
+      }
+      for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows - 1; row++) {
+          const avg = (prox[row][col] + prox[row + 1][col]) / 2;
+          if (avg >= 0.015) {
+            const t = avg * avg * (3 - 2 * avg);
+            ctx.beginPath();
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
+            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
+            ctx.lineWidth = lerpN(0.9, 2.2, t);
+            ctx.stroke();
+          }
         }
       }
 
@@ -4875,18 +5787,26 @@
     if (isUserLoggedIn) updateAccountLevelUI();
     updateRansomIndicator();
 
-    // Initialize Linear Neural Bus Mode & Spotlight
+    // Initialize Animated Dithered Plasma Shader for Game Hub Core
+    initHubShaderEngine();
+
+    // Initialize Linear Neural Bus Mode & Throttled Spotlight
     const savedBusMode = localStorage.getItem('hub_library_mode') || 'neural';
     setLibraryMode(savedBusMode);
 
     const busContainer = document.getElementById('neuralBusContainer');
     if (busContainer) {
+      let busRaf = null;
       busContainer.addEventListener('mousemove', (e) => {
-        const rect = busContainer.getBoundingClientRect();
-        const x = Math.round(e.clientX - rect.left);
-        const y = Math.round(e.clientY - rect.top);
-        busContainer.style.setProperty('--bus-mx', x + 'px');
-        busContainer.style.setProperty('--bus-my', y + 'px');
+        if (busRaf) return;
+        busRaf = requestAnimationFrame(() => {
+          const rect = busContainer.getBoundingClientRect();
+          const x = Math.round(e.clientX - rect.left);
+          const y = Math.round(e.clientY - rect.top);
+          busContainer.style.setProperty('--bus-mx', x + 'px');
+          busContainer.style.setProperty('--bus-my', y + 'px');
+          busRaf = null;
+        });
       });
     }
 
