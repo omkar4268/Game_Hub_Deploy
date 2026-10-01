@@ -16,6 +16,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Game Hub | Brain & Mind Training Games</title>
 <link rel="stylesheet" href="css/ransom_horror.css">
+<!-- Three.js 3D Engine for Hyperspace Warp Tunnel -->
+<script src="js/three.min.js"></script>
 <!-- Framer Motion Browser Engine (Motion One / Framer Motion Runtime) -->
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <style>
@@ -786,35 +788,24 @@
     50% { transform: scale(1.4); opacity: 0.5; }
   }
 
-  /* Neural Bus Container */
+  /* Neural Bus Container - Translucent Deep Void for Hyperspace Warp Tunnel */
   .neural-bus-container {
     position: relative;
     width: 100%;
     height: calc(100vh - 170px);
     min-height: 480px;
     max-height: 720px;
-    border-radius: 22px;
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    background-color: rgba(3, 7, 18, 0.85);
-    background-image: radial-gradient(circle, rgba(0, 240, 255, 0.2) 1.2px, transparent 1.2px);
-    background-size: 28px 28px;
-    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.95), 0 15px 40px rgba(0, 0, 0, 0.85);
+    border-radius: 24px;
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    background: rgba(3, 7, 18, 0.42);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 15px 45px rgba(0, 0, 0, 0.85);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     animation: panelSpringGlide 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-
-  /* Dynamic cursor spotlight glow */
-  .neural-spotlight {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    background: radial-gradient(circle 320px at var(--bus-mx, 50%) var(--bus-my, 50%), rgba(0, 240, 255, 0.08), transparent 70%);
-    transition: opacity 0.2s ease;
   }
 
   /* SVG Canvas for Linear Traces */
@@ -2846,8 +2837,7 @@
 
       <!-- LINEAR NEURAL INTEGRATION BUS (Zero Loops Architecture) -->
       <div class="neural-bus-container" id="neuralBusContainer">
-        <!-- Interactive Cursor Spotlight Glow -->
-        <div class="neural-spotlight" id="neuralSpotlight"></div>
+
 
         <!-- Linear SVG Traces (Zero Loops, Hub ➔ Games) -->
         <svg class="neural-svg" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
@@ -5366,363 +5356,225 @@
   });
 
   // =========================================================
-  // INTERACTIVE KINETIC GRID & CYBER HORIZON ENGINE
-  // (Full Kinetic Grid Gravitational Warp + Click Shockwave Ripples + Cyber Rays)
+  // HYPERSPACE WARP TUNNEL 3D ENGINE (Three.js WebGL + Additive Blending)
+  // Replaces heavy kinetic mesh with ultra-fast 60fps GPU star streaks
   // =========================================================
-  (function initKineticGridEngine() {
+  function initWarpTunnelEngine() {
     const canvas = document.getElementById('techRaysCanvas');
     if (!canvas) return;
+
+    const NEAR_Z = 5;
+    const FAR_Z = -45;
+    const COUNT = 420;
+    const SPREAD = 7.2;
+    let speed = 1.0;
+    let targetSpeed = 1.0;
+
+    // Interactive Warp Accel on Central Game Hub Hover
+    const hubCore = document.getElementById('neuralHubCore');
+    if (hubCore) {
+      hubCore.addEventListener('mouseenter', () => { targetSpeed = 2.4; });
+      hubCore.addEventListener('mouseleave', () => { targetSpeed = 1.0; });
+    }
+
+    function randomStreak(spread, out, offset, z) {
+      // Bias stars away from exact center so camera and Game Hub have a clear "eye"
+      const r = 0.4 + Math.sqrt(Math.random()) * spread;
+      const a = Math.random() * Math.PI * 2;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r * 0.65;
+      const zz = (z !== undefined) ? z : (FAR_Z + Math.random() * (NEAR_Z - FAR_Z));
+      const len = 1.2 + Math.random() * 2.0;
+      out[offset] = x;
+      out[offset + 1] = y;
+      out[offset + 2] = zz;
+      out[offset + 3] = x;
+      out[offset + 4] = y;
+      out[offset + 5] = zz - len;
+    }
+
+    // 1. Primary: Three.js High-Performance WebGL Engine
+    if (typeof THREE !== 'undefined') {
+      try {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
+        camera.position.set(0, 0, 6);
+
+        const renderer = new THREE.WebGLRenderer({
+          canvas: canvas,
+          alpha: true,
+          antialias: false,
+          powerPreference: 'high-performance'
+        });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+        const positions = new Float32Array(COUNT * 6);
+        const colors = new Float32Array(COUNT * 6);
+
+        for (let i = 0; i < COUNT; i++) {
+          randomStreak(SPREAD, positions, i * 6);
+        }
+
+        // Head: bright foreground cyan/white, Tail: deep primary cyan fading out
+        const head = new THREE.Color('#ffffff').lerp(new THREE.Color('#00f0ff'), 0.45);
+        const tail = new THREE.Color('#00f0ff').multiplyScalar(0.22);
+
+        for (let i = 0; i * 6 < colors.length; i++) {
+          const o = i * 6;
+          colors[o] = head.r;
+          colors[o + 1] = head.g;
+          colors[o + 2] = head.b;
+          colors[o + 3] = tail.r;
+          colors[o + 4] = tail.g;
+          colors[o + 5] = tail.b;
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const material = new THREE.LineBasicMaterial({
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.92,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending
+        });
+
+        const lineSegments = new THREE.LineSegments(geometry, material);
+        lineSegments.frustumCulled = false;
+        scene.add(lineSegments);
+
+        let targetCamX = 0;
+        let targetCamY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+          targetCamX = (e.clientX / width - 0.5) * 0.8;
+          targetCamY = -(e.clientY / height - 0.5) * 0.6;
+        }, { passive: true });
+
+        function onResize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        }
+        window.addEventListener('resize', onResize);
+
+        let lastTime = performance.now();
+
+        function animate(now) {
+          requestAnimationFrame(animate);
+
+          const delta = Math.min((now - lastTime) / 1000, 0.05);
+          lastTime = now;
+
+          speed += (targetSpeed - speed) * 0.06;
+          const dz = delta * 24 * speed;
+
+          const posAttr = geometry.getAttribute('position');
+          const arr = posAttr.array;
+
+          for (let i = 0; i * 6 < arr.length; i++) {
+            const o = i * 6;
+            arr[o + 2] += dz;
+            arr[o + 5] += dz;
+            if (arr[o + 5] > NEAR_Z) {
+              randomStreak(SPREAD, arr, o, FAR_Z - Math.random() * 6);
+            }
+          }
+          posAttr.needsUpdate = true;
+
+          // Subtle, buttery camera parallax without any DOM recalculation
+          camera.position.x += (targetCamX - camera.position.x) * 0.04;
+          camera.position.y += (targetCamY - camera.position.y) * 0.04;
+          camera.lookAt(0, 0, 0);
+
+          renderer.render(scene, camera);
+        }
+        requestAnimationFrame(animate);
+        return;
+      } catch (e) {
+        console.warn('Three.js setup encountered an issue, initializing canvas fallback:', e);
+      }
+    }
+
+    // 2. Resilient Canvas 2D Fallback
+    initCanvasWarpFallback(canvas, NEAR_Z, FAR_Z, COUNT, SPREAD);
+  }
+
+  function initCanvasWarpFallback(canvas, NEAR_Z, FAR_Z, count, spread) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    let W = 0, H = 0, horizonY = 0;
-
-    // Kinetic Grid Constants
-    const CELL_SIZE = 55;
-    const INFLUENCE_RADIUS = 260;
-    const MAX_WARP = 24;
-    const DOT_SPACING = 30;
-    const LERP_SPEED = 0.08;
-
-    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.18 };
-    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.95 };
-    const NODE_ACTIVE = { r: 74, g: 158, b: 255, a: 1.0 };
-    const NODE_BASE_RADIUS = 1.8;
-    const NODE_ACTIVE_RADIUS = 3.5;
-
-    const mouse = { x: -9999, y: -9999 };
-    const targetMouse = { x: -9999, y: -9999 };
-    const ripples = [];
-
-    // Performance Optimization: Offscreen Pre-rendered Dot Matrix
-    const dotCanvas = document.createElement('canvas');
-    const dotCtx = dotCanvas.getContext('2d');
-
-    function rebuildDotMatrix() {
-      dotCanvas.width = W;
-      dotCanvas.height = H;
-      dotCtx.clearRect(0, 0, W, H);
-      dotCtx.fillStyle = 'rgba(0, 240, 255, 0.04)';
-      for (let x = DOT_SPACING / 2; x < W; x += DOT_SPACING) {
-        for (let y = DOT_SPACING / 2; y < H; y += DOT_SPACING) {
-          dotCtx.beginPath();
-          dotCtx.arc(x, y, 0.65, 0, Math.PI * 2);
-          dotCtx.fill();
-        }
-      }
-    }
-
-    function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      horizonY = Math.round(H * 0.78);
-      rebuildDotMatrix();
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    window.addEventListener('mousemove', (e) => {
-      targetMouse.x = e.clientX;
-      targetMouse.y = e.clientY;
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     });
 
-    window.addEventListener('mouseleave', () => {
-      targetMouse.x = -9999;
-      targetMouse.y = -9999;
-    });
-
-    window.addEventListener('click', (e) => {
-      ripples.push({
-        x: e.clientX,
-        y: e.clientY,
-        radius: 0,
-        opacity: 1,
-        born: performance.now()
-      });
-      if (ripples.length > 8) ripples.shift();
-    });
-
-    function lerpN(a, b, t) { return a + (b - a) * t; }
-    function lerpColor(base, active, t) {
-      const r = Math.round(lerpN(base.r, active.r, t));
-      const g = Math.round(lerpN(base.g, active.g, t));
-      const b = Math.round(lerpN(base.b, active.b, t));
-      const a = lerpN(base.a, active.a, t);
-      return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
-    }
-
-    function getWarpedPoint(gx, gy, col, row, m, rips, cols, rows) {
-      const edgeMargin = 1.5;
-      const colPin = Math.min(col / edgeMargin, (cols - 1 - col) / edgeMargin, 1);
-      const rowPin = Math.min(row / edgeMargin, (rows - 1 - row) / edgeMargin, 1);
-      const pinFactor = colPin * colPin * rowPin * rowPin;
-
-      const dx = gx - m.x;
-      const dy = gy - m.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const proximity = Math.max(0, 1 - dist / INFLUENCE_RADIUS) * pinFactor;
-
-      let rx = 0, ry = 0;
-      for (let i = 0; i < rips.length; i++) {
-        const r = rips[i];
-        const rdx = gx - r.x;
-        const rdy = gy - r.y;
-        const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
-        const waveWidth = 55;
-        const diff = rdist - r.radius;
-        if (Math.abs(diff) < waveWidth) {
-          const strength = (1 - Math.abs(diff) / waveWidth) * r.opacity * 18 * pinFactor;
-          const angle = Math.atan2(rdy, rdx);
-          const sign = diff < 0 ? -1 : 1;
-          rx += Math.cos(angle) * strength * sign * -1;
-          ry += Math.sin(angle) * strength * sign * -1;
-        }
-      }
-
-      if (dist < INFLUENCE_RADIUS && dist > 0 && pinFactor > 0) {
-        const t = dist / INFLUENCE_RADIUS;
-        const eased = t < 0.01 ? 0 : (1 - t) * (1 - t) * Math.min(1, dist / 60);
-        const warpAmt = eased * MAX_WARP * pinFactor;
-        const angle = Math.atan2(dy, dx);
-        return {
-          pt: { x: gx - Math.cos(angle) * warpAmt + rx, y: gy - Math.sin(angle) * warpAmt + ry },
-          proximity: proximity
-        };
-      }
-
-      return { pt: { x: gx + rx, y: gy + ry }, proximity: proximity };
-    }
-
-    // Rising laser rays & particles
-    const RAY_COUNT = 60;
-    const rays = [];
-    for (let i = 0; i < RAY_COUNT; i++) {
-      const isBright = Math.random() < 0.25;
-      rays.push({
-        xPct: Math.random(),
-        maxHeight: isBright ? (0.35 + Math.random() * 0.45) : (0.15 + Math.random() * 0.35),
-        width: isBright ? (1.5 + Math.random() * 2.0) : (0.7 + Math.random() * 1.2),
-        alphaBase: isBright ? (0.55 + Math.random() * 0.35) : (0.15 + Math.random() * 0.3),
-        pulseSpeed: 0.015 + Math.random() * 0.03,
-        pulseOffset: Math.random() * Math.PI * 2,
-        colorType: Math.random() < 0.65 ? 'cyan' : 'blue'
+    const stars = [];
+    for (let i = 0; i < count; i++) {
+      const r = 0.4 + Math.sqrt(Math.random()) * spread;
+      const a = Math.random() * Math.PI * 2;
+      stars.push({
+        x: Math.cos(a) * r,
+        y: Math.sin(a) * r * 0.65,
+        z: FAR_Z + Math.random() * (NEAR_Z - FAR_Z),
+        len: 1.2 + Math.random() * 2.0
       });
     }
 
-    const PARTICLE_COUNT = 70;
-    const particles = [];
-    function createParticle(initial) {
-      return {
-        x: Math.random() * (W || window.innerWidth),
-        y: initial ? Math.random() * (H || window.innerHeight) : (horizonY + Math.random() * 20),
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: -(0.4 + Math.random() * 1.1),
-        size: 0.8 + Math.random() * 1.6,
-        alpha: 0.15 + Math.random() * 0.6,
-        maxLife: 140 + Math.random() * 160,
-        life: initial ? Math.random() * 180 : 0,
-        color: Math.random() < 0.7 ? '#00f0ff' : '#38bdf8'
-      };
-    }
-    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(createParticle(true));
+    let last = performance.now();
+    function draw(now) {
+      requestAnimationFrame(draw);
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
 
-    let time = 0;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#02040a';
+      ctx.fillRect(0, 0, w, h);
 
-    function render(now) {
-      time++;
-      if (mouse.x === -9999) {
-        mouse.x = targetMouse.x;
-        mouse.y = targetMouse.y;
-      } else {
-        mouse.x = lerpN(mouse.x, targetMouse.x, LERP_SPEED);
-        mouse.y = lerpN(mouse.y, targetMouse.y, LERP_SPEED);
-      }
+      const cx = w / 2;
+      const cy = h / 2;
+      const fov = 400;
 
-      ctx.clearRect(0, 0, W, H);
-
-      // Deep Space Base
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-      bgGrad.addColorStop(0, '#010308');
-      bgGrad.addColorStop(0.65, '#020614');
-      bgGrad.addColorStop(horizonY / H, '#030c22');
-      bgGrad.addColorStop(1, '#01040a');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
-
-      // 1. Static Dot Matrix (Pre-rendered single blit optimization)
-      if (dotCanvas.width > 0) {
-        ctx.drawImage(dotCanvas, 0, 0);
-      }
-
-      // 2. Update Shockwave Ripples
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const r = ripples[i];
-        const age = (now - r.born) / 1000;
-        r.radius = Math.max(0, age * 400);
-        r.opacity = Math.max(0, 1 - age * 1.2);
-        if (r.opacity <= 0) ripples.splice(i, 1);
-      }
-
-      // 3. Build Warped Grid
-      const cols = Math.max(2, Math.ceil(W / CELL_SIZE)) + 1;
-      const rows = Math.max(2, Math.ceil(H / CELL_SIZE)) + 1;
-      const cellW = W / (cols - 1);
-      const cellH = H / (rows - 1);
-
-      const pts = [];
-      const prox = [];
-
-      for (let row = 0; row < rows; row++) {
-        pts[row] = [];
-        prox[row] = [];
-        for (let col = 0; col < cols; col++) {
-          const res = getWarpedPoint(col * cellW, row * cellH, col, row, mouse, ripples, cols, rows);
-          pts[row][col] = res.pt;
-          prox[row][col] = res.proximity;
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        s.z += dt * 24;
+        if (s.z > NEAR_Z) {
+          s.z = FAR_Z - Math.random() * 6;
+          const r = 0.4 + Math.sqrt(Math.random()) * spread;
+          const a = Math.random() * Math.PI * 2;
+          s.x = Math.cos(a) * r;
+          s.y = Math.sin(a) * r * 0.65;
         }
-      }
 
-      // Batched Base Lines (Massive draw call reduction)
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.16)';
-      ctx.lineWidth = 0.9;
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - 1; col++) {
-          if ((prox[row][col] + prox[row][col + 1]) < 0.03) {
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
-          }
-        }
-      }
-      for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows - 1; row++) {
-          if ((prox[row][col] + prox[row + 1][col]) < 0.03) {
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
-          }
-        }
-      }
-      ctx.stroke();
+        const z1 = 6 - s.z;
+        const z2 = 6 - (s.z - s.len);
+        if (z1 <= 0.1 || z2 <= 0.1) continue;
 
-      // Active Warped Segments (only drawn where proximity > 0)
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - 1; col++) {
-          const avg = (prox[row][col] + prox[row][col + 1]) / 2;
-          if (avg >= 0.015) {
-            const t = avg * avg * (3 - 2 * avg);
-            ctx.beginPath();
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
-            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
-            ctx.lineWidth = lerpN(0.9, 2.2, t);
-            ctx.stroke();
-          }
-        }
-      }
-      for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows - 1; row++) {
-          const avg = (prox[row][col] + prox[row + 1][col]) / 2;
-          if (avg >= 0.015) {
-            const t = avg * avg * (3 - 2 * avg);
-            ctx.beginPath();
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
-            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
-            ctx.lineWidth = lerpN(0.9, 2.2, t);
-            ctx.stroke();
-          }
-        }
-      }
+        const px1 = cx + (s.x / z1) * fov;
+        const py1 = cy + (s.y / z1) * fov;
+        const px2 = cx + (s.x / z2) * fov;
+        const py2 = cy + (s.y / z2) * fov;
 
-      // Draw Intersection Nodes
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const p = pts[row][col];
-          const pr = prox[row][col];
-          const t = pr * pr * (3 - 2 * pr);
-          const r = lerpN(NODE_BASE_RADIUS, NODE_ACTIVE_RADIUS, t);
-
-          if (t > 0.25) {
-            const glowR = r + lerpN(0, 8, (t - 0.25) / 0.75);
-            const grd = ctx.createRadialGradient(p.x, p.y, r * 0.5, p.x, p.y, glowR);
-            grd.addColorStop(0, 'rgba(0, 240, 255, ' + (t * 0.45).toFixed(3) + ')');
-            grd.addColorStop(1, 'rgba(0, 240, 255, 0)');
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
-            ctx.fillStyle = grd;
-            ctx.fill();
-          }
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = lerpColor({ r: 0, g: 240, b: 255, a: 0.28 }, NODE_ACTIVE, t);
-          ctx.fill();
-        }
-      }
-
-      // Draw Ripple Rings
-      for (let i = 0; i < ripples.length; i++) {
-        const r = ripples[i];
-        const safeRadius = Math.max(0, r.radius);
+        const alpha = Math.max(0, Math.min(0.9, (s.z - FAR_Z) / (NEAR_Z - FAR_Z)));
         ctx.beginPath();
-        ctx.arc(r.x, r.y, safeRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(0, 240, 255, ' + (r.opacity * 0.6).toFixed(3) + ')';
-        ctx.lineWidth = 2.2;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(r.x, r.y, Math.max(0, safeRadius - 16), 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(56, 189, 248, ' + (r.opacity * 0.35).toFixed(3) + ')';
-        ctx.lineWidth = 1.2;
+        ctx.moveTo(px1, py1);
+        ctx.lineTo(px2, py2);
+        ctx.strokeStyle = 'rgba(0, 240, 255, ' + alpha.toFixed(3) + ')';
+        ctx.lineWidth = 1.3;
         ctx.stroke();
       }
-
-      // 4. Horizon Laser Pillars & Beams
-      for (let i = 0; i < rays.length; i++) {
-        const ray = rays[i];
-        const x = ray.xPct * W;
-        const pulse = Math.sin(time * ray.pulseSpeed + ray.pulseOffset);
-        const curAlpha = Math.max(0.08, Math.min(0.85, ray.alphaBase + pulse * 0.2));
-        const rayLen = ray.maxHeight * horizonY * (0.85 + pulse * 0.15);
-        const topY = horizonY - rayLen;
-
-        const rayGrad = ctx.createLinearGradient(x, horizonY, x, topY);
-        rayGrad.addColorStop(0, 'rgba(0, 240, 255, ' + curAlpha + ')');
-        rayGrad.addColorStop(0.3, 'rgba(2, 132, 199, ' + (curAlpha * 0.6) + ')');
-        rayGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = rayGrad;
-        ctx.fillRect(x - ray.width / 2, topY, ray.width, rayLen);
-      }
-
-      // 5. Rising Floating Particles
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx + Math.sin((time + i * 15) * 0.02) * 0.25;
-        p.y += p.vy;
-        p.life++;
-
-        const lifeRatio = p.life / p.maxLife;
-        let alpha = p.alpha;
-        if (lifeRatio > 0.7) alpha *= (1 - (lifeRatio - 0.7) / 0.3);
-
-        if (p.life >= p.maxLife || p.y < 0) {
-          particles[i] = createParticle(false);
-          continue;
-        }
-
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1.0;
-
-      requestAnimationFrame(render);
     }
-
-    requestAnimationFrame(render);
-  })();
+    requestAnimationFrame(draw);
+  }
 
   window.addEventListener('DOMContentLoaded', () => {
     enforceAccountBoundary(currentUsername);
@@ -5734,23 +5586,8 @@
     // Initialize Animated Dithered Plasma Shader for Game Hub Core
     initHubShaderEngine();
 
-    // Initialize Throttled Spotlight on Neural Bus
-
-    const busContainer = document.getElementById('neuralBusContainer');
-    if (busContainer) {
-      let busRaf = null;
-      busContainer.addEventListener('mousemove', (e) => {
-        if (busRaf) return;
-        busRaf = requestAnimationFrame(() => {
-          const rect = busContainer.getBoundingClientRect();
-          const x = Math.round(e.clientX - rect.left);
-          const y = Math.round(e.clientY - rect.top);
-          busContainer.style.setProperty('--bus-mx', x + 'px');
-          busContainer.style.setProperty('--bus-my', y + 'px');
-          busRaf = null;
-        });
-      });
-    }
+    // Initialize Hyperspace 3D Warp Tunnel Background Engine
+    initWarpTunnelEngine();
 
     const briefingCard = document.getElementById('neuralBriefingCard');
     if (briefingCard) {
