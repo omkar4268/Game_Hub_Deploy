@@ -64,7 +64,22 @@
     inset: 0;
   }
 
-  /* Rising Cyber Laser Rays & Particle Floor Horizon Canvas */
+  /* Dual Dynamic Background Canvas Layers */
+  .bg-canvas-layer {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.45s ease;
+  }
+  #kineticGridCanvas {
+    z-index: 0;
+  }
+  #warpTunnelCanvas {
+    z-index: 0;
+  }
   #techRaysCanvas {
     position: fixed;
     inset: 0;
@@ -72,6 +87,158 @@
     height: 100vh;
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* Post-Auth Transition Overlay (loader.tsx implementation) */
+  .auth-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 13, 28, 0.96) 0%, rgba(2, 4, 10, 0.99) 100%);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .auth-transition-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .auth-transition-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  /* Multi-Ring Conic Loader matching loader.tsx */
+  .deliberate-loader-container {
+    position: relative;
+    width: 8rem; /* size-32 */
+    height: 8rem;
+    animation: loaderContainerBreathe 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes loaderContainerBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  /* Outer Ring with shimmer */
+  .loader-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.95) 90deg, transparent 180deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 66%, black 67%);
+    mask: radial-gradient(circle at 50% 50%, transparent 66%, black 67%);
+    animation: loaderSpinClockwise 3s linear infinite;
+  }
+
+  /* Counter-Rotating Middle Ring */
+  .loader-ring-middle {
+    position: absolute;
+    inset: 8px; /* inset-2 */
+    border-radius: 9999px;
+    background: conic-gradient(from 180deg, transparent 0deg, rgba(255, 255, 255, 0.9) 180deg, transparent 270deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 64%, black 65%);
+    mask: radial-gradient(circle at 50% 50%, transparent 64%, black 65%);
+    animation: loaderSpinCounter 2.5s linear infinite;
+  }
+
+  /* Inner Pulsing Ring */
+  .loader-ring-inner {
+    position: absolute;
+    inset: 16px; /* inset-4 */
+    border-radius: 9999px;
+    background: conic-gradient(from 90deg, transparent 0deg, rgba(0, 240, 255, 0.95) 90deg, transparent 135deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 60%, black 62%);
+    mask: radial-gradient(circle at 50% 50%, transparent 60%, black 62%);
+    animation: loaderSpinClockwise 2s linear infinite, loaderInnerScale 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes loaderSpinClockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes loaderSpinCounter {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+  @keyframes loaderInnerScale {
+    0%, 100% { transform: scale(0.98); }
+    50% { transform: scale(1.02); }
+  }
+
+  /* Center Precision Dot */
+  .loader-center-dot {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.85);
+  }
+
+  /* Minimal Accent Particles Orbit */
+  .loader-particles-orbit {
+    position: absolute;
+    inset: 0;
+    animation: loaderSpinClockwise 8s linear infinite;
+    pointer-events: none;
+  }
+  .loader-particle-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 9999px;
+  }
+  .loader-particle-dot.dot-top {
+    top: 0;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.9);
+  }
+  .loader-particle-dot.dot-bottom {
+    bottom: 0;
+    width: 2.5px;
+    height: 2.5px;
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Modern Typography with Breathing Opacity */
+  .loader-typography {
+    text-align: center;
+    max-width: 18rem; /* max-w-64 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: loaderTextBreath 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes loaderTextBreath {
+    0%, 100% { opacity: 0.68; }
+    50% { opacity: 1; }
+  }
+  .loader-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: #f8fafc;
+    margin: 0;
+  }
+  .loader-subtitle {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: #94a3b8;
+    margin: 0;
   }
 
   /* Subtle CRT Scanline Mesh */
@@ -2675,8 +2842,40 @@
 </head>
 <body>
 
-  <!-- Rising Cyber Laser Rays & Particle Floor Horizon Canvas -->
-  <canvas id="techRaysCanvas"></canvas>
+  <!-- Dual Dynamic Background Canvas Layers -->
+  <canvas id="kineticGridCanvas" class="bg-canvas-layer"></canvas>
+  <canvas id="warpTunnelCanvas" class="bg-canvas-layer"></canvas>
+  <canvas id="techRaysCanvas" style="display:none;"></canvas>
+
+  <!-- =========================================================
+       POST-AUTH TRANSITION SCREEN (loader.tsx Implementation)
+       ========================================================= -->
+  <div id="authTransitionOverlay" class="auth-transition-overlay" aria-hidden="true">
+    <div class="auth-transition-card">
+      <!-- Enhanced Monochrome Multi-Ring Conic Loader -->
+      <div class="deliberate-loader-container">
+        <!-- Outer elegant ring with shimmer -->
+        <div class="loader-ring loader-ring-outer"></div>
+        <!-- Counter-rotating middle ring -->
+        <div class="loader-ring loader-ring-middle"></div>
+        <!-- Inner pulsing ring with subtle gradient -->
+        <div class="loader-ring loader-ring-inner"></div>
+        <!-- Center precision dot -->
+        <div class="loader-center-dot"></div>
+        <!-- Minimal accent particles orbit -->
+        <div class="loader-particles-orbit">
+          <div class="loader-particle-dot dot-top"></div>
+          <div class="loader-particle-dot dot-bottom"></div>
+        </div>
+      </div>
+
+      <!-- Modern typography with subtle breathing animation -->
+      <div class="loader-typography">
+        <h3 id="loaderTitle" class="loader-title">Configuring your account...</h3>
+        <p id="loaderSubtitle" class="loader-subtitle">Please wait while we prepare everything for you</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Framer Motion Kinetic Camera Depth Curtain -->
   <div id="motionCurtain" class="motion-page-curtain" aria-hidden="true">
@@ -3880,32 +4079,41 @@
     kineticNavigate(url);
   }
 
-  function triggerFastEnter(targetIdentity, completionMsg, onCompleteCallback) {
-    const Motion = getMotionEngine();
-    if (portal) {
-      if (Motion && typeof Motion.animate === 'function') {
-        Motion.animate(portal, { opacity: [1, 0], scale: [1, 1.12], filter: ['blur(0px)', 'blur(10px)'] }, { duration: 0.30, ease: [0.16, 1, 0.3, 1] })
-          .then(() => {
-            portal.classList.add('dismissed');
-            document.body.classList.add('portal-entered');
-            sessionStorage.setItem('hub_portal_passed', 'true');
-            if (onCompleteCallback) onCompleteCallback();
-          });
-      } else {
-        portal.classList.add('zoom-through');
-        setTimeout(() => {
-          portal.classList.add('dismissed');
-          portal.classList.remove('zoom-through');
-          document.body.classList.add('portal-entered');
-          sessionStorage.setItem('hub_portal_passed', 'true');
-          if (onCompleteCallback) onCompleteCallback();
-        }, 320);
-      }
-    } else {
-      document.body.classList.add('portal-entered');
-      sessionStorage.setItem('hub_portal_passed', 'true');
-      if (onCompleteCallback) onCompleteCallback();
+  function showAuthTransition(title, subtitle, durationMs, onFinished) {
+    const overlay = document.getElementById('authTransitionOverlay');
+    const titleEl = document.getElementById('loaderTitle');
+    const subEl = document.getElementById('loaderSubtitle');
+    if (titleEl && title) titleEl.innerText = title;
+    if (subEl && subtitle) subEl.innerText = subtitle;
+
+    if (overlay) {
+      overlay.classList.add('active');
     }
+
+    const waitTime = durationMs || 2600;
+    setTimeout(() => {
+      if (overlay) overlay.classList.remove('active');
+      if (onFinished) onFinished();
+    }, waitTime);
+  }
+
+  function triggerFastEnter(targetIdentity, completionMsg, onCompleteCallback) {
+    showAuthTransition(
+      'Configuring your account...',
+      'Please wait while we prepare everything for you',
+      2600,
+      () => {
+        if (portal) {
+          portal.classList.add('dismissed');
+        }
+        document.body.classList.add('portal-entered');
+        sessionStorage.setItem('hub_portal_passed', 'true');
+        if (typeof activateDashboardBackground === 'function') {
+          activateDashboardBackground();
+        }
+        if (onCompleteCallback) onCompleteCallback();
+      }
+    );
   }
 
   // Backward-compatible alias
@@ -3914,7 +4122,12 @@
   }
 
   function showPortal() {
-    kineticNavigate('auth.jsp');
+    sessionStorage.removeItem('hub_portal_passed');
+    if (portal) portal.classList.remove('dismissed');
+    document.body.classList.remove('portal-entered');
+    if (typeof activateLandingBackground === 'function') {
+      activateLandingBackground();
+    }
   }
 
   // Auto-dismiss portal if user already completed entrance in this browser tab
@@ -5356,12 +5569,435 @@
   });
 
   // =========================================================
-  // HYPERSPACE WARP TUNNEL 3D ENGINE (Three.js WebGL + Additive Blending)
-  // Replaces heavy kinetic mesh with ultra-fast 60fps GPU star streaks
+  // DUAL-STATE DYNAMIC BACKGROUND SYSTEM:
+  // 1. Interactive Kinetic Cyber Grid (Landing / Sign-in Portal)
+  // 2. 3D Hyperspace Warp Tunnel centered on Game Hub Core (Games Gallery)
   // =========================================================
-  function initWarpTunnelEngine() {
-    const canvas = document.getElementById('techRaysCanvas');
-    if (!canvas) return;
+  let kineticGridEngine = null;
+  let warpTunnelEngine = null;
+
+  function initDynamicBackgroundSystem() {
+    const portal = document.getElementById('landingPortal');
+    const isPortalActive = portal && !portal.classList.contains('dismissed');
+
+    kineticGridEngine = setupKineticGrid();
+    warpTunnelEngine = setupWarpTunnel();
+
+    if (isPortalActive) {
+      activateLandingBackground();
+    } else {
+      activateDashboardBackground();
+    }
+  }
+
+  function activateLandingBackground() {
+    const kCanvas = document.getElementById('kineticGridCanvas');
+    const wCanvas = document.getElementById('warpTunnelCanvas');
+    if (kCanvas) {
+      kCanvas.style.display = 'block';
+      kCanvas.style.opacity = '1';
+    }
+    if (wCanvas) {
+      wCanvas.style.opacity = '0';
+      setTimeout(() => { if (wCanvas) wCanvas.style.display = 'none'; }, 400);
+    }
+    if (warpTunnelEngine) warpTunnelEngine.stop();
+    if (kineticGridEngine) kineticGridEngine.start();
+  }
+
+  function activateDashboardBackground() {
+    const kCanvas = document.getElementById('kineticGridCanvas');
+    const wCanvas = document.getElementById('warpTunnelCanvas');
+    if (kCanvas) {
+      kCanvas.style.opacity = '0';
+      setTimeout(() => { if (kCanvas) kCanvas.style.display = 'none'; }, 400);
+    }
+    if (wCanvas) {
+      wCanvas.style.display = 'block';
+      wCanvas.style.opacity = '1';
+    }
+    if (kineticGridEngine) kineticGridEngine.stop();
+    if (warpTunnelEngine) {
+      warpTunnelEngine.start();
+      warpTunnelEngine.recenter();
+    }
+  }
+
+  // ---------------------------------------------------------
+  // 1. INTERACTIVE KINETIC GRID (Sign-In & Landing Portal)
+  // ---------------------------------------------------------
+  function setupKineticGrid() {
+    const canvas = document.getElementById('kineticGridCanvas');
+    if (!canvas) return null;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    let isRunning = false;
+    let animId = null;
+    let W = 0, H = 0, horizonY = 0;
+
+    const CELL_SIZE = 55;
+    const INFLUENCE_RADIUS = 260;
+    const MAX_WARP = 24;
+    const DOT_SPACING = 30;
+    const LERP_SPEED = 0.08;
+
+    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.18 };
+    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.95 };
+    const NODE_ACTIVE = { r: 74, g: 158, b: 255, a: 1.0 };
+    const NODE_BASE_RADIUS = 1.8;
+    const NODE_ACTIVE_RADIUS = 3.5;
+
+    const mouse = { x: -9999, y: -9999 };
+    const targetMouse = { x: -9999, y: -9999 };
+    const ripples = [];
+
+    const dotCanvas = document.createElement('canvas');
+    const dotCtx = dotCanvas.getContext('2d');
+
+    function rebuildDotMatrix() {
+      dotCanvas.width = W;
+      dotCanvas.height = H;
+      dotCtx.clearRect(0, 0, W, H);
+      dotCtx.fillStyle = 'rgba(0, 240, 255, 0.04)';
+      for (let x = DOT_SPACING / 2; x < W; x += DOT_SPACING) {
+        for (let y = DOT_SPACING / 2; y < H; y += DOT_SPACING) {
+          dotCtx.beginPath();
+          dotCtx.arc(x, y, 0.65, 0, Math.PI * 2);
+          dotCtx.fill();
+        }
+      }
+    }
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      horizonY = Math.round(H * 0.78);
+      rebuildDotMatrix();
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', (e) => {
+      targetMouse.x = e.clientX;
+      targetMouse.y = e.clientY;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      targetMouse.x = -9999;
+      targetMouse.y = -9999;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        targetMouse.x = e.touches[0].clientX;
+        targetMouse.y = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    window.addEventListener('click', (e) => {
+      ripples.push({
+        x: e.clientX,
+        y: e.clientY,
+        radius: 0,
+        opacity: 1,
+        born: performance.now()
+      });
+      if (ripples.length > 8) ripples.shift();
+    });
+
+    function lerpN(a, b, t) { return a + (b - a) * t; }
+    function lerpColor(base, active, t) {
+      const r = Math.round(lerpN(base.r, active.r, t));
+      const g = Math.round(lerpN(base.g, active.g, t));
+      const b = Math.round(lerpN(base.b, active.b, t));
+      const a = lerpN(base.a, active.a, t);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
+    }
+
+    function getWarpedPoint(gx, gy, col, row, m, rips, cols, rows) {
+      const edgeMargin = 1.5;
+      const colPin = Math.min(col / edgeMargin, (cols - 1 - col) / edgeMargin, 1);
+      const rowPin = Math.min(row / edgeMargin, (rows - 1 - row) / edgeMargin, 1);
+      const pinFactor = colPin * colPin * rowPin * rowPin;
+
+      const dx = gx - m.x;
+      const dy = gy - m.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const proximity = Math.max(0, 1 - dist / INFLUENCE_RADIUS) * pinFactor;
+
+      let rx = 0, ry = 0;
+      for (let i = 0; i < rips.length; i++) {
+        const r = rips[i];
+        const rdx = gx - r.x;
+        const rdy = gy - r.y;
+        const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
+        const waveWidth = 55;
+        const diff = rdist - r.radius;
+        if (Math.abs(diff) < waveWidth) {
+          const strength = (1 - Math.abs(diff) / waveWidth) * r.opacity * 18 * pinFactor;
+          const angle = Math.atan2(rdy, rdx);
+          const sign = diff < 0 ? -1 : 1;
+          rx += Math.cos(angle) * strength * sign * -1;
+          ry += Math.sin(angle) * strength * sign * -1;
+        }
+      }
+
+      if (dist < INFLUENCE_RADIUS && dist > 0 && pinFactor > 0) {
+        const t = dist / INFLUENCE_RADIUS;
+        const eased = t < 0.01 ? 0 : (1 - t) * (1 - t) * Math.min(1, dist / 60);
+        const warpAmt = eased * MAX_WARP * pinFactor;
+        const angle = Math.atan2(dy, dx);
+        return {
+          pt: { x: gx - Math.cos(angle) * warpAmt + rx, y: gy - Math.sin(angle) * warpAmt + ry },
+          proximity: proximity
+        };
+      }
+
+      return { pt: { x: gx + rx, y: gy + ry }, proximity: proximity };
+    }
+
+    const RAY_COUNT = 60;
+    const rays = [];
+    for (let i = 0; i < RAY_COUNT; i++) {
+      const isBright = Math.random() < 0.25;
+      rays.push({
+        xPct: Math.random(),
+        maxHeight: isBright ? (0.35 + Math.random() * 0.45) : (0.15 + Math.random() * 0.35),
+        width: isBright ? (1.5 + Math.random() * 2.0) : (0.7 + Math.random() * 1.2),
+        alphaBase: isBright ? (0.55 + Math.random() * 0.35) : (0.15 + Math.random() * 0.3),
+        pulseSpeed: 0.015 + Math.random() * 0.03,
+        pulseOffset: Math.random() * Math.PI * 2,
+        colorType: Math.random() < 0.65 ? 'cyan' : 'blue'
+      });
+    }
+
+    const PARTICLE_COUNT = 70;
+    const particles = [];
+    function createParticle(initial) {
+      return {
+        x: Math.random() * (W || window.innerWidth),
+        y: initial ? Math.random() * (H || window.innerHeight) : (horizonY + Math.random() * 20),
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: -(0.4 + Math.random() * 1.1),
+        size: 0.8 + Math.random() * 1.6,
+        alpha: 0.15 + Math.random() * 0.6,
+        maxLife: 140 + Math.random() * 160,
+        life: initial ? Math.random() * 180 : 0,
+        color: Math.random() < 0.7 ? '#00f0ff' : '#38bdf8'
+      };
+    }
+    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(createParticle(true));
+
+    let time = 0;
+
+    function render(now) {
+      if (!isRunning) return;
+      time++;
+      if (mouse.x === -9999) {
+        mouse.x = targetMouse.x;
+        mouse.y = targetMouse.y;
+      } else {
+        mouse.x = lerpN(mouse.x, targetMouse.x, LERP_SPEED);
+        mouse.y = lerpN(mouse.y, targetMouse.y, LERP_SPEED);
+      }
+
+      ctx.clearRect(0, 0, W, H);
+
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, '#010308');
+      bgGrad.addColorStop(0.65, '#020614');
+      bgGrad.addColorStop(horizonY / H, '#030c22');
+      bgGrad.addColorStop(1, '#01040a');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      if (dotCanvas.width > 0) {
+        ctx.drawImage(dotCanvas, 0, 0);
+      }
+
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        const age = (now - r.born) / 1000;
+        r.radius = Math.max(0, age * 400);
+        r.opacity = Math.max(0, 1 - age * 1.2);
+        if (r.opacity <= 0) ripples.splice(i, 1);
+      }
+
+      const cols = Math.max(2, Math.ceil(W / CELL_SIZE)) + 1;
+      const rows = Math.max(2, Math.ceil(H / CELL_SIZE)) + 1;
+      const cellW = W / (cols - 1);
+      const cellH = H / (rows - 1);
+
+      const pts = [];
+      const prox = [];
+
+      for (let row = 0; row < rows; row++) {
+        pts[row] = [];
+        prox[row] = [];
+        for (let col = 0; col < cols; col++) {
+          const res = getWarpedPoint(col * cellW, row * cellH, col, row, mouse, ripples, cols, rows);
+          pts[row][col] = res.pt;
+          prox[row][col] = res.proximity;
+        }
+      }
+
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.16)';
+      ctx.lineWidth = 0.9;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols - 1; col++) {
+          if ((prox[row][col] + prox[row][col + 1]) < 0.03) {
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
+          }
+        }
+      }
+      for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows - 1; row++) {
+          if ((prox[row][col] + prox[row + 1][col]) < 0.03) {
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols - 1; col++) {
+          const avg = (prox[row][col] + prox[row][col + 1]) / 2;
+          if (avg >= 0.015) {
+            const t = avg * avg * (3 - 2 * avg);
+            ctx.beginPath();
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
+            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
+            ctx.lineWidth = lerpN(0.9, 2.2, t);
+            ctx.stroke();
+          }
+        }
+      }
+      for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows - 1; row++) {
+          const avg = (prox[row][col] + prox[row + 1][col]) / 2;
+          if (avg >= 0.015) {
+            const t = avg * avg * (3 - 2 * avg);
+            ctx.beginPath();
+            ctx.moveTo(pts[row][col].x, pts[row][col].y);
+            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
+            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
+            ctx.lineWidth = lerpN(0.9, 2.2, t);
+            ctx.stroke();
+          }
+        }
+      }
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const p = pts[row][col];
+          const pr = prox[row][col];
+          const t = pr * pr * (3 - 2 * pr);
+          const r = lerpN(NODE_BASE_RADIUS, NODE_ACTIVE_RADIUS, t);
+
+          if (t > 0.25) {
+            const glowR = r + lerpN(0, 8, (t - 0.25) / 0.75);
+            const grd = ctx.createRadialGradient(p.x, p.y, r * 0.5, p.x, p.y, glowR);
+            grd.addColorStop(0, 'rgba(0, 240, 255, ' + (t * 0.45).toFixed(3) + ')');
+            grd.addColorStop(1, 'rgba(0, 240, 255, 0)');
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
+            ctx.fillStyle = grd;
+            ctx.fill();
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = lerpColor({ r: 0, g: 240, b: 255, a: 0.28 }, NODE_ACTIVE, t);
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < ripples.length; i++) {
+        const r = ripples[i];
+        const safeRadius = Math.max(0, r.radius);
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, safeRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0, 240, 255, ' + (r.opacity * 0.6).toFixed(3) + ')';
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, Math.max(0, safeRadius - 16), 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, ' + (r.opacity * 0.35).toFixed(3) + ')';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < rays.length; i++) {
+        const ray = rays[i];
+        const x = ray.xPct * W;
+        const pulse = Math.sin(time * ray.pulseSpeed + ray.pulseOffset);
+        const curAlpha = Math.max(0.08, Math.min(0.85, ray.alphaBase + pulse * 0.2));
+        const rayLen = ray.maxHeight * horizonY * (0.85 + pulse * 0.15);
+        const topY = horizonY - rayLen;
+
+        const rayGrad = ctx.createLinearGradient(x, horizonY, x, topY);
+        rayGrad.addColorStop(0, 'rgba(0, 240, 255, ' + curAlpha + ')');
+        rayGrad.addColorStop(0.3, 'rgba(2, 132, 199, ' + (curAlpha * 0.6) + ')');
+        rayGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = rayGrad;
+        ctx.fillRect(x - ray.width / 2, topY, ray.width, rayLen);
+      }
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx + Math.sin((time + i * 15) * 0.02) * 0.25;
+        p.y += p.vy;
+        p.life++;
+
+        const lifeRatio = p.life / p.maxLife;
+        let alpha = p.alpha;
+        if (lifeRatio > 0.7) alpha *= (1 - (lifeRatio - 0.7) / 0.3);
+
+        if (p.life >= p.maxLife || p.y < 0) {
+          particles[i] = createParticle(false);
+          continue;
+        }
+
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1.0;
+
+      animId = requestAnimationFrame(render);
+    }
+
+    return {
+      start() {
+        if (isRunning) return;
+        isRunning = true;
+        resize();
+        animId = requestAnimationFrame(render);
+      },
+      stop() {
+        isRunning = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      }
+    };
+  }
+
+  // ---------------------------------------------------------
+  // 2. 3D HYPERSPACE WARP TUNNEL (Centered on Game Hub Core)
+  // ---------------------------------------------------------
+  function setupWarpTunnel() {
+    const canvas = document.getElementById('warpTunnelCanvas');
+    if (!canvas) return null;
 
     const NEAR_Z = 5;
     const FAR_Z = -45;
@@ -5369,8 +6005,26 @@
     const SPREAD = 7.2;
     let speed = 1.0;
     let targetSpeed = 1.0;
+    let isRunning = false;
+    let animId = null;
 
-    // Interactive Warp Accel on Central Game Hub Hover
+    function getHubCenter() {
+      const hubCore = document.getElementById('neuralHubCore');
+      if (hubCore) {
+        const rect = hubCore.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+          };
+        }
+      }
+      return {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2
+      };
+    }
+
     const hubCore = document.getElementById('neuralHubCore');
     if (hubCore) {
       hubCore.addEventListener('mouseenter', () => { targetSpeed = 2.4; });
@@ -5378,7 +6032,6 @@
     }
 
     function randomStreak(spread, out, offset, z) {
-      // Bias stars away from exact center so camera and Game Hub have a clear "eye"
       const r = 0.4 + Math.sqrt(Math.random()) * spread;
       const a = Math.random() * Math.PI * 2;
       const x = Math.cos(a) * r;
@@ -5393,7 +6046,6 @@
       out[offset + 5] = zz - len;
     }
 
-    // 1. Primary: Three.js High-Performance WebGL Engine
     if (typeof THREE !== 'undefined') {
       try {
         let width = window.innerWidth;
@@ -5402,6 +6054,7 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
         camera.position.set(0, 0, 6);
+        camera.updateMatrixWorld();
 
         const renderer = new THREE.WebGLRenderer({
           canvas: canvas,
@@ -5419,7 +6072,6 @@
           randomStreak(SPREAD, positions, i * 6);
         }
 
-        // Head: bright foreground cyan/white, Tail: deep primary cyan fading out
         const head = new THREE.Color('#ffffff').lerp(new THREE.Color('#00f0ff'), 0.45);
         const tail = new THREE.Color('#00f0ff').multiplyScalar(0.22);
 
@@ -5449,27 +6101,35 @@
         lineSegments.frustumCulled = false;
         scene.add(lineSegments);
 
-        let targetCamX = 0;
-        let targetCamY = 0;
+        let lastHubX = -1, lastHubY = -1;
 
-        window.addEventListener('mousemove', (e) => {
-          targetCamX = (e.clientX / width - 0.5) * 0.8;
-          targetCamY = -(e.clientY / height - 0.5) * 0.6;
-        }, { passive: true });
+        function alignCameraToHub(force) {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          const hub = getHubCenter();
+          if (force || Math.abs(hub.x - lastHubX) > 0.5 || Math.abs(hub.y - lastHubY) > 0.5) {
+            lastHubX = hub.x;
+            lastHubY = hub.y;
+            camera.aspect = width / height;
+            // Set view offset so that optical center corresponds with Game Hub Core center
+            camera.setViewOffset(width, height, (width / 2 - hub.x), (height / 2 - hub.y), width, height);
+            camera.updateProjectionMatrix();
+          }
+        }
 
         function onResize() {
           width = window.innerWidth;
           height = window.innerHeight;
-          camera.aspect = width / height;
-          camera.updateProjectionMatrix();
           renderer.setSize(width, height);
+          alignCameraToHub(true);
         }
         window.addEventListener('resize', onResize);
 
         let lastTime = performance.now();
 
         function animate(now) {
-          requestAnimationFrame(animate);
+          if (!isRunning) return;
+          animId = requestAnimationFrame(animate);
 
           const delta = Math.min((now - lastTime) / 1000, 0.05);
           lastTime = now;
@@ -5490,27 +6150,40 @@
           }
           posAttr.needsUpdate = true;
 
-          // Subtle, buttery camera parallax without any DOM recalculation
-          camera.position.x += (targetCamX - camera.position.x) * 0.04;
-          camera.position.y += (targetCamY - camera.position.y) * 0.04;
+          alignCameraToHub(false);
+          camera.position.set(0, 0, 6);
           camera.lookAt(0, 0, 0);
 
           renderer.render(scene, camera);
         }
-        requestAnimationFrame(animate);
-        return;
+
+        return {
+          start() {
+            if (isRunning) return;
+            isRunning = true;
+            onResize();
+            lastTime = performance.now();
+            animId = requestAnimationFrame(animate);
+          },
+          stop() {
+            isRunning = false;
+            if (animId) {
+              cancelAnimationFrame(animId);
+              animId = null;
+            }
+          },
+          recenter() {
+            alignCameraToHub(true);
+          }
+        };
       } catch (e) {
         console.warn('Three.js setup encountered an issue, initializing canvas fallback:', e);
       }
     }
 
-    // 2. Resilient Canvas 2D Fallback
-    initCanvasWarpFallback(canvas, NEAR_Z, FAR_Z, COUNT, SPREAD);
-  }
-
-  function initCanvasWarpFallback(canvas, NEAR_Z, FAR_Z, count, spread) {
+    // 2D Canvas Fallback
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) return null;
     let w = canvas.width = window.innerWidth;
     let h = canvas.height = window.innerHeight;
     window.addEventListener('resize', () => {
@@ -5519,8 +6192,8 @@
     });
 
     const stars = [];
-    for (let i = 0; i < count; i++) {
-      const r = 0.4 + Math.sqrt(Math.random()) * spread;
+    for (let i = 0; i < COUNT; i++) {
+      const r = 0.4 + Math.sqrt(Math.random()) * SPREAD;
       const a = Math.random() * Math.PI * 2;
       stars.push({
         x: Math.cos(a) * r,
@@ -5532,7 +6205,8 @@
 
     let last = performance.now();
     function draw(now) {
-      requestAnimationFrame(draw);
+      if (!isRunning) return;
+      animId = requestAnimationFrame(draw);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
 
@@ -5540,16 +6214,17 @@
       ctx.fillStyle = '#02040a';
       ctx.fillRect(0, 0, w, h);
 
-      const cx = w / 2;
-      const cy = h / 2;
+      const hub = getHubCenter();
+      const cx = hub.x;
+      const cy = hub.y;
       const fov = 400;
 
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
-        s.z += dt * 24;
+        s.z += dt * 24 * speed;
         if (s.z > NEAR_Z) {
           s.z = FAR_Z - Math.random() * 6;
-          const r = 0.4 + Math.sqrt(Math.random()) * spread;
+          const r = 0.4 + Math.sqrt(Math.random()) * SPREAD;
           const a = Math.random() * Math.PI * 2;
           s.x = Math.cos(a) * r;
           s.y = Math.sin(a) * r * 0.65;
@@ -5573,7 +6248,25 @@
         ctx.stroke();
       }
     }
-    requestAnimationFrame(draw);
+
+    return {
+      start() {
+        if (isRunning) return;
+        isRunning = true;
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+        last = performance.now();
+        animId = requestAnimationFrame(draw);
+      },
+      stop() {
+        isRunning = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      },
+      recenter() {}
+    };
   }
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -5586,8 +6279,8 @@
     // Initialize Animated Dithered Plasma Shader for Game Hub Core
     initHubShaderEngine();
 
-    // Initialize Hyperspace 3D Warp Tunnel Background Engine
-    initWarpTunnelEngine();
+    // Initialize Dynamic Dual Background System (Kinetic Grid / Warp Tunnel)
+    initDynamicBackgroundSystem();
 
     const briefingCard = document.getElementById('neuralBriefingCard');
     if (briefingCard) {

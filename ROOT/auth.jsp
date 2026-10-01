@@ -122,6 +122,158 @@
     opacity: 1;
   }
 
+  /* Post-Auth Transition Overlay (loader.tsx implementation) */
+  .auth-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 13, 28, 0.96) 0%, rgba(2, 4, 10, 0.99) 100%);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .auth-transition-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .auth-transition-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  /* Multi-Ring Conic Loader matching loader.tsx */
+  .deliberate-loader-container {
+    position: relative;
+    width: 8rem; /* size-32 */
+    height: 8rem;
+    animation: loaderContainerBreathe 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes loaderContainerBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  /* Outer Ring with shimmer */
+  .loader-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.95) 90deg, transparent 180deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 66%, black 67%);
+    mask: radial-gradient(circle at 50% 50%, transparent 66%, black 67%);
+    animation: loaderSpinClockwise 3s linear infinite;
+  }
+
+  /* Counter-Rotating Middle Ring */
+  .loader-ring-middle {
+    position: absolute;
+    inset: 8px; /* inset-2 */
+    border-radius: 9999px;
+    background: conic-gradient(from 180deg, transparent 0deg, rgba(255, 255, 255, 0.9) 180deg, transparent 270deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 64%, black 65%);
+    mask: radial-gradient(circle at 50% 50%, transparent 64%, black 65%);
+    animation: loaderSpinCounter 2.5s linear infinite;
+  }
+
+  /* Inner Pulsing Ring */
+  .loader-ring-inner {
+    position: absolute;
+    inset: 16px; /* inset-4 */
+    border-radius: 9999px;
+    background: conic-gradient(from 90deg, transparent 0deg, rgba(0, 240, 255, 0.95) 90deg, transparent 135deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 60%, black 62%);
+    mask: radial-gradient(circle at 50% 50%, transparent 60%, black 62%);
+    animation: loaderSpinClockwise 2s linear infinite, loaderInnerScale 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes loaderSpinClockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes loaderSpinCounter {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+  @keyframes loaderInnerScale {
+    0%, 100% { transform: scale(0.98); }
+    50% { transform: scale(1.02); }
+  }
+
+  /* Center Precision Dot */
+  .loader-center-dot {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.85);
+  }
+
+  /* Minimal Accent Particles Orbit */
+  .loader-particles-orbit {
+    position: absolute;
+    inset: 0;
+    animation: loaderSpinClockwise 8s linear infinite;
+    pointer-events: none;
+  }
+  .loader-particle-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 9999px;
+  }
+  .loader-particle-dot.dot-top {
+    top: 0;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.9);
+  }
+  .loader-particle-dot.dot-bottom {
+    bottom: 0;
+    width: 2.5px;
+    height: 2.5px;
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Modern Typography with Breathing Opacity */
+  .loader-typography {
+    text-align: center;
+    max-width: 18rem; /* max-w-64 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: loaderTextBreath 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes loaderTextBreath {
+    0%, 100% { opacity: 0.68; }
+    50% { opacity: 1; }
+  }
+  .loader-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: #f8fafc;
+    margin: 0;
+  }
+  .loader-subtitle {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: #94a3b8;
+    margin: 0;
+  }
+
   /* Main Floating Space Terminal Auth Card */
   .auth-portal-card {
     position: relative;
@@ -452,6 +604,36 @@
     <div class="cyber-shutter-beam"></div>
   </div>
 
+  <!-- =========================================================
+       POST-AUTH TRANSITION SCREEN (loader.tsx Implementation)
+       ========================================================= -->
+  <div id="authTransitionOverlay" class="auth-transition-overlay" aria-hidden="true">
+    <div class="auth-transition-card">
+      <!-- Enhanced Monochrome Multi-Ring Conic Loader -->
+      <div class="deliberate-loader-container">
+        <!-- Outer elegant ring with shimmer -->
+        <div class="loader-ring loader-ring-outer"></div>
+        <!-- Counter-rotating middle ring -->
+        <div class="loader-ring loader-ring-middle"></div>
+        <!-- Inner pulsing ring with subtle gradient -->
+        <div class="loader-ring loader-ring-inner"></div>
+        <!-- Center precision dot -->
+        <div class="loader-center-dot"></div>
+        <!-- Minimal accent particles orbit -->
+        <div class="loader-particles-orbit">
+          <div class="loader-particle-dot dot-top"></div>
+          <div class="loader-particle-dot dot-bottom"></div>
+        </div>
+      </div>
+
+      <!-- Modern typography with subtle breathing animation -->
+      <div class="loader-typography">
+        <h3 id="loaderTitle" class="loader-title">Configuring your account...</h3>
+        <p id="loaderSubtitle" class="loader-subtitle">Please wait while we prepare everything for you</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Dedicated Space Terminal Auth Card -->
   <div class="auth-portal-card" id="authCard">
     <div class="portal-tag">🧠 BRAIN AGILITY & LOGIC PLATFORM</div>
@@ -571,10 +753,27 @@
     alertBox.style.display = 'block';
   }
 
+  function showAuthTransition(title, subtitle, durationMs, onFinished) {
+    const overlay = document.getElementById('authTransitionOverlay');
+    const titleEl = document.getElementById('loaderTitle');
+    const subEl = document.getElementById('loaderSubtitle');
+    if (titleEl && title) titleEl.innerText = title;
+    if (subEl && subtitle) subEl.innerText = subtitle;
+
+    if (overlay) {
+      overlay.classList.add('active');
+    }
+
+    const waitTime = durationMs || 2600;
+    setTimeout(() => {
+      if (overlay) overlay.classList.remove('active');
+      if (onFinished) onFinished();
+    }, waitTime);
+  }
+
   // Framer Motion Kinetic Transition to Dashboard
   function triggerWarpToDashboard(callsign) {
     const card = document.getElementById('authCard');
-    const shutter = document.getElementById('cyberShutter');
     const Motion = (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
 
     if (card) {
@@ -584,20 +783,18 @@
         card.classList.add('warp-out');
       }
     }
-    if (shutter) {
-      shutter.classList.add('active');
-      if (Motion && typeof Motion.animate === 'function') {
-        Motion.animate(shutter, { opacity: [0, 1], scale: [1.02, 1] }, { duration: 0.24, ease: [0.16, 1, 0.3, 1] });
-      }
-    }
 
     sessionStorage.setItem('hub_portal_passed', 'true');
     sessionStorage.setItem('hub_session_user', callsign || 'Operative');
 
-    // Smooth transition into index.jsp
-    setTimeout(() => {
-      window.location.href = 'index.jsp';
-    }, 240);
+    showAuthTransition(
+      'Configuring your account...',
+      'Please wait while we prepare everything for you',
+      2600,
+      () => {
+        window.location.href = 'index.jsp';
+      }
+    );
   }
 
   // Guest Bypass
