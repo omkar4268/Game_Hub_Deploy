@@ -729,41 +729,28 @@
     gap: 0.6rem;
     flex-shrink: 0;
   }
-  .view-mode-tabs {
-    display: inline-flex;
-    background: rgba(4, 9, 22, 0.85);
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    border-radius: 12px;
-    padding: 3px;
-    gap: 3px;
-  }
-  .view-mode-pill {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 0.76rem;
-    font-weight: 800;
-    letter-spacing: 1px;
-    padding: 6px 14px;
-    border-radius: 9px;
-    cursor: pointer;
+  .neural-header-tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: all 0.22s ease;
-  }
-  .view-mode-pill.active {
-    background: rgba(0, 240, 255, 0.16);
+    gap: 8px;
+    font-family: monospace;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
     color: var(--primary);
-    box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+    text-transform: uppercase;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    padding: 6px 14px;
+    border-radius: 12px;
   }
-  .view-mode-pill .pill-dot {
+  .neural-header-tag .live-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--primary);
     box-shadow: 0 0 8px var(--primary);
-    display: inline-block;
+    animation: livePulse 2s ease-in-out infinite;
   }
   .node-sync-indicator {
     font-family: monospace;
@@ -772,11 +759,19 @@
     color: var(--accent);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     background: rgba(16, 230, 168, 0.08);
     border: 1px solid rgba(16, 230, 168, 0.25);
-    padding: 5px 12px;
-    border-radius: 20px;
+    padding: 6px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .node-sync-indicator:hover {
+    background: rgba(16, 230, 168, 0.16);
+    border-color: #10e6a8;
+    box-shadow: 0 0 16px rgba(16, 230, 168, 0.3);
+    transform: translateY(-1px);
   }
   .node-sync-indicator .live-dot {
     width: 6px;
@@ -810,13 +805,7 @@
     justify-content: center;
     animation: panelSpringGlide 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  .neural-bus-container.hidden-mode {
-    display: none !important;
-  }
-  .carousel-controls.hidden-mode,
-  .game-carousel.hidden-mode {
-    display: none !important;
-  }
+
 
   /* Dynamic cursor spotlight glow */
   .neural-spotlight {
@@ -878,6 +867,7 @@
   }
 
   /* Central Game Hub Squircle Nucleus (Click to View Master Library) */
+  /* Central Game Hub Squircle Nucleus (Click to View Master Library) */
   .neural-hub-core {
     position: absolute;
     left: 50%;
@@ -886,12 +876,12 @@
     z-index: 10;
     width: 112px;
     height: 112px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, rgba(8, 18, 42, 0.96), rgba(2, 6, 18, 0.98));
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(6, 14, 32, 0.96), rgba(2, 6, 16, 0.98));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1.5px solid rgba(0, 240, 255, 0.55);
-    box-shadow: 0 0 35px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -903,14 +893,15 @@
                 box-shadow 0.28s;
     overflow: visible;
     will-change: transform;
+    backface-visibility: hidden;
   }
   .neural-hub-core:hover {
     transform: translate(-50%, -50%) scale(1.08) translateZ(0);
     border-color: #00f0ff;
-    box-shadow: 0 0 50px rgba(0, 240, 255, 0.7), inset 0 0 30px rgba(0, 240, 255, 0.35);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 0 0 55px rgba(0, 240, 255, 0.75), inset 0 0 30px rgba(0, 240, 255, 0.35);
   }
   .neural-hub-core:active {
-    transform: translate(-50%, -50%) scale(0.97) translateZ(0);
+    transform: translate(-50%, -50%) scale(0.96) translateZ(0);
   }
   .hub-shader-canvas {
     position: absolute;
@@ -920,7 +911,7 @@
     border-radius: 28px;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.85;
+    opacity: 0.88;
     transition: opacity 0.25s ease;
   }
   .neural-hub-core:hover .hub-shader-canvas {
@@ -936,79 +927,92 @@
     pointer-events: none;
   }
   .hub-nexus-svg {
-    width: 32px;
-    height: 32px;
-    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.85));
-    animation: hubNexusSpin 12s linear infinite;
+    width: 44px;
+    height: 44px;
+    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.85));
+  }
+  .nexus-ring-outer {
+    transform-origin: 22px 22px;
+    animation: hubNexusSpin 14s linear infinite;
+  }
+  .nexus-ring-inner {
+    transform-origin: 22px 22px;
+    animation: hubNexusSpinRev 9s linear infinite;
+  }
+  .nexus-core-glow {
+    animation: coreLuminPulse 2.2s ease-in-out infinite;
   }
   @keyframes hubNexusSpin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+  @keyframes hubNexusSpinRev {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes coreLuminPulse {
+    0%, 100% { filter: drop-shadow(0 0 4px #ffffff); opacity: 0.9; }
+    50% { filter: drop-shadow(0 0 10px #00f0ff); opacity: 1; }
+  }
   .hub-core-ping {
     position: absolute;
     inset: -8px;
-    border-radius: 34px;
-    border: 1.5px solid rgba(0, 240, 255, 0.25);
-    animation: hubCorePulse 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    border-radius: 36px;
+    border: 1.5px solid rgba(0, 240, 255, 0.3);
+    animation: hubCorePulse 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
     pointer-events: none;
   }
   @keyframes hubCorePulse {
     0% { transform: scale(0.96); opacity: 0.7; }
-    50% { transform: scale(1.1); opacity: 0.15; }
+    50% { transform: scale(1.12); opacity: 0.15; }
     100% { transform: scale(0.96); opacity: 0.7; }
-  }
-  .hub-core-title {
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: #fff;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 1.1;
-    margin-top: 2px;
-  }
-  .hub-core-title span {
-    color: var(--primary);
   }
   .hub-core-status {
     position: absolute;
-    bottom: -10px;
+    bottom: -15px;
     background: rgba(2, 6, 18, 0.95);
-    border: 1px solid rgba(0, 240, 255, 0.4);
-    padding: 2px 9px;
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    padding: 3px 12px;
     border-radius: 20px;
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-weight: 800;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.8px;
     color: var(--primary);
-    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 14px rgba(0, 240, 255, 0.25);
     white-space: nowrap;
     z-index: 12;
-    transition: all 0.2s ease;
-  }
-  .pulse-lib-hint {
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
   }
-  .neural-hub-core:hover .pulse-lib-hint {
-    background: #00f0ff;
+  .neural-hub-core:hover .hub-core-status {
+    background: var(--primary);
     color: #020612;
-    box-shadow: 0 0 20px #00f0ff;
-    transform: translateY(-2px);
+    border-color: #00f0ff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 25px #00f0ff;
+    transform: translateY(2px);
+  }
+  .hub-sparkle {
+    font-size: 0.65rem;
+    animation: sparkleBlink 1.8s ease-in-out infinite;
+  }
+  @keyframes sparkleBlink {
+    0%, 100% { opacity: 0.5; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.2); }
   }
 
   /* Satellite Game Squircles */
   .neural-node {
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     z-index: 8;
     width: 84px;
     height: 84px;
     border-radius: 22px;
-    background: rgba(6, 14, 30, 0.92);
+    background: rgba(6, 14, 30, 0.94);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1.5px solid rgba(0, 240, 255, 0.28);
@@ -1018,19 +1022,19 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.25s,
-                box-shadow 0.3s;
+                box-shadow 0.28s;
     user-select: none;
+    will-change: transform;
+    backface-visibility: hidden;
   }
   .neural-node:hover, .neural-node.active-hover {
-    transform: translate(-50%, -50%) scale(1.15);
-    border-color: var(--primary);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 240, 255, 0.6);
+    transform: translate(-50%, -50%) scale(1.14) translateZ(0);
     z-index: 15;
   }
   .neural-node:active {
-    transform: translate(-50%, -50%) scale(0.96);
+    transform: translate(-50%, -50%) scale(0.96) translateZ(0);
   }
   .neural-node .node-icon {
     display: flex;
@@ -1083,13 +1087,82 @@
     text-overflow: ellipsis;
   }
 
-  /* Node-specific color accents */
-  .node-chess:hover   { border-color: #38bdf8; box-shadow: 0 0 35px rgba(56, 189, 248, 0.6); }
-  .node-bomb:hover    { border-color: #f43f5e; box-shadow: 0 0 35px rgba(244, 63, 94, 0.6); }
-  .node-snake:hover   { border-color: #10e6a8; box-shadow: 0 0 35px rgba(16, 230, 168, 0.6); }
-  .node-maze:hover    { border-color: #a855f7; box-shadow: 0 0 35px rgba(168, 85, 247, 0.6); }
-  .node-guess:hover   { border-color: #facc15; box-shadow: 0 0 35px rgba(250, 204, 21, 0.6); }
-  .node-reactor:hover { border-color: #00f0ff; box-shadow: 0 0 35px rgba(0, 240, 255, 0.6); }
+  /* Continuous Ambient Glowing Outlines in Signature Game Colors */
+  @keyframes ambientGlowChess {
+    0%, 100% {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(56, 189, 248, 0.25), inset 0 0 12px rgba(56, 189, 248, 0.08);
+    }
+    50% {
+      border-color: rgba(56, 189, 248, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(56, 189, 248, 0.55), inset 0 0 18px rgba(56, 189, 248, 0.18);
+    }
+  }
+  @keyframes ambientGlowBomb {
+    0%, 100% {
+      border-color: rgba(244, 63, 94, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(244, 63, 94, 0.25), inset 0 0 12px rgba(244, 63, 94, 0.08);
+    }
+    50% {
+      border-color: rgba(244, 63, 94, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(244, 63, 94, 0.55), inset 0 0 18px rgba(244, 63, 94, 0.18);
+    }
+  }
+  @keyframes ambientGlowSnake {
+    0%, 100% {
+      border-color: rgba(16, 230, 168, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(16, 230, 168, 0.25), inset 0 0 12px rgba(16, 230, 168, 0.08);
+    }
+    50% {
+      border-color: rgba(16, 230, 168, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(16, 230, 168, 0.55), inset 0 0 18px rgba(16, 230, 168, 0.18);
+    }
+  }
+  @keyframes ambientGlowMaze {
+    0%, 100% {
+      border-color: rgba(168, 85, 247, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(168, 85, 247, 0.25), inset 0 0 12px rgba(168, 85, 247, 0.08);
+    }
+    50% {
+      border-color: rgba(168, 85, 247, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(168, 85, 247, 0.55), inset 0 0 18px rgba(168, 85, 247, 0.18);
+    }
+  }
+  @keyframes ambientGlowGuess {
+    0%, 100% {
+      border-color: rgba(250, 204, 21, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(250, 204, 21, 0.25), inset 0 0 12px rgba(250, 204, 21, 0.08);
+    }
+    50% {
+      border-color: rgba(250, 204, 21, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(250, 204, 21, 0.55), inset 0 0 18px rgba(250, 204, 21, 0.18);
+    }
+  }
+  @keyframes ambientGlowReactor {
+    0%, 100% {
+      border-color: rgba(0, 240, 255, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 240, 255, 0.25), inset 0 0 12px rgba(0, 240, 255, 0.08);
+    }
+    50% {
+      border-color: rgba(0, 240, 255, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(0, 240, 255, 0.55), inset 0 0 18px rgba(0, 240, 255, 0.18);
+    }
+  }
+
+  .node-chess   { animation: ambientGlowChess 3.4s ease-in-out infinite; }
+  .node-bomb    { animation: ambientGlowBomb 3.2s ease-in-out 0.4s infinite; }
+  .node-snake   { animation: ambientGlowSnake 3.6s ease-in-out 0.8s infinite; }
+  .node-maze    { animation: ambientGlowMaze 3.5s ease-in-out 1.2s infinite; }
+  .node-guess   { animation: ambientGlowGuess 3.3s ease-in-out 1.6s infinite; }
+  .node-reactor { animation: ambientGlowReactor 3.1s ease-in-out 2.0s infinite; }
+
+  /* Intense neon focus on hover or active */
+  .node-chess:hover,   .node-chess.active-hover   { animation: none; border-color: #38bdf8; box-shadow: 0 14px 40px rgba(0,0,0,0.95), 0 0 40px rgba(56, 189, 248, 0.8), inset 0 0 20px rgba(56, 189, 248, 0.3); }
+  .node-bomb:hover,    .node-bomb.active-hover    { animation: none; border-color: #f43f5e; box-shadow: 0 14px 40px rgba(0,0,0,0.95), 0 0 40px rgba(244, 63, 94, 0.8), inset 0 0 20px rgba(244, 63, 94, 0.3); }
+  .node-snake:hover,   .node-snake.active-hover   { animation: none; border-color: #10e6a8; box-shadow: 0 14px 40px rgba(0,0,0,0.95), 0 0 40px rgba(16, 230, 168, 0.8), inset 0 0 20px rgba(16, 230, 168, 0.3); }
+  .node-maze:hover,    .node-maze.active-hover    { animation: none; border-color: #a855f7; box-shadow: 0 14px 40px rgba(0,0,0,0.95), 0 0 40px rgba(168, 85, 247, 0.8), inset 0 0 20px rgba(168, 85, 247, 0.3); }
+  .node-guess:hover,   .node-guess.active-hover   { animation: none; border-color: #facc15; box-shadow: 0 14px 40px rgba(0,0,0,0.95), 0 0 40px rgba(250, 204, 21, 0.8), inset 0 0 20px rgba(250, 204, 21, 0.3); }
+  .node-reactor:hover, .node-reactor.active-hover { animation: none; border-color: #00f0ff; box-shadow: 0 14px 40px rgba(0,0,0,0.95), 0 0 40px rgba(0, 240, 255, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.3); }
 
   /* Tactical Mission Briefing Popover Card */
   .neural-briefing-popover {
@@ -1220,16 +1293,18 @@
       max-width: 60px;
     }
     .neural-hub-core {
-      width: 82px;
-      height: 82px;
-      border-radius: 20px;
+      width: 86px;
+      height: 86px;
+      border-radius: 22px;
     }
-    .hub-core-emblem {
-      font-size: 1.2rem;
-      margin-bottom: 2px;
+    .hub-nexus-svg {
+      width: 36px;
+      height: 36px;
     }
-    .hub-core-title {
-      font-size: 0.62rem;
+    .hub-core-status {
+      bottom: -13px;
+      font-size: 0.52rem;
+      padding: 2px 10px;
     }
     .neural-briefing-popover {
       position: absolute !important;
@@ -1260,10 +1335,7 @@
 
   /* GPU Compositing Performance Enhancements */
   .neural-bus-container,
-  .neural-node,
-  .neural-hub-core,
   .neural-briefing-popover,
-  .game-card,
   .modal-box {
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -2760,20 +2832,15 @@
 
     <!-- VIEW 1: GAME LIBRARY (NEURAL BUS & CAROUSEL DUAL MODE) -->
     <section id="libraryView" class="view-panel active">
-      <!-- Top Layout Switcher & Status Bar -->
+      <!-- Top Layout & Telemetry Bar -->
       <div class="library-header-bar">
-        <div class="view-mode-tabs" role="tablist" aria-label="Library View Mode">
-          <button class="view-mode-pill active" id="modeBtnNeural" onclick="setLibraryMode('neural')" role="tab" aria-selected="true">
-            <span class="pill-dot"></span>
-            <span>⚡ NEURAL BUS</span>
-          </button>
-          <button class="view-mode-pill" id="modeBtnCarousel" onclick="setLibraryMode('carousel')" role="tab" aria-selected="false">
-            <span>🗂️ CAROUSEL</span>
-          </button>
-        </div>
-        <div class="node-sync-indicator">
+        <div class="neural-header-tag">
           <span class="live-dot"></span>
-          <span>BUS INTEGRATION // 6 NODES ONLINE</span>
+          <span>NEURAL CONSTELLATION // BUS INTEGRATION</span>
+        </div>
+        <div class="node-sync-indicator" onclick="openMasterLibraryModal()" style="cursor: pointer;" title="Browse all games in Master Library">
+          <span class="live-dot" style="background: var(--primary); box-shadow: 0 0 10px var(--primary);"></span>
+          <span>6 PROTOCOLS ONLINE // BROWSE ALL</span>
         </div>
       </div>
 
@@ -2813,19 +2880,21 @@
         <div class="neural-hub-core" id="neuralHubCore" onclick="openMasterLibraryModal()" tabindex="0" role="button" aria-label="Game Hub Core - Click to view all games" title="Click to browse all games">
           <div class="hub-core-ping"></div>
           <!-- Hypnotic WebGL Dithered Plasma Shader Canvas -->
-          <canvas class="hub-shader-canvas" id="hubShaderCanvas" width="96" height="96" aria-hidden="true"></canvas>
+          <canvas class="hub-shader-canvas" id="hubShaderCanvas" width="112" height="112" aria-hidden="true"></canvas>
           <div class="hub-core-content">
             <div class="hub-core-emblem">
-              <svg class="hub-nexus-svg" viewBox="0 0 32 32" fill="none">
-                <polygon points="16,3 28,10 28,22 16,29 4,22 4,10" stroke="#00f0ff" stroke-width="1.8" fill="rgba(0, 240, 255, 0.2)"/>
-                <polygon points="16,8 23,12 23,20 16,24 9,20 9,12" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="3 1.5"/>
-                <circle cx="16" cy="16" r="3.2" fill="#ffffff"/>
+              <svg class="hub-nexus-svg" viewBox="0 0 44 44" fill="none">
+                <polygon class="nexus-ring-outer" points="22,3 38,12 38,32 22,41 6,32 6,12" stroke="#00f0ff" stroke-width="2" fill="rgba(0, 240, 255, 0.12)"/>
+                <polygon class="nexus-ring-inner" points="22,9 33,16 33,28 22,35 11,28 11,16" stroke="#38bdf8" stroke-width="1.6" stroke-dasharray="4 2"/>
+                <circle cx="22" cy="22" r="7" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" stroke-dasharray="2 3"/>
+                <circle class="nexus-core-glow" cx="22" cy="22" r="3.6" fill="#ffffff"/>
+                <circle cx="22" cy="22" r="1.4" fill="#00f0ff"/>
               </svg>
             </div>
-            <div class="hub-core-title">GAME<span>HUB</span></div>
           </div>
           <div class="hub-core-status pulse-lib-hint">
-            <span class="lib-icon">📂</span> ALL GAMES
+            <span class="hub-sparkle">✦</span>
+            <span class="hub-status-txt">ALL PROTOCOLS</span>
           </div>
         </div>
 
@@ -2992,100 +3061,7 @@
         </div>
       </div>
 
-      <!-- CAROUSEL CONTROLS (Active in Carousel Mode) -->
-      <div class="carousel-controls hidden-mode">
-        <button class="scroll-btn" onclick="scrollCarousel(-340)">‹</button>
-        <button class="scroll-btn" onclick="scrollCarousel(340)">›</button>
-      </div>
 
-      <!-- CAROUSEL WRAPPER (Active in Carousel Mode) -->
-      <div class="game-carousel hidden-mode" id="carousel">
-        
-        <!-- Game 1: Defusal Protocol -->
-        <div class="game-card" style="animation-delay: 0.05s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol // Crisis Sim', 'Multi-module bomb defusal sim featuring Data Serpent, Reactor Matrix, Firewall Maze, Banana Wires, and Frequency Tuner with a 3-charge containment system.')">
-          <div class="card-banner banner-bomb"><span class="banner-icon">☢️</span></div>
-          <div class="card-body">
-            <div class="card-tag">// Tactical Sim v3.0</div>
-            <div class="card-title">Defusal Protocol</div>
-            <div class="card-desc">Disarm 5 tactical mini-games (Snake, Reactor, Maze, Banana Wires, Freq Tuner) under a 3-minute clock with 3 containment charges.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Record: <span id="preview-defuse">0 pts</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Game 2: Cyber Chess -->
-        <div class="game-card" style="animation-delay: 0.1s;" onclick="openLaunchModal('Chess/index.jsp', 'Cyber Chess', 'Experience grandmaster AI chess with Stockfish depth evaluation, move history analysis, and dynamic tactical rating.')">
-          <div class="card-banner banner-chess"><span class="banner-icon">♟️</span></div>
-          <div class="card-body">
-            <div class="card-tag">// AI Strategy</div>
-            <div class="card-title">Cyber Chess</div>
-            <div class="card-desc">Challenge deep neural chess engines with move evaluation, rating progression, and PGN game export.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Rating: <span id="preview-chess">1200</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Game 3: Cyber Snake -->
-        <div class="game-card" style="animation-delay: 0.15s;" onclick="openLaunchModal('Snake/index.jsp', 'Cyber Snake', 'Steer your serpent through the cyber grid, devour rogue data packets, and breach node high scores.')">
-          <div class="card-banner banner-snake"><span class="banner-icon">🐍</span></div>
-          <div class="card-body">
-            <div class="card-tag">// Arcade Classic</div>
-            <div class="card-title">Cyber Snake</div>
-            <div class="card-desc">Balanced, fluid snake arcade experience with adjustable tick clocks, touch D-pads, and node tracking.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Record: <span id="preview-snake">0 pts</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Game 4: Cyber Maze -->
-        <div class="game-card" style="animation-delay: 0.2s;" onclick="openLaunchModal('Maze/index.jsp', 'Cyber Maze Runner', 'Solve procedurally generated labyrinth nodes with recursive backtracking algorithms and locate extraction portals.')">
-          <div class="card-banner banner-maze"><span class="banner-icon">⚡</span></div>
-          <div class="card-body">
-            <div class="card-tag">// Procedural Labyrinth</div>
-            <div class="card-title">Cyber Maze</div>
-            <div class="card-desc">Navigate randomized labyrinth architectures and locate extraction gates before system telemetry resets.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Cleared: <span id="preview-maze">0</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Game 5: Number Guesser -->
-        <div class="game-card" style="animation-delay: 0.25s;" onclick="openLaunchModal('Game1/index.jsp', 'Cipher Guesser', 'Crack the secret integer generated by the server session in minimal probe attempts.')">
-          <div class="card-banner banner-guesser"><span class="banner-icon">🔢</span></div>
-          <div class="card-body">
-            <div class="card-tag">// Quantum Decryption</div>
-            <div class="card-title">Cipher Guesser</div>
-            <div class="card-desc">Crack the server-side encrypted integer between 1 and 100 in minimal probe iterations.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Fewest: <span id="preview-guess">--</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Game 6: Reactor Meltdown -->
-        <div class="game-card" style="animation-delay: 0.3s;" onclick="openLaunchModal('Reactor_Meltdown/index.jsp', 'Reactor Meltdown', 'Progressive core memory puzzle inspired by Among Us. Replicate randomized glowing tile sequences under a 20s tension timer (+3s per clear) before containment collapses.')">
-          <div class="card-banner banner-reactor"><span class="banner-icon">☢️</span></div>
-          <div class="card-body">
-            <div class="card-tag">// Core Memory</div>
-            <div class="card-title">Reactor Meltdown</div>
-            <div class="card-desc">Replicate glowing reactor sequences under a 20s timer. Clear stages to expand from 3x3 to 4x4 matrix.</div>
-            <div class="card-footer">
-              <div class="card-score-preview">Record: <span id="preview-reactor">0 pts</span></div>
-              <div class="launch-arrow">➔</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </section>
 
     <!-- VIEW 2: EXPANDED SCORING & LEADERBOARDS -->
@@ -4044,7 +4020,7 @@
   }
 
   function scrollCarousel(dist) {
-    document.getElementById('carousel').scrollBy({ left: dist, behavior: 'smooth' });
+    // Legacy stub; Neural Constellation Bus is the permanent interface
   }
 
   // =========================================================
@@ -4114,28 +4090,28 @@
     const isGuest = !isUserLoggedIn;
     switch (gameKey) {
       case 'chess': {
-        const el = document.getElementById('preview-chess');
-        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_chess_rating') || '1200') : '1200');
+        if (isGuest) return localStorage.getItem('hub_chess_rating') || '1200';
+        return (scoresFetchedFromCloud && verifiedCloudScores.chessPlayed) ? String(verifiedCloudScores.chessRating) : '1200 (Unranked)';
       }
       case 'bomb': {
-        const el = document.getElementById('preview-defuse');
-        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_defuse_high') || '0') + ' pts' : '0 pts');
+        const val = isGuest ? (localStorage.getItem('hub_defuse_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.defuse || 0) : '0');
+        return val + ' pts';
       }
       case 'snake': {
-        const el = document.getElementById('preview-snake');
-        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_snake_high') || '0') + ' pts' : '0 pts');
+        const val = isGuest ? (localStorage.getItem('hub_snake_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.snake || 0) : '0');
+        return val + ' pts';
       }
       case 'maze': {
-        const el = document.getElementById('preview-maze');
-        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_maze_clears') || '0') : '0');
+        const val = isGuest ? (localStorage.getItem('hub_maze_clears') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.maze || 0) : '0');
+        return String(val);
       }
       case 'guess': {
-        const el = document.getElementById('preview-guess');
-        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_guess_best') || '--') : '--');
+        const val = isGuest ? (localStorage.getItem('hub_guess_best') || '--') : (scoresFetchedFromCloud && verifiedCloudScores.guess > 0 ? verifiedCloudScores.guess : '--');
+        return (val !== '--') ? val + ' tries' : '--';
       }
       case 'reactor': {
-        const el = document.getElementById('preview-reactor');
-        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_reactor_high') || '0') + ' pts' : '0 pts');
+        const val = isGuest ? (localStorage.getItem('hub_reactor_high') || '0') : (scoresFetchedFromCloud ? (verifiedCloudScores.reactor || 0) : '0');
+        return val + ' pts';
       }
       default:
         return '--';
@@ -4143,39 +4119,7 @@
   }
 
   function setLibraryMode(mode) {
-    const busContainer = document.getElementById('neuralBusContainer');
-    const carousel = document.getElementById('carousel');
-    const carouselControls = document.querySelector('.carousel-controls');
-    const btnNeural = document.getElementById('modeBtnNeural');
-    const btnCarousel = document.getElementById('modeBtnCarousel');
-
-    const isNeural = mode === 'neural';
-
-    if (btnNeural) {
-      btnNeural.classList.toggle('active', isNeural);
-      btnNeural.setAttribute('aria-selected', isNeural ? 'true' : 'false');
-    }
-    if (btnCarousel) {
-      btnCarousel.classList.toggle('active', !isNeural);
-      btnCarousel.setAttribute('aria-selected', !isNeural ? 'true' : 'false');
-    }
-
-    if (busContainer) {
-      busContainer.classList.toggle('hidden-mode', !isNeural);
-    }
-    if (carousel) {
-      carousel.classList.toggle('hidden-mode', isNeural);
-    }
-    if (carouselControls) {
-      carouselControls.classList.toggle('hidden-mode', isNeural);
-    }
-
-    localStorage.setItem('hub_library_mode', mode);
-
-    // If switching out of neural, hide any orphaned briefing
-    if (!isNeural) {
-      hideNeuralBriefing(null, true);
-    }
+    // Neural Constellation Bus is the permanent primary interface
   }
 
   function highlightNeuralLine(gameKey, state) {
@@ -5790,9 +5734,7 @@
     // Initialize Animated Dithered Plasma Shader for Game Hub Core
     initHubShaderEngine();
 
-    // Initialize Linear Neural Bus Mode & Throttled Spotlight
-    const savedBusMode = localStorage.getItem('hub_library_mode') || 'neural';
-    setLibraryMode(savedBusMode);
+    // Initialize Throttled Spotlight on Neural Bus
 
     const busContainer = document.getElementById('neuralBusContainer');
     if (busContainer) {
