@@ -74,6 +74,7 @@
     z-index: 0;
     transition: opacity 0.45s ease;
   }
+  #voxelWallCanvas,
   #kineticGridCanvas {
     z-index: 0;
   }
@@ -2775,6 +2776,216 @@
     border-radius: 999px;
   }
 
+  /* Live Orb Companion Mouse Follower */
+  .live-orb-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate3d(-100px, -100px, 0);
+    will-change: transform;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 10px var(--orb-glow, rgba(0, 240, 255, 0.35)));
+    transition: opacity 0.25s ease;
+  }
+  .live-orb-follower canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  .live-orb-follower.hidden {
+    display: none !important;
+  }
+
+  /* Spotlight Orb Preview */
+  .spotlight-orb-preview {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 50%, rgba(14, 25, 48, 0.95), rgba(4, 9, 20, 0.98));
+    border: 1.5px solid rgba(0, 240, 255, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 240, 255, 0.2);
+    flex-shrink: 0;
+  }
+  .spotlight-orb-preview canvas {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+  }
+  .spotlight-orb-badge {
+    position: absolute;
+    bottom: -8px;
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background: #020614;
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    color: var(--primary);
+    padding: 1px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  /* Orb Toggle Button */
+  .btn-orb-toggle {
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    color: var(--primary);
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    margin-left: auto;
+  }
+  .btn-orb-toggle:hover {
+    background: rgba(0, 240, 255, 0.25);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+  }
+
+  /* Orb Skins Vault Card */
+  .orb-vault-card {
+    background: rgba(6, 12, 26, 0.82);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 18px;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .orb-vault-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .orb-vault-title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .orb-vault-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .orb-unlocked-counter {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--accent);
+    background: rgba(16, 230, 168, 0.1);
+    border: 1px solid rgba(16, 230, 168, 0.3);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  /* Skins Grid */
+  .orb-skins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .orb-skin-card {
+    background: rgba(10, 18, 36, 0.7);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    user-select: none;
+  }
+  .orb-skin-card:hover:not(.locked) {
+    transform: translateY(-3px);
+    border-color: rgba(0, 240, 255, 0.5);
+    background: rgba(14, 26, 52, 0.85);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 240, 255, 0.25);
+  }
+  .orb-skin-card.equipped {
+    border-color: #00f0ff !important;
+    background: rgba(0, 240, 255, 0.12) !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), inset 0 0 12px rgba(0, 240, 255, 0.15);
+  }
+  .orb-skin-card.locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+    filter: grayscale(0.45);
+  }
+  .orb-skin-preview-swatch {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .orb-swatch-eye-l, .orb-swatch-eye-r {
+    position: absolute;
+    width: 6px;
+    height: 12px;
+    border-radius: 6px;
+    top: 34%;
+  }
+  .orb-swatch-eye-l { left: 32%; }
+  .orb-swatch-eye-r { left: 56%; }
+  .orb-skin-name {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+  .orb-skin-game {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .orb-skin-badge {
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .orb-skin-badge.badge-unlocked {
+    background: rgba(16, 230, 168, 0.15);
+    color: #10e6a8;
+    border: 1px solid rgba(16, 230, 168, 0.35);
+  }
+  .orb-skin-badge.badge-equipped {
+    background: #00f0ff;
+    color: #02040a;
+    font-weight: 900;
+  }
+  .orb-skin-badge.badge-locked {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
   /* Mobile Overrides */
   @media (max-width: 768px) {
     body { flex-direction: column; padding-bottom: 80px; }
@@ -2843,9 +3054,17 @@
 <body>
 
   <!-- Dual Dynamic Background Canvas Layers -->
-  <canvas id="kineticGridCanvas" class="bg-canvas-layer"></canvas>
+  <canvas id="voxelWallCanvas" class="bg-canvas-layer"></canvas>
   <canvas id="warpTunnelCanvas" class="bg-canvas-layer"></canvas>
+  <canvas id="kineticGridCanvas" style="display:none;"></canvas>
   <canvas id="techRaysCanvas" style="display:none;"></canvas>
+
+  <!-- =========================================================
+       LIVE ORB COMPANION (Level Progression Mouse Follower)
+       ========================================================= -->
+  <div id="liveOrbFollower" class="live-orb-follower" aria-hidden="true">
+    <canvas id="liveOrbCanvas" width="96" height="96"></canvas>
+  </div>
 
   <!-- =========================================================
        POST-AUTH TRANSITION SCREEN (loader.tsx Implementation)
@@ -2919,7 +3138,7 @@
       </div>
 
       <div class="portal-kinetic-hint">
-        <span>⚡ KINETIC GRID ACTIVE • MOVE CURSOR & CLICK ANYWHERE</span>
+        <span>⚡ VOXEL WALL 3D ACTIVE • HOVER & MOVE CURSOR TO RIPPLE VOXELS</span>
       </div>
 
       <div class="portal-footer-note">
@@ -3302,16 +3521,26 @@
 
       <!-- MEMBER CONTENT (RADAR CHART & METRICS) -->
       <div id="scoresContentWrap" style="display: <%= isLoggedIn ? "block" : "none" %>;">
-        <!-- DISCORD & GOOGLE PLAY GAMES PLAYER LEVEL CARD -->
+        <!-- PLAYER LEVEL & LIVE ORB COMPANION CARD -->
         <div class="player-spotlight-card">
           <div class="spotlight-level-emblem">
             <span class="emblem-lbl">LEVEL</span>
             <span class="emblem-num" id="spotlightLevelNum">1</span>
           </div>
+
+          <!-- Live Orb Companion Preview in Spotlight -->
+          <div class="spotlight-orb-preview" title="Equipped Companion Orb">
+            <canvas id="spotlightOrbCanvas" width="144" height="144"></canvas>
+            <span class="spotlight-orb-badge" id="spotlightOrbName">Operative Core</span>
+          </div>
+
           <div class="spotlight-info">
             <div class="spotlight-name-row">
               <span class="spotlight-username"><%= isLoggedIn ? currentUser : "Player" %></span>
               <span class="spotlight-tier-tag" id="spotlightRankTitle">Novice Thinker</span>
+              <button type="button" class="btn-orb-toggle" id="btnOrbFollowerToggle" onclick="toggleOrbFollower()" title="Toggle cursor companion orb">
+                <span id="orbToggleIcon">👁️</span> <span id="orbToggleLabel">Orb: Active</span>
+              </button>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
               Total Brain Experience: <strong style="color: var(--accent);" id="spotlightTotalXp">0 XP</strong>
@@ -3323,6 +3552,23 @@
               <span id="spotlightXpDetail">0 / 200 XP (0%)</span>
               <span id="spotlightXpRemaining">200 XP to next level</span>
             </div>
+          </div>
+        </div>
+
+        <!-- ORB COMPANION SKINS VAULT (UNLOCKED BY LEVEL) -->
+        <div class="orb-vault-card">
+          <div class="orb-vault-header">
+            <div>
+              <div class="orb-vault-title">🔮 Neural Orb Companion Skins</div>
+              <div class="orb-vault-subtitle">Unlock game-themed procedural orb skins by reaching higher operative levels</div>
+            </div>
+            <div class="orb-unlocked-counter" id="orbUnlockedCounter">
+              Skins: <span id="orbUnlockedCount">1</span> / 8
+            </div>
+          </div>
+
+          <div class="orb-skins-grid" id="orbSkinsGrid">
+            <!-- Dynamically populated by renderOrbSkinsGrid() -->
           </div>
         </div>
 
@@ -3989,48 +4235,53 @@
   }
 
   function updateAccountLevelUI() {
-    if (!isUserLoggedIn) return;
-
     const totalXp = calculateTotalXP();
     const data = getLevelData(totalXp);
 
-    // 1. Sidebar Profile Updates
-    const badge = document.getElementById('profileLevelBadge');
-    const title = document.getElementById('profileRankTitle');
-    const xpText = document.getElementById('profileXpText');
-    const xpFill = document.getElementById('profileXpFill');
-    const xpPct = document.getElementById('profileXpPercent');
-    const xpRem = document.getElementById('profileXpRemaining');
+    if (isUserLoggedIn) {
+      // 1. Sidebar Profile Updates
+      const badge = document.getElementById('profileLevelBadge');
+      const title = document.getElementById('profileRankTitle');
+      const xpText = document.getElementById('profileXpText');
+      const xpFill = document.getElementById('profileXpFill');
+      const xpPct = document.getElementById('profileXpPercent');
+      const xpRem = document.getElementById('profileXpRemaining');
 
-    if (badge) badge.innerText = 'LVL ' + data.level;
-    if (title) title.innerText = data.rankTitle;
-    if (xpText) xpText.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP';
-    if (xpFill) xpFill.style.width = data.percent + '%';
-    if (xpPct) xpPct.innerText = data.percent + '%';
-    if (xpRem) xpRem.innerText = data.remainingXp.toLocaleString() + ' XP to next lvl';
+      if (badge) badge.innerText = 'LVL ' + data.level;
+      if (title) title.innerText = data.rankTitle;
+      if (xpText) xpText.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP';
+      if (xpFill) xpFill.style.width = data.percent + '%';
+      if (xpPct) xpPct.innerText = data.percent + '%';
+      if (xpRem) xpRem.innerText = data.remainingXp.toLocaleString() + ' XP to next lvl';
 
-    // 2. Header Meta Pill Updates
-    const metaPill = document.getElementById('metaLevelPill');
-    const metaLvl = document.getElementById('metaLevelText');
-    const metaXp = document.getElementById('metaXpText');
-    if (metaPill) metaPill.style.display = 'inline-flex';
-    if (metaLvl) metaLvl.innerText = 'LVL ' + data.level;
-    if (metaXp) metaXp.innerText = data.totalXp.toLocaleString() + ' XP';
+      // 2. Header Meta Pill Updates
+      const metaPill = document.getElementById('metaLevelPill');
+      const metaLvl = document.getElementById('metaLevelText');
+      const metaXp = document.getElementById('metaXpText');
+      if (metaPill) metaPill.style.display = 'inline-flex';
+      if (metaLvl) metaLvl.innerText = 'LVL ' + data.level;
+      if (metaXp) metaXp.innerText = data.totalXp.toLocaleString() + ' XP';
 
-    // 3. Brain Stats Spotlight Card Updates
-    const spotLvl = document.getElementById('spotlightLevelNum');
-    const spotRank = document.getElementById('spotlightRankTitle');
-    const spotTotalXp = document.getElementById('spotlightTotalXp');
-    const spotBar = document.getElementById('spotlightXpBar');
-    const spotDetail = document.getElementById('spotlightXpDetail');
-    const spotRem = document.getElementById('spotlightXpRemaining');
+      // 3. Brain Stats Spotlight Card Updates
+      const spotLvl = document.getElementById('spotlightLevelNum');
+      const spotRank = document.getElementById('spotlightRankTitle');
+      const spotTotalXp = document.getElementById('spotlightTotalXp');
+      const spotBar = document.getElementById('spotlightXpBar');
+      const spotDetail = document.getElementById('spotlightXpDetail');
+      const spotRem = document.getElementById('spotlightXpRemaining');
 
-    if (spotLvl) spotLvl.innerText = data.level;
-    if (spotRank) spotRank.innerText = data.rankTitle;
-    if (spotTotalXp) spotTotalXp.innerText = data.totalXp.toLocaleString() + ' XP';
-    if (spotBar) spotBar.style.width = data.percent + '%';
-    if (spotDetail) spotDetail.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP (' + data.percent + '%)';
-    if (spotRem) spotRem.innerText = data.remainingXp.toLocaleString() + ' XP to next level';
+      if (spotLvl) spotLvl.innerText = data.level;
+      if (spotRank) spotRank.innerText = data.rankTitle;
+      if (spotTotalXp) spotTotalXp.innerText = data.totalXp.toLocaleString() + ' XP';
+      if (spotBar) spotBar.style.width = data.percent + '%';
+      if (spotDetail) spotDetail.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP (' + data.percent + '%)';
+      if (spotRem) spotRem.innerText = data.remainingXp.toLocaleString() + ' XP to next level';
+    }
+
+    // 4. Update Live Orb Skins Vault based on player level
+    if (typeof updateOrbSkinsUI === 'function') {
+      updateOrbSkinsUI(data.level);
+    }
   }
 
   // =========================================================
@@ -5570,17 +5821,17 @@
 
   // =========================================================
   // DUAL-STATE DYNAMIC BACKGROUND SYSTEM:
-  // 1. Interactive Kinetic Cyber Grid (Landing / Sign-in Portal)
+  // 1. 3D Atmospheric Voxel Wall (Landing / Sign-in Portal)
   // 2. 3D Hyperspace Warp Tunnel centered on Game Hub Core (Games Gallery)
   // =========================================================
-  let kineticGridEngine = null;
+  let voxelWallEngine = null;
   let warpTunnelEngine = null;
 
   function initDynamicBackgroundSystem() {
     const portal = document.getElementById('landingPortal');
     const isPortalActive = portal && !portal.classList.contains('dismissed');
 
-    kineticGridEngine = setupKineticGrid();
+    voxelWallEngine = setupVoxelWall();
     warpTunnelEngine = setupWarpTunnel();
 
     if (isPortalActive) {
@@ -5591,32 +5842,32 @@
   }
 
   function activateLandingBackground() {
-    const kCanvas = document.getElementById('kineticGridCanvas');
+    const vCanvas = document.getElementById('voxelWallCanvas') || document.getElementById('kineticGridCanvas');
     const wCanvas = document.getElementById('warpTunnelCanvas');
-    if (kCanvas) {
-      kCanvas.style.display = 'block';
-      kCanvas.style.opacity = '1';
+    if (vCanvas) {
+      vCanvas.style.display = 'block';
+      vCanvas.style.opacity = '1';
     }
     if (wCanvas) {
       wCanvas.style.opacity = '0';
       setTimeout(() => { if (wCanvas) wCanvas.style.display = 'none'; }, 400);
     }
     if (warpTunnelEngine) warpTunnelEngine.stop();
-    if (kineticGridEngine) kineticGridEngine.start();
+    if (voxelWallEngine) voxelWallEngine.start();
   }
 
   function activateDashboardBackground() {
-    const kCanvas = document.getElementById('kineticGridCanvas');
+    const vCanvas = document.getElementById('voxelWallCanvas') || document.getElementById('kineticGridCanvas');
     const wCanvas = document.getElementById('warpTunnelCanvas');
-    if (kCanvas) {
-      kCanvas.style.opacity = '0';
-      setTimeout(() => { if (kCanvas) kCanvas.style.display = 'none'; }, 400);
+    if (vCanvas) {
+      vCanvas.style.opacity = '0';
+      setTimeout(() => { if (vCanvas) vCanvas.style.display = 'none'; }, 400);
     }
     if (wCanvas) {
       wCanvas.style.display = 'block';
       wCanvas.style.opacity = '1';
     }
-    if (kineticGridEngine) kineticGridEngine.stop();
+    if (voxelWallEngine) voxelWallEngine.stop();
     if (warpTunnelEngine) {
       warpTunnelEngine.start();
       warpTunnelEngine.recenter();
@@ -5624,372 +5875,279 @@
   }
 
   // ---------------------------------------------------------
-  // 1. INTERACTIVE KINETIC GRID (Sign-In & Landing Portal)
+  // 1. 3D ATMOSPHERIC VOXEL WALL (Sign-In & Landing Portal)
+  // (Full Three.js port of voxel-wall.tsx + camera-rig + light-rays)
   // ---------------------------------------------------------
-  function setupKineticGrid() {
-    const canvas = document.getElementById('kineticGridCanvas');
+  function setupVoxelWall() {
+    const canvas = document.getElementById('voxelWallCanvas') || document.getElementById('kineticGridCanvas');
     if (!canvas) return null;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
 
     let isRunning = false;
     let animId = null;
-    let W = 0, H = 0, horizonY = 0;
 
-    const CELL_SIZE = 55;
-    const INFLUENCE_RADIUS = 260;
-    const MAX_WARP = 24;
-    const DOT_SPACING = 30;
-    const LERP_SPEED = 0.08;
-
-    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.18 };
-    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.95 };
-    const NODE_ACTIVE = { r: 74, g: 158, b: 255, a: 1.0 };
-    const NODE_BASE_RADIUS = 1.8;
-    const NODE_ACTIVE_RADIUS = 3.5;
-
-    const mouse = { x: -9999, y: -9999 };
-    const targetMouse = { x: -9999, y: -9999 };
-    const ripples = [];
-
-    const dotCanvas = document.createElement('canvas');
-    const dotCtx = dotCanvas.getContext('2d');
-
-    function rebuildDotMatrix() {
-      dotCanvas.width = W;
-      dotCanvas.height = H;
-      dotCtx.clearRect(0, 0, W, H);
-      dotCtx.fillStyle = 'rgba(0, 240, 255, 0.04)';
-      for (let x = DOT_SPACING / 2; x < W; x += DOT_SPACING) {
-        for (let y = DOT_SPACING / 2; y < H; y += DOT_SPACING) {
-          dotCtx.beginPath();
-          dotCtx.arc(x, y, 0.65, 0, Math.PI * 2);
-          dotCtx.fill();
-        }
-      }
+    if (typeof THREE === 'undefined') {
+      console.warn('Three.js not found, voxel wall unavailable.');
+      return null;
     }
 
-    function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      horizonY = Math.round(H * 0.78);
-      rebuildDotMatrix();
-    }
-    window.addEventListener('resize', resize);
-    resize();
+    try {
+      let width = window.innerWidth;
+      let height = window.innerHeight;
 
-    window.addEventListener('mousemove', (e) => {
-      targetMouse.x = e.clientX;
-      targetMouse.y = e.clientY;
-    }, { passive: true });
+      // 1. Scene & Atmosphere (background #000000, fog [#000000, 6, 22])
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x000000);
+      scene.fog = new THREE.Fog(0x000000, 6, 22);
 
-    window.addEventListener('mouseleave', () => {
-      targetMouse.x = -9999;
-      targetMouse.y = -9999;
-    });
+      // Camera: position [0.15, -2.35, 4.2], fov: 52, near: 0.1, far: 40
+      const camera = new THREE.PerspectiveCamera(52, width / height, 0.1, 40);
+      camera.position.set(0.15, -2.35, 4.2);
+      camera.lookAt(0, 0, 0);
 
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches && e.touches.length > 0) {
-        targetMouse.x = e.touches[0].clientX;
-        targetMouse.y = e.touches[0].clientY;
-      }
-    }, { passive: true });
-
-    window.addEventListener('click', (e) => {
-      ripples.push({
-        x: e.clientX,
-        y: e.clientY,
-        radius: 0,
-        opacity: 1,
-        born: performance.now()
+      // WebGL Renderer: antialias: false, alpha: false, ACESFilmicToneMapping, exposure: 1.05
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        antialias: false,
+        alpha: false,
+        powerPreference: 'high-performance'
       });
-      if (ripples.length > 8) ripples.shift();
-    });
-
-    function lerpN(a, b, t) { return a + (b - a) * t; }
-    function lerpColor(base, active, t) {
-      const r = Math.round(lerpN(base.r, active.r, t));
-      const g = Math.round(lerpN(base.g, active.g, t));
-      const b = Math.round(lerpN(base.b, active.b, t));
-      const a = lerpN(base.a, active.a, t);
-      return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
-    }
-
-    function getWarpedPoint(gx, gy, col, row, m, rips, cols, rows) {
-      const edgeMargin = 1.5;
-      const colPin = Math.min(col / edgeMargin, (cols - 1 - col) / edgeMargin, 1);
-      const rowPin = Math.min(row / edgeMargin, (rows - 1 - row) / edgeMargin, 1);
-      const pinFactor = colPin * colPin * rowPin * rowPin;
-
-      const dx = gx - m.x;
-      const dy = gy - m.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const proximity = Math.max(0, 1 - dist / INFLUENCE_RADIUS) * pinFactor;
-
-      let rx = 0, ry = 0;
-      for (let i = 0; i < rips.length; i++) {
-        const r = rips[i];
-        const rdx = gx - r.x;
-        const rdy = gy - r.y;
-        const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
-        const waveWidth = 55;
-        const diff = rdist - r.radius;
-        if (Math.abs(diff) < waveWidth) {
-          const strength = (1 - Math.abs(diff) / waveWidth) * r.opacity * 18 * pinFactor;
-          const angle = Math.atan2(rdy, rdx);
-          const sign = diff < 0 ? -1 : 1;
-          rx += Math.cos(angle) * strength * sign * -1;
-          ry += Math.sin(angle) * strength * sign * -1;
-        }
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      if (renderer.shadowMap) {
+        renderer.shadowMap.enabled = true;
       }
 
-      if (dist < INFLUENCE_RADIUS && dist > 0 && pinFactor > 0) {
-        const t = dist / INFLUENCE_RADIUS;
-        const eased = t < 0.01 ? 0 : (1 - t) * (1 - t) * Math.min(1, dist / 60);
-        const warpAmt = eased * MAX_WARP * pinFactor;
-        const angle = Math.atan2(dy, dx);
-        return {
-          pt: { x: gx - Math.cos(angle) * warpAmt + rx, y: gy - Math.sin(angle) * warpAmt + ry },
-          proximity: proximity
-        };
+      // 2. Scene Lights (SceneLights)
+      const ambientLight = new THREE.AmbientLight(0x081426, 0.45);
+      scene.add(ambientLight);
+
+      const sunLight = new THREE.DirectionalLight(0x00f0ff, 2.8);
+      sunLight.position.set(3.2, 4.0, 4.0);
+      sunLight.castShadow = true;
+      if (sunLight.shadow && sunLight.shadow.mapSize) {
+        sunLight.shadow.mapSize.width = 1024;
+        sunLight.shadow.mapSize.height = 1024;
       }
+      scene.add(sunLight);
 
-      return { pt: { x: gx + rx, y: gy + ry }, proximity: proximity };
-    }
+      const fillLight = new THREE.DirectionalLight(0x3b82f6, 1.1);
+      fillLight.position.set(-4.0, -3.0, 2.0);
+      scene.add(fillLight);
 
-    const RAY_COUNT = 60;
-    const rays = [];
-    for (let i = 0; i < RAY_COUNT; i++) {
-      const isBright = Math.random() < 0.25;
-      rays.push({
-        xPct: Math.random(),
-        maxHeight: isBright ? (0.35 + Math.random() * 0.45) : (0.15 + Math.random() * 0.35),
-        width: isBright ? (1.5 + Math.random() * 2.0) : (0.7 + Math.random() * 1.2),
-        alphaBase: isBright ? (0.55 + Math.random() * 0.35) : (0.15 + Math.random() * 0.3),
-        pulseSpeed: 0.015 + Math.random() * 0.03,
-        pulseOffset: Math.random() * Math.PI * 2,
-        colorType: Math.random() < 0.65 ? 'cyan' : 'blue'
+      const pointLight = new THREE.PointLight(0x00f0ff, 1.2, 8);
+      pointLight.position.set(0, 0, 3.5);
+      scene.add(pointLight);
+
+      // 3. Sun Beacon (LightSource)
+      const sunGeo = new THREE.SphereGeometry(0.35, 24, 24);
+      const sunMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+      sunMesh.position.set(3.2, 4.0, 3.5);
+      scene.add(sunMesh);
+
+      // Volumetric Light Cone (LightEffects)
+      const coneGeo = new THREE.ConeGeometry(4.5, 12, 32, 1, true);
+      const coneMat = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        transparent: true,
+        opacity: 0.08,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false
       });
-    }
+      const lightCone = new THREE.Mesh(coneGeo, coneMat);
+      lightCone.position.copy(sunMesh.position);
+      scene.add(lightCone);
 
-    const PARTICLE_COUNT = 70;
-    const particles = [];
-    function createParticle(initial) {
-      return {
-        x: Math.random() * (W || window.innerWidth),
-        y: initial ? Math.random() * (H || window.innerHeight) : (horizonY + Math.random() * 20),
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: -(0.4 + Math.random() * 1.1),
-        size: 0.8 + Math.random() * 1.6,
-        alpha: 0.15 + Math.random() * 0.6,
-        maxLife: 140 + Math.random() * 160,
-        life: initial ? Math.random() * 180 : 0,
-        color: Math.random() < 0.7 ? '#00f0ff' : '#38bdf8'
-      };
-    }
-    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(createParticle(true));
+      // 4. Instanced Voxel Wall (VoxelWall)
+      const COLS = 34;
+      const ROWS = 22;
+      const TOTAL_VOXELS = COLS * ROWS;
+      const VOXEL_SIZE = 0.36;
+      const GAP = 0.05;
+      const STEP = VOXEL_SIZE + GAP;
 
-    let time = 0;
+      const boxGeo = new THREE.BoxGeometry(VOXEL_SIZE, VOXEL_SIZE, 0.6);
+      const boxMat = new THREE.MeshStandardMaterial({
+        roughness: 0.25,
+        metalness: 0.4
+      });
 
-    function render(now) {
-      if (!isRunning) return;
-      time++;
-      if (mouse.x === -9999) {
-        mouse.x = targetMouse.x;
-        mouse.y = targetMouse.y;
-      } else {
-        mouse.x = lerpN(mouse.x, targetMouse.x, LERP_SPEED);
-        mouse.y = lerpN(mouse.y, targetMouse.y, LERP_SPEED);
-      }
+      const voxelMesh = new THREE.InstancedMesh(boxGeo, boxMat, TOTAL_VOXELS);
+      voxelMesh.castShadow = true;
+      voxelMesh.receiveShadow = true;
 
-      ctx.clearRect(0, 0, W, H);
+      const dummy = new THREE.Object3D();
+      const tempCol = new THREE.Color();
+      const gridItems = [];
 
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-      bgGrad.addColorStop(0, '#010308');
-      bgGrad.addColorStop(0.65, '#020614');
-      bgGrad.addColorStop(horizonY / H, '#030c22');
-      bgGrad.addColorStop(1, '#01040a');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
+      const offsetX = ((COLS - 1) * STEP) / 2;
+      const offsetY = ((ROWS - 1) * STEP) / 2;
 
-      if (dotCanvas.width > 0) {
-        ctx.drawImage(dotCanvas, 0, 0);
-      }
-
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const r = ripples[i];
-        const age = (now - r.born) / 1000;
-        r.radius = Math.max(0, age * 400);
-        r.opacity = Math.max(0, 1 - age * 1.2);
-        if (r.opacity <= 0) ripples.splice(i, 1);
-      }
-
-      const cols = Math.max(2, Math.ceil(W / CELL_SIZE)) + 1;
-      const rows = Math.max(2, Math.ceil(H / CELL_SIZE)) + 1;
-      const cellW = W / (cols - 1);
-      const cellH = H / (rows - 1);
-
-      const pts = [];
-      const prox = [];
-
-      for (let row = 0; row < rows; row++) {
-        pts[row] = [];
-        prox[row] = [];
-        for (let col = 0; col < cols; col++) {
-          const res = getWarpedPoint(col * cellW, row * cellH, col, row, mouse, ripples, cols, rows);
-          pts[row][col] = res.pt;
-          prox[row][col] = res.proximity;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const x = c * STEP - offsetX;
+          const y = r * STEP - offsetY;
+          const distCenter = Math.hypot(x, y);
+          gridItems.push({
+            x: x,
+            y: y,
+            baseZ: -Math.cos(distCenter * 0.4) * 0.3,
+            phase: (x * 0.5 + y * 0.3)
+          });
         }
       }
+      scene.add(voxelMesh);
 
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.16)';
-      ctx.lineWidth = 0.9;
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - 1; col++) {
-          if ((prox[row][col] + prox[row][col + 1]) < 0.03) {
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
-          }
+      // 5. Atmospheric Dust Motes (DustMotes)
+      const DUST_COUNT = 180;
+      const dustPositions = new Float32Array(DUST_COUNT * 3);
+      const dustVelocities = new Float32Array(DUST_COUNT * 3);
+
+      for (let i = 0; i < DUST_COUNT; i++) {
+        dustPositions[i * 3] = (Math.random() - 0.5) * 14;
+        dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        dustPositions[i * 3 + 2] = Math.random() * 4.5 + 0.2;
+
+        dustVelocities[i * 3] = (Math.random() - 0.5) * 0.004;
+        dustVelocities[i * 3 + 1] = Math.random() * 0.006 + 0.002;
+        dustVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.003;
+      }
+
+      const dustGeo = new THREE.BufferGeometry();
+      dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+      const dustMat = new THREE.PointsMaterial({
+        size: 0.045,
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const dustPoints = new THREE.Points(dustGeo, dustMat);
+      scene.add(dustPoints);
+
+      // 6. Camera Rig & Mouse Tracking (CameraRig)
+      const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
+      function onMouseMove(e) {
+        pointer.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+        pointer.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+      }
+      function onTouchMove(e) {
+        if (e.touches && e.touches[0]) {
+          pointer.targetX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+          pointer.targetY = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
         }
       }
-      for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows - 1; row++) {
-          if ((prox[row][col] + prox[row + 1][col]) < 0.03) {
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
-          }
-        }
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
+      window.addEventListener('touchmove', onTouchMove, { passive: true });
+
+      function onResize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
       }
-      ctx.stroke();
+      window.addEventListener('resize', onResize);
 
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - 1; col++) {
-          const avg = (prox[row][col] + prox[row][col + 1]) / 2;
-          if (avg >= 0.015) {
-            const t = avg * avg * (3 - 2 * avg);
-            ctx.beginPath();
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row][col + 1].x, pts[row][col + 1].y);
-            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
-            ctx.lineWidth = lerpN(0.9, 2.2, t);
-            ctx.stroke();
-          }
-        }
-      }
-      for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows - 1; row++) {
-          const avg = (prox[row][col] + prox[row + 1][col]) / 2;
-          if (avg >= 0.015) {
-            const t = avg * avg * (3 - 2 * avg);
-            ctx.beginPath();
-            ctx.moveTo(pts[row][col].x, pts[row][col].y);
-            ctx.lineTo(pts[row + 1][col].x, pts[row + 1][col].y);
-            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, t);
-            ctx.lineWidth = lerpN(0.9, 2.2, t);
-            ctx.stroke();
-          }
-        }
-      }
+      const clock = new THREE.Clock();
 
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const p = pts[row][col];
-          const pr = prox[row][col];
-          const t = pr * pr * (3 - 2 * pr);
-          const r = lerpN(NODE_BASE_RADIUS, NODE_ACTIVE_RADIUS, t);
-
-          if (t > 0.25) {
-            const glowR = r + lerpN(0, 8, (t - 0.25) / 0.75);
-            const grd = ctx.createRadialGradient(p.x, p.y, r * 0.5, p.x, p.y, glowR);
-            grd.addColorStop(0, 'rgba(0, 240, 255, ' + (t * 0.45).toFixed(3) + ')');
-            grd.addColorStop(1, 'rgba(0, 240, 255, 0)');
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
-            ctx.fillStyle = grd;
-            ctx.fill();
-          }
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = lerpColor({ r: 0, g: 240, b: 255, a: 0.28 }, NODE_ACTIVE, t);
-          ctx.fill();
-        }
-      }
-
-      for (let i = 0; i < ripples.length; i++) {
-        const r = ripples[i];
-        const safeRadius = Math.max(0, r.radius);
-        ctx.beginPath();
-        ctx.arc(r.x, r.y, safeRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(0, 240, 255, ' + (r.opacity * 0.6).toFixed(3) + ')';
-        ctx.lineWidth = 2.2;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(r.x, r.y, Math.max(0, safeRadius - 16), 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(56, 189, 248, ' + (r.opacity * 0.35).toFixed(3) + ')';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-      }
-
-      for (let i = 0; i < rays.length; i++) {
-        const ray = rays[i];
-        const x = ray.xPct * W;
-        const pulse = Math.sin(time * ray.pulseSpeed + ray.pulseOffset);
-        const curAlpha = Math.max(0.08, Math.min(0.85, ray.alphaBase + pulse * 0.2));
-        const rayLen = ray.maxHeight * horizonY * (0.85 + pulse * 0.15);
-        const topY = horizonY - rayLen;
-
-        const rayGrad = ctx.createLinearGradient(x, horizonY, x, topY);
-        rayGrad.addColorStop(0, 'rgba(0, 240, 255, ' + curAlpha + ')');
-        rayGrad.addColorStop(0.3, 'rgba(2, 132, 199, ' + (curAlpha * 0.6) + ')');
-        rayGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = rayGrad;
-        ctx.fillRect(x - ray.width / 2, topY, ray.width, rayLen);
-      }
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx + Math.sin((time + i * 15) * 0.02) * 0.25;
-        p.y += p.vy;
-        p.life++;
-
-        const lifeRatio = p.life / p.maxLife;
-        let alpha = p.alpha;
-        if (lifeRatio > 0.7) alpha *= (1 - (lifeRatio - 0.7) / 0.3);
-
-        if (p.life >= p.maxLife || p.y < 0) {
-          particles[i] = createParticle(false);
-          continue;
-        }
-
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1.0;
-
-      animId = requestAnimationFrame(render);
-    }
-
-    return {
-      start() {
-        if (isRunning) return;
-        isRunning = true;
-        resize();
+      function render() {
+        if (!isRunning) return;
         animId = requestAnimationFrame(render);
-      },
-      stop() {
-        isRunning = false;
-        if (animId) {
-          cancelAnimationFrame(animId);
-          animId = null;
+
+        const time = clock.getElapsedTime();
+
+        // Lerp pointer for smooth parallax
+        pointer.x += (pointer.targetX - pointer.x) * 0.06;
+        pointer.y += (pointer.targetY - pointer.y) * 0.06;
+
+        // Camera Rig Parallax tracking pointer
+        const camTargetX = 0.15 + pointer.x * 0.75;
+        const camTargetY = -2.35 + pointer.y * 0.5;
+        camera.position.x += (camTargetX - camera.position.x) * 0.05;
+        camera.position.y += (camTargetY - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, 0);
+
+        // Volumetric Light Cone slow rotation
+        lightCone.rotation.z = time * 0.05;
+
+        // Voxel Wall Dynamic Update
+        const ptrX = (pointer.x * (COLS * STEP)) / 2;
+        const ptrY = (pointer.y * (ROWS * STEP)) / 2;
+
+        for (let i = 0; i < gridItems.length; i++) {
+          const item = gridItems[i];
+          const wave =
+            Math.sin(time * 1.6 + item.phase) * 0.25 +
+            Math.cos(time * 0.9 - item.y * 0.6) * 0.15;
+
+          const dx = item.x - ptrX;
+          const dy = item.y - ptrY;
+          const mouseDist = Math.hypot(dx, dy);
+          const mouseInfluence = Math.max(0, 1 - mouseDist / 2.8);
+          const mouseElevation = Math.sin(mouseInfluence * Math.PI) * 0.75;
+
+          const z = item.baseZ + wave + mouseElevation;
+
+          dummy.position.set(item.x, item.y, z);
+          const scaleZ = 1 + mouseElevation * 1.2;
+          dummy.scale.set(1, 1, Math.max(0.4, scaleZ));
+          dummy.updateMatrix();
+          voxelMesh.setMatrixAt(i, dummy.matrix);
+
+          // Height + Cursor Reactive Ambient Glow
+          const elevationRatio = (z + 0.5) / 1.5;
+          const r = THREE.MathUtils.lerp(0.04, 0.0, elevationRatio);
+          const g = THREE.MathUtils.lerp(0.12, 0.85, Math.max(0, mouseInfluence));
+          const b = THREE.MathUtils.lerp(0.24, 1.0, elevationRatio);
+          tempCol.setRGB(r, g, b);
+          voxelMesh.setColorAt(i, tempCol);
         }
+        voxelMesh.instanceMatrix.needsUpdate = true;
+        if (voxelMesh.instanceColor) {
+          voxelMesh.instanceColor.needsUpdate = true;
+        }
+
+        // Dust Motes update
+        const pArr = dustGeo.attributes.position.array;
+        for (let i = 0; i < DUST_COUNT; i++) {
+          pArr[i * 3] += dustVelocities[i * 3];
+          pArr[i * 3 + 1] += dustVelocities[i * 3 + 1];
+          pArr[i * 3 + 2] += dustVelocities[i * 3 + 2];
+
+          if (pArr[i * 3 + 1] > 6) {
+            pArr[i * 3 + 1] = -5;
+            pArr[i * 3] = (Math.random() - 0.5) * 14;
+          }
+        }
+        dustGeo.attributes.position.needsUpdate = true;
+
+        renderer.render(scene, camera);
       }
-    };
+
+      return {
+        start() {
+          if (isRunning) return;
+          isRunning = true;
+          clock.start();
+          animId = requestAnimationFrame(render);
+        },
+        stop() {
+          isRunning = false;
+          if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+          }
+        }
+      };
+    } catch (err) {
+      console.warn('Voxel Wall WebGL setup failed:', err);
+      return null;
+    }
   }
 
   // ---------------------------------------------------------
@@ -6269,6 +6427,570 @@
     };
   }
 
+  // =========================================================
+  // LIVE ORB COMPANION & ACCOUNT LEVELING SKIN ENGINE
+  // (Port of live-orb.tsx with GLSL Raymarched Eye Tracking)
+  // =========================================================
+  const VERT_ORB = `
+    attribute vec2 a_position;
+    void main() {
+      gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+  `;
+
+  const FRAG_ORB = `
+    precision highp float;
+
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform float u_speed;
+    uniform vec2 u_look;
+    uniform float u_blink;
+    uniform float u_mode;
+    uniform vec3 u_body;
+    uniform vec3 u_eye;
+    uniform vec3 u_c1;
+    uniform vec3 u_c2;
+    uniform vec3 u_c3;
+
+    float hash(vec2 p) {
+      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+    }
+
+    float noise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      float a = hash(i);
+      float b = hash(i + vec2(1.0, 0.0));
+      float c = hash(i + vec2(0.0, 1.0));
+      float d = hash(i + vec2(1.0, 1.0));
+      vec2 u = f * f * (3.0 - 2.0 * f);
+      return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+    }
+
+    float fbm(vec2 p) {
+      float v = 0.0;
+      float a = 0.5;
+      mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
+      for (int i = 0; i < 5; i++) {
+        v += a * noise(p);
+        p = m * p;
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    vec3 orient(vec3 p, vec2 look) {
+      float yaw = look.x * 0.92;
+      float pitch = -look.y * 0.78;
+      float cy = cos(yaw);
+      float sy = sin(yaw);
+      float cp = cos(pitch);
+      float sp = sin(pitch);
+      vec3 q = vec3(p.x, p.y * cp - p.z * sp, p.y * sp + p.z * cp);
+      return vec3(q.x * cy + q.z * sy, q.y, -q.x * sy + q.z * cy);
+    }
+
+    float eyeMask(vec3 n, vec3 e, vec3 right, vec3 up, float halfH, float rad) {
+      float facing = dot(n, e);
+      float x = dot(n, right) - dot(e, right);
+      float y = dot(n, up) - dot(e, up);
+      y -= clamp(y, -halfH, halfH);
+      float d = length(vec2(x, y)) - rad;
+      float fill = 1.0 - smoothstep(-0.01, 0.01, d);
+      return fill * smoothstep(0.12, 0.32, facing);
+    }
+
+    vec3 wash(vec3 n, float t) {
+      vec2 q = n.xy * 2.2 + n.z * 0.85;
+      vec2 w1 = vec2(
+        fbm(q * 1.4 + vec2(t * 0.22, t * 0.18)),
+        fbm(q * 1.4 + vec2(-t * 0.16, t * 0.24) + 4.1)
+      );
+      q += (w1 - 0.5) * 0.72;
+      float f = fbm(q * 2.1 + vec2(0.0, t * 0.12));
+      float g = fbm(q * 4.6 - vec2(t * 0.2, 0.0));
+      vec3 col = mix(u_c1, u_c2, smoothstep(0.28, 0.72, f));
+      return mix(col, u_c3, pow(smoothstep(0.42, 0.9, g), 1.4));
+    }
+
+    void main() {
+      vec2 uv = (gl_FragCoord.xy / u_resolution.xy) * 2.0 - 1.0;
+      float aspect = u_resolution.x / max(u_resolution.y, 1.0);
+      uv.x *= aspect;
+
+      float radius = 0.94;
+      vec2 p = uv / radius;
+      float r2 = dot(p, p);
+      float edge = 1.0 - smoothstep(0.985, 1.012, sqrt(max(r2, 0.0)));
+      if (edge <= 0.001) {
+        gl_FragColor = vec4(0.0);
+        return;
+      }
+
+      float z = sqrt(max(1.0 - r2, 0.0));
+      vec3 n = normalize(vec3(p, z));
+
+      vec2 look = u_look;
+      float lm = length(look);
+      if (lm > 1.0) look /= lm;
+
+      vec3 right = orient(vec3(1.0, 0.0, 0.0), look);
+      vec3 up = orient(vec3(0.0, 1.0, 0.0), look);
+      vec3 eL = orient(normalize(vec3(-0.32, 0.08, 1.0)), look);
+      vec3 eR = orient(normalize(vec3(0.32, 0.08, 1.0)), look);
+
+      float halfH = mix(0.128, 0.012, u_blink);
+      float rad = mix(0.054, 0.062, u_blink);
+      float eyes = max(
+        eyeMask(n, eL, right, up, halfH, rad),
+        eyeMask(n, eR, right, up, halfH, rad)
+      );
+
+      vec3 body = u_mode > 0.5 ? wash(n, u_time * u_speed) : u_body;
+      vec3 col = mix(body, u_eye, clamp(eyes, 0.0, 1.0));
+
+      gl_FragColor = vec4(clamp(col, 0.0, 1.0), edge);
+    }
+  `;
+
+  function compileOrbShader(gl, type, source) {
+    const shader = gl.createShader(type);
+    if (!shader) return null;
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  const ORB_SKINS = [
+    {
+      id: 'default_white',
+      name: 'Operative Core',
+      game: 'System Core',
+      levelReq: 1,
+      variant: 'white',
+      color: '#F4F4F5',
+      eyeColor: '#09090B',
+      glow: 'rgba(244, 244, 245, 0.45)',
+      desc: 'Standard-issue cybernetic neural companion.'
+    },
+    {
+      id: 'chess_obsidian',
+      name: 'Tactical Obsidian',
+      game: 'Tactical Chess',
+      levelReq: 2,
+      variant: 'custom',
+      color: '#18181B',
+      eyeColor: '#38BDF8',
+      glow: 'rgba(56, 189, 248, 0.55)',
+      desc: 'Tempered carbon shell with strategic cyan optics.'
+    },
+    {
+      id: 'snake_viper',
+      name: 'Emerald Viper',
+      game: 'Neural Snake',
+      levelReq: 3,
+      variant: 'custom',
+      color: '#10E6A8',
+      eyeColor: '#022C22',
+      glow: 'rgba(16, 230, 168, 0.55)',
+      desc: 'Kinetic reflex skin with high-frequency emerald phosphor.'
+    },
+    {
+      id: 'defusal_crimson',
+      name: 'Crisis Defuser',
+      game: 'Bomb Defusal',
+      levelReq: 4,
+      variant: 'custom',
+      color: '#F43F5E',
+      eyeColor: '#FFFFFF',
+      glow: 'rgba(244, 63, 94, 0.55)',
+      desc: 'Thermal blast-resistant shell forged under crisis pressure.'
+    },
+    {
+      id: 'maze_void',
+      name: 'Void Navigator',
+      game: 'Cyber Maze',
+      levelReq: 5,
+      variant: 'custom',
+      color: '#A855F7',
+      eyeColor: '#FAFAFA',
+      glow: 'rgba(168, 85, 247, 0.55)',
+      desc: 'Spatial pathfinding matrix bathed in deep violet energy.'
+    },
+    {
+      id: 'cipher_gold',
+      name: 'Golden Cipher',
+      game: 'Cipher Protocol',
+      levelReq: 6,
+      variant: 'custom',
+      color: '#FACC15',
+      eyeColor: '#0F172A',
+      glow: 'rgba(250, 204, 21, 0.55)',
+      desc: 'Cryptographic gold finish reserved for pattern decoders.'
+    },
+    {
+      id: 'reactor_cyan',
+      name: 'Reactor Overload',
+      game: 'Reactor Meltdown',
+      levelReq: 7,
+      variant: 'custom',
+      color: '#00F0FF',
+      eyeColor: '#001424',
+      glow: 'rgba(0, 240, 255, 0.75)',
+      desc: 'Supercharged ionized cyan core from nuclear equilibrium.'
+    },
+    {
+      id: 'glitch_aurora',
+      name: 'Quantum Aurora',
+      game: 'Glitch Protocol',
+      levelReq: 8,
+      variant: 'webgl',
+      colors: ['#7C6AF7', '#7DD3C7', '#E8B4D4'],
+      glow: 'rgba(124, 106, 247, 0.65)',
+      desc: 'Flowing procedural plasma shader unlocked by master operatives.'
+    }
+  ];
+
+  let currentOrbSkinId = localStorage.getItem('hub_orb_skin') || 'default_white';
+  let isOrbFollowerActive = localStorage.getItem('hub_orb_active') !== 'false';
+  let followerOrbInstance = null;
+  let spotlightOrbInstance = null;
+
+  function createOrbGlEngine(canvas, initialOptions) {
+    if (!canvas) return null;
+    let options = Object.assign({
+      variant: 'white',
+      color: '#F4F4F5',
+      eyeColor: '#09090B',
+      colors: ['#7C6AF7', '#7DD3C7', '#E8B4D4'],
+      interactive: true,
+      blink: true
+    }, initialOptions);
+
+    const look = { x: 0, y: 0.08 };
+    const targetLook = { x: 0, y: 0.08 };
+
+    const gl = canvas.getContext('webgl', {
+      alpha: true,
+      antialias: false,
+      depth: false,
+      stencil: false,
+      premultipliedAlpha: false,
+      powerPreference: 'high-performance'
+    });
+    if (!gl) return null;
+
+    const vs = compileOrbShader(gl, gl.VERTEX_SHADER, VERT_ORB);
+    const fs = compileOrbShader(gl, gl.FRAGMENT_SHADER, FRAG_ORB);
+    if (!vs || !fs) return null;
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+
+    gl.useProgram(program);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+
+    const loc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    const uResolution = gl.getUniformLocation(program, 'u_resolution');
+    const uTime = gl.getUniformLocation(program, 'u_time');
+    const uSpeed = gl.getUniformLocation(program, 'u_speed');
+    const uLook = gl.getUniformLocation(program, 'u_look');
+    const uBlink = gl.getUniformLocation(program, 'u_blink');
+    const uMode = gl.getUniformLocation(program, 'u_mode');
+    const uBody = gl.getUniformLocation(program, 'u_body');
+    const uEye = gl.getUniformLocation(program, 'u_eye');
+    const uC1 = gl.getUniformLocation(program, 'u_c1');
+    const uC2 = gl.getUniformLocation(program, 'u_c2');
+    const uC3 = gl.getUniformLocation(program, 'u_c3');
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    let raf = 0;
+    let running = true;
+    const start = performance.now();
+    let nextBlink = start + 1800 + Math.random() * 2400;
+    let blinkAt = -10000;
+
+    function hexToRgbArr(hex) {
+      const h = (hex || '#F4F4F5').replace('#', '').trim();
+      const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h.padEnd(6, '0').slice(0, 6);
+      const n = parseInt(full, 16);
+      if (isNaN(n)) return [0.96, 0.96, 0.96];
+      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+    }
+
+    function render(now) {
+      if (!running) return;
+
+      const time = (now - start) / 1000;
+      look.x += (targetLook.x - look.x) * 0.16;
+      look.y += (targetLook.y - look.y) * 0.16;
+
+      if (options.blink && now >= nextBlink) {
+        blinkAt = now;
+        nextBlink = now + 2200 + Math.random() * 3800;
+      }
+      const bt = (now - blinkAt) / 1000;
+      let b = 0;
+      if (options.blink) {
+        if (bt < 0.055) b = bt / 0.055;
+        else if (bt < 0.1) b = 1;
+        else if (bt < 0.18) b = 1 - (bt - 0.1) / 0.08;
+      }
+
+      let mode = options.variant === 'webgl' ? 1.0 : 0.0;
+      let bodyRgb = hexToRgbArr(options.color);
+      let eyeRgb = hexToRgbArr(options.eyeColor);
+      let palette = (options.colors && options.colors.length >= 3 ? options.colors : ['#7C6AF7', '#7DD3C7', '#E8B4D4']).map(hexToRgbArr);
+
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      gl.uniform2f(uResolution, canvas.width, canvas.height);
+      gl.uniform1f(uTime, time);
+      gl.uniform1f(uSpeed, 0.55);
+      gl.uniform2f(uLook, look.x, look.y);
+      gl.uniform1f(uBlink, b);
+      gl.uniform1f(uMode, mode);
+      gl.uniform3f(uBody, bodyRgb[0], bodyRgb[1], bodyRgb[2]);
+      gl.uniform3f(uEye, eyeRgb[0], eyeRgb[1], eyeRgb[2]);
+      gl.uniform3f(uC1, palette[0][0], palette[0][1], palette[0][2]);
+      gl.uniform3f(uC2, palette[1][0], palette[1][1], palette[1][2]);
+      gl.uniform3f(uC3, palette[2][0], palette[2][1], palette[2][2]);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      raf = requestAnimationFrame(render);
+    }
+
+    raf = requestAnimationFrame(render);
+
+    return {
+      setOptions(newOpts) {
+        Object.assign(options, newOpts);
+      },
+      setTargetLook(x, y) {
+        targetLook.x = Math.max(-1, Math.min(1, x));
+        targetLook.y = Math.max(-1, Math.min(1, y));
+      },
+      destroy() {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    };
+  }
+
+  let mouseFollowerX = window.innerWidth / 2;
+  let mouseFollowerY = window.innerHeight / 2;
+  let rawMouseX = mouseFollowerX;
+  let rawMouseY = mouseFollowerY;
+
+  window.addEventListener('mousemove', (e) => {
+    rawMouseX = e.clientX;
+    rawMouseY = e.clientY;
+  }, { passive: true });
+
+  function tickOrbFollower() {
+    requestAnimationFrame(tickOrbFollower);
+    if (!isOrbFollowerActive) return;
+
+    // Follow cursor with silky smooth spring damping, trailing slightly to top-right
+    const targetX = rawMouseX + 22;
+    const targetY = rawMouseY - 22;
+
+    mouseFollowerX += (targetX - mouseFollowerX) * 0.12;
+    mouseFollowerY += (targetY - mouseFollowerY) * 0.12;
+
+    const el = document.getElementById('liveOrbFollower');
+    if (el) {
+      el.style.transform = 'translate3d(' + Math.round(mouseFollowerX) + 'px, ' + Math.round(mouseFollowerY) + 'px, 0)';
+    }
+
+    if (followerOrbInstance) {
+      const dx = (rawMouseX - mouseFollowerX) / 35;
+      const dy = (mouseFollowerY - rawMouseY) / 35;
+      followerOrbInstance.setTargetLook(dx, dy);
+    }
+  }
+
+  function equipOrbSkin(skinId) {
+    const skin = ORB_SKINS.find(s => s.id === skinId);
+    if (!skin) return;
+
+    const totalXp = calculateTotalXP();
+    const userLvl = getLevelData(totalXp).level;
+    if (userLvl < skin.levelReq) {
+      alert('⚠️ Skin Locked! Reach Level ' + skin.levelReq + ' to unlock ' + skin.name + '.');
+      return;
+    }
+
+    currentOrbSkinId = skinId;
+    localStorage.setItem('hub_orb_skin', skinId);
+
+    applyEquippedSkin(skin);
+    renderOrbSkinsGrid(userLvl);
+  }
+
+  function applyEquippedSkin(skin) {
+    if (!skin) return;
+    const followerEl = document.getElementById('liveOrbFollower');
+    if (followerEl) {
+      followerEl.style.setProperty('--orb-glow', skin.glow || 'rgba(0, 240, 255, 0.4)');
+    }
+
+    const orbNameEl = document.getElementById('spotlightOrbName');
+    if (orbNameEl) orbNameEl.innerText = skin.name;
+
+    const opts = {
+      variant: skin.variant,
+      color: skin.color,
+      eyeColor: skin.eyeColor,
+      colors: skin.colors
+    };
+
+    if (followerOrbInstance) followerOrbInstance.setOptions(opts);
+    if (spotlightOrbInstance) spotlightOrbInstance.setOptions(opts);
+  }
+
+  function toggleOrbFollower() {
+    isOrbFollowerActive = !isOrbFollowerActive;
+    localStorage.setItem('hub_orb_active', isOrbFollowerActive ? 'true' : 'false');
+    const el = document.getElementById('liveOrbFollower');
+    if (el) {
+      if (isOrbFollowerActive) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+    const label = document.getElementById('orbToggleLabel');
+    const icon = document.getElementById('orbToggleIcon');
+    if (label) label.innerText = isOrbFollowerActive ? 'Orb: Active' : 'Orb: Muted';
+    if (icon) icon.innerText = isOrbFollowerActive ? '👁️' : '💤';
+  }
+
+  function renderOrbSkinsGrid(userLevel) {
+    const grid = document.getElementById('orbSkinsGrid');
+    if (!grid) return;
+
+    let unlockedCount = 0;
+    grid.innerHTML = ORB_SKINS.map(skin => {
+      const isUnlocked = userLevel >= skin.levelReq;
+      const isEquipped = skin.id === currentOrbSkinId;
+      if (isUnlocked) unlockedCount++;
+
+      let swatchBg = skin.color || '#F4F4F5';
+      if (skin.variant === 'webgl') {
+        swatchBg = 'linear-gradient(135deg, #7C6AF7, #7DD3C7, #E8B4D4)';
+      }
+      const eyeCol = skin.eyeColor || '#09090B';
+
+      let badgeHtml = '';
+      if (isEquipped) {
+        badgeHtml = '<span class="orb-skin-badge badge-equipped">EQUIPPED</span>';
+      } else if (isUnlocked) {
+        badgeHtml = '<span class="orb-skin-badge badge-unlocked">UNLOCKED</span>';
+      } else {
+        badgeHtml = '<span class="orb-skin-badge badge-locked">🔒 LVL ' + skin.levelReq + '</span>';
+      }
+
+      return `
+        <div class="orb-skin-card ${isEquipped ? 'equipped' : ''} ${!isUnlocked ? 'locked' : ''}"
+             onclick="equipOrbSkin('${skin.id}')"
+             title="${skin.name} (${skin.game}) - ${skin.desc}">
+          <div class="orb-skin-preview-swatch" style="background: ${swatchBg};">
+            <span class="orb-swatch-eye-l" style="background: ${eyeCol};"></span>
+            <span class="orb-swatch-eye-r" style="background: ${eyeCol};"></span>
+          </div>
+          <div class="orb-skin-name">${skin.name}</div>
+          <div class="orb-skin-game">${skin.game}</div>
+          ${badgeHtml}
+        </div>
+      `;
+    }).join('');
+
+    const countEl = document.getElementById('orbUnlockedCount');
+    if (countEl) countEl.innerText = unlockedCount;
+  }
+
+  function updateOrbSkinsUI(userLevel) {
+    const activeSkin = ORB_SKINS.find(s => s.id === currentOrbSkinId) || ORB_SKINS[0];
+    applyEquippedSkin(activeSkin);
+    renderOrbSkinsGrid(userLevel);
+  }
+
+  function initLiveOrbSystem() {
+    const followerCanvas = document.getElementById('liveOrbCanvas');
+    const spotlightCanvas = document.getElementById('spotlightOrbCanvas');
+
+    const activeSkin = ORB_SKINS.find(s => s.id === currentOrbSkinId) || ORB_SKINS[0];
+
+    const skinOpts = {
+      variant: activeSkin.variant,
+      color: activeSkin.color,
+      eyeColor: activeSkin.eyeColor,
+      colors: activeSkin.colors
+    };
+
+    if (followerCanvas) {
+      followerOrbInstance = createOrbGlEngine(followerCanvas, skinOpts);
+    }
+    if (spotlightCanvas) {
+      spotlightOrbInstance = createOrbGlEngine(spotlightCanvas, skinOpts);
+    }
+
+    const followerEl = document.getElementById('liveOrbFollower');
+    if (followerEl) {
+      if (!isOrbFollowerActive) {
+        followerEl.classList.add('hidden');
+      } else {
+        followerEl.classList.remove('hidden');
+      }
+      followerEl.style.setProperty('--orb-glow', activeSkin.glow || 'rgba(0, 240, 255, 0.4)');
+    }
+
+    const label = document.getElementById('orbToggleLabel');
+    const icon = document.getElementById('orbToggleIcon');
+    if (label) label.innerText = isOrbFollowerActive ? 'Orb: Active' : 'Orb: Muted';
+    if (icon) icon.innerText = isOrbFollowerActive ? '👁️' : '💤';
+
+    window.addEventListener('mousemove', (e) => {
+      if (spotlightOrbInstance) {
+        const c = document.getElementById('spotlightOrbCanvas');
+        if (c) {
+          const rect = c.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            const dx = (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2);
+            const dy = ((rect.top + rect.height / 2) - e.clientY) / (window.innerHeight / 2);
+            spotlightOrbInstance.setTargetLook(dx, dy);
+          }
+        }
+      }
+    }, { passive: true });
+
+    const totalXp = calculateTotalXP();
+    const currentLevel = getLevelData(totalXp).level;
+    renderOrbSkinsGrid(currentLevel);
+    applyEquippedSkin(activeSkin);
+
+    tickOrbFollower();
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     enforceAccountBoundary(currentUsername);
     checkLiveSession();
@@ -6281,6 +7003,9 @@
 
     // Initialize Dynamic Dual Background System (Kinetic Grid / Warp Tunnel)
     initDynamicBackgroundSystem();
+
+    // Initialize Live Orb Companion & Leveling Skin Engine
+    initLiveOrbSystem();
 
     const briefingCard = document.getElementById('neuralBriefingCard');
     if (briefingCard) {
