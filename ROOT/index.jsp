@@ -717,6 +717,463 @@
     100% { opacity: 1; transform: translateX(0); filter: blur(0); }
   }
 
+  /* =========================================================
+     FEATURE: LINEAR NEURAL INTEGRATION BUS (Zero Loops Architecture)
+     ========================================================= */
+  .library-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .view-mode-tabs {
+    display: inline-flex;
+    background: rgba(4, 9, 22, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .view-mode-pill {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 9px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.22s ease;
+  }
+  .view-mode-pill.active {
+    background: rgba(0, 240, 255, 0.16);
+    color: var(--primary);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+  }
+  .view-mode-pill .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 8px var(--primary);
+    display: inline-block;
+  }
+  .node-sync-indicator {
+    font-family: monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 230, 168, 0.08);
+    border: 1px solid rgba(16, 230, 168, 0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+  .node-sync-indicator .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10e6a8;
+    box-shadow: 0 0 8px #10e6a8;
+    animation: livePulse 1.8s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.5; }
+  }
+
+  /* Neural Bus Container */
+  .neural-bus-container {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 170px);
+    min-height: 480px;
+    max-height: 720px;
+    border-radius: 22px;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    background-color: rgba(3, 7, 18, 0.85);
+    background-image: radial-gradient(circle, rgba(0, 240, 255, 0.2) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.95), 0 15px 40px rgba(0, 0, 0, 0.85);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: panelSpringGlide 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .neural-bus-container.hidden-mode {
+    display: none !important;
+  }
+  .carousel-controls.hidden-mode,
+  .game-carousel.hidden-mode {
+    display: none !important;
+  }
+
+  /* Dynamic cursor spotlight glow */
+  .neural-spotlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(circle 320px at var(--bus-mx, 50%) var(--bus-my, 50%), rgba(0, 240, 255, 0.08), transparent 70%);
+    transition: opacity 0.2s ease;
+  }
+
+  /* SVG Canvas for Linear Traces */
+  .neural-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .neural-trace-base {
+    stroke: rgba(0, 240, 255, 0.16);
+    stroke-width: 2px;
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke 0.25s, stroke-width 0.25s, filter 0.25s;
+  }
+  .neural-trace-base.highlighted {
+    stroke: rgba(0, 240, 255, 0.95);
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 10px #00f0ff);
+  }
+
+  /* Animated linear energy pulses (HUB ➔ GAME) */
+  .neural-trace-pulse {
+    stroke-width: 3.5px;
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 45 200;
+    animation: tracePacketFlow 2.8s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.85));
+  }
+  @keyframes tracePacketFlow {
+    0% { stroke-dashoffset: 245; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .pulse-chess    { animation-delay: 0.1s; stroke: #38bdf8; }
+  .pulse-bomb     { animation-delay: 0.4s; stroke: #f43f5e; }
+  .pulse-snake    { animation-delay: 0.7s; stroke: #10e6a8; }
+  .pulse-maze     { animation-delay: 1.0s; stroke: #a855f7; }
+  .pulse-guess    { animation-delay: 1.3s; stroke: #facc15; }
+  .pulse-reactor  { animation-delay: 1.6s; stroke: #00f0ff; }
+
+  .neural-trace-pulse.highlighted {
+    stroke-width: 5px;
+    stroke: #00f0ff !important;
+    animation-duration: 1.4s;
+    filter: drop-shadow(0 0 16px #00f0ff);
+  }
+
+  /* Central Game Hub Squircle Nucleus */
+  .neural-hub-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 106px;
+    height: 106px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, rgba(8, 18, 42, 0.96), rgba(2, 6, 18, 0.98));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 35px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+  }
+  .hub-core-ping {
+    position: absolute;
+    inset: -8px;
+    border-radius: 32px;
+    border: 1.5px solid rgba(0, 240, 255, 0.25);
+    animation: hubCorePulse 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    pointer-events: none;
+  }
+  @keyframes hubCorePulse {
+    0% { transform: scale(0.96); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 0.15; }
+    100% { transform: scale(0.96); opacity: 0.7; }
+  }
+  .hub-core-emblem {
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.8));
+  }
+  .hub-core-title {
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .hub-core-title span {
+    color: var(--primary);
+  }
+  .hub-core-status {
+    position: absolute;
+    bottom: -10px;
+    background: rgba(2, 6, 18, 0.95);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    white-space: nowrap;
+  }
+
+  /* Satellite Game Squircles */
+  .neural-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 8;
+    width: 84px;
+    height: 84px;
+    border-radius: 22px;
+    background: rgba(6, 14, 30, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(0, 240, 255, 0.28);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 240, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s,
+                box-shadow 0.3s;
+    user-select: none;
+  }
+  .neural-node:hover, .neural-node.active-hover {
+    transform: translate(-50%, -50%) scale(1.15);
+    border-color: var(--primary);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 240, 255, 0.6);
+    z-index: 15;
+  }
+  .neural-node:active {
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  .neural-node .node-icon {
+    font-size: 1.9rem;
+    line-height: 1;
+    margin-bottom: 4px;
+    transition: transform 0.25s ease;
+  }
+  .neural-node:hover .node-icon {
+    transform: scale(1.1);
+  }
+  .neural-node .node-name {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #e2e8f0;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+    max-width: 76px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Node-specific color accents */
+  .node-chess:hover   { border-color: #38bdf8; box-shadow: 0 0 35px rgba(56, 189, 248, 0.6); }
+  .node-bomb:hover    { border-color: #f43f5e; box-shadow: 0 0 35px rgba(244, 63, 94, 0.6); }
+  .node-snake:hover   { border-color: #10e6a8; box-shadow: 0 0 35px rgba(16, 230, 168, 0.6); }
+  .node-maze:hover    { border-color: #a855f7; box-shadow: 0 0 35px rgba(168, 85, 247, 0.6); }
+  .node-guess:hover   { border-color: #facc15; box-shadow: 0 0 35px rgba(250, 204, 21, 0.6); }
+  .node-reactor:hover { border-color: #00f0ff; box-shadow: 0 0 35px rgba(0, 240, 255, 0.6); }
+
+  /* Tactical Mission Briefing Popover Card */
+  .neural-briefing-popover {
+    position: absolute;
+    z-index: 25;
+    width: 290px;
+    background: rgba(4, 9, 24, 0.96);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    border-radius: 20px;
+    padding: 1.2rem 1.3rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 240, 255, 0.25);
+    pointer-events: all;
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    display: none;
+  }
+  .neural-briefing-popover.active {
+    display: block;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  .briefing-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .briefing-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .briefing-close-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .briefing-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .briefing-desc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+  .briefing-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 240, 255, 0.06);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 0.78rem;
+    color: #e2e8f0;
+  }
+  .briefing-stat-row .stat-val {
+    color: var(--primary);
+    font-weight: 800;
+    font-family: monospace;
+  }
+  .btn-briefing-launch {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), #0284c7);
+    color: #02040a;
+    font-weight: 900;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-briefing-launch:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    background: linear-gradient(135deg, #7dd3fc, var(--primary));
+  }
+  .btn-briefing-launch:active {
+    transform: scale(0.97);
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .neural-bus-container {
+      min-height: 520px;
+      height: 60vh;
+      max-height: 600px;
+    }
+    .neural-node {
+      width: 66px;
+      height: 66px;
+      border-radius: 16px;
+    }
+    .neural-node .node-icon {
+      font-size: 1.5rem;
+      margin-bottom: 2px;
+    }
+    .neural-node .node-name {
+      font-size: 0.55rem;
+      max-width: 60px;
+    }
+    .neural-hub-core {
+      width: 82px;
+      height: 82px;
+      border-radius: 20px;
+    }
+    .hub-core-emblem {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+    .hub-core-title {
+      font-size: 0.62rem;
+    }
+    .neural-briefing-popover {
+      position: absolute !important;
+      bottom: 10px !important;
+      left: 10px !important;
+      right: 10px !important;
+      top: auto !important;
+      width: auto !important;
+      padding: 1rem;
+      border-radius: 16px;
+    }
+    .briefing-title {
+      font-size: 1rem;
+    }
+    .briefing-desc {
+      font-size: 0.75rem;
+      margin-bottom: 0.7rem;
+    }
+    .briefing-stat-row {
+      margin-bottom: 0.7rem;
+      padding: 4px 10px;
+    }
+    .btn-briefing-launch {
+      padding: 8px;
+      font-size: 0.8rem;
+    }
+  }
+
   #libraryView {
     display: none;
     flex-direction: column;
@@ -1960,14 +2417,151 @@
       <div class="sys-status">System Online</div>
     </div>
 
-    <!-- VIEW 1: GAME LIBRARY CAROUSEL -->
+    <!-- VIEW 1: GAME LIBRARY (NEURAL BUS & CAROUSEL DUAL MODE) -->
     <section id="libraryView" class="view-panel active">
-      <div class="carousel-controls">
+      <!-- Top Layout Switcher & Status Bar -->
+      <div class="library-header-bar">
+        <div class="view-mode-tabs" role="tablist" aria-label="Library View Mode">
+          <button class="view-mode-pill active" id="modeBtnNeural" onclick="setLibraryMode('neural')" role="tab" aria-selected="true">
+            <span class="pill-dot"></span>
+            <span>⚡ NEURAL BUS</span>
+          </button>
+          <button class="view-mode-pill" id="modeBtnCarousel" onclick="setLibraryMode('carousel')" role="tab" aria-selected="false">
+            <span>🗂️ CAROUSEL</span>
+          </button>
+        </div>
+        <div class="node-sync-indicator">
+          <span class="live-dot"></span>
+          <span>BUS INTEGRATION // 6 NODES ONLINE</span>
+        </div>
+      </div>
+
+      <!-- LINEAR NEURAL INTEGRATION BUS (Zero Loops Architecture) -->
+      <div class="neural-bus-container" id="neuralBusContainer">
+        <!-- Interactive Cursor Spotlight Glow -->
+        <div class="neural-spotlight" id="neuralSpotlight"></div>
+
+        <!-- Linear SVG Traces (Zero Loops, Hub ➔ Games) -->
+        <svg class="neural-svg" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+          <!-- Hub ➔ Chess (Top-Left) -->
+          <path id="trace-base-chess" class="neural-trace-base" d="M 470 310 V 145 Q 470 120 445 120 H 200" />
+          <path id="trace-pulse-chess" class="neural-trace-pulse pulse-chess" d="M 470 310 V 145 Q 470 120 445 120 H 200" />
+
+          <!-- Hub ➔ Bomb Defusal (Top-Right) -->
+          <path id="trace-base-bomb" class="neural-trace-base" d="M 530 310 V 145 Q 530 120 555 120 H 800" />
+          <path id="trace-pulse-bomb" class="neural-trace-pulse pulse-bomb" d="M 530 310 V 145 Q 530 120 555 120 H 800" />
+
+          <!-- Hub ➔ Snake (Mid-Left) -->
+          <path id="trace-base-snake" class="neural-trace-base" d="M 500 310 H 140" />
+          <path id="trace-pulse-snake" class="neural-trace-pulse pulse-snake" d="M 500 310 H 140" />
+
+          <!-- Hub ➔ Maze (Mid-Right) -->
+          <path id="trace-base-maze" class="neural-trace-base" d="M 500 310 H 860" />
+          <path id="trace-pulse-maze" class="neural-trace-pulse pulse-maze" d="M 500 310 H 860" />
+
+          <!-- Hub ➔ Cipher Guesser (Bottom-Left) -->
+          <path id="trace-base-guess" class="neural-trace-base" d="M 470 310 V 475 Q 470 500 445 500 H 200" />
+          <path id="trace-pulse-guess" class="neural-trace-pulse pulse-guess" d="M 470 310 V 475 Q 470 500 445 500 H 200" />
+
+          <!-- Hub ➔ Reactor Meltdown (Bottom-Right) -->
+          <path id="trace-base-reactor" class="neural-trace-base" d="M 530 310 V 475 Q 530 500 555 500 H 800" />
+          <path id="trace-pulse-reactor" class="neural-trace-pulse pulse-reactor" d="M 530 310 V 475 Q 530 500 555 500 H 800" />
+        </svg>
+
+        <!-- Central Game Hub Squircle Nucleus -->
+        <div class="neural-hub-core" aria-label="Game Hub Core">
+          <div class="hub-core-ping"></div>
+          <div class="hub-core-emblem">⚡</div>
+          <div class="hub-core-title">GAME<span>HUB</span></div>
+          <div class="hub-core-status">CORE BUS</div>
+        </div>
+
+        <!-- Satellite 1: Cyber Chess (Top-Left) -->
+        <div class="neural-node node-chess" id="node-chess" style="left: 20%; top: 19.35%;"
+             onmouseenter="showNeuralBriefing('chess', this)"
+             onmouseleave="hideNeuralBriefing('chess')"
+             onclick="handleNeuralNodeClick('chess', this)"
+             tabindex="0" role="button" aria-label="Cyber Chess Node">
+          <div class="node-icon">♟️</div>
+          <div class="node-name">Chess</div>
+        </div>
+
+        <!-- Satellite 2: Defusal Protocol (Top-Right) -->
+        <div class="neural-node node-bomb" id="node-bomb" style="left: 80%; top: 19.35%;"
+             onmouseenter="showNeuralBriefing('bomb', this)"
+             onmouseleave="hideNeuralBriefing('bomb')"
+             onclick="handleNeuralNodeClick('bomb', this)"
+             tabindex="0" role="button" aria-label="Defusal Protocol Node">
+          <div class="node-icon">☢️</div>
+          <div class="node-name">Defusal</div>
+        </div>
+
+        <!-- Satellite 3: Cyber Snake (Mid-Left) -->
+        <div class="neural-node node-snake" id="node-snake" style="left: 14%; top: 50%;"
+             onmouseenter="showNeuralBriefing('snake', this)"
+             onmouseleave="hideNeuralBriefing('snake')"
+             onclick="handleNeuralNodeClick('snake', this)"
+             tabindex="0" role="button" aria-label="Cyber Snake Node">
+          <div class="node-icon">🐍</div>
+          <div class="node-name">Snake</div>
+        </div>
+
+        <!-- Satellite 4: Cyber Maze (Mid-Right) -->
+        <div class="neural-node node-maze" id="node-maze" style="left: 86%; top: 50%;"
+             onmouseenter="showNeuralBriefing('maze', this)"
+             onmouseleave="hideNeuralBriefing('maze')"
+             onclick="handleNeuralNodeClick('maze', this)"
+             tabindex="0" role="button" aria-label="Cyber Maze Node">
+          <div class="node-icon">⚡</div>
+          <div class="node-name">Maze</div>
+        </div>
+
+        <!-- Satellite 5: Cipher Guesser (Bottom-Left) -->
+        <div class="neural-node node-guess" id="node-guess" style="left: 20%; top: 80.65%;"
+             onmouseenter="showNeuralBriefing('guess', this)"
+             onmouseleave="hideNeuralBriefing('guess')"
+             onclick="handleNeuralNodeClick('guess', this)"
+             tabindex="0" role="button" aria-label="Cipher Guesser Node">
+          <div class="node-icon">🔢</div>
+          <div class="node-name">Cipher</div>
+        </div>
+
+        <!-- Satellite 6: Reactor Meltdown (Bottom-Right) -->
+        <div class="neural-node node-reactor" id="node-reactor" style="left: 80%; top: 80.65%;"
+             onmouseenter="showNeuralBriefing('reactor', this)"
+             onmouseleave="hideNeuralBriefing('reactor')"
+             onclick="handleNeuralNodeClick('reactor', this)"
+             tabindex="0" role="button" aria-label="Reactor Meltdown Node">
+          <div class="node-icon">⚛️</div>
+          <div class="node-name">Reactor</div>
+        </div>
+
+        <!-- Tactical Mission Briefing Popover Card -->
+        <div class="neural-briefing-popover" id="neuralBriefingCard" role="dialog" aria-modal="false" aria-labelledby="briefingTitle">
+          <div class="briefing-tag">
+            <span id="briefingTag">// TACTICAL SIM v3.0</span>
+            <button class="briefing-close-btn" onclick="hideNeuralBriefing(null, true)" aria-label="Close briefing">✕</button>
+          </div>
+          <div class="briefing-title" id="briefingTitle">Cyber Chess</div>
+          <div class="briefing-desc" id="briefingDesc">Description of game goes here.</div>
+          <div class="briefing-stat-row">
+            <span id="briefingStatLabel">AI Rating:</span>
+            <span class="stat-val" id="briefingStatVal">1200</span>
+          </div>
+          <button class="btn-briefing-launch" id="briefingLaunchBtn" onclick="launchActiveNeuralGame()">
+            <span>▶</span> PLAY NOW
+          </button>
+        </div>
+      </div>
+
+      <!-- CAROUSEL CONTROLS (Active in Carousel Mode) -->
+      <div class="carousel-controls hidden-mode">
         <button class="scroll-btn" onclick="scrollCarousel(-340)">‹</button>
         <button class="scroll-btn" onclick="scrollCarousel(340)">›</button>
       </div>
 
-      <div class="game-carousel" id="carousel">
+      <!-- CAROUSEL WRAPPER (Active in Carousel Mode) -->
+      <div class="game-carousel hidden-mode" id="carousel">
         
         <!-- Game 1: Defusal Protocol -->
         <div class="game-card" style="animation-delay: 0.05s;" onclick="openLaunchModal('Bomb_Defuse/index.jsp', 'Defusal Protocol // Crisis Sim', 'Multi-module bomb defusal sim featuring Data Serpent, Reactor Matrix, Firewall Maze, Banana Wires, and Frequency Tuner with a 3-charge containment system.')">
@@ -2979,6 +3573,279 @@
 
   function scrollCarousel(dist) {
     document.getElementById('carousel').scrollBy({ left: dist, behavior: 'smooth' });
+  }
+
+  // =========================================================
+  // FEATURE: LINEAR NEURAL INTEGRATION BUS CONTROLLER
+  // =========================================================
+  const NEURAL_GAMES = {
+    chess: {
+      title: 'Cyber Chess',
+      tag: '// AI STRATEGY ENGINE',
+      desc: 'Challenge deep neural chess engines with move evaluation, rating progression, and PGN export.',
+      statLabel: 'AI Rating:',
+      statKey: 'chess',
+      url: 'Chess/index.jsp',
+      color: '#38bdf8'
+    },
+    bomb: {
+      title: 'Defusal Protocol',
+      tag: '// CRISIS SIM v3.0',
+      desc: 'Disarm 5 tactical mini-games (Snake, Reactor, Maze, Banana Wires, Freq Tuner) under a 3-minute clock with 3 containment charges.',
+      statLabel: 'Record Score:',
+      statKey: 'defuse',
+      url: 'Bomb_Defuse/index.jsp',
+      color: '#f43f5e'
+    },
+    snake: {
+      title: 'Cyber Snake',
+      tag: '// ARCADE CLASSIC',
+      desc: 'Balanced, fluid snake arcade experience with adjustable tick clocks, touch D-pads, and node tracking.',
+      statLabel: 'High Score:',
+      statKey: 'snake',
+      url: 'Snake/index.jsp',
+      color: '#10e6a8'
+    },
+    maze: {
+      title: 'Cyber Maze',
+      tag: '// PROCEDURAL LABYRINTH',
+      desc: 'Navigate randomized labyrinth architectures and locate extraction gates before system telemetry resets.',
+      statLabel: 'Nodes Cleared:',
+      statKey: 'maze',
+      url: 'Maze/index.jsp',
+      color: '#a855f7'
+    },
+    guess: {
+      title: 'Cipher Guesser',
+      tag: '// QUANTUM DECRYPTION',
+      desc: 'Crack the server-side encrypted integer between 1 and 100 in minimal probe iterations.',
+      statLabel: 'Fewest Tries:',
+      statKey: 'guess',
+      url: 'Game1/index.jsp',
+      color: '#facc15'
+    },
+    reactor: {
+      title: 'Reactor Meltdown',
+      tag: '// CORE MEMORY PUZZLE',
+      desc: 'Replicate glowing reactor sequences under a 20s timer. Clear stages to expand from 3x3 to 4x4 matrix.',
+      statLabel: 'Core Record:',
+      statKey: 'reactor',
+      url: 'Reactor_Meltdown/index.jsp',
+      color: '#00f0ff'
+    }
+  };
+
+  let activeNeuralGameKey = null;
+  let briefingHideTimer = null;
+
+  function getNeuralGameStatValue(gameKey) {
+    const isGuest = !isUserLoggedIn;
+    switch (gameKey) {
+      case 'chess': {
+        const el = document.getElementById('preview-chess');
+        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_chess_rating') || '1200') : '1200');
+      }
+      case 'bomb': {
+        const el = document.getElementById('preview-defuse');
+        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_defuse_high') || '0') + ' pts' : '0 pts');
+      }
+      case 'snake': {
+        const el = document.getElementById('preview-snake');
+        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_snake_high') || '0') + ' pts' : '0 pts');
+      }
+      case 'maze': {
+        const el = document.getElementById('preview-maze');
+        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_maze_clears') || '0') : '0');
+      }
+      case 'guess': {
+        const el = document.getElementById('preview-guess');
+        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_guess_best') || '--') : '--');
+      }
+      case 'reactor': {
+        const el = document.getElementById('preview-reactor');
+        return (el && el.innerText) ? el.innerText : (isGuest ? (localStorage.getItem('hub_reactor_high') || '0') + ' pts' : '0 pts');
+      }
+      default:
+        return '--';
+    }
+  }
+
+  function setLibraryMode(mode) {
+    const busContainer = document.getElementById('neuralBusContainer');
+    const carousel = document.getElementById('carousel');
+    const carouselControls = document.querySelector('.carousel-controls');
+    const btnNeural = document.getElementById('modeBtnNeural');
+    const btnCarousel = document.getElementById('modeBtnCarousel');
+
+    const isNeural = mode === 'neural';
+
+    if (btnNeural) {
+      btnNeural.classList.toggle('active', isNeural);
+      btnNeural.setAttribute('aria-selected', isNeural ? 'true' : 'false');
+    }
+    if (btnCarousel) {
+      btnCarousel.classList.toggle('active', !isNeural);
+      btnCarousel.setAttribute('aria-selected', !isNeural ? 'true' : 'false');
+    }
+
+    if (busContainer) {
+      busContainer.classList.toggle('hidden-mode', !isNeural);
+    }
+    if (carousel) {
+      carousel.classList.toggle('hidden-mode', isNeural);
+    }
+    if (carouselControls) {
+      carouselControls.classList.toggle('hidden-mode', isNeural);
+    }
+
+    localStorage.setItem('hub_library_mode', mode);
+
+    // If switching out of neural, hide any orphaned briefing
+    if (!isNeural) {
+      hideNeuralBriefing(null, true);
+    }
+  }
+
+  function highlightNeuralLine(gameKey, state) {
+    if (!gameKey) return;
+    const base = document.getElementById('trace-base-' + gameKey);
+    const pulse = document.getElementById('trace-pulse-' + gameKey);
+    const node = document.getElementById('node-' + gameKey);
+
+    if (base) base.classList.toggle('highlighted', state);
+    if (pulse) pulse.classList.toggle('highlighted', state);
+    if (node) node.classList.toggle('active-hover', state);
+  }
+
+  function positionBriefingPopover(nodeElem) {
+    const container = document.getElementById('neuralBusContainer');
+    const card = document.getElementById('neuralBriefingCard');
+    if (!container || !card || !nodeElem) return;
+
+    if (window.innerWidth <= 768) {
+      card.style.left = '';
+      card.style.top = '';
+      card.style.right = '';
+      card.style.bottom = '';
+      return;
+    }
+
+    const cRect = container.getBoundingClientRect();
+    const nRect = nodeElem.getBoundingClientRect();
+
+    const nodeCenterX = nRect.left + nRect.width / 2 - cRect.left;
+    const nodeCenterY = nRect.top + nRect.height / 2 - cRect.top;
+
+    const cardWidth = 290;
+    const cardHeight = card.offsetHeight || 220;
+
+    let left, top;
+
+    // Horizontal positioning: place card towards the center/opposite side of node
+    if (nodeCenterX < cRect.width * 0.4) {
+      // Node is on left side -> place card to the right of node
+      left = nodeCenterX + (nRect.width / 2) + 18;
+    } else if (nodeCenterX > cRect.width * 0.6) {
+      // Node is on right side -> place card to the left of node
+      left = nodeCenterX - (nRect.width / 2) - cardWidth - 18;
+    } else {
+      // Node is near horizontal center
+      left = nodeCenterX - cardWidth / 2;
+    }
+
+    // Vertical positioning: center vertically on node, clamped within container
+    top = nodeCenterY - (cardHeight / 2);
+
+    left = Math.max(16, Math.min(cRect.width - cardWidth - 16, left));
+    top = Math.max(16, Math.min(cRect.height - cardHeight - 16, top));
+
+    card.style.left = Math.round(left) + 'px';
+    card.style.top = Math.round(top) + 'px';
+    card.style.right = 'auto';
+    card.style.bottom = 'auto';
+  }
+
+  function showNeuralBriefing(gameKey, elem) {
+    if (briefingHideTimer) {
+      clearTimeout(briefingHideTimer);
+      briefingHideTimer = null;
+    }
+
+    const game = NEURAL_GAMES[gameKey];
+    if (!game) return;
+
+    if (activeNeuralGameKey && activeNeuralGameKey !== gameKey) {
+      highlightNeuralLine(activeNeuralGameKey, false);
+    }
+
+    activeNeuralGameKey = gameKey;
+    highlightNeuralLine(gameKey, true);
+
+    const card = document.getElementById('neuralBriefingCard');
+    const bTag = document.getElementById('briefingTag');
+    const bTitle = document.getElementById('briefingTitle');
+    const bDesc = document.getElementById('briefingDesc');
+    const bStatLabel = document.getElementById('briefingStatLabel');
+    const bStatVal = document.getElementById('briefingStatVal');
+
+    if (bTag) bTag.innerText = game.tag;
+    if (bTitle) bTitle.innerText = game.title;
+    if (bDesc) bDesc.innerText = game.desc;
+    if (bStatLabel) bStatLabel.innerText = game.statLabel;
+    if (bStatVal) bStatVal.innerText = getNeuralGameStatValue(gameKey);
+
+    if (card) {
+      card.classList.add('active');
+      positionBriefingPopover(elem);
+    }
+  }
+
+  function hideNeuralBriefing(gameKey, immediate = false) {
+    if (immediate) {
+      if (briefingHideTimer) {
+        clearTimeout(briefingHideTimer);
+        briefingHideTimer = null;
+      }
+      const card = document.getElementById('neuralBriefingCard');
+      if (card) card.classList.remove('active');
+      if (activeNeuralGameKey) {
+        highlightNeuralLine(activeNeuralGameKey, false);
+        activeNeuralGameKey = null;
+      }
+      return;
+    }
+
+    briefingHideTimer = setTimeout(() => {
+      const card = document.getElementById('neuralBriefingCard');
+      if (card) card.classList.remove('active');
+      if (activeNeuralGameKey) {
+        highlightNeuralLine(activeNeuralGameKey, false);
+        activeNeuralGameKey = null;
+      }
+    }, 140);
+  }
+
+  function launchActiveNeuralGame() {
+    if (!activeNeuralGameKey) return;
+    const game = NEURAL_GAMES[activeNeuralGameKey];
+    if (!game) return;
+    triggerGameLaunch(game.url);
+  }
+
+  function handleNeuralNodeClick(gameKey, elem) {
+    if (window.innerWidth <= 768) {
+      const card = document.getElementById('neuralBriefingCard');
+      if (card && card.classList.contains('active') && activeNeuralGameKey === gameKey) {
+        hideNeuralBriefing(gameKey, true);
+      } else {
+        showNeuralBriefing(gameKey, elem);
+      }
+    } else {
+      const game = NEURAL_GAMES[gameKey];
+      if (game) {
+        openLaunchModal(game.url, game.title, game.desc);
+      }
+    }
   }
 
   function triggerGameLaunch(url) {
@@ -4007,6 +4874,44 @@
     syncCloudScores();
     if (isUserLoggedIn) updateAccountLevelUI();
     updateRansomIndicator();
+
+    // Initialize Linear Neural Bus Mode & Spotlight
+    const savedBusMode = localStorage.getItem('hub_library_mode') || 'neural';
+    setLibraryMode(savedBusMode);
+
+    const busContainer = document.getElementById('neuralBusContainer');
+    if (busContainer) {
+      busContainer.addEventListener('mousemove', (e) => {
+        const rect = busContainer.getBoundingClientRect();
+        const x = Math.round(e.clientX - rect.left);
+        const y = Math.round(e.clientY - rect.top);
+        busContainer.style.setProperty('--bus-mx', x + 'px');
+        busContainer.style.setProperty('--bus-my', y + 'px');
+      });
+    }
+
+    const briefingCard = document.getElementById('neuralBriefingCard');
+    if (briefingCard) {
+      briefingCard.addEventListener('mouseenter', () => {
+        if (briefingHideTimer) {
+          clearTimeout(briefingHideTimer);
+          briefingHideTimer = null;
+        }
+      });
+      briefingCard.addEventListener('mouseleave', () => {
+        if (activeNeuralGameKey) {
+          hideNeuralBriefing(activeNeuralGameKey);
+        }
+      });
+    }
+
+    // Dismiss briefing when clicking outside of nodes and briefing card
+    document.addEventListener('click', (e) => {
+      const card = document.getElementById('neuralBriefingCard');
+      if (!card || !card.classList.contains('active')) return;
+      if (e.target.closest('#neuralBriefingCard') || e.target.closest('.neural-node')) return;
+      hideNeuralBriefing(null, true);
+    });
 
     // Tactile Click Shockwave for Game Cards
     document.querySelectorAll('.game-card').forEach(card => {
