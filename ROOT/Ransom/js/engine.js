@@ -559,10 +559,14 @@ function triggerGoodEnding() {
 // Save Score to Game Hub Database
 function saveScoreToDatabase(timeTaken) {
     const scoreVal = Math.max(10, (120 - timeTaken) * 50);
+    const existingRansom = parseInt(localStorage.getItem('hub_ransom_high') || '0', 10);
+    if (scoreVal > existingRansom) {
+        localStorage.setItem('hub_ransom_high', scoreVal);
+    }
     fetch('../save_score.jsp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `game=Ransom&score=${scoreVal}`
+        body: `game=ransom&score=${scoreVal}`
     }).catch(() => {});
 }
 

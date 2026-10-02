@@ -3389,7 +3389,7 @@
         </div>
         <div class="auth-name" style="color: var(--text-muted);">
           GUEST OPERATIVE
-          <span class="profile-level-badge" style="background: rgba(255,255,255,0.1); color: var(--text-muted); box-shadow: none;">LVL 0</span>
+          <span class="profile-level-badge" id="profileLevelBadgeGuest" style="background: rgba(255,255,255,0.1); color: var(--text-muted); box-shadow: none;">LVL 1</span>
         </div>
         <div class="auth-role" style="color: var(--warning); margin-top: 4px;">UNREGISTERED GUEST</div>
         <div style="font-size: 0.72rem; color: var(--text-muted); margin: 6px 0;">Sign in to earn XP & save stats</div>
@@ -3430,7 +3430,7 @@
     <div class="top-meta">
       <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
         <h2 id="viewTitle">GAMES GALLERY</h2>
-        <div class="meta-level-pill" id="metaLevelPill" style="display: <%= isLoggedIn ? "inline-flex" : "none" %>;">
+        <div class="meta-level-pill" id="metaLevelPill" style="display: inline-flex;">
           <span>⭐</span>
           <span id="metaLevelText">LVL 1</span>
           <span style="color: rgba(250, 204, 21, 0.4);">•</span>
@@ -4333,7 +4333,9 @@
     reactor: 0,
     maze: 0,
     guess: 0,
-    ransom: 0
+    ransom: 0,
+    glitch: 0,
+    nodebreaker: 0
   };
   let scoresFetchedFromCloud = false;
 
@@ -4342,12 +4344,10 @@
     const current = (user !== undefined && user !== null) ? user.trim() : '';
     const stored = localStorage.getItem('hub_active_user') || '';
     
-    if (stored !== current || !current) {
-      // Identity switch or guest detected: purge cached telemetry
+    // Only purge cached telemetry if transitioning from one authenticated user to a DIFFERENT authenticated user
+    if (stored && current && stored !== current) {
       localStorage.clear();
-      if (current) {
-        localStorage.setItem('hub_active_user', current);
-      }
+      localStorage.setItem('hub_active_user', current);
       verifiedCloudScores = {
         snake: 0,
         defuse: 0,
@@ -4357,9 +4357,13 @@
         reactor: 0,
         maze: 0,
         guess: 0,
-        ransom: 0
+        ransom: 0,
+        glitch: 0,
+        nodebreaker: 0
       };
       scoresFetchedFromCloud = false;
+    } else if (current) {
+      localStorage.setItem('hub_active_user', current);
     }
   }
 
@@ -4367,36 +4371,80 @@
   // DISCORD & GOOGLE PLAY GAMES ACCOUNT LEVELING ENGINE
   // =========================================================
   function calculateTotalXP() {
-    if (!isUserLoggedIn) return 0;
-    if (!scoresFetchedFromCloud) return 0;
+    // 1. Defusal Protocol: cloud vs local
+    const defuseLocal = parseInt(localStorage.getItem('hub_defuse_high') || '0', 10);
+    const defuseCloud = Number(verifiedCloudScores.defuse || 0);
+    const defuseBest = Math.max(isNaN(defuseLocal) ? 0 : defuseLocal, isNaN(defuseCloud) ? 0 : defuseCloud);
 
-    const defuseBest = verifiedCloudScores.defuse || 0;
-    const snakeBest = verifiedCloudScores.snake || 0;
-    const mazeClears = verifiedCloudScores.maze || 0;
-    const reactorBest = verifiedCloudScores.reactor || 0;
-    const ransomBest = verifiedCloudScores.ransom || 0;
-    const chessWins = verifiedCloudScores.chessPlayed ? (verifiedCloudScores.chessWins || 0) : 0;
-    const chessRating = verifiedCloudScores.chessPlayed ? (verifiedCloudScores.chessRating || 1200) : 1200;
+    // 2. Cyber Snake: cloud vs local
+    const snakeLocal = parseInt(localStorage.getItem('hub_snake_high') || '0', 10);
+    const snakeCloud = Number(verifiedCloudScores.snake || 0);
+    const snakeBest = Math.max(isNaN(snakeLocal) ? 0 : snakeLocal, isNaN(snakeCloud) ? 0 : snakeCloud);
 
-    // Progressive XP breakdown (strictly 0 if games never played)
-    const xpReactor = Math.round(reactorBest * 2);
+    // 3. Cyber Maze: cloud vs local
+    const mazeLocal = parseInt(localStorage.getItem('hub_maze_clears') || '0', 10);
+    const mazeCloud = Number(verifiedCloudScores.maze || 0);
+    const mazeClears = Math.max(isNaN(mazeLocal) ? 0 : mazeLocal, isNaN(mazeCloud) ? 0 : mazeCloud);
+
+    // 4. Reactor Meltdown: cloud vs local
+    const reactorLocal = parseInt(localStorage.getItem('hub_reactor_high') || '0', 10);
+    const reactorCloud = Number(verifiedCloudScores.reactor || 0);
+    const reactorBest = Math.max(isNaN(reactorLocal) ? 0 : reactorLocal, isNaN(reactorCloud) ? 0 : reactorCloud);
+
+    // 5. Ransom Crisis: cloud vs local
+    const ransomLocal = parseInt(localStorage.getItem('hub_ransom_high') || '0', 10);
+    const ransomCloud = Number(verifiedCloudScores.ransom || 0);
+    const ransomBest = Math.max(isNaN(ransomLocal) ? 0 : ransomLocal, isNaN(ransomCloud) ? 0 : ransomCloud);
+
+    // 6. Cyber Chess: cloud vs local
+    const chessLocalWins = parseInt(localStorage.getItem('hub_chess_wins') || '0', 10);
+    const chessCloudWins = Number(verifiedCloudScores.chessWins || 0);
+    const chessWins = Math.max(isNaN(chessLocalWins) ? 0 : chessLocalWins, isNaN(chessCloudWins) ? 0 : chessCloudWins);
+    const chessLocalRating = parseInt(localStorage.getItem('hub_chess_rating') || '1200', 10);
+    const chessCloudRating = Number(verifiedCloudScores.chessRating || 1200);
+    const chessRating = Math.max(isNaN(chessLocalRating) ? 1200 : chessLocalRating, isNaN(chessCloudRating) ? 1200 : chessCloudRating);
+    const chessPlayed = verifiedCloudScores.chessPlayed || (localStorage.getItem('hub_chess_rating') !== null);
+
+    // 7. Cipher Guesser (Game1): cloud vs local
+    const guessLocal = parseInt(localStorage.getItem('hub_guess_best') || '0', 10);
+    const guessCloud = Number(verifiedCloudScores.guess || 0);
+    const guessBest = Math.max(isNaN(guessLocal) ? 0 : guessLocal, isNaN(guessCloud) ? 0 : guessCloud);
+
+    // 8. Glitch Protocol (Match-3): cloud vs local
+    const glitchLocal = parseInt(localStorage.getItem('hub_glitch_high') || '0', 10);
+    const glitchCloud = Number(verifiedCloudScores.glitch || 0);
+    const glitchBest = Math.max(isNaN(glitchLocal) ? 0 : glitchLocal, isNaN(glitchCloud) ? 0 : glitchCloud);
+
+    // 9. Node Breaker: cloud vs local
+    const nodeLocal = parseInt(localStorage.getItem('hub_nodebreaker_high') || '0', 10);
+    const nodeCloud = Number(verifiedCloudScores.nodebreaker || 0);
+    const nodeBest = Math.max(isNaN(nodeLocal) ? 0 : nodeLocal, isNaN(nodeCloud) ? 0 : nodeCloud);
+
+    // Progressive XP breakdown across all simulation protocols
     const xpDefuse = Math.round(defuseBest * 2);
     const xpSnake = Math.round(snakeBest * 5);
     const xpMaze = Math.round(mazeClears * 100);
-    const xpChess = verifiedCloudScores.chessPlayed ? Math.round(chessWins * 150 + Math.max(0, chessRating - 1200) * 2) : 0;
+    const xpReactor = Math.round(reactorBest * 2);
     const xpRansom = Math.round(ransomBest * 3);
+    const xpChess = chessPlayed ? Math.round(chessWins * 150 + Math.max(0, chessRating - 1200) * 2) : 0;
+    const xpGuess = guessBest > 0 ? Math.max(50, Math.round((20 - Math.min(19, guessBest)) * 25)) : 0;
+    const xpGlitch = Math.round(glitchBest * 0.5);
+    const xpNode = Math.round(nodeBest * 0.5);
 
-    return xpReactor + xpDefuse + xpSnake + xpMaze + xpChess + xpRansom;
+    const total = xpDefuse + xpSnake + xpMaze + xpReactor + xpRansom + xpChess + xpGuess + xpGlitch + xpNode;
+    return Number.isFinite(total) && total >= 0 ? total : 0;
   }
 
   function getLevelData(totalXp) {
+    if (!Number.isFinite(totalXp) || totalXp < 0) totalXp = 0;
+
     const tierSteps = [200, 300, 450, 600, 800, 1000, 1250, 1500, 1800, 2100];
     let level = 1;
     let threshold = 0;
     let prevThreshold = 0;
     let step = 200;
 
-    while (true) {
+    while (level < 100) {
       step = (level <= tierSteps.length) ? tierSteps[level - 1] : (2100 + (level - 10) * 350);
       if (totalXp < threshold + step) {
         prevThreshold = threshold;
@@ -4439,45 +4487,52 @@
     const totalXp = calculateTotalXP();
     const data = getLevelData(totalXp);
 
-    if (isUserLoggedIn) {
-      // 1. Sidebar Profile Updates
-      const badge = document.getElementById('profileLevelBadge');
-      const title = document.getElementById('profileRankTitle');
-      const xpText = document.getElementById('profileXpText');
-      const xpFill = document.getElementById('profileXpFill');
-      const xpPct = document.getElementById('profileXpPercent');
-      const xpRem = document.getElementById('profileXpRemaining');
+    // 1. Sidebar Profile Updates (both logged-in and guest accounts)
+    const badge = document.getElementById('profileLevelBadge');
+    const badgeGuest = document.getElementById('profileLevelBadgeGuest');
+    const title = document.getElementById('profileRankTitle');
+    const xpText = document.getElementById('profileXpText');
+    const xpFill = document.getElementById('profileXpFill');
+    const xpPct = document.getElementById('profileXpPercent');
+    const xpRem = document.getElementById('profileXpRemaining');
 
-      if (badge) badge.innerText = 'LVL ' + data.level;
-      if (title) title.innerText = data.rankTitle;
-      if (xpText) xpText.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP';
-      if (xpFill) xpFill.style.width = data.percent + '%';
-      if (xpPct) xpPct.innerText = data.percent + '%';
-      if (xpRem) xpRem.innerText = data.remainingXp.toLocaleString() + ' XP to next lvl';
-
-      // 2. Header Meta Pill Updates
-      const metaPill = document.getElementById('metaLevelPill');
-      const metaLvl = document.getElementById('metaLevelText');
-      const metaXp = document.getElementById('metaXpText');
-      if (metaPill) metaPill.style.display = 'inline-flex';
-      if (metaLvl) metaLvl.innerText = 'LVL ' + data.level;
-      if (metaXp) metaXp.innerText = data.totalXp.toLocaleString() + ' XP';
-
-      // 3. Brain Stats Spotlight Card Updates
-      const spotLvl = document.getElementById('spotlightLevelNum');
-      const spotRank = document.getElementById('spotlightRankTitle');
-      const spotTotalXp = document.getElementById('spotlightTotalXp');
-      const spotBar = document.getElementById('spotlightXpBar');
-      const spotDetail = document.getElementById('spotlightXpDetail');
-      const spotRem = document.getElementById('spotlightXpRemaining');
-
-      if (spotLvl) spotLvl.innerText = data.level;
-      if (spotRank) spotRank.innerText = data.rankTitle;
-      if (spotTotalXp) spotTotalXp.innerText = data.totalXp.toLocaleString() + ' XP';
-      if (spotBar) spotBar.style.width = data.percent + '%';
-      if (spotDetail) spotDetail.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP (' + data.percent + '%)';
-      if (spotRem) spotRem.innerText = data.remainingXp.toLocaleString() + ' XP to next level';
+    if (badge) badge.innerText = 'LVL ' + data.level;
+    if (badgeGuest) {
+      badgeGuest.innerText = 'LVL ' + data.level;
+      if (data.level > 1) {
+        badgeGuest.style.background = 'linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(129, 140, 248, 0.25))';
+        badgeGuest.style.color = '#38bdf8';
+        badgeGuest.style.borderColor = '#38bdf8';
+      }
     }
+    if (title) title.innerText = data.rankTitle;
+    if (xpText) xpText.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP';
+    if (xpFill) xpFill.style.width = data.percent + '%';
+    if (xpPct) xpPct.innerText = data.percent + '%';
+    if (xpRem) xpRem.innerText = data.remainingXp.toLocaleString() + ' XP to next lvl';
+
+    // 2. Header Meta Pill Updates
+    const metaPill = document.getElementById('metaLevelPill');
+    const metaLvl = document.getElementById('metaLevelText');
+    const metaXp = document.getElementById('metaXpText');
+    if (metaPill) metaPill.style.display = 'inline-flex';
+    if (metaLvl) metaLvl.innerText = 'LVL ' + data.level;
+    if (metaXp) metaXp.innerText = data.totalXp.toLocaleString() + ' XP';
+
+    // 3. Brain Stats Spotlight Card Updates
+    const spotLvl = document.getElementById('spotlightLevelNum');
+    const spotRank = document.getElementById('spotlightRankTitle');
+    const spotTotalXp = document.getElementById('spotlightTotalXp');
+    const spotBar = document.getElementById('spotlightXpBar');
+    const spotDetail = document.getElementById('spotlightXpDetail');
+    const spotRem = document.getElementById('spotlightXpRemaining');
+
+    if (spotLvl) spotLvl.innerText = data.level;
+    if (spotRank) spotRank.innerText = data.rankTitle;
+    if (spotTotalXp) spotTotalXp.innerText = data.totalXp.toLocaleString() + ' XP';
+    if (spotBar) spotBar.style.width = data.percent + '%';
+    if (spotDetail) spotDetail.innerText = data.xpInCurrentLevel.toLocaleString() + ' / ' + data.xpNeededForLevel.toLocaleString() + ' XP (' + data.percent + '%)';
+    if (spotRem) spotRem.innerText = data.remainingXp.toLocaleString() + ' XP to next level';
 
     // 4. Update Live Orb Skins Vault based on player level
     if (typeof updateOrbSkinsUI === 'function') {
@@ -5771,6 +5826,8 @@
           const dbMaze = (uScores.maze !== undefined) ? Number(uScores.maze) : ((uScores.cyber_maze !== undefined) ? Number(uScores.cyber_maze) : 0);
           const dbGuess = (uScores.number_guess !== undefined) ? Number(uScores.number_guess) : ((uScores.guess !== undefined) ? Number(uScores.guess) : 0);
           const dbRansom = uScores.ransom !== undefined ? Number(uScores.ransom) : 0;
+          const dbGlitch = uScores.glitch_protocol !== undefined ? Number(uScores.glitch_protocol) : 0;
+          const dbNodeBreaker = uScores.node_breaker !== undefined ? Number(uScores.node_breaker) : 0;
 
           verifiedCloudScores.snake = dbSnake;
           verifiedCloudScores.defuse = dbDefuse;
@@ -5778,6 +5835,8 @@
           verifiedCloudScores.maze = dbMaze;
           verifiedCloudScores.guess = dbGuess;
           verifiedCloudScores.ransom = dbRansom;
+          verifiedCloudScores.glitch = dbGlitch;
+          verifiedCloudScores.nodebreaker = dbNodeBreaker;
 
           if (uScores.chess !== undefined) {
             verifiedCloudScores.chessRating = Number(uScores.chess);
@@ -5791,19 +5850,25 @@
 
           scoresFetchedFromCloud = true;
 
-          // Store verified values in localStorage
-          localStorage.setItem('hub_snake_high', dbSnake);
-          localStorage.setItem('hub_defuse_high', dbDefuse);
+          // Store maximum between cloud and local values in localStorage
+          const maxSnake = Math.max(dbSnake, parseInt(localStorage.getItem('hub_snake_high') || '0', 10));
+          const maxDefuse = Math.max(dbDefuse, parseInt(localStorage.getItem('hub_defuse_high') || '0', 10));
+          const maxReactor = Math.max(dbReactor, parseInt(localStorage.getItem('hub_reactor_high') || '0', 10));
+          const maxMaze = Math.max(dbMaze, parseInt(localStorage.getItem('hub_maze_clears') || '0', 10));
+          const maxRansom = Math.max(dbRansom, parseInt(localStorage.getItem('hub_ransom_high') || '0', 10));
+          const maxGlitch = Math.max(dbGlitch, parseInt(localStorage.getItem('hub_glitch_high') || '0', 10));
+          const maxNode = Math.max(dbNodeBreaker, parseInt(localStorage.getItem('hub_nodebreaker_high') || '0', 10));
+
+          if (maxSnake > 0) localStorage.setItem('hub_snake_high', maxSnake);
+          if (maxDefuse > 0) localStorage.setItem('hub_defuse_high', maxDefuse);
+          if (maxReactor > 0) localStorage.setItem('hub_reactor_high', maxReactor);
+          if (maxMaze > 0) localStorage.setItem('hub_maze_clears', maxMaze);
+          if (maxRansom > 0) localStorage.setItem('hub_ransom_high', maxRansom);
+          if (maxGlitch > 0) localStorage.setItem('hub_glitch_high', maxGlitch);
+          if (maxNode > 0) localStorage.setItem('hub_nodebreaker_high', maxNode);
           localStorage.setItem('hub_chess_rating', verifiedCloudScores.chessRating);
           localStorage.setItem('hub_chess_wins', verifiedCloudScores.chessWins);
-          localStorage.setItem('hub_reactor_high', dbReactor);
-          localStorage.setItem('hub_maze_clears', dbMaze);
-          localStorage.setItem('hub_ransom_high', dbRansom);
-          if (dbGuess > 0) {
-            localStorage.setItem('hub_guess_best', dbGuess);
-          } else {
-            localStorage.removeItem('hub_guess_best');
-          }
+          if (dbGuess > 0) localStorage.setItem('hub_guess_best', dbGuess);
 
           // Authoritative DOM updates for carousel cards
           if (pSnake) pSnake.innerText = dbSnake + ' pts';
@@ -5869,23 +5934,26 @@
     let mazeClears = 0;
     let reactorBest = 0;
 
-    if (isUserLoggedIn) {
-      if (scoresFetchedFromCloud) {
-        defuseBest = verifiedCloudScores.defuse || 0;
-        chessRating = verifiedCloudScores.chessRating || 1200;
-        chessPlayed = verifiedCloudScores.chessPlayed;
-        snakeBest = verifiedCloudScores.snake || 0;
-        mazeClears = verifiedCloudScores.maze || 0;
-        reactorBest = verifiedCloudScores.reactor || 0;
-      }
-    } else {
-      defuseBest = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
-      chessRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
-      chessPlayed = localStorage.getItem('hub_chess_rating') !== null;
-      snakeBest = parseFloat(localStorage.getItem('hub_snake_high') || '0');
-      mazeClears = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
-      reactorBest = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
-    }
+    const defuseLocal = parseFloat(localStorage.getItem('hub_defuse_high') || '0');
+    const defuseCloud = Number(verifiedCloudScores.defuse || 0);
+    defuseBest = Math.max(isNaN(defuseLocal) ? 0 : defuseLocal, isNaN(defuseCloud) ? 0 : defuseCloud);
+
+    const snakeLocal = parseFloat(localStorage.getItem('hub_snake_high') || '0');
+    const snakeCloud = Number(verifiedCloudScores.snake || 0);
+    snakeBest = Math.max(isNaN(snakeLocal) ? 0 : snakeLocal, isNaN(snakeCloud) ? 0 : snakeCloud);
+
+    const mazeLocal = parseFloat(localStorage.getItem('hub_maze_clears') || '0');
+    const mazeCloud = Number(verifiedCloudScores.maze || 0);
+    mazeClears = Math.max(isNaN(mazeLocal) ? 0 : mazeLocal, isNaN(mazeCloud) ? 0 : mazeCloud);
+
+    const reactorLocal = parseFloat(localStorage.getItem('hub_reactor_high') || '0');
+    const reactorCloud = Number(verifiedCloudScores.reactor || 0);
+    reactorBest = Math.max(isNaN(reactorLocal) ? 0 : reactorLocal, isNaN(reactorCloud) ? 0 : reactorCloud);
+
+    const chessLocalRating = parseFloat(localStorage.getItem('hub_chess_rating') || '1200');
+    const chessCloudRating = Number(verifiedCloudScores.chessRating || 1200);
+    chessRating = Math.max(isNaN(chessLocalRating) ? 1200 : chessLocalRating, isNaN(chessCloudRating) ? 1200 : chessCloudRating);
+    chessPlayed = verifiedCloudScores.chessPlayed || (localStorage.getItem('hub_chess_rating') !== null);
 
     const hasAnyScore = (defuseBest > 0 || reactorBest > 0 || snakeBest > 0 || mazeClears > 0 || (chessPlayed && chessRating > 1200));
 
@@ -7560,7 +7628,7 @@
     enforceAccountBoundary(currentUsername);
     checkLiveSession();
     syncCloudScores();
-    if (isUserLoggedIn) updateAccountLevelUI();
+    updateAccountLevelUI();
     updateRansomIndicator();
 
     // Initialize Animated Dithered Plasma Shader for Game Hub Core
