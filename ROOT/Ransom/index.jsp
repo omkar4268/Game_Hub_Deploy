@@ -47,10 +47,10 @@
                     <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                     <span>REBOOT</span>
                 </button>
-                <button class="bar-btn" onclick="exitToHub()">
+                <a href="../index.jsp" onclick="exitToHub(); return false;" class="bar-btn">
                     <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     <span>GAME HUB</span>
-                </button>
+                </a>
             </div>
         </header>
 
@@ -173,7 +173,7 @@
                 <div class="good-stats" id="goodEndingStats"></div>
                 <div class="action-btn-row">
                     <button class="btn-cyber btn-cyber-primary" onclick="restartGame()">PLAY AGAIN</button>
-                    <button class="btn-cyber btn-cyber-secondary" onclick="exitToHub()">RETURN TO GAME HUB</button>
+                    <a href="../index.jsp" onclick="exitToHub(); return false;" class="btn-cyber btn-cyber-secondary">RETURN TO GAME HUB</a>
                 </div>
             </div>
         </div>

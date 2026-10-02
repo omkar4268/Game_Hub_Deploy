@@ -510,7 +510,7 @@ function showGameOver(reason) {
                 <p style="color: #94a3b8; font-size: 13px; margin: 10px 0 20px;">${reason || 'The ransomware executed all payloads.'}</p>
                 <div class="action-btn-row">
                     <button class="btn-primary" onclick="restartGame()">RETRY CONTAINMENT</button>
-                    <button class="btn-secondary" onclick="exitToHub()">RETURN TO HUB</button>
+                    <a href="../index.jsp" class="btn-secondary" onclick="exitToHub(); return false;">RETURN TO HUB</a>
                 </div>
             </div>
         `;

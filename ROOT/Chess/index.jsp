@@ -39,7 +39,7 @@
             <span class="header-badge">AI v3.0</span>
         </div>
         <div class="navbar-right">
-            <a href="javascript:void(0)" onclick="cyberNavigate('../index.jsp')" class="btn-hub">
+            <a href="../index.jsp" onclick="cyberNavigate('../index.jsp'); return false;" class="btn-hub">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 <span>Hub</span>
             </a>
@@ -99,7 +99,7 @@
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     <span>PROTOCOLS</span>
                 </button>
-                <a href="javascript:void(0)" onclick="cyberNavigate('../index.jsp')" class="btn-cyber btn-cyber-secondary">
+                <a href="../index.jsp" onclick="cyberNavigate('../index.jsp'); return false;" class="btn-cyber btn-cyber-secondary">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     <span>HUB</span>
                 </a>
@@ -193,10 +193,10 @@
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
                         <span>FLIP</span>
                     </button>
-                    <button class="btn-cyber btn-cyber-secondary" id="exitBtn" style="flex: 1;">
+                    <a href="../index.jsp" onclick="cyberNavigate('../index.jsp'); return false;" class="btn-cyber btn-cyber-secondary" id="exitBtn" style="flex: 1; text-decoration: none;">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                         <span>EXIT</span>
-                    </button>
+                    </a>
                 </div>
             </div>
 

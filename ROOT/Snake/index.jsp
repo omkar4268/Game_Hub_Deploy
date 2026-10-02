@@ -27,7 +27,7 @@
         <h1>CYBER <span class="hollow-text">SNAKE</span></h1>
         <span class="header-badge">NEURAL VECTOR v3.0</span>
       </div>
-      <a href="javascript:void(0)" onclick="cyberNavigate('../index.jsp')" class="btn-hub">
+      <a href="../index.jsp" onclick="cyberNavigate('../index.jsp'); return false;" class="btn-hub">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span>Hub</span>
       </a>
@@ -108,7 +108,7 @@
           </button>
           <div class="menu-actions-row">
             <button class="btn-cyber btn-cyber-secondary" onclick="openManual()">⚙ DIRECTIVE & CONTROLS</button>
-            <a href="javascript:void(0)" onclick="cyberNavigate('../index.jsp')" class="btn-cyber btn-cyber-secondary">‹ HUB</a>
+            <a href="../index.jsp" onclick="cyberNavigate('../index.jsp'); return false;" class="btn-cyber btn-cyber-secondary">‹ HUB</a>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@
           </button>
           <div class="menu-actions-row">
             <button class="btn-cyber btn-cyber-secondary" onclick="showStartScreen()">☰ MAIN MENU</button>
-            <a href="javascript:void(0)" onclick="cyberNavigate('../index.jsp')" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
+            <a href="../index.jsp" onclick="cyberNavigate('../index.jsp'); return false;" class="btn-cyber btn-cyber-secondary">‹ RETURN TO HUB</a>
           </div>
         </div>
       </div>

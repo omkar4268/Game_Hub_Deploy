@@ -749,7 +749,7 @@
     </div>
     <div class="header-controls">
       <button class="btn-icon" id="soundBtn" title="Toggle Sound" onclick="toggleSound()">🔊</button>
-      <button class="btn-hub" onclick="cyberNavigate('index.jsp')">‹ HUB</button>
+      <a href="index.jsp" onclick="cyberNavigate('index.jsp'); return false;" class="btn-hub">‹ HUB</a>
     </div>
   </div>
 
@@ -809,9 +809,9 @@
           <button class="btn-cyber btn-secondary" onclick="openProtocolModal()">
             ⚙ PROTOCOL & INTEL
           </button>
-          <button class="btn-cyber btn-secondary" onclick="cyberNavigate('index.jsp')">
+          <a href="index.jsp" onclick="cyberNavigate('index.jsp'); return false;" class="btn-cyber btn-secondary">
             ‹ HUB
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -846,9 +846,9 @@
           <button class="btn-cyber btn-secondary" onclick="openProtocolModal()">
             ⚙ PROTOCOL
           </button>
-          <button class="btn-cyber btn-secondary" onclick="cyberNavigate('index.jsp')">
+          <a href="index.jsp" onclick="cyberNavigate('index.jsp'); return false;" class="btn-cyber btn-secondary">
             ‹ RETURN TO HUB
-          </button>
+          </a>
         </div>
       </div>
     </div>
