@@ -362,7 +362,7 @@
   }
 
   /* =========================================================
-     LANDING PORTAL OVERLAY
+     LANDING PORTAL OVERLAY (With 3D Tilt & Traveling Beam Perimeter)
      ========================================================= */
   #landingPortal {
     position: fixed;
@@ -375,6 +375,7 @@
     justify-content: center;
     padding: 1.5rem;
     text-align: center;
+    perspective: 1500px;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease, visibility 0.35s ease;
     overflow: hidden !important;
   }
@@ -421,15 +422,18 @@
     align-items: center;
     position: relative;
     z-index: 10;
-    background: rgba(8, 9, 14, 0.88);
+    background: rgba(8, 9, 14, 0.90);
     backdrop-filter: blur(28px) saturate(110%);
     -webkit-backdrop-filter: blur(28px) saturate(110%);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 26px;
     padding: 2.3rem 2.1rem;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     animation: portalSpringIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     box-sizing: border-box;
+    transform-style: preserve-3d;
+    will-change: transform;
+    overflow: hidden !important;
   }
   .portal-content::before {
     content: '';
@@ -441,6 +445,93 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
     box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
   }
+
+  /* Traveling Light Beam Perimeter Circuit for Landing Card (matching sign-in-card-2) */
+  .portal-content .card-beam-perimeter {
+    position: absolute;
+    inset: 0;
+    border-radius: 26px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .portal-content .beam-runner.beam-top {
+    position: absolute;
+    top: 0;
+    left: -50%;
+    height: 2px;
+    width: 50%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #ffffff 85%, transparent 100%);
+    filter: blur(1px);
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: portalBeamTop 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .portal-content .beam-runner.beam-right {
+    position: absolute;
+    top: -50%;
+    right: 0;
+    width: 2px;
+    height: 50%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #ffffff 85%, transparent 100%);
+    filter: blur(1px);
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: portalBeamRight 3.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s infinite;
+  }
+  .portal-content .beam-runner.beam-bottom {
+    position: absolute;
+    bottom: 0;
+    right: -50%;
+    height: 2px;
+    width: 50%;
+    background: linear-gradient(270deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #ffffff 85%, transparent 100%);
+    filter: blur(1px);
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: portalBeamBottom 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
+  }
+  .portal-content .beam-runner.beam-left {
+    position: absolute;
+    bottom: -50%;
+    left: 0;
+    width: 2px;
+    height: 50%;
+    background: linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #ffffff 85%, transparent 100%);
+    filter: blur(1px);
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: portalBeamLeft 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.8s infinite;
+  }
+  @keyframes portalBeamTop { 0% { left: -50%; opacity: 0.3; } 35%, 65% { opacity: 0.95; } 100% { left: 100%; opacity: 0.3; } }
+  @keyframes portalBeamRight { 0% { top: -50%; opacity: 0.3; } 35%, 65% { opacity: 0.95; } 100% { top: 100%; opacity: 0.3; } }
+  @keyframes portalBeamBottom { 0% { right: -50%; opacity: 0.3; } 35%, 65% { opacity: 0.95; } 100% { right: 100%; opacity: 0.3; } }
+  @keyframes portalBeamLeft { 0% { bottom: -50%; opacity: 0.3; } 35%, 65% { opacity: 0.95; } 100% { bottom: 100%; opacity: 0.3; } }
+
+  .portal-content .beam-corner-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    z-index: 4;
+  }
+  .portal-content .beam-corner-dot.dot-tl { top: 3px; left: 3px; width: 6px; height: 6px; }
+  .portal-content .beam-corner-dot.dot-tr { top: 3px; right: 3px; width: 8px; height: 8px; }
+  .portal-content .beam-corner-dot.dot-br { bottom: 3px; right: 3px; width: 8px; height: 8px; }
+  .portal-content .beam-corner-dot.dot-bl { bottom: 3px; left: 3px; width: 6px; height: 6px; }
+
+  /* Card Border Glow Sheen */
+  .portal-content .card-border-glow-sheen {
+    position: absolute;
+    inset: -1px;
+    border-radius: 26px;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.15)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.65;
+    z-index: 2;
+  }
+
   @keyframes portalSpringIn {
     0% { transform: scale(0.92) translateY(24px); opacity: 0; }
     100% { transform: scale(1) translateY(0); opacity: 1; }
@@ -541,6 +632,28 @@
     transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-decoration: none;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-portal .btn-shimmer-sweep {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
+    transform: translateX(-100%);
+    animation: btnPortalShimmer 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .btn-portal:hover .btn-shimmer-sweep {
+    animation-duration: 1.5s;
+  }
+  .btn-portal span:not(.btn-shimmer-sweep) {
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes btnPortalShimmer {
+    0% { transform: translateX(-100%); }
+    45%, 100% { transform: translateX(100%); }
   }
   .btn-portal:hover {
     transform: translateY(-2px) scale(1.02);
@@ -3173,7 +3286,21 @@
        LANDING PORTAL OVERLAY
        ========================================================= -->
   <div id="landingPortal">
-    <div class="portal-content">
+    <div class="portal-content" id="landingCard">
+      <!-- Animated Traveling Light Beam Perimeter Circuit (from sign-in-card-2) -->
+      <div class="card-beam-perimeter">
+        <div class="beam-runner beam-top"></div>
+        <div class="beam-runner beam-right"></div>
+        <div class="beam-runner beam-bottom"></div>
+        <div class="beam-runner beam-left"></div>
+        <div class="beam-corner-dot dot-tl"></div>
+        <div class="beam-corner-dot dot-tr"></div>
+        <div class="beam-corner-dot dot-br"></div>
+        <div class="beam-corner-dot dot-bl"></div>
+      </div>
+      <!-- Subtle Card Border Glow Sheen (from sign-in-card-2) -->
+      <div class="card-border-glow-sheen"></div>
+
       <!-- Stationary Operative Companion Orb (Tracking cursor from fixed post) -->
       <div class="portal-orb-station" id="portalOrbStation" title="Operative Companion Orb">
         <canvas id="portalOrbCanvas" width="96" height="96"></canvas>
@@ -3187,26 +3314,27 @@
       <div class="portal-actions">
         <% if (isLoggedIn) { %>
           <button class="btn-portal btn-portal-primary" onclick="triggerFastEnter('<%= currentUser %>', 'Welcome back!')">
+            <span class="btn-shimmer-sweep"></span>
             <span>▶ PLAY NOW (<%= currentUser %>)</span>
           </button>
           <button class="btn-portal btn-portal-secondary" onclick="performLogout()">
+            <span class="btn-shimmer-sweep"></span>
             <span>✕ LOG OUT</span>
           </button>
         <% } else { %>
-          <button class="btn-portal btn-portal-primary" onclick="window.location.href='auth.jsp?mode=login'">
+          <button class="btn-portal btn-portal-primary" onclick="warpToAuthPage('login')">
+            <span class="btn-shimmer-sweep"></span>
             <span>LOG IN</span>
           </button>
-          <button class="btn-portal btn-portal-secondary" onclick="window.location.href='auth.jsp?mode=signup'">
+          <button class="btn-portal btn-portal-secondary" onclick="warpToAuthPage('signup')">
+            <span class="btn-shimmer-sweep"></span>
             <span>SIGN UP</span>
           </button>
           <button class="btn-portal btn-portal-guest" onclick="triggerFastEnter('Guest', 'Welcome! Enjoy the games.')">
+            <span class="btn-shimmer-sweep"></span>
             <span>🎮 PLAY AS GUEST</span>
           </button>
         <% } %>
-      </div>
-
-      <div class="portal-kinetic-hint">
-        <span>⚡ MONOCHROME VOXEL TUNNEL • CENTRED GATEWAY ACTIVE</span>
       </div>
 
       <div class="portal-footer-note">
@@ -7482,6 +7610,77 @@
       });
     });
   });
+
+  // 3D Card Tilt Effect for Landing Card (matching sign-in-card-2 / auth.jsp animation)
+  (function init3DCardTiltLanding() {
+    const portal = document.getElementById('landingPortal');
+    const card = document.getElementById('landingCard');
+    if (!portal || !card) return;
+
+    let currentRotX = 0, currentRotY = 0;
+    let targetRotX = 0, targetRotY = 0;
+    let isHovered = false;
+    let animId = null;
+
+    function updateCardTransform() {
+      if (portal.classList.contains('dismissed') || portal.classList.contains('zoom-through')) return;
+      currentRotX += (targetRotX - currentRotX) * 0.14;
+      currentRotY += (targetRotY - currentRotY) * 0.14;
+
+      const translateZ = isHovered ? 12 : 0;
+      card.style.transform = 'perspective(1500px) rotateX(' + currentRotX.toFixed(2) + 'deg) rotateY(' + currentRotY.toFixed(2) + 'deg) translateZ(' + translateZ + 'px)';
+
+      if (Math.abs(targetRotX - currentRotX) > 0.01 || Math.abs(targetRotY - currentRotY) > 0.01 || isHovered) {
+        animId = requestAnimationFrame(updateCardTransform);
+      } else {
+        animId = null;
+      }
+    }
+
+    portal.addEventListener('mousemove', (e) => {
+      if (portal.classList.contains('dismissed')) return;
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+
+      targetRotX = Math.max(-10, Math.min(10, (-dy / (rect.height / 2)) * 10));
+      targetRotY = Math.max(-10, Math.min(10, (dx / (rect.width / 2)) * 10));
+
+      if (!animId) animId = requestAnimationFrame(updateCardTransform);
+    });
+
+    portal.addEventListener('mouseenter', () => {
+      isHovered = true;
+      if (!animId) animId = requestAnimationFrame(updateCardTransform);
+    });
+
+    portal.addEventListener('mouseleave', () => {
+      isHovered = false;
+      targetRotX = 0;
+      targetRotY = 0;
+      if (!animId) animId = requestAnimationFrame(updateCardTransform);
+    });
+  })();
+
+  // Cinematic Warp Transition from First Page to Auth Page (Space -> Tech transition)
+  function warpToAuthPage(mode) {
+    const card = document.getElementById('landingCard');
+    const curtain = document.getElementById('motionCurtain');
+    if (card) {
+      card.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease, filter 0.32s ease';
+      card.style.transform = 'scale(1.12) translateY(-18px)';
+      card.style.opacity = '0';
+      card.style.filter = 'blur(10px)';
+    }
+    if (curtain) {
+      curtain.classList.add('active');
+    }
+    setTimeout(() => {
+      window.location.href = 'auth.jsp?mode=' + (mode || 'login');
+    }, 280);
+  }
 </script>
 </body>
 </html>

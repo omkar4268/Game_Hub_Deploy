@@ -536,10 +536,6 @@
         <span>🎮 Bypass Authentication (Play as Guest)</span>
       </button>
     </div>
-
-    <div class="portal-footer-hint">
-      ⚡ KINETIC GRID ACTIVE • MOVE CURSOR & CLICK ANYWHERE
-    </div>
   </div>
 
 <script>
