@@ -54,7 +54,7 @@
     height: 100vh;
     height: 100dvh;
     overflow: hidden !important;
-    background-color: var(--bg-base);
+    background-color: #000000;
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -125,40 +125,35 @@
     opacity: 1;
   }
 
-  /* Main Floating Space Terminal Auth Card with Diagonal 135deg Slash Architecture */
+  /* Monochromatic Obsidian Space Glass Terminal with White-to-Blue Gradient Outline */
   .auth-portal-card {
     position: relative;
     z-index: 10;
     width: 92vw;
-    max-width: 450px;
-    max-height: 90dvh;
-    overflow-y: auto;
+    max-width: 440px;
+    max-height: 96dvh;
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    box-sizing: border-box;
+    border-radius: 24px;
     background:
+      linear-gradient(rgba(8, 9, 14, 0.92), rgba(8, 9, 14, 0.92)) padding-box,
       linear-gradient(135deg,
-        rgba(8, 10, 16, 0.92) 0%,
-        rgba(10, 12, 22, 0.86) 40%,
-        rgba(6, 20, 50, 0.50) 48%,
-        rgba(3, 16, 44, 0.32) 56%,
-        rgba(2, 12, 36, 0.24) 100%
-      ) padding-box,
-      linear-gradient(135deg,
-        #ffffff 0%,
-        #ffffff 42%,
-        #bae6fd 48%,
-        #00f0ff 54%,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.70) 30%,
+        rgba(56, 189, 248, 0.85) 70%,
         #00f0ff 100%
       ) border-box;
-    border: 2px solid transparent;
-    backdrop-filter: blur(12px) saturate(160%);
-    -webkit-backdrop-filter: blur(12px) saturate(160%);
-    border-radius: 28px;
-    padding: 2.2rem 2rem;
+    border: 1.8px solid transparent;
+    backdrop-filter: blur(28px) saturate(110%);
+    -webkit-backdrop-filter: blur(28px) saturate(110%);
+    padding: 1.6rem 1.9rem;
     box-shadow:
-      -18px -18px 45px -4px rgba(255, 255, 255, 0.32),
-      18px 18px 50px -4px rgba(0, 240, 255, 0.48),
-      0 30px 80px rgba(0, 0, 0, 0.90),
-      inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65),
-      inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.55);
+      0 25px 70px rgba(0, 0, 0, 0.95),
+      -8px -8px 30px rgba(255, 255, 255, 0.10),
+      8px 8px 35px rgba(0, 240, 255, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -244,44 +239,47 @@
   }
 
   .portal-subtitle {
-    font-size: 0.82rem;
+    font-size: 0.80rem;
     line-height: 1.45;
-    color: var(--text-muted);
-    margin-bottom: 1.4rem;
+    color: #94a3b8;
+    margin-bottom: 0.95rem;
     max-width: 360px;
   }
 
-  /* Framer-Motion Tab Switcher */
+  /* Monochromatic Tab Switcher */
   .auth-tabs {
     display: flex;
     width: 100%;
-    background: rgba(2, 4, 10, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
     padding: 4px;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.95rem;
     gap: 4px;
+    box-sizing: border-box;
   }
   .auth-tab {
     flex: 1;
-    padding: 9px 12px;
+    padding: 8px 10px;
     background: transparent;
     border: none;
-    border-radius: 10px;
-    color: var(--text-muted);
-    font-weight: 800;
-    font-size: 0.78rem;
+    border-radius: 9px;
+    color: #94a3b8;
+    font-weight: 700;
+    font-size: 0.76rem;
     letter-spacing: 1.5px;
     cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.22s ease;
   }
   .auth-tab:hover {
     color: #ffffff;
   }
   .auth-tab.active {
-    background: var(--primary);
-    color: #02040a;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
+    background: #ffffff;
+    color: #000000;
+    font-weight: 900;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
   }
 
   /* Forms & Inputs */
@@ -289,7 +287,7 @@
     width: 100%;
     display: none;
     flex-direction: column;
-    gap: 12px;
+    gap: 9px;
   }
   .auth-form-wrap.active {
     display: flex;
@@ -304,19 +302,34 @@
     display: flex;
     flex-direction: column;
     text-align: left;
-    gap: 5px;
+    gap: 4px;
   }
   .auth-input-label {
     font-size: 0.68rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     font-weight: 700;
-    color: var(--text-muted);
+    color: #94a3b8;
   }
   .auth-input-box {
     position: relative;
     display: flex;
     align-items: center;
+    border-radius: 12px;
+    background: rgba(14, 16, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .auth-input-box:hover {
+    transform: scale(1.01);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 14px rgba(255, 255, 255, 0.08);
+  }
+  .auth-input-box:focus-within {
+    transform: scale(1.015);
+    border-color: #ffffff;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.25);
   }
   .auth-input-icon {
     position: absolute;
@@ -327,52 +340,49 @@
   }
   .auth-field {
     width: 100%;
-    background: rgba(2, 4, 10, 0.85);
-    border: 1px solid rgba(0, 240, 255, 0.25);
+    background: transparent !important;
+    border: none !important;
     border-radius: 12px;
-    padding: 11px 14px 11px 40px;
+    padding: 10px 14px 10px 42px;
     color: #ffffff;
-    font-size: 15px !important;
+    font-size: 14px !important;
     outline: none;
-    transition: all 0.2s ease;
-  }
-  .auth-field:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
-    background: rgba(2, 6, 16, 0.95);
+    box-sizing: border-box;
+    font-weight: 600;
   }
   .auth-field::placeholder {
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.35);
     font-size: 0.82rem;
   }
 
-  /* Action Buttons with Spring Micro-interactions */
+  /* Action Buttons matching index.jsp */
   .btn-submit {
     width: 100%;
-    padding: 13px 18px;
+    padding: 12px 18px;
     border: none;
-    border-radius: 13px;
-    background: linear-gradient(135deg, var(--primary), #0284c7);
-    color: #02040a;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #000000;
     font-weight: 900;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.45), 0 4px 14px rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 6px;
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+    transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   .btn-submit:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 35px rgba(0, 240, 255, 0.65);
+    background: #f1f5f9;
+    box-shadow: 0 0 36px rgba(255, 255, 255, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px) scale(1.02);
   }
   .btn-submit:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
   }
   .btn-submit:disabled {
     opacity: 0.55;
@@ -381,29 +391,26 @@
   }
 
   .btn-signup-submit {
-    background: linear-gradient(135deg, var(--accent), #059669);
-    box-shadow: 0 0 25px rgba(16, 230, 168, 0.4);
-  }
-  .btn-signup-submit:hover {
-    box-shadow: 0 0 35px rgba(16, 230, 168, 0.65);
+    background: #ffffff;
+    color: #000000;
   }
 
   /* Guest Bypass Button */
   .guest-bypass-box {
-    margin-top: 1.1rem;
-    padding-top: 1.1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
   .btn-guest {
     background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--text-muted);
-    padding: 10px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #94a3b8;
+    padding: 10px 14px;
     border-radius: 12px;
     font-size: 0.78rem;
     font-weight: 700;
@@ -412,16 +419,17 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
     justify-content: center;
+    box-sizing: border-box;
   }
   .btn-guest:hover {
-    background: rgba(0, 240, 255, 0.1);
-    border-color: rgba(0, 240, 255, 0.4);
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.35);
     color: #ffffff;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
-    transform: scale(1.01);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
   }
 
   /* Feedback Alerts */

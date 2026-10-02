@@ -51,9 +51,7 @@
     height: 100vh;
     height: 100dvh;
     overflow: hidden !important;
-    background:
-      radial-gradient(circle at 18% 45%, rgba(22, 25, 38, 0.95) 0%, rgba(5, 7, 14, 0.98) 55%, #010204 100%),
-      radial-gradient(circle at 82% 45%, rgba(4, 28, 64, 0.8) 0%, rgba(2, 10, 26, 0.95) 55%, #01040a 100%);
+    background: #000000;
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -418,7 +416,7 @@
     max-width: 440px;
   }
 
-  /* Main Floating Space Terminal Auth Card with Diagonal 135deg Slash Architecture */
+  /* Monochromatic Obsidian Space Glass Terminal with White-to-Blue Gradient Outline */
   .auth-portal-card {
     position: relative;
     z-index: 10;
@@ -430,68 +428,37 @@
     -ms-overflow-style: none !important;
     box-sizing: border-box;
     border-radius: 24px;
-    /* Diagonal 135deg Transition:
-       - Top-Left Half: Space Obsidian Glass with brilliant White Outline (Crisp & Vibrant)
-       - Bottom-Right Half: Translucent Cyber Glass with Electric Tech Cyan Blue Outline
-         (Subtly transparent to showcase the interactive kinetic grid color shifting beneath) */
+    /* Clean uniform obsidian space glass interior, with gradient outline (White to Tech Blue) */
     background:
+      linear-gradient(rgba(8, 9, 14, 0.92), rgba(8, 9, 14, 0.92)) padding-box,
       linear-gradient(135deg,
-        rgba(8, 10, 16, 0.92) 0%,
-        rgba(10, 12, 22, 0.86) 40%,
-        rgba(6, 20, 50, 0.50) 48%,
-        rgba(3, 16, 44, 0.32) 56%,
-        rgba(2, 12, 36, 0.24) 100%
-      ) padding-box,
-      linear-gradient(135deg,
-        #ffffff 0%,
-        #ffffff 42%,
-        #bae6fd 48%,
-        #00f0ff 54%,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.70) 30%,
+        rgba(56, 189, 248, 0.85) 70%,
         #00f0ff 100%
       ) border-box;
-    border: 2px solid transparent;
-    backdrop-filter: blur(12px) saturate(160%);
-    -webkit-backdrop-filter: blur(12px) saturate(160%);
-    padding: 1.55rem 1.85rem;
+    border: 1.8px solid transparent;
+    backdrop-filter: blur(28px) saturate(110%);
+    -webkit-backdrop-filter: blur(28px) saturate(110%);
+    padding: 1.6rem 1.9rem;
     box-shadow:
-      -18px -18px 45px -4px rgba(255, 255, 255, 0.32), /* Vibrant Space White diagonal halo */
-      18px 18px 50px -4px rgba(0, 240, 255, 0.48),    /* Vibrant Tech Cyan diagonal halo */
-      0 25px 80px rgba(0, 0, 0, 0.90),                /* Deep grounding shadow */
-      inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65), /* Specular crisp white rim on top-left */
-      inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.55); /* Specular neon cyan rim on bottom-right */
+      0 25px 70px rgba(0, 0, 0, 0.95),
+      -8px -8px 30px rgba(255, 255, 255, 0.10),
+      8px 8px 35px rgba(0, 240, 255, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     transform-style: preserve-3d;
     will-change: transform;
-    animation: cardDiagonalGlowPulse 4s ease-in-out infinite alternate;
+    animation: cardGlowPulse 4s ease-in-out infinite alternate;
     transition: opacity 0.35s ease, filter 0.35s ease;
   }
   .auth-portal-card::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
-  }
-
-  /* Subtle Celestial Stardust & Cosmic Nebula Overlay (Masked to Top-Left Space Half) */
-  .card-space-stardust {
-    position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    pointer-events: none;
-    background:
-      radial-gradient(1px 1px at 14% 18%, rgba(255, 255, 255, 0.85), transparent),
-      radial-gradient(1.5px 1.5px at 26% 62%, rgba(255, 255, 255, 0.75), transparent),
-      radial-gradient(1px 1px at 36% 28%, rgba(255, 255, 255, 0.6), transparent),
-      radial-gradient(1px 1px at 12% 82%, rgba(255, 255, 255, 0.7), transparent),
-      radial-gradient(1.2px 1.2px at 42% 78%, rgba(255, 255, 255, 0.5), transparent),
-      radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
-    z-index: 1;
-    opacity: 0.9;
-    /* Softly fades along the 135deg diagonal cut so the right side remains crystal-clear glass */
-    -webkit-mask-image: linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 38%, transparent 56%);
-    mask-image: linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 38%, transparent 56%);
   }
 
   /* Traveling Light Beam Perimeter Circuit (Space White -> Tech Blue Gradient) */
@@ -630,51 +597,49 @@
   }
 
   /* Subtle Card Border Glow Sheen (Diagonal 135deg Space White -> Tech Blue Gradient) */
+  /* Card Border Glow Sheen (White-to-Blue Outline Gradient Accent) */
   .card-border-glow-sheen {
     position: absolute;
-    inset: -2px;
+    inset: -1.5px;
     border-radius: 24px;
-    border: 2px solid transparent;
+    border: 1.8px solid transparent;
     background: linear-gradient(135deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 0.9) 42%,
-      rgba(186, 230, 253, 0.85) 48%,
-      rgba(0, 240, 255, 0.85) 54%,
-      rgba(0, 240, 255, 1) 100%
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.5) 30%,
+      rgba(56, 189, 248, 0.6) 70%,
+      rgba(0, 240, 255, 0.85) 100%
     ) border-box;
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    opacity: 0.9;
+    opacity: 0.75;
     z-index: 2;
-    filter: drop-shadow(-8px -8px 14px rgba(255, 255, 255, 0.5)) drop-shadow(8px 8px 16px rgba(0, 240, 255, 0.65));
-    animation: borderSheenDiagonalPulse 3.5s ease-in-out infinite alternate;
+    filter: drop-shadow(-4px -4px 10px rgba(255, 255, 255, 0.3)) drop-shadow(4px 4px 12px rgba(0, 240, 255, 0.45));
+    animation: borderSheenPulse 3.5s ease-in-out infinite alternate;
   }
   .auth-portal-card:hover .card-border-glow-sheen {
     opacity: 1;
   }
-  @keyframes borderSheenDiagonalPulse {
-    0% { opacity: 0.70; }
-    100% { opacity: 1; }
+  @keyframes borderSheenPulse {
+    0% { opacity: 0.55; }
+    100% { opacity: 0.95; }
   }
 
-  @keyframes cardDiagonalGlowPulse {
+  @keyframes cardGlowPulse {
     0% {
       box-shadow:
-        -16px -16px 40px -4px rgba(255, 255, 255, 0.24),
-        16px 16px 45px -4px rgba(0, 240, 255, 0.38),
-        0 25px 80px rgba(0, 0, 0, 0.90),
-        inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.5),
-        inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.4);
+        0 25px 70px rgba(0, 0, 0, 0.95),
+        -6px -6px 25px rgba(255, 255, 255, 0.08),
+        6px 6px 30px rgba(0, 240, 255, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
     }
     100% {
       box-shadow:
-        -24px -24px 60px -4px rgba(255, 255, 255, 0.42),
-        24px 24px 65px -4px rgba(0, 240, 255, 0.60),
-        0 25px 80px rgba(0, 0, 0, 0.90),
-        inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.8),
-        inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.65);
+        0 25px 80px rgba(0, 0, 0, 0.95),
+        -10px -10px 38px rgba(255, 255, 255, 0.15),
+        10px 10px 42px rgba(0, 240, 255, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
   }
 
@@ -686,23 +651,22 @@
     pointer-events: none;
   }
 
-  /* Badges & Titles with Space White -> Tech Blue Gradient Palette */
+  /* Badges & Titles matching index.jsp monochromatic clean aesthetic */
   .portal-tag {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 240, 255, 0.14) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     padding: 5px 14px;
     border-radius: 9999px;
     font-size: 0.70rem;
     font-weight: 800;
     letter-spacing: 2px;
-    color: #f0f9ff;
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+    color: #f1f5f9;
     text-transform: uppercase;
-    margin-bottom: 0.60rem;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.08);
+    margin-bottom: 0.70rem;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
   }
   .portal-tag::before {
     content: '';
@@ -710,34 +674,35 @@
     height: 7px;
     border-radius: 50%;
     background: #ffffff;
-    box-shadow: 0 0 10px #ffffff, 0 0 16px #00f0ff;
+    box-shadow: 0 0 10px #ffffff;
     animation: pulseDot 1.8s infinite;
   }
   @keyframes pulseDot {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.35); opacity: 0.5; }
+    50% { transform: scale(1.3); opacity: 0.6; }
   }
 
   .portal-title {
-    font-size: clamp(1.6rem, 4.5vw, 2.1rem);
+    font-size: clamp(1.7rem, 4.5vw, 2.2rem);
     font-weight: 900;
     letter-spacing: 2.5px;
-    margin: 0 0 0.25rem 0;
+    margin: 0 0 0.35rem 0;
     line-height: 1.1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: linear-gradient(180deg, #ffffff 40%, #bae6fd 75%, #38bdf8 100%);
+    color: #ffffff;
+    background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 24px rgba(0, 240, 255, 0.5));
+    text-shadow: 0 2px 20px rgba(255, 255, 255, 0.35);
   }
   .portal-title span {
     color: #ffffff;
   }
 
-  /* Hollow HUB with Pure White Lines Outline & Dual Space-Tech Aura */
+  /* Hollow HUB with Pure White Lines Outline matching index.jsp */
   .hollow-hub {
     background: none !important;
     -webkit-background-clip: border-box !important;
@@ -749,35 +714,33 @@
     letter-spacing: 3.5px;
     font-weight: 900;
     display: inline-block;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 24px rgba(0, 240, 255, 0.75));
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
     transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.3s ease;
   }
   .hollow-hub:hover {
-    filter: drop-shadow(0 0 18px #ffffff) drop-shadow(0 0 32px #00f0ff);
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 30px rgba(0, 240, 255, 0.6));
     -webkit-text-stroke: 2.2px #ffffff !important;
   }
 
   .portal-subtitle {
-    font-size: 0.78rem;
-    line-height: 1.4;
-    color: #cbd5e1;
-    text-shadow: 0 0 10px rgba(186, 230, 253, 0.25);
-    margin-bottom: 0.85rem;
+    font-size: 0.80rem;
+    line-height: 1.45;
+    color: #94a3b8;
+    margin-bottom: 0.95rem;
     max-width: 360px;
-    opacity: 0.95;
   }
 
-  /* Framer-Motion Tab Switcher with Sliding Morphing Pill (Space White to Tech Blue Gradient) */
+  /* Monochromatic Tab Switcher matching first page buttons */
   .auth-tabs {
     position: relative;
     display: flex;
     width: 100%;
-    background: linear-gradient(135deg, rgba(12, 14, 22, 0.92) 0%, rgba(8, 16, 36, 0.70) 45%, rgba(4, 18, 44, 0.40) 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), -4px -2px 14px rgba(255, 255, 255, 0.12), 4px 4px 16px rgba(0, 240, 255, 0.22);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
     border-radius: 12px;
     padding: 4px;
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.95rem;
     box-sizing: border-box;
     overflow: hidden;
   }
@@ -787,17 +750,15 @@
     bottom: 4px;
     left: 4px;
     width: calc(50% - 4px);
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 60%, #cbd5e1 100%);
-    box-shadow: 0 0 22px rgba(255, 255, 255, 0.85), inset 0 1px 1px #ffffff;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
     border-radius: 9px;
     pointer-events: none;
     z-index: 1;
-    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.32s ease, box-shadow 0.32s ease;
+    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   .auth-tabs.is-login .auth-tab-pill {
     transform: translateX(100%);
-    background: linear-gradient(135deg, #38bdf8 0%, #00f0ff 60%, #06b6d4 100%);
-    box-shadow: 0 0 24px rgba(0, 240, 255, 0.85), inset 0 1px 1px #ffffff;
   }
   .auth-tab {
     position: relative;
@@ -808,23 +769,21 @@
     border: none;
     border-radius: 9px;
     color: #94a3b8;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 0.76rem;
     letter-spacing: 1.5px;
     cursor: pointer;
-    transition: color 0.22s ease, text-shadow 0.22s ease;
+    transition: color 0.22s ease;
   }
   .auth-tab:hover {
     color: #ffffff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   }
   .auth-tab.active {
-    color: #020817;
+    color: #000000;
     font-weight: 900;
-    text-shadow: none;
   }
 
-  /* Morphing Forms & Inputs */
+  /* Morphing Forms & Monochromatic Inputs */
   .auth-form-wrap {
     width: 100%;
     display: none;
@@ -848,40 +807,30 @@
   }
   .auth-input-label {
     font-size: 0.68rem;
-    letter-spacing: 1.8px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    font-weight: 800;
-    background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 45%, #38bdf8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    font-weight: 700;
+    color: #94a3b8;
   }
-  /* Input micro-scaling, hover & focus highlights (Space White on left, Translucent Tech Blue on right) */
   .auth-input-box {
     position: relative;
     display: flex;
     align-items: center;
     border-radius: 12px;
-    background:
-      linear-gradient(135deg, rgba(12, 14, 22, 0.88) 0%, rgba(10, 14, 24, 0.70) 42%, rgba(4, 18, 42, 0.35) 58%, rgba(2, 14, 38, 0.22) 100%) padding-box,
-      linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.4) 42%, rgba(0, 240, 255, 0.5) 55%, rgba(0, 240, 255, 0.9) 100%) border-box;
-    border: 1.5px solid transparent;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45), -4px -2px 14px rgba(255, 255, 255, 0.1), 4px 4px 16px rgba(0, 240, 255, 0.18);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease;
+    background: rgba(14, 16, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
   }
   .auth-input-box:hover {
-    transform: scale(1.015);
-    background:
-      linear-gradient(135deg, rgba(16, 18, 28, 0.92) 0%, rgba(12, 18, 36, 0.75) 42%, rgba(6, 24, 60, 0.45) 58%, rgba(3, 18, 48, 0.30) 100%) padding-box,
-      linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.6) 42%, rgba(0, 240, 255, 0.7) 55%, #00f0ff 100%) border-box;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35), -6px -3px 18px rgba(255, 255, 255, 0.18), 6px 6px 24px rgba(0, 240, 255, 0.35);
+    transform: scale(1.01);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 14px rgba(255, 255, 255, 0.08);
   }
   .auth-input-box:focus-within {
-    transform: scale(1.025);
-    background:
-      linear-gradient(135deg, rgba(18, 20, 32, 0.95) 0%, rgba(14, 22, 44, 0.80) 42%, rgba(8, 30, 72, 0.50) 58%, rgba(4, 22, 58, 0.35) 100%) padding-box,
-      linear-gradient(135deg, #ffffff 0%, #ffffff 40%, #00f0ff 60%, #00f0ff 100%) border-box;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4), -8px -4px 26px rgba(255, 255, 255, 0.38), 8px 8px 32px rgba(0, 240, 255, 0.6);
+    transform: scale(1.015);
+    border-color: #ffffff;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.25);
   }
   .auth-field {
     width: 100%;
@@ -889,14 +838,14 @@
     border: none !important;
     border-radius: 12px;
     padding: 10px 14px 10px 42px;
-    color: #f8fafc;
+    color: #ffffff;
     font-size: 14px !important;
     outline: none;
     box-sizing: border-box;
     font-weight: 600;
   }
   .auth-field::placeholder {
-    color: rgba(203, 213, 225, 0.55);
+    color: rgba(255, 255, 255, 0.35);
     font-size: 0.82rem;
   }
   .auth-svg-icon {
@@ -906,38 +855,37 @@
     height: 17px;
     pointer-events: none;
     stroke: #ffffff;
-    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85));
-    transition: transform 0.25s ease, filter 0.25s ease, stroke 0.25s ease;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6));
+    transition: transform 0.22s ease, filter 0.22s ease;
     z-index: 2;
   }
   .auth-input-box:focus-within .auth-svg-icon {
     transform: scale(1.15);
-    stroke: #ffffff;
-    filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 18px rgba(0, 240, 255, 0.7));
+    filter: drop-shadow(0 0 10px #ffffff);
   }
 
-  /* Action Buttons with Spring Micro-interactions & Shimmer Sweep (Diagonal Space White -> Tech Blue Gradient) */
+  /* Action Buttons matching index.jsp primary and guest styles */
   .btn-submit {
     position: relative;
     overflow: hidden;
     width: 100%;
     padding: 12px 18px;
-    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    border: none;
     border-radius: 12px;
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 60%, #00f0ff 100%);
-    color: #020817;
+    background: #ffffff;
+    color: #000000;
     font-weight: 900;
     font-size: 0.84rem;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: -8px -4px 25px rgba(255, 255, 255, 0.45), 8px 6px 35px rgba(0, 240, 255, 0.65), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.45), 0 4px 14px rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 6px;
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, filter 0.2s ease;
+    transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   .btn-shimmer-sweep {
     position: absolute;
@@ -945,7 +893,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.65) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
     transform: translateX(-100%);
     animation: btnShimmerSweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     pointer-events: none;
@@ -963,12 +911,12 @@
     45%, 100% { transform: translateX(100%); }
   }
   .btn-submit:hover {
-    transform: scale(1.02);
-    box-shadow: -10px -5px 35px rgba(255, 255, 255, 0.6), 10px 8px 45px rgba(0, 240, 255, 0.85), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
-    filter: brightness(1.06);
+    background: #f1f5f9;
+    box-shadow: 0 0 36px rgba(255, 255, 255, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px) scale(1.02);
   }
   .btn-submit:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
   }
   .btn-submit:disabled {
     opacity: 0.55;
@@ -977,18 +925,15 @@
   }
 
   .btn-signup-submit {
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 60%, #00f0ff 100%);
-    box-shadow: -8px -4px 25px rgba(255, 255, 255, 0.45), 8px 6px 35px rgba(0, 240, 255, 0.65), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
-  }
-  .btn-signup-submit:hover {
-    box-shadow: -10px -5px 35px rgba(255, 255, 255, 0.6), 10px 8px 45px rgba(0, 240, 255, 0.85), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
+    background: #ffffff;
+    color: #000000;
   }
 
-  /* Guest Bypass Button (Space Black & Translucent Tech Blue Hybrid) */
+  /* Guest Bypass Button matching btn-portal-guest on index.jsp */
   .guest-bypass-box {
     margin-top: 0.85rem;
     padding-top: 0.85rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -996,12 +941,10 @@
     gap: 6px;
   }
   .btn-guest {
-    background:
-      linear-gradient(135deg, rgba(14, 16, 24, 0.85) 0%, rgba(8, 16, 32, 0.65) 42%, rgba(4, 20, 48, 0.35) 58%, rgba(2, 14, 38, 0.22) 100%) padding-box,
-      linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.35) 42%, rgba(0, 240, 255, 0.45) 58%, rgba(0, 240, 255, 0.8) 100%) border-box;
-    border: 1.5px solid transparent;
-    color: #e2e8f0;
-    padding: 9px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #94a3b8;
+    padding: 10px 14px;
     border-radius: 12px;
     font-size: 0.78rem;
     font-weight: 700;
@@ -1014,15 +957,13 @@
     width: 100%;
     justify-content: center;
     box-sizing: border-box;
-    box-shadow: -4px -2px 16px rgba(255, 255, 255, 0.15), 4px 4px 20px rgba(0, 240, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   .btn-guest:hover {
-    background:
-      linear-gradient(135deg, rgba(20, 22, 34, 0.92) 0%, rgba(12, 22, 42, 0.75) 42%, rgba(8, 30, 68, 0.45) 58%, rgba(4, 20, 52, 0.32) 100%) padding-box,
-      linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.55) 42%, rgba(0, 240, 255, 0.65) 58%, #00f0ff 100%) border-box;
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.35);
     color: #ffffff;
-    box-shadow: -6px -3px 24px rgba(255, 255, 255, 0.3), 6px 6px 30px rgba(0, 240, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    transform: scale(1.015);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
   }
 
   /* Feedback Alerts */
@@ -1158,8 +1099,6 @@
         <div class="beam-corner-dot dot-br"></div>
         <div class="beam-corner-dot dot-bl"></div>
       </div>
-      <!-- Subtle Stardust & Cosmic Nebula Overlay inside Card (Space Theme) -->
-      <div class="card-space-stardust"></div>
 
       <!-- Subtle Card Border Glow Sheen (Space White -> Tech Blue Gradient) -->
       <div class="card-border-glow-sheen"></div>
@@ -1192,7 +1131,7 @@
         <div class="auth-input-group">
           <label class="auth-input-label" for="signupUser">Operative Handle [3-20 Chars]</label>
           <div class="auth-input-box">
-            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <input type="text" class="auth-field" id="signupUser" placeholder="e.g. AstroOperative" autocomplete="username" required>
           </div>
         </div>
@@ -1200,7 +1139,7 @@
         <div class="auth-input-group">
           <label class="auth-input-label" for="signupPass">Security Cipher [Min 6 Chars]</label>
           <div class="auth-input-box">
-            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <input type="password" class="auth-field" id="signupPass" placeholder="••••••••••••" autocomplete="new-password" required>
           </div>
         </div>
@@ -1208,7 +1147,7 @@
         <div class="auth-input-group">
           <label class="auth-input-label" for="signupPassConfirm">Confirm Cipher</label>
           <div class="auth-input-box">
-            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <input type="password" class="auth-field" id="signupPassConfirm" placeholder="••••••••••••" autocomplete="new-password" required>
           </div>
         </div>
@@ -1227,7 +1166,7 @@
         <div class="auth-input-group">
           <label class="auth-input-label" for="loginUser">Operative Callsign</label>
           <div class="auth-input-box">
-            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <input type="text" class="auth-field" id="loginUser" placeholder="e.g. CyberNinja" autocomplete="username" required>
           </div>
         </div>
@@ -1235,7 +1174,7 @@
         <div class="auth-input-group">
           <label class="auth-input-label" for="loginPass">Security Cipher</label>
           <div class="auth-input-box">
-            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <input type="password" class="auth-field" id="loginPass" placeholder="••••••••••••" autocomplete="current-password" required>
           </div>
         </div>
@@ -1252,7 +1191,7 @@
       <!-- Guest Access Bypass -->
       <div class="guest-bypass-box">
         <button type="button" class="btn-guest" onclick="handleGuestBypass()">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px rgba(0,240,255,0.7));"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="3"/></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="3"/></svg>
           <span>Bypass Authentication (Play as Guest)</span>
         </button>
       </div>
