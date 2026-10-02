@@ -474,6 +474,7 @@ body {
   max-height: 90vh;
   max-height: 90dvh;
   overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -574,59 +575,104 @@ body {
 .mg-stage-viewport {
   position: relative;
   min-height: 280px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
-/* Snake Viewport */
-.snake-hud, .reactor-hud, .maze-hud {
+/* Master Game Container: forces vertical column flow and prevents horizontal stretch/scroll */
+.mg-game-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+/* HUD Bars */
+.snake-hud, .reactor-hud {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 8px;
+  max-width: 280px;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+
+.maze-hud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 6px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .hud-tag { font-size: 0.72rem; color: var(--text-muted); font-weight: 800; }
 .hud-score { font-size: 0.92rem; color: #ffffff; font-weight: 900; }
 
+/* 1. Snake & 3. Maze Canvas Wrappers (Square 1:1 Aspect Ratio) */
 .snake-canvas-wrap, .maze-canvas-wrap {
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
+  width: 280px;
+  height: 280px;
+  aspect-ratio: 1 / 1;
+  border: 2px solid rgba(56, 189, 248, 0.35);
+  border-radius: 12px;
+  background: #020617;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+  margin: 0 auto;
 }
 
+#snakeCanvas, #mazeCanvas {
+  width: 280px !important;
+  height: 280px !important;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* Mini Touch D-Pad for Snake and Maze */
 .mg-dpad {
   display: grid;
-  grid-template-areas: 
-    ". up ."
-    "left down right";
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(2, 40px);
   gap: 6px;
-  margin-top: 10px;
+  margin-top: 6px;
+  justify-content: center;
 }
 
 .mg-d-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  user-select: none;
+  touch-action: manipulation;
+  transition: all 0.15s ease;
 }
-.d-up { grid-area: up; }
-.d-left { grid-area: left; }
-.d-down { grid-area: down; }
-.d-right { grid-area: right; }
+.mg-d-btn:active { background: var(--neon-blue); color: #000; transform: scale(0.92); }
+.d-up { grid-column: 2; grid-row: 1; }
+.d-left { grid-column: 1; grid-row: 2; }
+.d-down { grid-column: 2; grid-row: 2; }
+.d-right { grid-column: 3; grid-row: 2; }
 
-/* Reactor Keypad */
+/* 2. Reactor Core Keypad Matrix */
 .reactor-keypad-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -634,40 +680,89 @@ body {
   gap: 10px;
   width: 280px;
   height: 280px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-.reactor-keypad-grid .rk-tile {
-  background: rgba(16, 22, 38, 0.9);
-  border: 1.2px solid rgba(56, 189, 248, 0.25);
+.mg-reactor-tile, .reactor-keypad-grid .rk-tile {
+  background: radial-gradient(circle at 35% 35%, rgba(15, 23, 42, 0.95) 0%, rgba(3, 7, 18, 0.98) 100%);
+  border: 2px solid rgba(56, 189, 248, 0.35);
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  color: #f1f5f9;
+  font-size: 1.4rem;
+  font-weight: 900;
+  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.reactor-keypad-grid .rk-tile.active-flash {
-  background: radial-gradient(circle, #ffffff 0%, #38bdf8 50%, #0284c7 100%) !important;
-  box-shadow: 0 0 25px rgba(56, 189, 248, 0.9);
-  transform: scale(0.96);
-}
-
-/* Banana Wires Viewport */
-.wires-top-bar { width: 100%; margin-bottom: 8px; }
-.rule-slider-toggle-btn {
-  width: 100%;
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  color: var(--banana-gold);
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 0.76rem;
-  font-weight: 800;
   cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  touch-action: manipulation;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.08);
+}
+
+.mg-reactor-tile:hover, .reactor-keypad-grid .rk-tile:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.mg-reactor-tile.flash, .reactor-keypad-grid .rk-tile.active-flash {
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #38bdf8 38%, #0284c7 75%, #0369a1 100%) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 25px #38bdf8, 0 0 50px rgba(56, 189, 248, 0.9), inset 0 0 20px #ffffff !important;
+  color: #ffffff !important;
+  transform: scale(1.05);
+}
+
+.mg-reactor-tile.correct, .reactor-keypad-grid .rk-tile.correct {
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #22c55e 38%, #16a34a 75%, #15803d 100%) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 25px #22c55e, inset 0 0 15px #ffffff !important;
+  color: #ffffff !important;
+  transform: scale(0.97);
+}
+
+.mg-reactor-tile.wrong, .reactor-keypad-grid .rk-tile.wrong {
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f43f5e 38%, #dc2626 75%, #991b1b 100%) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 30px #f43f5e, inset 0 0 20px #ffffff !important;
+  color: #ffffff !important;
+  transform: scale(0.95);
+}
+
+/* 4. Banana Wire Module */
+.wires-top-bar {
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 4px;
+}
+
+.rule-slider-toggle-btn {
+  background: rgba(250, 204, 21, 0.15);
+  border: 1px solid var(--banana-gold);
+  color: var(--banana-gold);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  user-select: none;
+  touch-action: manipulation;
+}
+.rule-slider-toggle-btn:hover {
+  background: rgba(250, 204, 21, 0.28);
+  box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
 }
 
 .wires-board {
@@ -675,106 +770,209 @@ body {
   flex-direction: column;
   gap: 12px;
   width: 100%;
+  max-width: 380px;
   padding: 10px 0;
 }
 
-.wire-item {
-  height: 22px;
-  border-radius: 6px;
+.wire-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
+  user-select: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.wire-row:hover { background: rgba(255, 255, 255, 0.06); }
+.wire-tag { font-size: 0.7rem; color: var(--text-muted); width: 34px; font-weight: bold; flex-shrink: 0; }
+.wire-terminal {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #475569;
+  border: 2px solid #94a3b8;
+  box-shadow: 0 0 6px rgba(0,0,0,0.8);
+  flex-shrink: 0;
+}
+.wire-cable-wrap {
+  flex: 1;
+  height: 18px;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-  transition: transform 0.15s ease;
+  display: flex;
+  align-items: center;
 }
-.wire-item:hover { transform: scaleY(1.15); }
-.wire-item.cut { opacity: 0.3; pointer-events: none; text-decoration: line-through; }
-
-.wires-hint {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  margin-top: 8px;
+.wire-cable {
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 0 10px currentColor;
+  transition: all 0.2s ease;
 }
+.wire-cable.cut {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.wire-cable.cut::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 42%;
+  height: 100%;
+  border-radius: 5px 0 0 5px;
+  background: inherit;
+  box-shadow: 0 0 8px currentColor;
+}
+.wire-cable.cut::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 42%;
+  height: 100%;
+  border-radius: 0 5px 5px 0;
+  background: inherit;
+  box-shadow: 0 0 8px currentColor;
+}
+.wires-hint { font-size: 0.68rem; color: var(--text-muted); text-align: center; }
 
 .wires-rule-drawer {
   position: absolute;
   inset: 0;
-  background: rgba(10, 15, 26, 0.98);
-  border-radius: 16px;
-  z-index: 50;
-  padding: 16px;
-  display: none;
+  background: rgba(8, 14, 26, 0.98);
+  backdrop-filter: blur(14px);
+  border: 2px solid var(--banana-gold);
+  border-radius: 12px;
+  z-index: 150;
+  padding: 14px;
+  display: flex;
   flex-direction: column;
+  gap: 10px;
+  transform: translateX(105%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.9);
+  overflow-y: auto;
 }
-.wires-rule-drawer.open { display: flex; }
-
+.wires-rule-drawer.active, .wires-rule-drawer.open {
+  transform: translateX(0);
+}
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(250, 204, 21, 0.3);
   padding-bottom: 8px;
-  margin-bottom: 12px;
 }
-.drawer-title { font-size: 0.85rem; font-weight: 900; color: var(--banana-gold); }
-.drawer-close-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 0.8rem; }
-
+.drawer-title {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--banana-gold);
+  letter-spacing: 1px;
+}
+.drawer-close-btn {
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid var(--neon-red);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.drawer-close-btn:hover { background: var(--neon-red); }
+.drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .manual-rule-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   padding: 8px 10px;
-  margin-bottom: 8px;
   text-align: left;
+  transition: all 0.2s;
 }
-.rule-badge { font-size: 0.62rem; color: var(--banana-gold); font-weight: 800; margin-bottom: 2px; }
-.rule-text { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
-
+.rule-badge {
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: var(--neon-blue);
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.rule-text {
+  font-size: 0.76rem;
+  color: #f8fafc;
+  line-height: 1.4;
+}
 .badge-dot {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  margin-left: 2px;
   vertical-align: middle;
+  margin: 0 2px;
 }
-.badge-dot.ruby { background: #f43f5e; box-shadow: 0 0 6px #f43f5e; }
+.badge-dot.ruby { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 .badge-dot.lime { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
 .badge-dot.purple { background: #a855f7; box-shadow: 0 0 6px #a855f7; }
-.badge-dot.gold { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+.badge-dot.gold { background: #facc15; box-shadow: 0 0 6px #facc15; }
+.drawer-status {
+  font-size: 0.72rem;
+  color: var(--banana-gold);
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px dashed rgba(250, 204, 21, 0.4);
+  text-align: center;
+}
 
-.drawer-status { font-size: 0.66rem; color: var(--text-muted); margin-top: auto; }
-
-/* Frequency Tuner Viewport */
+/* 5. Frequency Tuner Module */
 .freq-screen-wrap {
   width: 100%;
+  max-width: 340px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: #020617;
+  border: 1.8px solid rgba(56, 189, 248, 0.4);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+  box-sizing: border-box;
 }
 
 #freqCanvas {
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 320px;
+  height: 130px;
+  display: block;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  cursor: crosshair;
 }
 
 .freq-canvas-hint {
   font-size: 0.62rem;
-  color: var(--text-muted);
+  color: var(--neon-blue);
   letter-spacing: 1px;
-  margin: 4px 0 8px;
+  font-weight: 800;
+  margin-top: 5px;
+  text-transform: uppercase;
 }
 
 .freq-meter-wrap {
   width: 100%;
-  margin-bottom: 8px;
+  margin-top: 6px;
+  box-sizing: border-box;
 }
 
 .freq-meter-label {
   display: flex;
   justify-content: space-between;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 800;
   color: var(--neon-blue);
   margin-bottom: 3px;
@@ -782,8 +980,8 @@ body {
 
 .freq-meter-bar {
   width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -795,53 +993,76 @@ body {
   transition: width 0.1s linear;
 }
 
+.val-pill {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid var(--neon-blue);
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 900;
+}
+
 .freq-controls {
   width: 100%;
+  max-width: 340px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: 8px;
+  box-sizing: border-box;
 }
 
 .freq-slider-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
+  width: 100%;
 }
 
 .freq-slider-group label {
   display: flex;
   justify-content: space-between;
-  font-size: 0.66rem;
+  align-items: center;
+  font-size: 0.7rem;
   font-weight: 800;
   color: var(--text-muted);
-}
-
-.val-pill {
-  background: rgba(56, 189, 248, 0.15);
-  color: var(--neon-blue);
-  padding: 1px 6px;
-  border-radius: 4px;
 }
 
 .interactive-slider-row {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+}
+
+.interactive-slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--neon-blue);
+  cursor: pointer;
+  height: 6px;
 }
 
 .step-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
   color: #fff;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
-  font-size: 0.72rem;
+  font-size: 0.76rem;
+  font-weight: 900;
   cursor: pointer;
+  min-width: 44px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
 }
-
-input[type="range"] {
-  flex: 1;
-  accent-color: var(--neon-blue);
+.step-btn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
 }
 
 /* Modals */
@@ -989,4 +1210,49 @@ input[type="range"] {
   height: 3px;
   background: linear-gradient(90deg, transparent, #f43f5e, #ffffff, #f43f5e, transparent);
   box-shadow: 0 0 30px #f43f5e;
+}
+
+/* Responsive adjustments for mobile & small screens */
+@media (max-width: 600px) {
+  .minigame-box {
+    padding: 14px 12px;
+    width: 95vw;
+    max-width: 380px;
+    border-radius: 18px;
+  }
+  .snake-hud, .reactor-hud, .maze-hud {
+    max-width: 250px;
+  }
+  .snake-canvas-wrap, .maze-canvas-wrap {
+    width: 250px;
+    height: 250px;
+  }
+  #snakeCanvas, #mazeCanvas {
+    width: 250px !important;
+    height: 250px !important;
+  }
+  .reactor-keypad-grid {
+    width: 250px;
+    height: 250px;
+    gap: 8px;
+  }
+  .mg-reactor-tile, .reactor-keypad-grid .rk-tile {
+    font-size: 1.25rem;
+    border-radius: 10px;
+  }
+  .freq-screen-wrap, .freq-controls, .wires-top-bar, .wires-board {
+    max-width: 100%;
+  }
+  #freqCanvas {
+    max-width: 100%;
+    height: 110px;
+  }
+  .mg-dpad {
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(2, 36px);
+    gap: 5px;
+  }
+  .mg-d-btn {
+    font-size: 0.9rem;
+  }
 }
