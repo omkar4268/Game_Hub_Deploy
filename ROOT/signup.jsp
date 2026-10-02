@@ -125,7 +125,7 @@
     opacity: 1;
   }
 
-  /* Main Floating Space Terminal Auth Card */
+  /* Main Floating Space Terminal Auth Card with Dual 50/50 Split */
   .auth-portal-card {
     position: relative;
     z-index: 10;
@@ -133,13 +133,31 @@
     max-width: 450px;
     max-height: 90dvh;
     overflow-y: auto;
-    background: rgba(4, 9, 22, 0.90);
+    background:
+      linear-gradient(90deg,
+        rgba(7, 8, 14, 0.96) 0%,
+        rgba(9, 11, 20, 0.95) 45%,
+        rgba(4, 16, 42, 0.95) 55%,
+        rgba(2, 14, 38, 0.98) 100%
+      ) padding-box,
+      linear-gradient(90deg,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.95) 45%,
+        rgba(255, 255, 255, 0.7) 49%,
+        #00f0ff 51%,
+        #00f0ff 100%
+      ) border-box;
+    border: 2px solid transparent;
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(0, 240, 255, 0.35);
     border-radius: 28px;
     padding: 2.2rem 2rem;
-    box-shadow: 0 0 60px rgba(0, 240, 255, 0.18), 0 30px 80px rgba(0, 0, 0, 0.95);
+    box-shadow:
+      -20px 0 50px -4px rgba(255, 255, 255, 0.22),
+      20px 0 55px -4px rgba(0, 240, 255, 0.38),
+      0 30px 80px rgba(0, 0, 0, 0.95),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.5),
+      inset -1px -1px 2px rgba(0, 240, 255, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -156,8 +174,8 @@
     left: 15%;
     right: 15%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    box-shadow: 0 0 16px var(--primary);
+    background: linear-gradient(90deg, transparent, #ffffff 40%, #00f0ff 70%, transparent);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.8);
   }
 
   @keyframes cardSpringIn {
@@ -178,14 +196,14 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 240, 255, 0.08);
-    border: 1px solid rgba(0, 240, 255, 0.3);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 240, 255, 0.12) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 5px 14px;
     border-radius: 9999px;
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 2px;
-    color: var(--primary);
+    color: #f8fafc;
     text-transform: uppercase;
     margin-bottom: 0.9rem;
     box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
@@ -195,8 +213,8 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
+    background: #ffffff;
+    box-shadow: 0 0 8px #ffffff, 0 0 14px #00f0ff;
     animation: pulseDot 1.8s infinite;
   }
   @keyframes pulseDot {
@@ -213,9 +231,15 @@
     margin: 0 0 0.4rem 0;
     line-height: 1.1;
   }
-  .portal-title span {
-    color: var(--primary);
-    text-shadow: 0 0 35px var(--primary);
+  .portal-title span, .portal-title .hollow-hub {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    -webkit-text-stroke: 1.8px #ffffff !important;
+    text-stroke: 1.8px #ffffff !important;
+    letter-spacing: 3.5px;
+    font-weight: 900;
+    display: inline-block;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 24px rgba(0, 240, 255, 0.75));
   }
 
   .portal-subtitle {
@@ -458,7 +482,7 @@
   <!-- Dedicated Space Terminal Auth Card -->
   <div class="auth-portal-card" id="authCard">
     <div class="portal-tag">🧠 BRAIN AGILITY & LOGIC PLATFORM</div>
-    <h1 class="portal-title">GAME <span>HUB</span></h1>
+    <h1 class="portal-title">GAME <span class="hollow-hub">HUB</span></h1>
     <p class="portal-subtitle">
       Cognitive agility, pattern recognition, and split-second reflex training. Zero latency.
     </p>

@@ -51,7 +51,9 @@
     height: 100vh;
     height: 100dvh;
     overflow: hidden !important;
-    background: radial-gradient(circle at 50% 40%, #051838 0%, #030e24 55%, #010612 100%);
+    background:
+      radial-gradient(circle at 18% 45%, rgba(22, 25, 38, 0.95) 0%, rgba(5, 7, 14, 0.98) 55%, #010204 100%),
+      radial-gradient(circle at 82% 45%, rgba(4, 28, 64, 0.8) 0%, rgba(2, 10, 26, 0.95) 55%, #01040a 100%);
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -416,7 +418,7 @@
     max-width: 440px;
   }
 
-  /* Main Floating Space Terminal Auth Card with Tech Blue & Cyan Theme */
+  /* Main Floating Space Terminal Auth Card with Dual 50/50 Split (Space White & Black Left, Tech Cyan Blue Right) */
   .auth-portal-card {
     position: relative;
     z-index: 10;
@@ -426,21 +428,42 @@
     overflow: hidden !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
-    background: linear-gradient(135deg, rgba(16, 20, 32, 0.95) 0%, rgba(8, 22, 52, 0.94) 50%, rgba(2, 14, 38, 0.98) 100%);
+    box-sizing: border-box;
+    border-radius: 24px;
+    /* Dual Split Background & Dual Split Outline:
+       Left Half: Space Obsidian Glass with pure white / black & white outline
+       Right Half: Tech Cyber Blue Glass with electric cyan blue outline */
+    background:
+      linear-gradient(90deg,
+        rgba(7, 8, 14, 0.96) 0%,
+        rgba(9, 11, 20, 0.95) 45%,
+        rgba(4, 16, 42, 0.95) 55%,
+        rgba(2, 14, 38, 0.98) 100%
+      ) padding-box,
+      linear-gradient(90deg,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.95) 45%,
+        rgba(255, 255, 255, 0.7) 49%,
+        #00f0ff 51%,
+        #00f0ff 100%
+      ) border-box;
+    border: 2px solid transparent;
     backdrop-filter: blur(32px) saturate(140%);
     -webkit-backdrop-filter: blur(32px) saturate(140%);
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    border-radius: 24px;
-    padding: 1.45rem 1.75rem;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(255, 255, 255, 0.12), 0 20px 60px rgba(0, 240, 255, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+    padding: 1.55rem 1.85rem;
+    box-shadow:
+      -20px 0 50px -4px rgba(255, 255, 255, 0.22),
+      20px 0 55px -4px rgba(0, 240, 255, 0.38),
+      0 25px 80px rgba(0, 0, 0, 0.96),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.5),
+      inset -1px -1px 2px rgba(0, 240, 255, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-sizing: border-box;
     transform-style: preserve-3d;
     will-change: transform;
-    animation: cardGlowPulse 4s ease-in-out infinite alternate;
+    animation: cardDualGlowPulse 4s ease-in-out infinite alternate;
     transition: opacity 0.35s ease, filter 0.35s ease;
   }
   .auth-portal-card::-webkit-scrollbar {
@@ -449,28 +472,21 @@
     height: 0 !important;
   }
 
-  /* Stationary Operative Companion Orb Station (matching first page landing card) */
-  .auth-portal-card .portal-orb-station {
+  /* Subtle Celestial Stardust & Cosmic Nebula Overlay inside Card (Space Theme) */
+  .card-space-stardust {
     position: absolute;
-    top: 18px;
-    right: 20px;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at 40% 40%, rgba(30, 32, 44, 0.95), rgba(6, 8, 16, 0.98));
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 0 16px rgba(255, 255, 255, 0.3), 0 0 25px rgba(0, 240, 255, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.5);
-    z-index: 20;
+    inset: 0;
+    border-radius: 24px;
     pointer-events: none;
-  }
-  .auth-portal-card .portal-orb-station canvas {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: block;
+    background:
+      radial-gradient(1px 1px at 14% 18%, rgba(255, 255, 255, 0.85), transparent),
+      radial-gradient(1.5px 1.5px at 26% 62%, rgba(255, 255, 255, 0.75), transparent),
+      radial-gradient(1px 1px at 36% 28%, rgba(255, 255, 255, 0.6), transparent),
+      radial-gradient(1px 1px at 12% 82%, rgba(255, 255, 255, 0.7), transparent),
+      radial-gradient(1.2px 1.2px at 42% 78%, rgba(255, 255, 255, 0.5), transparent),
+      radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
+    z-index: 1;
+    opacity: 0.9;
   }
 
   /* Traveling Light Beam Perimeter Circuit (Space White -> Tech Blue Gradient) */
@@ -483,16 +499,16 @@
     z-index: 3;
   }
 
-  /* Top Light Beam: Space White */
+  /* Top Light Beam: Space White on left -> Tech Cyan on right */
   .beam-runner.beam-top {
     position: absolute;
     top: 0;
     left: -50%;
     height: 2.5px;
     width: 50%;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.98) 50%, #ffffff 85%, transparent 100%);
-    filter: blur(1px);
-    box-shadow: 0 0 14px #ffffff, 0 0 6px #ffffff;
+    background: linear-gradient(90deg, transparent 0%, #ffffff 35%, #7dd3fc 60%, #00f0ff 85%, transparent 100%);
+    filter: blur(1.2px);
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.7), 0 0 14px rgba(0, 240, 255, 0.7);
     animation: beamMoveTop 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -505,20 +521,20 @@
     height: 50%;
     background: linear-gradient(180deg, transparent 0%, rgba(56, 189, 248, 0.95) 50%, #00f0ff 85%, transparent 100%);
     filter: blur(1.5px);
-    box-shadow: 0 0 14px rgba(0, 240, 255, 0.85), 0 0 6px #00f0ff;
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.95), 0 0 8px #00f0ff;
     animation: beamMoveRight 3.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s infinite;
   }
 
-  /* Bottom Light Beam: Electric Cyan */
+  /* Bottom Light Beam: Electric Cyan on right -> Space White on left */
   .beam-runner.beam-bottom {
     position: absolute;
     bottom: 0;
     right: -50%;
     height: 2.5px;
     width: 50%;
-    background: linear-gradient(270deg, transparent 0%, rgba(56, 189, 248, 0.95) 50%, #00f0ff 85%, transparent 100%);
-    filter: blur(1.5px);
-    box-shadow: 0 0 14px rgba(0, 240, 255, 0.85), 0 0 6px #00f0ff;
+    background: linear-gradient(270deg, transparent 0%, #00f0ff 35%, #7dd3fc 60%, #ffffff 85%, transparent 100%);
+    filter: blur(1.2px);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.7), 0 0 14px rgba(255, 255, 255, 0.7);
     animation: beamMoveBottom 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
   }
 
@@ -529,7 +545,7 @@
     left: 0;
     width: 2.5px;
     height: 50%;
-    background: linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #ffffff 85%, transparent 100%);
+    background: linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.98) 50%, #ffffff 85%, transparent 100%);
     filter: blur(1px);
     box-shadow: 0 0 14px #ffffff, 0 0 6px #ffffff;
     animation: beamMoveLeft 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.8s infinite;
@@ -559,7 +575,7 @@
     100% { bottom: 100%; opacity: 0.3; filter: blur(1px); }
   }
 
-  /* Corner Glow Dots: White top-left, Cyan bottom-right */
+  /* Corner Glow Dots: Pure Space White on left side, Tech Cyan Blue on right side */
   .beam-corner-dot {
     position: absolute;
     border-radius: 50%;
@@ -572,25 +588,25 @@
     width: 6px;
     height: 6px;
     background: #ffffff;
-    box-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.85);
     animation: cornerPulseDot 2s ease-in-out infinite alternate;
   }
   .beam-corner-dot.dot-tr {
     top: 3px;
     right: 3px;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, #ffffff 40%, #bae6fd 80%);
-    box-shadow: 0 0 10px #bae6fd, 0 0 18px rgba(56, 189, 248, 0.7);
+    width: 7px;
+    height: 7px;
+    background: #00f0ff;
+    box-shadow: 0 0 12px #00f0ff, 0 0 22px rgba(0, 240, 255, 0.85);
     animation: cornerPulseDot 2.4s ease-in-out 0.5s infinite alternate;
   }
   .beam-corner-dot.dot-br {
     bottom: 3px;
     right: 3px;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, #ffffff 30%, #00f0ff 80%);
-    box-shadow: 0 0 10px #00f0ff, 0 0 18px rgba(0, 240, 255, 0.8);
+    width: 7px;
+    height: 7px;
+    background: #00f0ff;
+    box-shadow: 0 0 12px #00f0ff, 0 0 22px rgba(0, 240, 255, 0.85);
     animation: cornerPulseDot 2.2s ease-in-out 1.0s infinite alternate;
   }
   .beam-corner-dot.dot-bl {
@@ -598,48 +614,62 @@
     left: 3px;
     width: 6px;
     height: 6px;
-    background: radial-gradient(circle, #ffffff 40%, #7dd3fc 80%);
-    box-shadow: 0 0 10px #7dd3fc, 0 0 16px rgba(125, 211, 252, 0.7);
+    background: #ffffff;
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.85);
     animation: cornerPulseDot 2.3s ease-in-out 1.5s infinite alternate;
   }
 
   @keyframes cornerPulseDot {
-    0% { opacity: 0.25; transform: scale(0.85); }
-    100% { opacity: 0.85; transform: scale(1.2); }
+    0% { opacity: 0.35; transform: scale(0.85); }
+    100% { opacity: 0.95; transform: scale(1.2); }
   }
 
   /* Subtle Card Border Glow Sheen (Space White -> Tech Blue Gradient) */
   .card-border-glow-sheen {
     position: absolute;
-    inset: -1px;
+    inset: -2px;
     border-radius: 24px;
-    border: 1px solid transparent;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(186, 230, 253, 0.45) 45%, rgba(0, 240, 255, 0.7) 100%) border-box;
+    border: 2px solid transparent;
+    background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.75) 45%,
+      rgba(255, 255, 255, 0.5) 49%,
+      rgba(0, 240, 255, 0.6) 51%,
+      rgba(0, 240, 255, 0.95) 100%
+    ) border-box;
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    opacity: 0.75;
-    transition: opacity 0.5s ease;
-    animation: borderSheenPulse 4s ease-in-out infinite alternate;
+    opacity: 0.85;
     z-index: 2;
+    filter: drop-shadow(-8px 0 14px rgba(255, 255, 255, 0.4)) drop-shadow(8px 0 16px rgba(0, 240, 255, 0.5));
+    animation: borderSheenDualPulse 3.5s ease-in-out infinite alternate;
   }
   .auth-portal-card:hover .card-border-glow-sheen {
-    opacity: 0.95;
+    opacity: 1;
   }
-  @keyframes borderSheenPulse {
-    0% { opacity: 0.55; }
-    100% { opacity: 0.90; }
+  @keyframes borderSheenDualPulse {
+    0% { opacity: 0.65; }
+    100% { opacity: 1; }
   }
 
-  @keyframes cardGlowPulse {
+  @keyframes cardDualGlowPulse {
     0% {
-      box-shadow: 0 0 35px rgba(255, 255, 255, 0.18), 0 0 50px rgba(0, 240, 255, 0.25), 0 25px 80px rgba(2, 6, 23, 0.95), inset 0 1px 2px rgba(255, 255, 255, 0.4);
-      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow:
+        -16px 0 38px -4px rgba(255, 255, 255, 0.16),
+        16px 0 42px -4px rgba(0, 240, 255, 0.30),
+        0 25px 80px rgba(0, 0, 0, 0.96),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.45),
+        inset -1px -1px 2px rgba(0, 240, 255, 0.35);
     }
     100% {
-      box-shadow: 0 0 45px rgba(255, 255, 255, 0.28), 0 0 75px rgba(0, 240, 255, 0.45), 0 25px 80px rgba(2, 6, 23, 0.95), inset 0 1px 2px rgba(255, 255, 255, 0.7);
-      border-color: rgba(0, 240, 255, 0.65);
+      box-shadow:
+        -24px 0 55px -4px rgba(255, 255, 255, 0.28),
+        24px 0 60px -4px rgba(0, 240, 255, 0.50),
+        0 25px 80px rgba(0, 0, 0, 0.96),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.70),
+        inset -1px -1px 2px rgba(0, 240, 255, 0.55);
     }
   }
 
@@ -737,9 +767,9 @@
     position: relative;
     display: flex;
     width: 100%;
-    background: linear-gradient(90deg, rgba(14, 18, 28, 0.92) 0%, rgba(6, 18, 44, 0.92) 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 240, 255, 0.15);
+    background: linear-gradient(90deg, rgba(12, 14, 22, 0.95) 0%, rgba(4, 18, 44, 0.95) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), -4px 0 14px rgba(255, 255, 255, 0.1), 4px 0 16px rgba(0, 240, 255, 0.2);
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 0.85rem;
@@ -752,15 +782,17 @@
     bottom: 4px;
     left: 4px;
     width: calc(50% - 4px);
-    background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 45%, #00f0ff 100%);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.5), inset 0 1px 1px #ffffff;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 60%, #cbd5e1 100%);
+    box-shadow: 0 0 22px rgba(255, 255, 255, 0.85), inset 0 1px 1px #ffffff;
     border-radius: 9px;
     pointer-events: none;
     z-index: 1;
-    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.32s ease, box-shadow 0.32s ease;
   }
   .auth-tabs.is-login .auth-tab-pill {
     transform: translateX(100%);
+    background: linear-gradient(135deg, #38bdf8 0%, #00f0ff 60%, #06b6d4 100%);
+    box-shadow: 0 0 24px rgba(0, 240, 255, 0.85), inset 0 1px 1px #ffffff;
   }
   .auth-tab {
     position: relative;
@@ -770,7 +802,7 @@
     background: transparent;
     border: none;
     border-radius: 9px;
-    color: #cbd5e1;
+    color: #94a3b8;
     font-weight: 800;
     font-size: 0.76rem;
     letter-spacing: 1.5px;
@@ -814,31 +846,37 @@
     letter-spacing: 1.8px;
     text-transform: uppercase;
     font-weight: 800;
-    color: #38bdf8;
-    text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+    background: linear-gradient(90deg, #ffffff 0%, #bae6fd 60%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
   }
-  /* Input micro-scaling, hover & focus highlights (from sign-in-card-2) */
+  /* Input micro-scaling, hover & focus highlights (Space White on left, Tech Blue on right) */
   .auth-input-box {
     position: relative;
     display: flex;
     align-items: center;
     border-radius: 12px;
-    background: rgba(6, 22, 50, 0.8);
-    border: 1.5px solid rgba(0, 240, 255, 0.38);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 240, 255, 0.1);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    background:
+      linear-gradient(90deg, rgba(12, 14, 22, 0.92) 0%, rgba(4, 18, 42, 0.92) 100%) padding-box,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 45%, rgba(0, 240, 255, 0.35) 55%, rgba(0, 240, 255, 0.65) 100%) border-box;
+    border: 1.5px solid transparent;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), -4px 0 12px rgba(255, 255, 255, 0.06), 4px 0 14px rgba(0, 240, 255, 0.12);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease;
   }
   .auth-input-box:hover {
     transform: scale(1.015);
-    background: rgba(8, 28, 64, 0.9);
-    border-color: rgba(0, 240, 255, 0.7);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 22px rgba(0, 240, 255, 0.25);
+    background:
+      linear-gradient(90deg, rgba(16, 18, 28, 0.94) 0%, rgba(6, 26, 60, 0.94) 100%) padding-box,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.45) 45%, rgba(0, 240, 255, 0.5) 55%, rgba(0, 240, 255, 0.9) 100%) border-box;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4), -6px 0 16px rgba(255, 255, 255, 0.12), 6px 0 20px rgba(0, 240, 255, 0.25);
   }
   .auth-input-box:focus-within {
     transform: scale(1.025);
-    background: rgba(10, 36, 80, 0.96);
-    border-color: #00f0ff;
-    box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.3), 0 0 35px rgba(0, 240, 255, 0.55);
+    background:
+      linear-gradient(90deg, rgba(18, 20, 32, 0.98) 0%, rgba(8, 32, 74, 0.98) 100%) padding-box,
+      linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 45%, rgba(0, 240, 255, 0.8) 55%, #00f0ff 100%) border-box;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), -8px 0 24px rgba(255, 255, 255, 0.3), 8px 0 28px rgba(0, 240, 255, 0.45);
   }
   .auth-field {
     width: 100%;
@@ -846,14 +884,14 @@
     border: none !important;
     border-radius: 12px;
     padding: 10px 14px 10px 42px;
-    color: #f0f9ff;
+    color: #f8fafc;
     font-size: 14px !important;
     outline: none;
     box-sizing: border-box;
     font-weight: 600;
   }
   .auth-field::placeholder {
-    color: rgba(125, 211, 252, 0.5);
+    color: rgba(203, 213, 225, 0.5);
     font-size: 0.82rem;
   }
   .auth-svg-icon {
@@ -862,15 +900,15 @@
     width: 17px;
     height: 17px;
     pointer-events: none;
-    stroke: #00f0ff;
-    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.8));
+    stroke: #ffffff;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
     transition: transform 0.25s ease, filter 0.25s ease, stroke 0.25s ease;
     z-index: 2;
   }
   .auth-input-box:focus-within .auth-svg-icon {
-    transform: scale(1.2);
+    transform: scale(1.15);
     stroke: #ffffff;
-    filter: drop-shadow(0 0 10px #00f0ff) drop-shadow(0 0 18px #38bdf8);
+    filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 18px rgba(0, 240, 255, 0.6));
   }
 
   /* Action Buttons with Spring Micro-interactions & Shimmer Sweep (Space White -> Tech Blue Gradient) */
@@ -879,16 +917,16 @@
     overflow: hidden;
     width: 100%;
     padding: 12px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
     border-radius: 12px;
-    background: linear-gradient(135deg, #ffffff 0%, #bae6fd 25%, #38bdf8 65%, #00f0ff 100%);
+    background: linear-gradient(90deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 65%, #00f0ff 100%);
     color: #020817;
     font-weight: 900;
     font-size: 0.84rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.6), 0 4px 18px rgba(2, 132, 199, 0.5), inset 0 1px 2px #ffffff;
+    box-shadow: -8px 0 25px rgba(255, 255, 255, 0.35), 8px 0 35px rgba(0, 240, 255, 0.55), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -921,7 +959,7 @@
   }
   .btn-submit:hover {
     transform: scale(1.02);
-    box-shadow: 0 0 35px rgba(255, 255, 255, 0.6), 0 0 55px rgba(0, 240, 255, 0.85), 0 6px 26px rgba(2, 132, 199, 0.7), inset 0 1px 2px #ffffff;
+    box-shadow: -10px 0 35px rgba(255, 255, 255, 0.5), 10px 0 45px rgba(0, 240, 255, 0.75), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
     filter: brightness(1.06);
   }
   .btn-submit:active {
@@ -934,18 +972,18 @@
   }
 
   .btn-signup-submit {
-    background: linear-gradient(135deg, #ffffff 0%, #bae6fd 25%, #38bdf8 65%, #00f0ff 100%);
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.6), 0 4px 18px rgba(2, 132, 199, 0.5), inset 0 1px 2px #ffffff;
+    background: linear-gradient(90deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 65%, #00f0ff 100%);
+    box-shadow: -8px 0 25px rgba(255, 255, 255, 0.35), 8px 0 35px rgba(0, 240, 255, 0.55), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
   }
   .btn-signup-submit:hover {
-    box-shadow: 0 0 35px rgba(255, 255, 255, 0.6), 0 0 55px rgba(0, 240, 255, 0.85), 0 6px 26px rgba(2, 132, 199, 0.7), inset 0 1px 2px #ffffff;
+    box-shadow: -10px 0 35px rgba(255, 255, 255, 0.5), 10px 0 45px rgba(0, 240, 255, 0.75), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
   }
 
-  /* Guest Bypass Button (Tech Blue & Cyan) */
+  /* Guest Bypass Button (Space Black & Tech Blue Hybrid) */
   .guest-bypass-box {
     margin-top: 0.85rem;
     padding-top: 0.85rem;
-    border-top: 1px solid rgba(0, 240, 255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -953,9 +991,11 @@
     gap: 6px;
   }
   .btn-guest {
-    background: rgba(6, 24, 54, 0.75);
-    border: 1.5px solid rgba(0, 240, 255, 0.35);
-    color: #7dd3fc;
+    background:
+      linear-gradient(90deg, rgba(14, 16, 24, 0.9) 0%, rgba(4, 20, 48, 0.9) 100%) padding-box,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(0, 240, 255, 0.55) 100%) border-box;
+    border: 1.5px solid transparent;
+    color: #e2e8f0;
     padding: 9px 14px;
     border-radius: 12px;
     font-size: 0.78rem;
@@ -969,13 +1009,14 @@
     width: 100%;
     justify-content: center;
     box-sizing: border-box;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    box-shadow: -4px 0 16px rgba(255, 255, 255, 0.1), 4px 0 20px rgba(0, 240, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   .btn-guest:hover {
-    background: rgba(10, 36, 80, 0.9);
-    border-color: #00f0ff;
+    background:
+      linear-gradient(90deg, rgba(20, 22, 34, 0.95) 0%, rgba(8, 30, 68, 0.95) 100%) padding-box,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(0, 240, 255, 0.9) 100%) border-box;
     color: #ffffff;
-    box-shadow: 0 0 30px rgba(0, 240, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: -6px 0 24px rgba(255, 255, 255, 0.25), 6px 0 28px rgba(0, 240, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     transform: scale(1.015);
   }
 
@@ -1112,16 +1153,14 @@
         <div class="beam-corner-dot dot-br"></div>
         <div class="beam-corner-dot dot-bl"></div>
       </div>
-      <!-- Subtle Card Border Glow Sheen (from sign-in-card-2) -->
+      <!-- Subtle Stardust & Cosmic Nebula Overlay inside Card (Space Theme) -->
+      <div class="card-space-stardust"></div>
+
+      <!-- Subtle Card Border Glow Sheen (Space White -> Tech Blue Gradient) -->
       <div class="card-border-glow-sheen"></div>
 
-      <!-- Stationary Operative Companion Orb (Tracking cursor from fixed post) -->
-      <div class="portal-orb-station" id="portalOrbStation" title="Operative Companion Orb">
-        <canvas id="portalOrbCanvas" width="96" height="96"></canvas>
-      </div>
-
       <div class="portal-tag">
-        <svg class="tag-svg-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px #00f0ff);"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+        <svg class="tag-svg-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px #ffffff);"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
         BRAIN AGILITY &amp; LOGIC PLATFORM
       </div>
       <h1 class="portal-title">GAME <span class="hollow-hub">HUB</span></h1>
@@ -1739,249 +1778,6 @@
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
-  })();
-
-  // =========================================================
-  // OPERATIVE COMPANION ORB ENGINE (WebGL / 2D Canvas Fallback)
-  // Preserving the beloved space companion orb on the auth card
-  // =========================================================
-  (function initAuthCompanionOrb() {
-    const canvas = document.getElementById('portalOrbCanvas');
-    if (!canvas) return;
-
-    const VERT_ORB = `
-      attribute vec2 a_position;
-      void main() {
-        gl_Position = vec4(a_position, 0.0, 1.0);
-      }
-    `;
-
-    const FRAG_ORB = `
-      precision highp float;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_look;
-      uniform float u_blink;
-      uniform vec3 u_body;
-      uniform vec3 u_eye;
-
-      vec3 orient(vec3 p, vec2 look) {
-        float yaw = look.x * 0.92;
-        float pitch = -look.y * 0.78;
-        float cy = cos(yaw), sy = sin(yaw);
-        float cp = cos(pitch), sp = sin(pitch);
-        vec3 q = vec3(p.x, p.y * cp - p.z * sp, p.y * sp + p.z * cp);
-        return vec3(q.x * cy + q.z * sy, q.y, -q.x * sy + q.z * cy);
-      }
-
-      float eyeMask(vec3 n, vec3 e, vec3 right, vec3 up, float halfH, float rad) {
-        float facing = dot(n, e);
-        float x = dot(n, right) - dot(e, right);
-        float y = dot(n, up) - dot(e, up);
-        y -= clamp(y, -halfH, halfH);
-        float d = length(vec2(x, y)) - rad;
-        float fill = 1.0 - smoothstep(-0.01, 0.01, d);
-        return fill * smoothstep(0.12, 0.32, facing);
-      }
-
-      void main() {
-        vec2 uv = (gl_FragCoord.xy / u_resolution.xy) * 2.0 - 1.0;
-        float aspect = u_resolution.x / max(u_resolution.y, 1.0);
-        uv.x *= aspect;
-
-        float radius = 0.94;
-        vec2 p = uv / radius;
-        float r2 = dot(p, p);
-        float edge = 1.0 - smoothstep(0.985, 1.012, sqrt(max(r2, 0.0)));
-        if (edge <= 0.001) {
-          gl_FragColor = vec4(0.0);
-          return;
-        }
-
-        float z = sqrt(max(1.0 - r2, 0.0));
-        vec3 n = normalize(vec3(p, z));
-
-        vec2 look = u_look;
-        float lm = length(look);
-        if (lm > 1.0) look /= lm;
-
-        vec3 right = orient(vec3(1.0, 0.0, 0.0), look);
-        vec3 up = orient(vec3(0.0, 1.0, 0.0), look);
-        vec3 eL = orient(normalize(vec3(-0.32, 0.08, 1.0)), look);
-        vec3 eR = orient(normalize(vec3(0.32, 0.08, 1.0)), look);
-
-        float halfH = mix(0.128, 0.012, u_blink);
-        float rad = mix(0.054, 0.062, u_blink);
-        float eyes = max(
-          eyeMask(n, eL, right, up, halfH, rad),
-          eyeMask(n, eR, right, up, halfH, rad)
-        );
-
-        vec3 col = mix(u_body, u_eye, clamp(eyes, 0.0, 1.0));
-        gl_FragColor = vec4(clamp(col, 0.0, 1.0), edge);
-      }
-    `;
-
-    function createOrb2DFallback(cvs) {
-      const ctx = cvs.getContext('2d');
-      if (!ctx) return null;
-      let targetX = 0, targetY = 0.08;
-      let curX = 0, curY = 0.08;
-      let blinkVal = 0, blinkProgress = 0, isBlinking = false;
-      let nextBlink = performance.now() + 2500 + Math.random() * 3000;
-      let running = true, raf = null;
-
-      function render(now) {
-        if (!running) return;
-        curX += (targetX - curX) * 0.12;
-        curY += (targetY - curY) * 0.12;
-
-        if (!isBlinking && now > nextBlink) {
-          isBlinking = true;
-          blinkProgress = 0;
-        }
-        if (isBlinking) {
-          blinkProgress += 0.08;
-          blinkVal = Math.sin(blinkProgress * Math.PI);
-          if (blinkProgress >= 1.0) {
-            isBlinking = false;
-            blinkVal = 0;
-            nextBlink = now + 2500 + Math.random() * 3000;
-          }
-        }
-
-        const W = cvs.width, H = cvs.height;
-        ctx.clearRect(0, 0, W, H);
-        const cx = W / 2, cy = H / 2, r = Math.min(W, H) * 0.46;
-
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fillStyle = '#F4F4F5';
-        ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
-        ctx.shadowBlur = 12;
-        ctx.fill();
-        ctx.shadowColor = 'transparent';
-
-        const eyeSpacing = r * 0.52;
-        const eyeOffsetX = curX * r * 0.45;
-        const eyeOffsetY = -curY * r * 0.45;
-        const eyeR = r * 0.09;
-        const eyeScaleY = Math.max(0.08, 1 - blinkVal);
-
-        ctx.fillStyle = '#09090B';
-        [-eyeSpacing / 2, eyeSpacing / 2].forEach(offset => {
-          ctx.save();
-          ctx.translate(cx + offset + eyeOffsetX, cy + eyeOffsetY);
-          ctx.scale(1, eyeScaleY);
-          ctx.beginPath();
-          ctx.arc(0, 0, eyeR, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        });
-
-        raf = requestAnimationFrame(render);
-      }
-      raf = requestAnimationFrame(render);
-
-      return {
-        setTargetLook(x, y) {
-          targetX = Math.max(-0.45, Math.min(0.45, x));
-          targetY = Math.max(-0.45, Math.min(0.45, y));
-        },
-        destroy() {
-          running = false;
-          if (raf) cancelAnimationFrame(raf);
-        }
-      };
-    }
-
-    let gl = null;
-    try {
-      gl = canvas.getContext('webgl', { alpha: true, antialias: false, depth: false });
-    } catch (e) { gl = null; }
-    if (!gl) return createOrb2DFallback(canvas);
-
-    function compile(type, src) {
-      const s = gl.createShader(type);
-      if (!s) return null;
-      gl.shaderSource(s, src);
-      gl.compileShader(s);
-      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; }
-      return s;
-    }
-
-    const vs = compile(gl.VERTEX_SHADER, VERT_ORB);
-    const fs = compile(gl.FRAGMENT_SHADER, FRAG_ORB);
-    if (!vs || !fs) return createOrb2DFallback(canvas);
-
-    const program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return createOrb2DFallback(canvas);
-
-    gl.useProgram(program);
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
-
-    const loc = gl.getAttribLocation(program, 'a_position');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes = gl.getUniformLocation(program, 'u_resolution');
-    const uTime = gl.getUniformLocation(program, 'u_time');
-    const uLook = gl.getUniformLocation(program, 'u_look');
-    const uBlink = gl.getUniformLocation(program, 'u_blink');
-    const uBody = gl.getUniformLocation(program, 'u_body');
-    const uEye = gl.getUniformLocation(program, 'u_eye');
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-    let curLook = { x: 0, y: 0.08 };
-    let targetLook = { x: 0, y: 0.08 };
-    let blinkVal = 0, isBlinking = false, blinkProg = 0;
-    let nextBlink = performance.now() + 2500 + Math.random() * 3000;
-    let startT = performance.now();
-
-    function render(now) {
-      curLook.x += (targetLook.x - curLook.x) * 0.12;
-      curLook.y += (targetLook.y - curLook.y) * 0.12;
-
-      if (!isBlinking && now > nextBlink) { isBlinking = true; blinkProg = 0; }
-      if (isBlinking) {
-        blinkProg += 0.08;
-        blinkVal = Math.sin(blinkProg * Math.PI);
-        if (blinkProg >= 1.0) { isBlinking = false; blinkVal = 0; nextBlink = now + 2500 + Math.random() * 3000; }
-      }
-
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-
-      gl.useProgram(program);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uTime, (now - startT) * 0.001);
-      gl.uniform2f(uLook, curLook.x, curLook.y);
-      gl.uniform1f(uBlink, blinkVal);
-      gl.uniform3f(uBody, 0.957, 0.957, 0.961); // Space White #F4F4F5
-      gl.uniform3f(uEye, 0.035, 0.035, 0.043);  // Dark Pupil #09090B
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-      requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
-
-    window.addEventListener('mousemove', (e) => {
-      const r = canvas.getBoundingClientRect();
-      if (r.width > 0 && r.height > 0) {
-        const cx = r.left + r.width / 2;
-        const cy = r.top + r.height / 2;
-        targetLook.x = Math.max(-0.45, Math.min(0.45, (e.clientX - cx) / 45));
-        targetLook.y = Math.max(-0.45, Math.min(0.45, (cy - e.clientY) / 45));
-      }
-    }, { passive: true });
   })();
 </script>
 </body>
