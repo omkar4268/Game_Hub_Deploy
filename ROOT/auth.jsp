@@ -142,12 +142,139 @@
     pointer-events: auto;
   }
   .auth-transition-card {
+    position: relative;
+    z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 2rem;
     padding: 2rem;
+  }
+
+  /* Digital Cyber Matrix Background for Loading Screen */
+  .digital-bg-matrix {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .digital-grid-floor {
+    position: absolute;
+    bottom: -10%;
+    left: -25%;
+    right: -25%;
+    height: 60%;
+    background:
+      linear-gradient(180deg, transparent 0%, rgba(0, 240, 255, 0.08) 100%),
+      linear-gradient(90deg, rgba(0, 240, 255, 0.12) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+    background-size: 100% 100%, 46px 46px, 46px 46px;
+    transform: perspective(420px) rotateX(62deg);
+    transform-origin: bottom center;
+    opacity: 0.75;
+    mask-image: linear-gradient(180deg, transparent 0%, black 40%, black 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 40%, black 100%);
+  }
+  .digital-radar-system {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 680px;
+    height: 680px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .digital-radar-circle {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border-radius: 50%;
+  }
+  .digital-radar-circle.c-1 {
+    width: 250px;
+    height: 250px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    animation: radarPulse 4s ease-in-out infinite;
+  }
+  .digital-radar-circle.c-2 {
+    width: 440px;
+    height: 440px;
+    border: 1px dashed rgba(0, 240, 255, 0.22);
+    animation: loaderSpinClockwise 45s linear infinite;
+  }
+  .digital-radar-circle.c-3 {
+    width: 640px;
+    height: 640px;
+    border: 1px dotted rgba(0, 240, 255, 0.16);
+  }
+  .digital-radar-crosshair-h {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.35) 20%, transparent 45%, transparent 55%, rgba(0, 240, 255, 0.35) 80%, transparent 100%);
+  }
+  .digital-radar-crosshair-v {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 240, 255, 0.35) 20%, transparent 45%, transparent 55%, rgba(0, 240, 255, 0.35) 80%, transparent 100%);
+  }
+  .digital-radar-sweep {
+    position: absolute;
+    inset: 40px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 240, 255, 0.12) 65deg, transparent 70deg);
+    animation: loaderSpinClockwise 4s linear infinite;
+  }
+  @keyframes radarPulse {
+    0%, 100% { transform: scale(1); opacity: 0.55; }
+    50% { transform: scale(1.05); opacity: 0.9; }
+  }
+
+  /* HUD Telemetry Diagnostics on Loading Screen */
+  .digital-hud-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+    font-size: 0.70rem;
+    letter-spacing: 1.5px;
+    color: rgba(0, 240, 255, 0.65);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .digital-hud-corner .hud-status {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+  }
+  .hud-top-left { top: 30px; left: 32px; }
+  .hud-top-right { top: 30px; right: 32px; text-align: right; }
+  .hud-bottom-left { bottom: 30px; left: 32px; }
+  .hud-bottom-right { bottom: 30px; right: 32px; text-align: right; }
+  .digital-hex-stream {
+    position: absolute;
+    top: 40%;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: rgba(0, 240, 255, 0.28);
+    writing-mode: vertical-rl;
+    animation: hexFlicker 3s infinite alternate;
+  }
+  .stream-left { left: 36px; }
+  .stream-right { right: 36px; }
+  @keyframes hexFlicker {
+    0% { opacity: 0.2; }
+    50% { opacity: 0.45; }
+    100% { opacity: 0.25; }
   }
 
   /* Multi-Ring Conic Loader matching loader.tsx */
@@ -404,8 +531,9 @@
     max-width: 360px;
   }
 
-  /* Framer-Motion Tab Switcher */
+  /* Framer-Motion Tab Switcher with Sliding Morphing Pill */
   .auth-tabs {
+    position: relative;
     display: flex;
     width: 100%;
     background: rgba(2, 4, 10, 0.75);
@@ -413,10 +541,28 @@
     border-radius: 12px;
     padding: 3px;
     margin-bottom: 0.85rem;
-    gap: 4px;
     box-sizing: border-box;
+    overflow: hidden;
+  }
+  .auth-tab-pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, var(--primary) 100%);
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
+    border-radius: 9px;
+    pointer-events: none;
+    z-index: 1;
+    transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .auth-tabs.is-login .auth-tab-pill {
+    transform: translateX(100%);
   }
   .auth-tab {
+    position: relative;
+    z-index: 2;
     flex: 1;
     padding: 7px 10px;
     background: transparent;
@@ -427,31 +573,29 @@
     font-size: 0.76rem;
     letter-spacing: 1.5px;
     cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.22s ease;
   }
   .auth-tab:hover {
     color: #ffffff;
   }
   .auth-tab.active {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, var(--primary) 100%);
     color: #02040a;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
   }
 
-  /* Forms & Inputs */
+  /* Morphing Forms & Inputs */
   .auth-form-wrap {
     width: 100%;
     display: none;
     flex-direction: column;
     gap: 9px;
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .auth-form-wrap.active {
     display: flex;
-    animation: formFadeIn 0.3s ease forwards;
-  }
-  @keyframes formFadeIn {
-    0% { opacity: 0; transform: translateY(6px); }
-    100% { opacity: 1; transform: translateY(0); }
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 
   .auth-input-group {
@@ -640,6 +784,39 @@
        POST-AUTH TRANSITION SCREEN (loader.tsx Implementation)
        ========================================================= -->
   <div id="authTransitionOverlay" class="auth-transition-overlay" aria-hidden="true">
+    <!-- Cinematic Cyber Digital Background -->
+    <div class="digital-bg-matrix" aria-hidden="true">
+      <div class="digital-grid-floor"></div>
+      <div class="digital-radar-system">
+        <div class="digital-radar-circle c-1"></div>
+        <div class="digital-radar-circle c-2"></div>
+        <div class="digital-radar-circle c-3"></div>
+        <div class="digital-radar-crosshair-h"></div>
+        <div class="digital-radar-crosshair-v"></div>
+        <div class="digital-radar-sweep"></div>
+      </div>
+      <!-- HUD Telemetry Diagnostics -->
+      <div class="digital-hud-corner hud-top-left">
+        <span class="hud-tag">// SYSTEM_ID: GH-CORE-v3.5</span>
+        <span class="hud-status">STATUS: INITIALIZING ENCRYPTION</span>
+      </div>
+      <div class="digital-hud-corner hud-top-right">
+        <span class="hud-tag">// TELEMETRY_STREAM</span>
+        <span class="hud-status">LATENCY: 0.12ms • 120 FPS</span>
+      </div>
+      <div class="digital-hud-corner hud-bottom-left">
+        <span class="hud-tag">// MEMORY_ALLOC: 0x7FFF82A4</span>
+        <span class="hud-status">NEURAL_BUS: PROTOCOLS SYNCED</span>
+      </div>
+      <div class="digital-hud-corner hud-bottom-right">
+        <span class="hud-tag">// QUANTUM_STATE</span>
+        <span class="hud-status">AUTHENTICATED • OPERATIONAL</span>
+      </div>
+      <!-- Ambient Hex Streams -->
+      <div class="digital-hex-stream stream-left">01 7F E4 B9 2A 9C 00 FF 10 E6</div>
+      <div class="digital-hex-stream stream-right">FF 00 F0 11 8A DE 44 2B C7 90</div>
+    </div>
+
     <div class="auth-transition-card">
       <!-- Enhanced Monochrome Multi-Ring Conic Loader -->
       <div class="deliberate-loader-container">
@@ -674,8 +851,9 @@
       Cognitive agility, pattern recognition, and split-second reflex training. Zero latency.
     </p>
 
-    <!-- Tab Switcher -->
-    <div class="auth-tabs">
+    <!-- Tab Switcher with Morphing Pill -->
+    <div class="auth-tabs <%= "login".equals(defaultMode) ? "is-login" : "" %>" id="authTabs">
+      <div class="auth-tab-pill" id="authTabPill"></div>
       <button type="button" class="auth-tab <%= "signup".equals(defaultMode) ? "active" : "" %>" id="tabSignup" onclick="switchAuthMode('signup')">
         SIGN UP
       </button>
@@ -754,28 +932,79 @@
   </div>
 
 <script>
-  // Tab Switching
+  // Framer Motion Morphing Tab & Form Switcher
   function switchAuthMode(mode) {
     const tabSignup = document.getElementById('tabSignup');
     const tabLogin = document.getElementById('tabLogin');
     const formSignup = document.getElementById('signupForm');
     const formLogin = document.getElementById('loginForm');
     const alertBox = document.getElementById('authAlert');
+    const tabsContainer = document.getElementById('authTabs');
+    const Motion = (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
 
     if (alertBox) alertBox.style.display = 'none';
 
     if (mode === 'signup') {
+      if (tabsContainer) tabsContainer.classList.remove('is-login');
       tabSignup.classList.add('active');
       tabLogin.classList.remove('active');
-      formSignup.classList.add('active');
-      formLogin.classList.remove('active');
+
+      if (formLogin && formSignup && formLogin.classList.contains('active')) {
+        if (Motion && typeof Motion.animate === 'function') {
+          Motion.animate(formLogin, { opacity: [1, 0], scale: [1, 0.96], y: [0, -6] }, { duration: 0.16 }).then(() => {
+            formLogin.classList.remove('active');
+            formSignup.classList.add('active');
+            Motion.animate(formSignup, { opacity: [0, 1], scale: [0.96, 1], y: [6, 0] }, { duration: 0.28, ease: [0.16, 1, 0.3, 1] });
+            const fields = formSignup.querySelectorAll('.auth-input-group, .btn-submit');
+            Motion.animate(fields, { opacity: [0, 1], y: [8, 0] }, { delay: Motion.stagger(0.04), duration: 0.24, ease: [0.16, 1, 0.3, 1] });
+          });
+        } else {
+          formLogin.classList.remove('active');
+          formSignup.classList.add('active');
+        }
+      }
     } else {
+      if (tabsContainer) tabsContainer.classList.add('is-login');
       tabLogin.classList.add('active');
       tabSignup.classList.remove('active');
-      formLogin.classList.add('active');
-      formSignup.classList.remove('active');
+
+      if (formSignup && formLogin && formSignup.classList.contains('active')) {
+        if (Motion && typeof Motion.animate === 'function') {
+          Motion.animate(formSignup, { opacity: [1, 0], scale: [1, 0.96], y: [0, -6] }, { duration: 0.16 }).then(() => {
+            formSignup.classList.remove('active');
+            formLogin.classList.add('active');
+            Motion.animate(formLogin, { opacity: [0, 1], scale: [0.96, 1], y: [6, 0] }, { duration: 0.28, ease: [0.16, 1, 0.3, 1] });
+            const fields = formLogin.querySelectorAll('.auth-input-group, .btn-submit');
+            Motion.animate(fields, { opacity: [0, 1], y: [8, 0] }, { delay: Motion.stagger(0.04), duration: 0.24, ease: [0.16, 1, 0.3, 1] });
+          });
+        } else {
+          formSignup.classList.remove('active');
+          formLogin.classList.add('active');
+        }
+      }
     }
   }
+
+  // Entrance Spring Morph for Terminal Card
+  window.addEventListener('DOMContentLoaded', () => {
+    const card = document.getElementById('authCard');
+    const Motion = (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
+    if (card && Motion && typeof Motion.animate === 'function') {
+      Motion.animate(
+        card,
+        { opacity: [0, 1], scale: [0.93, 1], y: [22, 0] },
+        { duration: 0.48, ease: [0.175, 0.885, 0.32, 1.275] }
+      );
+      const activeFields = card.querySelectorAll('.auth-form-wrap.active .auth-input-group, .auth-form-wrap.active .btn-submit');
+      if (activeFields.length > 0) {
+        Motion.animate(
+          activeFields,
+          { opacity: [0, 1], y: [10, 0] },
+          { delay: Motion.stagger(0.045, { startDelay: 0.12 }), duration: 0.32, ease: [0.16, 1, 0.3, 1] }
+        );
+      }
+    }
+  });
 
   function showAlert(type, text) {
     const alertBox = document.getElementById('authAlert');

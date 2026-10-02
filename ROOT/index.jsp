@@ -4505,19 +4505,35 @@
     }
   });
 
-  // --- TAB NAVIGATION (GATED FOR GUESTS) ---
+  // --- TAB NAVIGATION WITH FRAMER MOTION MORPHING VIEW TRANSITIONS ---
   function switchTab(tab, btn) {
+    const Motion = getMotionEngine();
+    const currentActiveView = document.querySelector('.view-panel.active');
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    
-    setTimeout(() => {
-      if (tab === 'library') {
-        document.getElementById('libraryView').classList.add('active');
-        document.getElementById('viewTitle').innerText = 'Games';
-      } else if (tab === 'scores') {
-        document.getElementById('scoresView').classList.add('active');
-        document.getElementById('viewTitle').innerText = isUserLoggedIn ? 'Brain Stats & Records' : 'Brain Stats (Locked)';
+    if (btn) btn.classList.add('active');
+
+    let targetView = null;
+    let newTitle = 'Games';
+    if (tab === 'library') {
+      targetView = document.getElementById('libraryView');
+      newTitle = 'Games';
+    } else if (tab === 'scores') {
+      targetView = document.getElementById('scoresView');
+      newTitle = isUserLoggedIn ? 'Brain Stats & Records' : 'Brain Stats (Locked)';
+    } else if (tab === 'settings') {
+      targetView = document.getElementById('settingsView');
+      newTitle = isUserLoggedIn ? 'Settings' : 'Settings (Locked)';
+    }
+
+    if (!targetView || targetView === currentActiveView) return;
+
+    function renderTargetView() {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      targetView.classList.add('active');
+      const titleEl = document.getElementById('viewTitle');
+      if (titleEl) titleEl.innerText = newTitle;
+
+      if (tab === 'scores') {
         const lockedCard = document.getElementById('scoresLockedCard');
         const contentWrap = document.getElementById('scoresContentWrap');
         if (isUserLoggedIn) {
@@ -4531,8 +4547,6 @@
           if (contentWrap) contentWrap.style.display = 'none';
         }
       } else if (tab === 'settings') {
-        document.getElementById('settingsView').classList.add('active');
-        document.getElementById('viewTitle').innerText = isUserLoggedIn ? 'Settings' : 'Settings (Locked)';
         const lockedCard = document.getElementById('settingsLockedCard');
         const contentWrap = document.getElementById('settingsContentWrap');
         if (isUserLoggedIn) {
@@ -4543,7 +4557,35 @@
           if (contentWrap) contentWrap.style.display = 'none';
         }
       }
-    }, 40);
+
+      if (Motion && typeof Motion.animate === 'function') {
+        Motion.animate(
+          targetView,
+          { opacity: [0, 1], scale: [0.97, 1], y: [12, 0] },
+          { duration: 0.32, ease: [0.16, 1, 0.3, 1] }
+        );
+        const cards = targetView.querySelectorAll('.game-card, .player-rank-spotlight, .settings-group-card');
+        if (cards.length > 0) {
+          Motion.animate(
+            cards,
+            { opacity: [0, 1], y: [10, 0] },
+            { delay: Motion.stagger(0.04), duration: 0.28, ease: [0.16, 1, 0.3, 1] }
+          );
+        }
+      }
+    }
+
+    if (currentActiveView && Motion && typeof Motion.animate === 'function') {
+      Motion.animate(
+        currentActiveView,
+        { opacity: [1, 0], scale: [1, 0.97], y: [0, -8] },
+        { duration: 0.16, ease: [0.7, 0, 0.84, 0] }
+      ).then(() => {
+        renderTargetView();
+      });
+    } else {
+      renderTargetView();
+    }
   }
 
   function scrollCarousel(dist) {
@@ -5006,6 +5048,16 @@
       `;
       grid.appendChild(card);
     });
+
+    const Motion = getMotionEngine();
+    const allCards = grid.querySelectorAll('.master-card');
+    if (Motion && typeof Motion.animate === 'function' && allCards.length > 0) {
+      Motion.animate(
+        allCards,
+        { opacity: [0, 1], scale: [0.94, 1], y: [12, 0] },
+        { delay: Motion.stagger(0.035), duration: 0.32, ease: [0.16, 1, 0.3, 1] }
+      );
+    }
   }
 
   function filterMasterCategory(cat, btn) {
@@ -5226,9 +5278,17 @@
     if (modalBox && Motion && typeof Motion.animate === 'function') {
       Motion.animate(
         modalBox,
-        { opacity: [0, 1], scale: [0.93, 1], y: [16, 0] },
-        { duration: 0.3, ease: [0.16, 1, 0.3, 1] }
+        { opacity: [0, 1], scale: [0.89, 1.02, 1], y: [22, -2, 0] },
+        { duration: 0.42, ease: [0.16, 1, 0.3, 1] }
       );
+      const staggeredKids = modalBox.querySelectorAll('.master-tag, h2, form, .modal-actions, .master-search-bar, .master-pills-row, .master-library-grid');
+      if (staggeredKids.length > 0) {
+        Motion.animate(
+          staggeredKids,
+          { opacity: [0, 1], y: [8, 0] },
+          { delay: Motion.stagger(0.035, { start: 0.08 }), duration: 0.28, ease: [0.16, 1, 0.3, 1] }
+        );
+      }
     }
 
     if (window.innerWidth > 768) {
@@ -5243,12 +5303,12 @@
     const modalBox = modal.querySelector('.modal-box');
     const Motion = getMotionEngine();
 
-    // UI/UX Pro Max rule: Exit faster than enter (snappy 160ms deceleration)
+    // UI/UX Pro Max rule: Exit faster than enter (snappy 180ms deceleration)
     if (modalBox && Motion && typeof Motion.animate === 'function') {
       Motion.animate(
         modalBox,
-        { opacity: [1, 0], scale: [1, 0.94], y: [0, 8] },
-        { duration: 0.16, ease: [0.7, 0, 0.84, 0] }
+        { opacity: [1, 0], scale: [1, 0.92], y: [0, 12] },
+        { duration: 0.18, ease: [0.7, 0, 0.84, 0] }
       ).then(() => {
         modal.classList.remove('active');
         modal.style.display = 'none';
@@ -5257,7 +5317,7 @@
       });
     } else {
       modal.classList.remove('active');
-      setTimeout(() => { modal.style.display = 'none'; }, 160);
+      setTimeout(() => { modal.style.display = 'none'; }, 180);
     }
   }
 
