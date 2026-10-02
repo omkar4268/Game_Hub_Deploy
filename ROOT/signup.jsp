@@ -125,7 +125,7 @@
     opacity: 1;
   }
 
-  /* Main Floating Space Terminal Auth Card with Dual 50/50 Split */
+  /* Main Floating Space Terminal Auth Card with Diagonal 135deg Slash Architecture */
   .auth-portal-card {
     position: relative;
     z-index: 10;
@@ -134,30 +134,31 @@
     max-height: 90dvh;
     overflow-y: auto;
     background:
-      linear-gradient(90deg,
-        rgba(7, 8, 14, 0.96) 0%,
-        rgba(9, 11, 20, 0.95) 45%,
-        rgba(4, 16, 42, 0.95) 55%,
-        rgba(2, 14, 38, 0.98) 100%
+      linear-gradient(135deg,
+        rgba(8, 10, 16, 0.92) 0%,
+        rgba(10, 12, 22, 0.86) 40%,
+        rgba(6, 20, 50, 0.50) 48%,
+        rgba(3, 16, 44, 0.32) 56%,
+        rgba(2, 12, 36, 0.24) 100%
       ) padding-box,
-      linear-gradient(90deg,
+      linear-gradient(135deg,
         #ffffff 0%,
-        rgba(255, 255, 255, 0.95) 45%,
-        rgba(255, 255, 255, 0.7) 49%,
-        #00f0ff 51%,
+        #ffffff 42%,
+        #bae6fd 48%,
+        #00f0ff 54%,
         #00f0ff 100%
       ) border-box;
     border: 2px solid transparent;
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
     border-radius: 28px;
     padding: 2.2rem 2rem;
     box-shadow:
-      -20px 0 50px -4px rgba(255, 255, 255, 0.22),
-      20px 0 55px -4px rgba(0, 240, 255, 0.38),
-      0 30px 80px rgba(0, 0, 0, 0.95),
-      inset 1px 1px 2px rgba(255, 255, 255, 0.5),
-      inset -1px -1px 2px rgba(0, 240, 255, 0.4);
+      -18px -18px 45px -4px rgba(255, 255, 255, 0.32),
+      18px 18px 50px -4px rgba(0, 240, 255, 0.48),
+      0 30px 80px rgba(0, 0, 0, 0.90),
+      inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65),
+      inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.55);
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -418,7 +418,7 @@
     max-width: 440px;
   }
 
-  /* Main Floating Space Terminal Auth Card with Dual 50/50 Split (Space White & Black Left, Tech Cyan Blue Right) */
+  /* Main Floating Space Terminal Auth Card with Diagonal 135deg Slash Architecture */
   .auth-portal-card {
     position: relative;
     z-index: 10;
@@ -430,40 +430,42 @@
     -ms-overflow-style: none !important;
     box-sizing: border-box;
     border-radius: 24px;
-    /* Dual Split Background & Dual Split Outline:
-       Left Half: Space Obsidian Glass with pure white / black & white outline
-       Right Half: Tech Cyber Blue Glass with electric cyan blue outline */
+    /* Diagonal 135deg Transition:
+       - Top-Left Half: Space Obsidian Glass with brilliant White Outline (Crisp & Vibrant)
+       - Bottom-Right Half: Translucent Cyber Glass with Electric Tech Cyan Blue Outline
+         (Subtly transparent to showcase the interactive kinetic grid color shifting beneath) */
     background:
-      linear-gradient(90deg,
-        rgba(7, 8, 14, 0.96) 0%,
-        rgba(9, 11, 20, 0.95) 45%,
-        rgba(4, 16, 42, 0.95) 55%,
-        rgba(2, 14, 38, 0.98) 100%
+      linear-gradient(135deg,
+        rgba(8, 10, 16, 0.92) 0%,
+        rgba(10, 12, 22, 0.86) 40%,
+        rgba(6, 20, 50, 0.50) 48%,
+        rgba(3, 16, 44, 0.32) 56%,
+        rgba(2, 12, 36, 0.24) 100%
       ) padding-box,
-      linear-gradient(90deg,
+      linear-gradient(135deg,
         #ffffff 0%,
-        rgba(255, 255, 255, 0.95) 45%,
-        rgba(255, 255, 255, 0.7) 49%,
-        #00f0ff 51%,
+        #ffffff 42%,
+        #bae6fd 48%,
+        #00f0ff 54%,
         #00f0ff 100%
       ) border-box;
     border: 2px solid transparent;
-    backdrop-filter: blur(32px) saturate(140%);
-    -webkit-backdrop-filter: blur(32px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
     padding: 1.55rem 1.85rem;
     box-shadow:
-      -20px 0 50px -4px rgba(255, 255, 255, 0.22),
-      20px 0 55px -4px rgba(0, 240, 255, 0.38),
-      0 25px 80px rgba(0, 0, 0, 0.96),
-      inset 1px 1px 2px rgba(255, 255, 255, 0.5),
-      inset -1px -1px 2px rgba(0, 240, 255, 0.4);
+      -18px -18px 45px -4px rgba(255, 255, 255, 0.32), /* Vibrant Space White diagonal halo */
+      18px 18px 50px -4px rgba(0, 240, 255, 0.48),    /* Vibrant Tech Cyan diagonal halo */
+      0 25px 80px rgba(0, 0, 0, 0.90),                /* Deep grounding shadow */
+      inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65), /* Specular crisp white rim on top-left */
+      inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.55); /* Specular neon cyan rim on bottom-right */
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     transform-style: preserve-3d;
     will-change: transform;
-    animation: cardDualGlowPulse 4s ease-in-out infinite alternate;
+    animation: cardDiagonalGlowPulse 4s ease-in-out infinite alternate;
     transition: opacity 0.35s ease, filter 0.35s ease;
   }
   .auth-portal-card::-webkit-scrollbar {
@@ -472,7 +474,7 @@
     height: 0 !important;
   }
 
-  /* Subtle Celestial Stardust & Cosmic Nebula Overlay inside Card (Space Theme) */
+  /* Subtle Celestial Stardust & Cosmic Nebula Overlay (Masked to Top-Left Space Half) */
   .card-space-stardust {
     position: absolute;
     inset: 0;
@@ -487,6 +489,9 @@
       radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
     z-index: 1;
     opacity: 0.9;
+    /* Softly fades along the 135deg diagonal cut so the right side remains crystal-clear glass */
+    -webkit-mask-image: linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 38%, transparent 56%);
+    mask-image: linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 38%, transparent 56%);
   }
 
   /* Traveling Light Beam Perimeter Circuit (Space White -> Tech Blue Gradient) */
@@ -508,7 +513,7 @@
     width: 50%;
     background: linear-gradient(90deg, transparent 0%, #ffffff 35%, #7dd3fc 60%, #00f0ff 85%, transparent 100%);
     filter: blur(1.2px);
-    box-shadow: 0 0 14px rgba(255, 255, 255, 0.7), 0 0 14px rgba(0, 240, 255, 0.7);
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.8), 0 0 14px rgba(0, 240, 255, 0.8);
     animation: beamMoveTop 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -534,7 +539,7 @@
     width: 50%;
     background: linear-gradient(270deg, transparent 0%, #00f0ff 35%, #7dd3fc 60%, #ffffff 85%, transparent 100%);
     filter: blur(1.2px);
-    box-shadow: 0 0 14px rgba(0, 240, 255, 0.7), 0 0 14px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.8), 0 0 14px rgba(255, 255, 255, 0.8);
     animation: beamMoveBottom 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
   }
 
@@ -575,7 +580,7 @@
     100% { bottom: 100%; opacity: 0.3; filter: blur(1px); }
   }
 
-  /* Corner Glow Dots: Pure Space White on left side, Tech Cyan Blue on right side */
+  /* Corner Glow Dots: Pure Space White on top-left, Vivid Tech Cyan on bottom-right */
   .beam-corner-dot {
     position: absolute;
     border-radius: 50%;
@@ -588,7 +593,7 @@
     width: 6px;
     height: 6px;
     background: #ffffff;
-    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 14px #ffffff, 0 0 24px rgba(255, 255, 255, 0.9);
     animation: cornerPulseDot 2s ease-in-out infinite alternate;
   }
   .beam-corner-dot.dot-tr {
@@ -596,8 +601,8 @@
     right: 3px;
     width: 7px;
     height: 7px;
-    background: #00f0ff;
-    box-shadow: 0 0 12px #00f0ff, 0 0 22px rgba(0, 240, 255, 0.85);
+    background: #bae6fd;
+    box-shadow: 0 0 12px #38bdf8, 0 0 20px rgba(56, 189, 248, 0.85);
     animation: cornerPulseDot 2.4s ease-in-out 0.5s infinite alternate;
   }
   .beam-corner-dot.dot-br {
@@ -606,7 +611,7 @@
     width: 7px;
     height: 7px;
     background: #00f0ff;
-    box-shadow: 0 0 12px #00f0ff, 0 0 22px rgba(0, 240, 255, 0.85);
+    box-shadow: 0 0 14px #00f0ff, 0 0 26px rgba(0, 240, 255, 0.9);
     animation: cornerPulseDot 2.2s ease-in-out 1.0s infinite alternate;
   }
   .beam-corner-dot.dot-bl {
@@ -614,62 +619,62 @@
     left: 3px;
     width: 6px;
     height: 6px;
-    background: #ffffff;
-    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(255, 255, 255, 0.85);
+    background: #bae6fd;
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(186, 230, 253, 0.8);
     animation: cornerPulseDot 2.3s ease-in-out 1.5s infinite alternate;
   }
 
   @keyframes cornerPulseDot {
-    0% { opacity: 0.35; transform: scale(0.85); }
-    100% { opacity: 0.95; transform: scale(1.2); }
+    0% { opacity: 0.4; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1.25); }
   }
 
-  /* Subtle Card Border Glow Sheen (Space White -> Tech Blue Gradient) */
+  /* Subtle Card Border Glow Sheen (Diagonal 135deg Space White -> Tech Blue Gradient) */
   .card-border-glow-sheen {
     position: absolute;
     inset: -2px;
     border-radius: 24px;
     border: 2px solid transparent;
-    background: linear-gradient(90deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(255, 255, 255, 0.75) 45%,
-      rgba(255, 255, 255, 0.5) 49%,
-      rgba(0, 240, 255, 0.6) 51%,
-      rgba(0, 240, 255, 0.95) 100%
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.9) 42%,
+      rgba(186, 230, 253, 0.85) 48%,
+      rgba(0, 240, 255, 0.85) 54%,
+      rgba(0, 240, 255, 1) 100%
     ) border-box;
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    opacity: 0.85;
+    opacity: 0.9;
     z-index: 2;
-    filter: drop-shadow(-8px 0 14px rgba(255, 255, 255, 0.4)) drop-shadow(8px 0 16px rgba(0, 240, 255, 0.5));
-    animation: borderSheenDualPulse 3.5s ease-in-out infinite alternate;
+    filter: drop-shadow(-8px -8px 14px rgba(255, 255, 255, 0.5)) drop-shadow(8px 8px 16px rgba(0, 240, 255, 0.65));
+    animation: borderSheenDiagonalPulse 3.5s ease-in-out infinite alternate;
   }
   .auth-portal-card:hover .card-border-glow-sheen {
     opacity: 1;
   }
-  @keyframes borderSheenDualPulse {
-    0% { opacity: 0.65; }
+  @keyframes borderSheenDiagonalPulse {
+    0% { opacity: 0.70; }
     100% { opacity: 1; }
   }
 
-  @keyframes cardDualGlowPulse {
+  @keyframes cardDiagonalGlowPulse {
     0% {
       box-shadow:
-        -16px 0 38px -4px rgba(255, 255, 255, 0.16),
-        16px 0 42px -4px rgba(0, 240, 255, 0.30),
-        0 25px 80px rgba(0, 0, 0, 0.96),
-        inset 1px 1px 2px rgba(255, 255, 255, 0.45),
-        inset -1px -1px 2px rgba(0, 240, 255, 0.35);
+        -16px -16px 40px -4px rgba(255, 255, 255, 0.24),
+        16px 16px 45px -4px rgba(0, 240, 255, 0.38),
+        0 25px 80px rgba(0, 0, 0, 0.90),
+        inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.5),
+        inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.4);
     }
     100% {
       box-shadow:
-        -24px 0 55px -4px rgba(255, 255, 255, 0.28),
-        24px 0 60px -4px rgba(0, 240, 255, 0.50),
-        0 25px 80px rgba(0, 0, 0, 0.96),
-        inset 1px 1px 2px rgba(255, 255, 255, 0.70),
-        inset -1px -1px 2px rgba(0, 240, 255, 0.55);
+        -24px -24px 60px -4px rgba(255, 255, 255, 0.42),
+        24px 24px 65px -4px rgba(0, 240, 255, 0.60),
+        0 25px 80px rgba(0, 0, 0, 0.90),
+        inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.8),
+        inset -1.5px -1.5px 3px rgba(0, 240, 255, 0.65);
     }
   }
 
@@ -767,9 +772,9 @@
     position: relative;
     display: flex;
     width: 100%;
-    background: linear-gradient(90deg, rgba(12, 14, 22, 0.95) 0%, rgba(4, 18, 44, 0.95) 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.22);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), -4px 0 14px rgba(255, 255, 255, 0.1), 4px 0 16px rgba(0, 240, 255, 0.2);
+    background: linear-gradient(135deg, rgba(12, 14, 22, 0.92) 0%, rgba(8, 16, 36, 0.70) 45%, rgba(4, 18, 44, 0.40) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), -4px -2px 14px rgba(255, 255, 255, 0.12), 4px 4px 16px rgba(0, 240, 255, 0.22);
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 0.85rem;
@@ -846,37 +851,37 @@
     letter-spacing: 1.8px;
     text-transform: uppercase;
     font-weight: 800;
-    background: linear-gradient(90deg, #ffffff 0%, #bae6fd 60%, #38bdf8 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 45%, #38bdf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
   }
-  /* Input micro-scaling, hover & focus highlights (Space White on left, Tech Blue on right) */
+  /* Input micro-scaling, hover & focus highlights (Space White on left, Translucent Tech Blue on right) */
   .auth-input-box {
     position: relative;
     display: flex;
     align-items: center;
     border-radius: 12px;
     background:
-      linear-gradient(90deg, rgba(12, 14, 22, 0.92) 0%, rgba(4, 18, 42, 0.92) 100%) padding-box,
-      linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 45%, rgba(0, 240, 255, 0.35) 55%, rgba(0, 240, 255, 0.65) 100%) border-box;
+      linear-gradient(135deg, rgba(12, 14, 22, 0.88) 0%, rgba(10, 14, 24, 0.70) 42%, rgba(4, 18, 42, 0.35) 58%, rgba(2, 14, 38, 0.22) 100%) padding-box,
+      linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.4) 42%, rgba(0, 240, 255, 0.5) 55%, rgba(0, 240, 255, 0.9) 100%) border-box;
     border: 1.5px solid transparent;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), -4px 0 12px rgba(255, 255, 255, 0.06), 4px 0 14px rgba(0, 240, 255, 0.12);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45), -4px -2px 14px rgba(255, 255, 255, 0.1), 4px 4px 16px rgba(0, 240, 255, 0.18);
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease;
   }
   .auth-input-box:hover {
     transform: scale(1.015);
     background:
-      linear-gradient(90deg, rgba(16, 18, 28, 0.94) 0%, rgba(6, 26, 60, 0.94) 100%) padding-box,
-      linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.45) 45%, rgba(0, 240, 255, 0.5) 55%, rgba(0, 240, 255, 0.9) 100%) border-box;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4), -6px 0 16px rgba(255, 255, 255, 0.12), 6px 0 20px rgba(0, 240, 255, 0.25);
+      linear-gradient(135deg, rgba(16, 18, 28, 0.92) 0%, rgba(12, 18, 36, 0.75) 42%, rgba(6, 24, 60, 0.45) 58%, rgba(3, 18, 48, 0.30) 100%) padding-box,
+      linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.6) 42%, rgba(0, 240, 255, 0.7) 55%, #00f0ff 100%) border-box;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35), -6px -3px 18px rgba(255, 255, 255, 0.18), 6px 6px 24px rgba(0, 240, 255, 0.35);
   }
   .auth-input-box:focus-within {
     transform: scale(1.025);
     background:
-      linear-gradient(90deg, rgba(18, 20, 32, 0.98) 0%, rgba(8, 32, 74, 0.98) 100%) padding-box,
-      linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 45%, rgba(0, 240, 255, 0.8) 55%, #00f0ff 100%) border-box;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), -8px 0 24px rgba(255, 255, 255, 0.3), 8px 0 28px rgba(0, 240, 255, 0.45);
+      linear-gradient(135deg, rgba(18, 20, 32, 0.95) 0%, rgba(14, 22, 44, 0.80) 42%, rgba(8, 30, 72, 0.50) 58%, rgba(4, 22, 58, 0.35) 100%) padding-box,
+      linear-gradient(135deg, #ffffff 0%, #ffffff 40%, #00f0ff 60%, #00f0ff 100%) border-box;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4), -8px -4px 26px rgba(255, 255, 255, 0.38), 8px 8px 32px rgba(0, 240, 255, 0.6);
   }
   .auth-field {
     width: 100%;
@@ -891,7 +896,7 @@
     font-weight: 600;
   }
   .auth-field::placeholder {
-    color: rgba(203, 213, 225, 0.5);
+    color: rgba(203, 213, 225, 0.55);
     font-size: 0.82rem;
   }
   .auth-svg-icon {
@@ -901,32 +906,32 @@
     height: 17px;
     pointer-events: none;
     stroke: #ffffff;
-    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85));
     transition: transform 0.25s ease, filter 0.25s ease, stroke 0.25s ease;
     z-index: 2;
   }
   .auth-input-box:focus-within .auth-svg-icon {
     transform: scale(1.15);
     stroke: #ffffff;
-    filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 18px rgba(0, 240, 255, 0.6));
+    filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 18px rgba(0, 240, 255, 0.7));
   }
 
-  /* Action Buttons with Spring Micro-interactions & Shimmer Sweep (Space White -> Tech Blue Gradient) */
+  /* Action Buttons with Spring Micro-interactions & Shimmer Sweep (Diagonal Space White -> Tech Blue Gradient) */
   .btn-submit {
     position: relative;
     overflow: hidden;
     width: 100%;
     padding: 12px 18px;
-    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
     border-radius: 12px;
-    background: linear-gradient(90deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 65%, #00f0ff 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 60%, #00f0ff 100%);
     color: #020817;
     font-weight: 900;
     font-size: 0.84rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: -8px 0 25px rgba(255, 255, 255, 0.35), 8px 0 35px rgba(0, 240, 255, 0.55), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
+    box-shadow: -8px -4px 25px rgba(255, 255, 255, 0.45), 8px 6px 35px rgba(0, 240, 255, 0.65), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -959,7 +964,7 @@
   }
   .btn-submit:hover {
     transform: scale(1.02);
-    box-shadow: -10px 0 35px rgba(255, 255, 255, 0.5), 10px 0 45px rgba(0, 240, 255, 0.75), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
+    box-shadow: -10px -5px 35px rgba(255, 255, 255, 0.6), 10px 8px 45px rgba(0, 240, 255, 0.85), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
     filter: brightness(1.06);
   }
   .btn-submit:active {
@@ -972,14 +977,14 @@
   }
 
   .btn-signup-submit {
-    background: linear-gradient(90deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 65%, #00f0ff 100%);
-    box-shadow: -8px 0 25px rgba(255, 255, 255, 0.35), 8px 0 35px rgba(0, 240, 255, 0.55), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 25%, #7dd3fc 60%, #00f0ff 100%);
+    box-shadow: -8px -4px 25px rgba(255, 255, 255, 0.45), 8px 6px 35px rgba(0, 240, 255, 0.65), 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
   }
   .btn-signup-submit:hover {
-    box-shadow: -10px 0 35px rgba(255, 255, 255, 0.5), 10px 0 45px rgba(0, 240, 255, 0.75), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
+    box-shadow: -10px -5px 35px rgba(255, 255, 255, 0.6), 10px 8px 45px rgba(0, 240, 255, 0.85), 0 6px 26px rgba(0, 0, 0, 0.7), inset 0 1px 2px #ffffff;
   }
 
-  /* Guest Bypass Button (Space Black & Tech Blue Hybrid) */
+  /* Guest Bypass Button (Space Black & Translucent Tech Blue Hybrid) */
   .guest-bypass-box {
     margin-top: 0.85rem;
     padding-top: 0.85rem;
@@ -992,8 +997,8 @@
   }
   .btn-guest {
     background:
-      linear-gradient(90deg, rgba(14, 16, 24, 0.9) 0%, rgba(4, 20, 48, 0.9) 100%) padding-box,
-      linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(0, 240, 255, 0.55) 100%) border-box;
+      linear-gradient(135deg, rgba(14, 16, 24, 0.85) 0%, rgba(8, 16, 32, 0.65) 42%, rgba(4, 20, 48, 0.35) 58%, rgba(2, 14, 38, 0.22) 100%) padding-box,
+      linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.35) 42%, rgba(0, 240, 255, 0.45) 58%, rgba(0, 240, 255, 0.8) 100%) border-box;
     border: 1.5px solid transparent;
     color: #e2e8f0;
     padding: 9px 14px;
@@ -1009,14 +1014,14 @@
     width: 100%;
     justify-content: center;
     box-sizing: border-box;
-    box-shadow: -4px 0 16px rgba(255, 255, 255, 0.1), 4px 0 20px rgba(0, 240, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: -4px -2px 16px rgba(255, 255, 255, 0.15), 4px 4px 20px rgba(0, 240, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   .btn-guest:hover {
     background:
-      linear-gradient(90deg, rgba(20, 22, 34, 0.95) 0%, rgba(8, 30, 68, 0.95) 100%) padding-box,
-      linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(0, 240, 255, 0.9) 100%) border-box;
+      linear-gradient(135deg, rgba(20, 22, 34, 0.92) 0%, rgba(12, 22, 42, 0.75) 42%, rgba(8, 30, 68, 0.45) 58%, rgba(4, 20, 52, 0.32) 100%) padding-box,
+      linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.55) 42%, rgba(0, 240, 255, 0.65) 58%, #00f0ff 100%) border-box;
     color: #ffffff;
-    box-shadow: -6px 0 24px rgba(255, 255, 255, 0.25), 6px 0 28px rgba(0, 240, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow: -6px -3px 24px rgba(255, 255, 255, 0.3), 6px 6px 30px rgba(0, 240, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     transform: scale(1.015);
   }
 
