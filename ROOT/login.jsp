@@ -57,6 +57,10 @@
         }
     }
 
+    // Redirect browser GET requests to unified high-tech cyber auth portal
+    response.sendRedirect("auth.jsp?mode=login");
+    if (true) return;
+
     // Check if already logged in
     HttpSession existingSess = request.getSession(false);
     boolean alreadyLoggedIn = (existingSess != null && existingSess.getAttribute("user_session") != null);

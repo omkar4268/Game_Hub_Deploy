@@ -24,17 +24,17 @@
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <style>
   :root {
-    --bg-base: #02040a;
-    --card-bg: rgba(6, 12, 24, 0.88);
-    --border-glow: rgba(0, 240, 255, 0.35);
-    --border-cyan: rgba(0, 240, 255, 0.25);
+    --bg-base: #030e24;
+    --card-bg: rgba(7, 24, 56, 0.94);
+    --border-glow: rgba(0, 240, 255, 0.55);
+    --border-cyan: rgba(0, 240, 255, 0.42);
     --primary: #00f0ff;
     --primary-rgb: 0, 240, 255;
-    --primary-glow: rgba(0, 240, 255, 0.45);
-    --accent: #10e6a8;
-    --accent-glow: rgba(16, 230, 168, 0.4);
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+    --primary-glow: rgba(0, 240, 255, 0.65);
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.55);
+    --text-main: #f0f9ff;
+    --text-muted: #7dd3fc;
     --danger: #ef4444;
   }
 
@@ -51,7 +51,7 @@
     height: 100vh;
     height: 100dvh;
     overflow: hidden !important;
-    background-color: var(--bg-base);
+    background: radial-gradient(circle at 50% 40%, #051838 0%, #030e24 55%, #010612 100%);
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -294,10 +294,11 @@
     position: absolute;
     inset: 0;
     border-radius: 9999px;
-    background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.95) 90deg, transparent 180deg);
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 240, 255, 0.9) 70deg, #ffffff 90deg, transparent 180deg);
     -webkit-mask: radial-gradient(circle at 50% 50%, transparent 66%, black 67%);
     mask: radial-gradient(circle at 50% 50%, transparent 66%, black 67%);
     animation: loaderSpinClockwise 3s linear infinite;
+    filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.7));
   }
 
   /* Counter-Rotating Middle Ring */
@@ -305,10 +306,11 @@
     position: absolute;
     inset: 8px; /* inset-2 */
     border-radius: 9999px;
-    background: conic-gradient(from 180deg, transparent 0deg, rgba(255, 255, 255, 0.9) 180deg, transparent 270deg);
+    background: conic-gradient(from 180deg, transparent 0deg, rgba(56, 189, 248, 0.9) 160deg, #bae6fd 180deg, transparent 270deg);
     -webkit-mask: radial-gradient(circle at 50% 50%, transparent 64%, black 65%);
     mask: radial-gradient(circle at 50% 50%, transparent 64%, black 65%);
     animation: loaderSpinCounter 2.5s linear infinite;
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
   }
 
   /* Inner Pulsing Ring */
@@ -320,6 +322,7 @@
     -webkit-mask: radial-gradient(circle at 50% 50%, transparent 60%, black 62%);
     mask: radial-gradient(circle at 50% 50%, transparent 60%, black 62%);
     animation: loaderSpinClockwise 2s linear infinite, loaderInnerScale 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.8));
   }
 
   @keyframes loaderSpinClockwise {
@@ -401,7 +404,19 @@
     margin: 0;
   }
 
-  /* Main Floating Space Terminal Auth Card with White-to-Blue Dual Gradient */
+  /* 3D Scene Perspective Wrapper (from sign-in-card-2) */
+  .auth-3d-scene {
+    perspective: 1500px;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 440px;
+  }
+
+  /* Main Floating Space Terminal Auth Card with Tech Blue & Cyan Theme */
   .auth-portal-card {
     position: relative;
     z-index: 10;
@@ -411,20 +426,22 @@
     overflow: hidden !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
-    background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.14) 0%, rgba(4, 9, 22, 0.94) 75%);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(0, 240, 255, 0.35);
+    background: radial-gradient(circle at 50% -10%, rgba(0, 240, 255, 0.28) 0%, rgba(8, 28, 64, 0.94) 45%, rgba(3, 12, 32, 0.98) 100%);
+    backdrop-filter: blur(32px) saturate(160%);
+    -webkit-backdrop-filter: blur(32px) saturate(160%);
+    border: 1.5px solid rgba(0, 240, 255, 0.5);
     border-radius: 24px;
     padding: 1.45rem 1.75rem;
-    box-shadow: 0 0 50px rgba(0, 240, 255, 0.18), 0 30px 80px rgba(0, 0, 0, 0.95);
+    box-shadow: 0 0 60px rgba(0, 240, 255, 0.3), 0 25px 80px rgba(2, 6, 23, 0.95), inset 0 1px 2px rgba(186, 230, 253, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    animation: cardSpringIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease;
     box-sizing: border-box;
+    transform-style: preserve-3d;
+    will-change: transform;
+    animation: cardGlowPulse 4s ease-in-out infinite alternate;
+    transition: opacity 0.35s ease, filter 0.35s ease;
   }
   .auth-portal-card::-webkit-scrollbar {
     display: none !important;
@@ -432,126 +449,279 @@
     height: 0 !important;
   }
 
-  /* Top Glowing Cyber Beam with White-to-Blue Spectrum */
-  .auth-portal-card::before {
-    content: '';
+  /* Traveling Light Beam Perimeter Circuit (from sign-in-card-2) */
+  .card-beam-perimeter {
     position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 25%, #00f0ff 75%, transparent 100%);
-    box-shadow: 0 0 16px rgba(0, 240, 255, 0.8);
+    inset: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 3;
   }
 
-  @keyframes cardSpringIn {
-    0% { transform: scale(0.92) translateY(24px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
+  /* Top Light Beam */
+  .beam-runner.beam-top {
+    position: absolute;
+    top: 0;
+    left: -50%;
+    height: 2.5px;
+    width: 50%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #00f0ff 85%, transparent 100%);
+    filter: blur(1.5px);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.85), 0 0 6px #ffffff;
+    animation: beamMoveTop 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* Right Light Beam */
+  .beam-runner.beam-right {
+    position: absolute;
+    top: -50%;
+    right: 0;
+    width: 2.5px;
+    height: 50%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #00f0ff 85%, transparent 100%);
+    filter: blur(1.5px);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.85), 0 0 6px #ffffff;
+    animation: beamMoveRight 3.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s infinite;
+  }
+
+  /* Bottom Light Beam */
+  .beam-runner.beam-bottom {
+    position: absolute;
+    bottom: 0;
+    right: -50%;
+    height: 2.5px;
+    width: 50%;
+    background: linear-gradient(270deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #00f0ff 85%, transparent 100%);
+    filter: blur(1.5px);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.85), 0 0 6px #ffffff;
+    animation: beamMoveBottom 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
+  }
+
+  /* Left Light Beam */
+  .beam-runner.beam-left {
+    position: absolute;
+    bottom: -50%;
+    left: 0;
+    width: 2.5px;
+    height: 50%;
+    background: linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, #00f0ff 85%, transparent 100%);
+    filter: blur(1.5px);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.85), 0 0 6px #ffffff;
+    animation: beamMoveLeft 3.5s cubic-bezier(0.4, 0, 0.2, 1) 1.8s infinite;
+  }
+
+  @keyframes beamMoveTop {
+    0% { left: -50%; opacity: 0.3; filter: blur(1px); }
+    35%, 65% { opacity: 0.95; filter: blur(2px); }
+    100% { left: 100%; opacity: 0.3; filter: blur(1px); }
+  }
+
+  @keyframes beamMoveRight {
+    0% { top: -50%; opacity: 0.3; filter: blur(1px); }
+    35%, 65% { opacity: 0.95; filter: blur(2px); }
+    100% { top: 100%; opacity: 0.3; filter: blur(1px); }
+  }
+
+  @keyframes beamMoveBottom {
+    0% { right: -50%; opacity: 0.3; filter: blur(1px); }
+    35%, 65% { opacity: 0.95; filter: blur(2px); }
+    100% { right: 100%; opacity: 0.3; filter: blur(1px); }
+  }
+
+  @keyframes beamMoveLeft {
+    0% { bottom: -50%; opacity: 0.3; filter: blur(1px); }
+    35%, 65% { opacity: 0.95; filter: blur(2px); }
+    100% { bottom: 100%; opacity: 0.3; filter: blur(1px); }
+  }
+
+  /* Corner Glow Dots (from sign-in-card-2) */
+  .beam-corner-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 30%, #00f0ff 80%);
+    box-shadow: 0 0 10px #00f0ff, 0 0 18px rgba(0, 240, 255, 0.7);
+    pointer-events: none;
+    z-index: 4;
+  }
+  .beam-corner-dot.dot-tl {
+    top: 3px;
+    left: 3px;
+    width: 6px;
+    height: 6px;
+    animation: cornerPulseDot 2s ease-in-out infinite alternate;
+  }
+  .beam-corner-dot.dot-tr {
+    top: 3px;
+    right: 3px;
+    width: 8px;
+    height: 8px;
+    animation: cornerPulseDot 2.4s ease-in-out 0.5s infinite alternate;
+  }
+  .beam-corner-dot.dot-br {
+    bottom: 3px;
+    right: 3px;
+    width: 8px;
+    height: 8px;
+    animation: cornerPulseDot 2.2s ease-in-out 1.0s infinite alternate;
+  }
+  .beam-corner-dot.dot-bl {
+    bottom: 3px;
+    left: 3px;
+    width: 6px;
+    height: 6px;
+    animation: cornerPulseDot 2.3s ease-in-out 1.5s infinite alternate;
+  }
+
+  @keyframes cornerPulseDot {
+    0% { opacity: 0.25; transform: scale(0.85); }
+    100% { opacity: 0.85; transform: scale(1.2); }
+  }
+
+  /* Subtle Card Border Glow Sheen (from sign-in-card-2) */
+  .card-border-glow-sheen {
+    position: absolute;
+    inset: -1px;
+    border-radius: 24px;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 240, 255, 0.25), rgba(255, 255, 255, 0.08)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.55;
+    transition: opacity 0.5s ease;
+    animation: borderSheenPulse 4s ease-in-out infinite alternate;
+    z-index: 2;
+  }
+  .auth-portal-card:hover .card-border-glow-sheen {
+    opacity: 0.95;
+  }
+  @keyframes borderSheenPulse {
+    0% { opacity: 0.45; }
+    100% { opacity: 0.85; }
+  }
+
+  @keyframes cardGlowPulse {
+    0% {
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.25), 0 25px 80px rgba(2, 6, 23, 0.95), inset 0 1px 2px rgba(186, 230, 253, 0.35);
+      border-color: rgba(0, 240, 255, 0.45);
+    }
+    100% {
+      box-shadow: 0 0 75px rgba(0, 240, 255, 0.45), 0 0 25px rgba(56, 189, 248, 0.3), 0 25px 80px rgba(2, 6, 23, 0.95), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+      border-color: rgba(0, 240, 255, 0.75);
+    }
   }
 
   /* Exit Spring Compression Warp */
   .auth-portal-card.warp-out {
-    transform: scale(1.12) translateY(-20px);
+    transform: scale(1.12) translateY(-20px) !important;
     opacity: 0;
     filter: blur(14px);
     pointer-events: none;
   }
 
-  /* Badges & Titles */
+  /* Badges & Titles with Electric Cyan & Cyber Blue Palette */
   .portal-tag {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 240, 255, 0.08);
-    border: 1px solid rgba(0, 240, 255, 0.32);
-    padding: 4px 12px;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.48);
+    padding: 5px 14px;
     border-radius: 9999px;
     font-size: 0.70rem;
     font-weight: 800;
     letter-spacing: 2px;
     color: #00f0ff;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
     text-transform: uppercase;
-    margin-bottom: 0.55rem;
-    box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
+    margin-bottom: 0.60rem;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.15);
   }
   .portal-tag::before {
     content: '';
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #10e6a8;
-    box-shadow: 0 0 8px #10e6a8;
+    background: #00f0ff;
+    box-shadow: 0 0 10px #00f0ff, 0 0 16px #38bdf8;
     animation: pulseDot 1.8s infinite;
   }
   @keyframes pulseDot {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); opacity: 0.6; }
+    50% { transform: scale(1.35); opacity: 0.5; }
   }
 
   .portal-title {
     font-size: clamp(1.6rem, 4.5vw, 2.1rem);
     font-weight: 900;
     letter-spacing: 2.5px;
-    color: #ffffff;
-    text-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
     margin: 0 0 0.25rem 0;
     line-height: 1.1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    background: linear-gradient(180deg, #ffffff 10%, #bae6fd 55%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.65));
   }
   .portal-title span {
     color: var(--primary);
     text-shadow: 0 0 35px var(--primary);
   }
 
-  /* Hollow HUB with Pure White Outline Lines */
+  /* Hollow HUB with Electric Cyan Luminous Outline */
   .hollow-hub {
     color: transparent !important;
     -webkit-text-fill-color: transparent !important;
-    -webkit-text-stroke: 1.8px #ffffff !important;
-    text-stroke: 1.8px #ffffff !important;
+    -webkit-text-stroke: 1.8px #00f0ff !important;
+    text-stroke: 1.8px #00f0ff !important;
     letter-spacing: 3.5px;
     font-weight: 900;
     display: inline-block;
-    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.75));
+    filter: drop-shadow(0 0 14px #00f0ff) drop-shadow(0 0 28px rgba(56, 189, 248, 0.8));
     transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.3s ease;
   }
   .hollow-hub:hover {
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 30px rgba(var(--panel-rgb, 0, 240, 255), 0.7));
-    -webkit-text-stroke: 2.2px #ffffff !important;
+    filter: drop-shadow(0 0 22px #00f0ff) drop-shadow(0 0 35px #38bdf8);
+    -webkit-text-stroke: 2.2px #38bdf8 !important;
   }
 
   .portal-subtitle {
     font-size: 0.78rem;
-    line-height: 1.38;
-    color: var(--text-muted);
+    line-height: 1.4;
+    color: #93c5fd;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
     margin-bottom: 0.85rem;
     max-width: 360px;
+    opacity: 0.95;
   }
 
-  /* Framer-Motion Tab Switcher with Sliding Morphing Pill */
+  /* Framer-Motion Tab Switcher with Sliding Morphing Pill (Tech Blue & Cyan) */
   .auth-tabs {
     position: relative;
     display: flex;
     width: 100%;
-    background: rgba(2, 4, 10, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(4, 18, 44, 0.88);
+    border: 1.5px solid rgba(0, 240, 255, 0.35);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 240, 255, 0.15);
     border-radius: 12px;
-    padding: 3px;
+    padding: 4px;
     margin-bottom: 0.85rem;
     box-sizing: border-box;
     overflow: hidden;
   }
   .auth-tab-pill {
     position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    width: calc(50% - 3px);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, var(--primary) 100%);
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    background: linear-gradient(135deg, #00f0ff 0%, #38bdf8 45%, #0284c7 100%);
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.8);
     border-radius: 9px;
     pointer-events: none;
     z-index: 1;
@@ -564,22 +734,25 @@
     position: relative;
     z-index: 2;
     flex: 1;
-    padding: 7px 10px;
+    padding: 8px 10px;
     background: transparent;
     border: none;
     border-radius: 9px;
-    color: var(--text-muted);
+    color: #93c5fd;
     font-weight: 800;
     font-size: 0.76rem;
     letter-spacing: 1.5px;
     cursor: pointer;
-    transition: color 0.22s ease;
+    transition: color 0.22s ease, text-shadow 0.22s ease;
   }
   .auth-tab:hover {
     color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
   }
   .auth-tab.active {
-    color: #02040a;
+    color: #020817;
+    font-weight: 900;
+    text-shadow: none;
   }
 
   /* Morphing Forms & Inputs */
@@ -602,73 +775,122 @@
     display: flex;
     flex-direction: column;
     text-align: left;
-    gap: 3px;
+    gap: 4px;
   }
   .auth-input-label {
-    font-size: 0.65rem;
-    letter-spacing: 1.5px;
+    font-size: 0.68rem;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
-    font-weight: 700;
-    color: var(--text-muted);
+    font-weight: 800;
+    color: #38bdf8;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
   }
+  /* Input micro-scaling, hover & focus highlights (from sign-in-card-2) */
   .auth-input-box {
     position: relative;
     display: flex;
     align-items: center;
+    border-radius: 12px;
+    background: rgba(6, 22, 50, 0.8);
+    border: 1.5px solid rgba(0, 240, 255, 0.38);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 240, 255, 0.1);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
   }
-  .auth-input-icon {
-    position: absolute;
-    left: 13px;
-    font-size: 0.9rem;
-    pointer-events: none;
-    opacity: 0.8;
+  .auth-input-box:hover {
+    transform: scale(1.015);
+    background: rgba(8, 28, 64, 0.9);
+    border-color: rgba(0, 240, 255, 0.7);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 22px rgba(0, 240, 255, 0.25);
+  }
+  .auth-input-box:focus-within {
+    transform: scale(1.025);
+    background: rgba(10, 36, 80, 0.96);
+    border-color: #00f0ff;
+    box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.3), 0 0 35px rgba(0, 240, 255, 0.55);
   }
   .auth-field {
     width: 100%;
-    background: rgba(2, 4, 10, 0.85);
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    border-radius: 11px;
-    padding: 9px 12px 9px 38px;
-    color: #ffffff;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px;
+    padding: 10px 14px 10px 42px;
+    color: #f0f9ff;
     font-size: 14px !important;
     outline: none;
-    transition: all 0.2s ease;
     box-sizing: border-box;
-  }
-  .auth-field:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
-    background: rgba(2, 6, 16, 0.95);
+    font-weight: 600;
   }
   .auth-field::placeholder {
-    color: rgba(255, 255, 255, 0.25);
-    font-size: 0.80rem;
+    color: rgba(125, 211, 252, 0.5);
+    font-size: 0.82rem;
+  }
+  .auth-svg-icon {
+    position: absolute;
+    left: 14px;
+    width: 17px;
+    height: 17px;
+    pointer-events: none;
+    stroke: #00f0ff;
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.8));
+    transition: transform 0.25s ease, filter 0.25s ease, stroke 0.25s ease;
+    z-index: 2;
+  }
+  .auth-input-box:focus-within .auth-svg-icon {
+    transform: scale(1.2);
+    stroke: #ffffff;
+    filter: drop-shadow(0 0 10px #00f0ff) drop-shadow(0 0 18px #38bdf8);
   }
 
-  /* Action Buttons with Spring Micro-interactions */
+  /* Action Buttons with Spring Micro-interactions & Shimmer Sweep (Tech Blue & Cyan) */
   .btn-submit {
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    padding: 11px 16px;
-    border: none;
+    padding: 12px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 12px;
-    background: linear-gradient(135deg, #ffffff 0%, var(--primary) 40%, #0284c7 100%);
-    color: #02040a;
+    background: linear-gradient(135deg, #00f0ff 0%, #38bdf8 50%, #0284c7 100%);
+    color: #020817;
     font-weight: 900;
-    font-size: 0.82rem;
-    letter-spacing: 1.5px;
+    font-size: 0.84rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 35px rgba(0, 240, 255, 0.65), 0 4px 18px rgba(2, 132, 199, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 4px;
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+    margin-top: 6px;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  .btn-shimmer-sweep {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.65) 50%, transparent 100%);
+    transform: translateX(-100%);
+    animation: btnShimmerSweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .btn-submit:hover .btn-shimmer-sweep {
+    animation-duration: 1.5s;
+  }
+  .btn-submit span:not(.btn-shimmer-sweep) {
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes btnShimmerSweep {
+    0% { transform: translateX(-100%); }
+    45%, 100% { transform: translateX(100%); }
   }
   .btn-submit:hover {
     transform: scale(1.02);
-    box-shadow: 0 0 35px rgba(0, 240, 255, 0.65);
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.9), 0 6px 26px rgba(2, 132, 199, 0.7), inset 0 1px 2px #ffffff;
+    filter: brightness(1.08);
   }
   .btn-submit:active {
     transform: scale(0.98);
@@ -680,18 +902,18 @@
   }
 
   .btn-signup-submit {
-    background: linear-gradient(135deg, var(--accent), #059669);
-    box-shadow: 0 0 25px rgba(16, 230, 168, 0.4);
+    background: linear-gradient(135deg, #00f0ff 0%, #10e6a8 50%, #0284c7 100%);
+    box-shadow: 0 0 35px rgba(0, 240, 255, 0.65), 0 4px 18px rgba(16, 230, 168, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.85);
   }
   .btn-signup-submit:hover {
-    box-shadow: 0 0 35px rgba(16, 230, 168, 0.65);
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.9), 0 6px 26px rgba(16, 230, 168, 0.65), inset 0 1px 2px #ffffff;
   }
 
-  /* Guest Bypass Button */
+  /* Guest Bypass Button (Tech Blue & Cyan) */
   .guest-bypass-box {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(0, 240, 255, 0.2);
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -699,29 +921,30 @@
     gap: 6px;
   }
   .btn-guest {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--text-muted);
-    padding: 8px 14px;
-    border-radius: 11px;
-    font-size: 0.75rem;
+    background: rgba(6, 24, 54, 0.75);
+    border: 1.5px solid rgba(0, 240, 255, 0.35);
+    color: #7dd3fc;
+    padding: 9px 14px;
+    border-radius: 12px;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 1px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
     justify-content: center;
     box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
   .btn-guest:hover {
-    background: rgba(0, 240, 255, 0.1);
-    border-color: rgba(0, 240, 255, 0.4);
+    background: rgba(10, 36, 80, 0.9);
+    border-color: #00f0ff;
     color: #ffffff;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
-    transform: scale(1.01);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: scale(1.015);
   }
 
   /* Feedback Alerts */
@@ -843,91 +1066,119 @@
     </div>
   </div>
 
-  <!-- Dedicated Space Terminal Auth Card -->
-  <div class="auth-portal-card" id="authCard">
-    <div class="portal-tag">🧠 BRAIN AGILITY & LOGIC PLATFORM</div>
-    <h1 class="portal-title">GAME <span class="hollow-hub">HUB</span></h1>
-    <p class="portal-subtitle">
-      Cognitive agility, pattern recognition, and split-second reflex training. Zero latency.
-    </p>
+  <!-- Dedicated Space Terminal Auth Card with 3D Perspective Scene (from sign-in-card-2) -->
+  <div class="auth-3d-scene" id="auth3DScene">
+    <div class="auth-portal-card" id="authCard">
+      <!-- Animated Traveling Light Beam Perimeter Circuit (from sign-in-card-2) -->
+      <div class="card-beam-perimeter">
+        <div class="beam-runner beam-top"></div>
+        <div class="beam-runner beam-right"></div>
+        <div class="beam-runner beam-bottom"></div>
+        <div class="beam-runner beam-left"></div>
+        <div class="beam-corner-dot dot-tl"></div>
+        <div class="beam-corner-dot dot-tr"></div>
+        <div class="beam-corner-dot dot-br"></div>
+        <div class="beam-corner-dot dot-bl"></div>
+      </div>
+      <!-- Subtle Card Border Glow Sheen (from sign-in-card-2) -->
+      <div class="card-border-glow-sheen"></div>
 
-    <!-- Tab Switcher with Morphing Pill -->
-    <div class="auth-tabs <%= "login".equals(defaultMode) ? "is-login" : "" %>" id="authTabs">
-      <div class="auth-tab-pill" id="authTabPill"></div>
-      <button type="button" class="auth-tab <%= "signup".equals(defaultMode) ? "active" : "" %>" id="tabSignup" onclick="switchAuthMode('signup')">
-        SIGN UP
-      </button>
-      <button type="button" class="auth-tab <%= "login".equals(defaultMode) ? "active" : "" %>" id="tabLogin" onclick="switchAuthMode('login')">
-        LOG IN
-      </button>
-    </div>
+      <div class="portal-tag">
+        <svg class="tag-svg-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px #00f0ff);"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+        BRAIN AGILITY &amp; LOGIC PLATFORM
+      </div>
+      <h1 class="portal-title">GAME <span class="hollow-hub">HUB</span></h1>
+      <p class="portal-subtitle">
+        Cognitive agility, pattern recognition, and split-second reflex training. Zero latency.
+      </p>
 
-    <!-- Alert Box -->
-    <div class="auth-alert" id="authAlert"></div>
-
-    <!-- ================= SIGN UP FORM ================= -->
-    <form class="auth-form-wrap <%= "signup".equals(defaultMode) ? "active" : "" %>" id="signupForm" onsubmit="event.preventDefault(); handleSignup();">
-      <div class="auth-input-group">
-        <label class="auth-input-label" for="signupUser">Operative Handle [3-20 Chars]</label>
-        <div class="auth-input-box">
-          <span class="auth-input-icon">👤</span>
-          <input type="text" class="auth-field" id="signupUser" placeholder="e.g. AstroOperative" autocomplete="username" required>
-        </div>
+      <!-- Tab Switcher with Morphing Pill -->
+      <div class="auth-tabs <%= "login".equals(defaultMode) ? "is-login" : "" %>" id="authTabs">
+        <div class="auth-tab-pill" id="authTabPill"></div>
+        <button type="button" class="auth-tab <%= "signup".equals(defaultMode) ? "active" : "" %>" id="tabSignup" onclick="switchAuthMode('signup')">
+          SIGN UP
+        </button>
+        <button type="button" class="auth-tab <%= "login".equals(defaultMode) ? "active" : "" %>" id="tabLogin" onclick="switchAuthMode('login')">
+          LOG IN
+        </button>
       </div>
 
-      <div class="auth-input-group">
-        <label class="auth-input-label" for="signupPass">Security Cipher [Min 6 Chars]</label>
-        <div class="auth-input-box">
-          <span class="auth-input-icon">🔒</span>
-          <input type="password" class="auth-field" id="signupPass" placeholder="••••••••••••" autocomplete="new-password" required>
+      <!-- Alert Box -->
+      <div class="auth-alert" id="authAlert"></div>
+
+      <!-- ================= SIGN UP FORM ================= -->
+      <form class="auth-form-wrap <%= "signup".equals(defaultMode) ? "active" : "" %>" id="signupForm" onsubmit="event.preventDefault(); handleSignup();">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="signupUser">Operative Handle [3-20 Chars]</label>
+          <div class="auth-input-box">
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" class="auth-field" id="signupUser" placeholder="e.g. AstroOperative" autocomplete="username" required>
+          </div>
         </div>
+
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="signupPass">Security Cipher [Min 6 Chars]</label>
+          <div class="auth-input-box">
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" class="auth-field" id="signupPass" placeholder="••••••••••••" autocomplete="new-password" required>
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="signupPassConfirm">Confirm Cipher</label>
+          <div class="auth-input-box">
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <input type="password" class="auth-field" id="signupPassConfirm" placeholder="••••••••••••" autocomplete="new-password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit btn-signup-submit" id="signupBtn">
+          <span class="btn-shimmer-sweep"></span>
+          <span id="signupBtnText" style="display:inline-flex;align-items:center;gap:7px;">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="#020817" stroke="#020817" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            ENLIST PROFILE &amp; ENTER
+          </span>
+        </button>
+      </form>
+
+      <!-- ================= LOG IN FORM ================= -->
+      <form class="auth-form-wrap <%= "login".equals(defaultMode) ? "active" : "" %>" id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="loginUser">Operative Callsign</label>
+          <div class="auth-input-box">
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" class="auth-field" id="loginUser" placeholder="e.g. CyberNinja" autocomplete="username" required>
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="loginPass">Security Cipher</label>
+          <div class="auth-input-box">
+            <svg class="auth-svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" class="auth-field" id="loginPass" placeholder="••••••••••••" autocomplete="current-password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="loginBtn">
+          <span class="btn-shimmer-sweep"></span>
+          <span id="loginBtnText" style="display:inline-flex;align-items:center;gap:7px;">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="#020817" stroke="#020817" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            AUTHENTICATE &amp; ENTER
+          </span>
+        </button>
+      </form>
+
+      <!-- Guest Access Bypass -->
+      <div class="guest-bypass-box">
+        <button type="button" class="btn-guest" onclick="handleGuestBypass()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px rgba(0,240,255,0.7));"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="3"/></svg>
+          <span>Bypass Authentication (Play as Guest)</span>
+        </button>
       </div>
 
-      <div class="auth-input-group">
-        <label class="auth-input-label" for="signupPassConfirm">Confirm Cipher</label>
-        <div class="auth-input-box">
-          <span class="auth-input-icon">🛡️</span>
-          <input type="password" class="auth-field" id="signupPassConfirm" placeholder="••••••••••••" autocomplete="new-password" required>
-        </div>
+      <div class="portal-footer-hint">
+        ⚡ KINETIC GRID ACTIVE • MOVE CURSOR &amp; CLICK ANYWHERE
       </div>
-
-      <button type="submit" class="btn-submit btn-signup-submit" id="signupBtn">
-        <span id="signupBtnText">⚡ ENLIST PROFILE & ENTER</span>
-      </button>
-    </form>
-
-    <!-- ================= LOG IN FORM ================= -->
-    <form class="auth-form-wrap <%= "login".equals(defaultMode) ? "active" : "" %>" id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
-      <div class="auth-input-group">
-        <label class="auth-input-label" for="loginUser">Operative Callsign</label>
-        <div class="auth-input-box">
-          <span class="auth-input-icon">👤</span>
-          <input type="text" class="auth-field" id="loginUser" placeholder="e.g. CyberNinja" autocomplete="username" required>
-        </div>
-      </div>
-
-      <div class="auth-input-group">
-        <label class="auth-input-label" for="loginPass">Security Cipher</label>
-        <div class="auth-input-box">
-          <span class="auth-input-icon">🔒</span>
-          <input type="password" class="auth-field" id="loginPass" placeholder="••••••••••••" autocomplete="current-password" required>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit" id="loginBtn">
-        <span id="loginBtnText">⚡ AUTHENTICATE & ENTER</span>
-      </button>
-    </form>
-
-    <!-- Guest Access Bypass -->
-    <div class="guest-bypass-box">
-      <button type="button" class="btn-guest" onclick="handleGuestBypass()">
-        <span>🎮 Bypass Authentication (Play as Guest)</span>
-      </button>
-    </div>
-
-    <div class="portal-footer-hint">
-      ⚡ KINETIC GRID ACTIVE • MOVE CURSOR & CLICK ANYWHERE
     </div>
   </div>
 
@@ -985,7 +1236,7 @@
     }
   }
 
-  // Entrance Spring Morph for Terminal Card
+  // Entrance Spring Morph for Terminal Card & 3D Tilt Initialization
   window.addEventListener('DOMContentLoaded', () => {
     const card = document.getElementById('authCard');
     const Motion = (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
@@ -994,7 +1245,11 @@
         card,
         { opacity: [0, 1], scale: [0.93, 1], y: [22, 0] },
         { duration: 0.48, ease: [0.175, 0.885, 0.32, 1.275] }
-      );
+      ).then(() => {
+        if (typeof window.onAuthCardEntranceDone === 'function') {
+          window.onAuthCardEntranceDone();
+        }
+      });
       const activeFields = card.querySelectorAll('.auth-form-wrap.active .auth-input-group, .auth-form-wrap.active .btn-submit');
       if (activeFields.length > 0) {
         Motion.animate(
@@ -1003,8 +1258,85 @@
           { delay: Motion.stagger(0.045, { startDelay: 0.12 }), duration: 0.32, ease: [0.16, 1, 0.3, 1] }
         );
       }
+    } else {
+      if (typeof window.onAuthCardEntranceDone === 'function') {
+        window.onAuthCardEntranceDone();
+      }
     }
   });
+
+  // Interactive 3D Card Tilt Effect from sign-in-card-2 (perspective: 1500px, -10 to 10 deg)
+  (function init3DCardTilt() {
+    const card = document.getElementById('authCard');
+    const scene = document.getElementById('auth3DScene');
+    if (!card || !scene) return;
+
+    let currentRotX = 0, currentRotY = 0;
+    let targetRotX = 0, targetRotY = 0;
+    let isHovered = false;
+    let isWarping = false;
+    let isReady = false;
+    let animId = null;
+
+    window.onAuthCardEntranceDone = function() {
+      isReady = true;
+    };
+
+    function updateCardTransform() {
+      if (isWarping) return;
+      currentRotX += (targetRotX - currentRotX) * 0.14;
+      currentRotY += (targetRotY - currentRotY) * 0.14;
+
+      const translateZ = isHovered ? 10 : 0;
+      card.style.transform = 'perspective(1500px) rotateX(' + currentRotX.toFixed(2) + 'deg) rotateY(' + currentRotY.toFixed(2) + 'deg) translateZ(' + translateZ + 'px)';
+
+      if (Math.abs(targetRotX - currentRotX) > 0.01 || Math.abs(targetRotY - currentRotY) > 0.01 || isHovered) {
+        animId = requestAnimationFrame(updateCardTransform);
+      } else {
+        animId = null;
+      }
+    }
+
+    function handleMouseMove(e) {
+      if (isWarping || !isReady) return;
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+
+      // Rotation range: -10 to 10 deg (matches sign-in-card-2)
+      targetRotX = Math.max(-10, Math.min(10, (-dy / (rect.height / 2)) * 10));
+      targetRotY = Math.max(-10, Math.min(10, (dx / (rect.width / 2)) * 10));
+
+      if (!animId) animId = requestAnimationFrame(updateCardTransform);
+    }
+
+    function handleMouseEnter() {
+      if (isWarping || !isReady) return;
+      isHovered = true;
+      if (!animId) animId = requestAnimationFrame(updateCardTransform);
+    }
+
+    function handleMouseLeave() {
+      if (isWarping) return;
+      isHovered = false;
+      targetRotX = 0;
+      targetRotY = 0;
+      if (!animId) animId = requestAnimationFrame(updateCardTransform);
+    }
+
+    scene.addEventListener('mousemove', handleMouseMove);
+    scene.addEventListener('mouseenter', handleMouseEnter);
+    scene.addEventListener('mouseleave', handleMouseLeave);
+
+    // Stop tilt during warp out
+    window.stop3DTiltForWarp = function() {
+      isWarping = true;
+      if (animId) cancelAnimationFrame(animId);
+      card.style.transform = '';
+    };
+  })();
 
   function showAlert(type, text) {
     const alertBox = document.getElementById('authAlert');
@@ -1034,6 +1366,9 @@
 
   // Framer Motion Kinetic Transition to Dashboard
   function triggerWarpToDashboard(callsign) {
+    if (typeof window.stop3DTiltForWarp === 'function') {
+      window.stop3DTiltForWarp();
+    }
     const card = document.getElementById('authCard');
     const Motion = (typeof window !== 'undefined' && window.Motion) ? window.Motion : null;
 
@@ -1095,12 +1430,12 @@
       } else {
         showAlert('error', data.message || 'Invalid callsign or security cipher.');
         btn.disabled = false;
-        btnText.innerText = '⚡ AUTHENTICATE & ENTER';
+        btnText.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="#020817" stroke="#020817" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AUTHENTICATE & ENTER';
       }
     } catch (err) {
       showAlert('error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
       btn.disabled = false;
-      btnText.innerText = '⚡ AUTHENTICATE & ENTER';
+      btnText.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="#020817" stroke="#020817" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AUTHENTICATE & ENTER';
     }
   }
 
@@ -1142,12 +1477,12 @@
       } else {
         showAlert('error', data.message || 'Unable to register callsign.');
         btn.disabled = false;
-        btnText.innerText = '⚡ ENLIST PROFILE & ENTER';
+        btnText.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="#020817" stroke="#020817" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> ENLIST PROFILE & ENTER';
       }
     } catch (err) {
       showAlert('error', 'Database offline. Verify MySQL connection or check DB_URL on Render.');
       btn.disabled = false;
-      btnText.innerText = '⚡ ENLIST PROFILE & ENTER';
+      btnText.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="#020817" stroke="#020817" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> ENLIST PROFILE & ENTER';
     }
   }
 
@@ -1181,16 +1516,16 @@
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
 
-      // Rebuild high-performance linear gradients across the screen (white on left -> electric blue on right)
+      // Rebuild high-performance linear gradients across the screen (deep tech blue on left -> electric neon cyan on right)
       baseLineGrad = ctx.createLinearGradient(0, 0, W, 0);
-      baseLineGrad.addColorStop(0, 'rgba(255, 255, 255, 0.38)');
-      baseLineGrad.addColorStop(0.5, 'rgba(160, 240, 255, 0.34)');
-      baseLineGrad.addColorStop(1, 'rgba(0, 240, 255, 0.38)');
+      baseLineGrad.addColorStop(0, 'rgba(14, 165, 233, 0.38)');
+      baseLineGrad.addColorStop(0.5, 'rgba(6, 182, 212, 0.40)');
+      baseLineGrad.addColorStop(1, 'rgba(0, 240, 255, 0.44)');
 
       activeLineGrad = ctx.createLinearGradient(0, 0, W, 0);
-      activeLineGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-      activeLineGrad.addColorStop(0.5, 'rgba(180, 245, 255, 0.95)');
-      activeLineGrad.addColorStop(1, 'rgba(0, 240, 255, 0.95)');
+      activeLineGrad.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
+      activeLineGrad.addColorStop(0.5, 'rgba(34, 211, 238, 0.98)');
+      activeLineGrad.addColorStop(1, 'rgba(0, 240, 255, 1.0)');
 
       cols = Math.ceil(W / CELL_SIZE) + 2;
       rows = Math.ceil(H / CELL_SIZE) + 2;
@@ -1342,25 +1677,26 @@
       ctx.lineWidth = 2.0;
       ctx.stroke();
 
-      // Pass 3: Draw Glowing Intersection Nodes (White on left, Cyan on right)
+      // Pass 3: Draw Glowing Intersection Nodes (Electric blue on left, Neon cyan on right)
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           let p = pts[r][c];
           if (p.factor > 0.035) {
             let ratio = Math.max(0, Math.min(1, p.x / W));
-            let nr = Math.round(255 * (1 - ratio));
-            let ng = Math.round(255 * (1 - ratio) + 240 * ratio);
+            let nr = Math.round(14 * (1 - ratio));
+            let ng = Math.round(165 * (1 - ratio) + 242 * ratio);
+            let nb = 255;
             let rad = 1.8 + 2.4 * p.factor;
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(' + nr + ',' + ng + ',255,' + p.factor.toFixed(2) + ')';
+            ctx.fillStyle = 'rgba(' + nr + ',' + ng + ',' + nb + ',' + p.factor.toFixed(2) + ')';
             ctx.fill();
 
             if (p.factor > 0.25) {
               ctx.beginPath();
               ctx.arc(p.x, p.y, rad * 2.2, 0, Math.PI * 2);
-              ctx.fillStyle = 'rgba(' + nr + ',' + ng + ',255,' + (p.factor * 0.35).toFixed(2) + ')';
+              ctx.fillStyle = 'rgba(' + nr + ',' + ng + ',' + nb + ',' + (p.factor * 0.35).toFixed(2) + ')';
               ctx.fill();
             }
           }

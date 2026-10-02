@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+    response.sendRedirect("auth.jsp?mode=signup");
+    if (true) return;
+
     String currentUser = null;
     if (session != null) {
         currentUser = (String) session.getAttribute("user_session");
