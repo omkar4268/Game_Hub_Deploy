@@ -1685,25 +1685,210 @@ function abortToMenu() {
 }
 
 // Startup Screen Controls
+let defuseBgEngine = null;
+
+class DefusalHazardGridEngine {
+  constructor() {
+    this.canvas = document.getElementById('defuseBgCanvas');
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.sweepAngle = 0;
+    this.blips = [];
+    this.init();
+  }
+
+  init() {
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+
+    // Generate radar threat blips
+    this.blips = [];
+    for (let i = 0; i < 12; i++) {
+      this.blips.push({
+        dist: 0.2 + Math.random() * 0.7,
+        angle: Math.random() * Math.PI * 2,
+        alpha: 0,
+        size: 2 + Math.random() * 2
+      });
+    }
+
+    this.animate = this.animate.bind(this);
+    requestAnimationFrame(this.animate);
+  }
+
+  resize() {
+    if (!this.canvas) return;
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.width = this.width * this.dpr;
+    this.canvas.height = this.height * this.dpr;
+    this.ctx.scale(this.dpr, this.dpr);
+  }
+
+  animate() {
+    if (!this.ctx) return;
+    this.ctx.fillStyle = '#000000';
+    this.ctx.fillRect(0, 0, this.width, this.height);
+
+    const cx = this.width / 2;
+    const cy = this.height / 2;
+    const maxR = Math.min(this.width, this.height) * 0.44;
+
+    const isPanic = (typeof timeRemaining !== 'undefined' && timeRemaining <= 30) || (typeof remainingCharges !== 'undefined' && remainingCharges <= 1);
+    const themeColor = isPanic ? '244, 63, 94' : '56, 189, 248';
+
+    // 1. Subtle Hex / Rectangular Grid
+    this.ctx.strokeStyle = `rgba(255, 255, 255, 0.02)`;
+    this.ctx.lineWidth = 1;
+    const step = 42;
+    for (let x = 0; x < this.width; x += step) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, this.height);
+      this.ctx.stroke();
+    }
+    for (let y = 0; y < this.height; y += step) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(this.width, y);
+      this.ctx.stroke();
+    }
+
+    // 2. Tactical Concentric Radar Rings
+    this.ctx.save();
+    this.ctx.translate(cx, cy);
+
+    [0.25, 0.5, 0.75, 1.0].forEach((rPct) => {
+      this.ctx.strokeStyle = `rgba(${themeColor}, ${rPct === 1.0 ? 0.35 : 0.15})`;
+      this.ctx.lineWidth = rPct === 1.0 ? 1.8 : 1.0;
+      this.ctx.setLineDash(rPct === 0.75 ? [6, 6] : []);
+      this.ctx.beginPath();
+      this.ctx.arc(0, 0, maxR * rPct, 0, Math.PI * 2);
+      this.ctx.stroke();
+    });
+
+    // Crosshairs
+    this.ctx.strokeStyle = `rgba(${themeColor}, 0.2)`;
+    this.ctx.setLineDash([4, 4]);
+    this.ctx.beginPath();
+    this.ctx.moveTo(-maxR * 1.1, 0);
+    this.ctx.lineTo(maxR * 1.1, 0);
+    this.ctx.moveTo(0, -maxR * 1.1);
+    this.ctx.lineTo(0, maxR * 1.1);
+    this.ctx.stroke();
+    this.ctx.setLineDash([]);
+
+    // 3. Rotating Sweep Arm
+    this.sweepAngle = (this.sweepAngle + (isPanic ? 0.045 : 0.022)) % (Math.PI * 2);
+    const sweepGrad = this.ctx.createRadialGradient(0, 0, 0, 0, 0, maxR);
+    sweepGrad.addColorStop(0, `rgba(${themeColor}, 0.25)`);
+    sweepGrad.addColorStop(1, 'transparent');
+
+    this.ctx.save();
+    this.ctx.rotate(this.sweepAngle);
+    this.ctx.fillStyle = sweepGrad;
+    this.ctx.beginPath();
+    this.ctx.moveTo(0, 0);
+    this.ctx.arc(0, 0, maxR, -0.35, 0);
+    this.ctx.closePath();
+    this.ctx.fill();
+
+    this.ctx.strokeStyle = `rgba(255, 255, 255, 0.7)`;
+    this.ctx.lineWidth = 1.5;
+    this.ctx.beginPath();
+    this.ctx.moveTo(0, 0);
+    this.ctx.lineTo(maxR, 0);
+    this.ctx.stroke();
+    this.ctx.restore();
+
+    // 4. Radar Threat Blips
+    this.blips.forEach((blip) => {
+      const diff = (this.sweepAngle - blip.angle + Math.PI * 2) % (Math.PI * 2);
+      if (diff < 0.15) blip.alpha = 1.0;
+      else blip.alpha = Math.max(0, blip.alpha - 0.012);
+
+      if (blip.alpha > 0) {
+        const bx = Math.cos(blip.angle) * (blip.dist * maxR);
+        const by = Math.sin(blip.angle) * (blip.dist * maxR);
+        this.ctx.fillStyle = `rgba(255, 255, 255, ${blip.alpha})`;
+        this.ctx.shadowColor = `rgba(${themeColor}, 0.9)`;
+        this.ctx.shadowBlur = 8;
+        this.ctx.beginPath();
+        this.ctx.arc(bx, by, blip.size, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.shadowBlur = 0;
+      }
+    });
+
+    this.ctx.restore();
+
+    requestAnimationFrame(this.animate);
+  }
+}
+
 function openLevelSelect() {
-    document.getElementById('screen-startup').classList.remove('active');
+    const startup = document.getElementById('screen-startup');
+    const menu = document.getElementById('screen-menu');
+    if (startup) {
+      if (window.Motion) {
+        window.Motion.animate(startup, { opacity: [1, 0], scale: [1, 0.95] }, { duration: 0.25 }).then(() => {
+          startup.classList.remove('active');
+          if (menu) {
+            menu.classList.add('active');
+            window.Motion.animate(menu, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.3 });
+          }
+        });
+      } else {
+        startup.classList.remove('active');
+        if (menu) menu.classList.add('active');
+      }
+    }
     document.getElementById('defuseIntelModal').classList.remove('active');
-    document.getElementById('screen-menu').classList.add('active');
 }
 
 function showStartupScreen() {
-    document.getElementById('screen-menu').classList.remove('active');
+    const menu = document.getElementById('screen-menu');
+    const startup = document.getElementById('screen-startup');
+    if (menu) {
+      if (window.Motion) {
+        window.Motion.animate(menu, { opacity: [1, 0], scale: [1, 0.95] }, { duration: 0.25 }).then(() => {
+          menu.classList.remove('active');
+          if (startup) {
+            startup.classList.add('active');
+            window.Motion.animate(startup, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.3 });
+          }
+        });
+      } else {
+        menu.classList.remove('active');
+        if (startup) startup.classList.add('active');
+      }
+    }
     document.getElementById('defuseIntelModal').classList.remove('active');
-    document.getElementById('screen-startup').classList.add('active');
     loadDefusalTelemetry();
 }
 
 function openDefuseIntel() {
-    document.getElementById('defuseIntelModal').classList.add('active');
+    const modal = document.getElementById('defuseIntelModal');
+    if (modal) {
+      modal.classList.add('active');
+      if (window.Motion) {
+        window.Motion.animate(modal, { opacity: [0, 1], scale: [0.92, 1], y: [20, 0] }, { duration: 0.3, ease: [0.16, 1, 0.3, 1] });
+      }
+    }
 }
 
 function closeDefuseIntel() {
-    document.getElementById('defuseIntelModal').classList.remove('active');
+    const modal = document.getElementById('defuseIntelModal');
+    if (modal) {
+      if (window.Motion) {
+        window.Motion.animate(modal, { opacity: [1, 0], scale: [1, 0.94], y: [0, 15] }, { duration: 0.2 }).then(() => {
+          modal.classList.remove('active');
+        });
+      } else {
+        modal.classList.remove('active');
+      }
+    }
 }
 
 function loadDefusalTelemetry() {
@@ -1717,8 +1902,14 @@ function loadDefusalTelemetry() {
 
 // Initial Boot
 window.addEventListener('DOMContentLoaded', () => {
+    defuseBgEngine = new DefusalHazardGridEngine();
     initMenu();
     loadDefusalTelemetry();
+
+    const startup = document.getElementById('screen-startup');
+    if (startup && window.Motion) {
+      window.Motion.animate(startup, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.35, ease: [0.16, 1, 0.3, 1] });
+    }
 });
 
 initMenu();

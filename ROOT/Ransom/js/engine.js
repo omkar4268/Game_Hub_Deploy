@@ -80,8 +80,121 @@ function playSound(snd) {
     } catch (e) {}
 }
 
+// Fullscreen Animated Red Alert Glitch Matrix Canvas
+class RansomBgGlitchEngine {
+  constructor() {
+    this.canvas = document.getElementById('ransomBgCanvas');
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.columns = [];
+    this.chars = '0123456789ABCDEF!#%&*+=-<>~💀☣️☠️ERROR_CORRUPT_NULL';
+    this.glitchSpike = 0;
+    this.init();
+  }
+
+  init() {
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+
+    const colWidth = 24;
+    const colCount = Math.floor(this.width / colWidth);
+    this.columns = [];
+
+    for (let i = 0; i < colCount; i++) {
+      this.columns.push({
+        x: i * colWidth,
+        y: Math.random() * -this.height,
+        speed: 1.5 + Math.random() * 2.8,
+        length: 10 + Math.floor(Math.random() * 14),
+        data: []
+      });
+    }
+
+    this.animate = this.animate.bind(this);
+    requestAnimationFrame(this.animate);
+  }
+
+  resize() {
+    if (!this.canvas) return;
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.width = this.width * this.dpr;
+    this.canvas.height = this.height * this.dpr;
+    this.ctx.scale(this.dpr, this.dpr);
+  }
+
+  triggerGlitch() {
+    this.glitchSpike = 1.0;
+  }
+
+  animate() {
+    if (!this.ctx) return;
+    this.ctx.fillStyle = '#000000';
+    this.ctx.fillRect(0, 0, this.width, this.height);
+
+    if (this.glitchSpike > 0) {
+      this.glitchSpike = Math.max(0, this.glitchSpike - 0.03);
+    }
+
+    // Perspective / Cyber Threat Grid
+    this.ctx.strokeStyle = `rgba(244, 63, 94, ${0.03 + this.glitchSpike * 0.1})`;
+    this.ctx.lineWidth = 1;
+    const gridStep = 44;
+    for (let x = 0; x < this.width; x += gridStep) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, this.height);
+      this.ctx.stroke();
+    }
+    for (let y = 0; y < this.height; y += gridStep) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(this.width, y);
+      this.ctx.stroke();
+    }
+
+    // Red Glitch Matrix Rain
+    this.ctx.font = '11px "Share Tech Mono", monospace';
+    this.columns.forEach((col) => {
+      col.y += col.speed * (1 + this.glitchSpike * 1.5);
+      if (col.y - col.length * 16 > this.height) {
+        col.y = Math.random() * -100;
+        col.speed = 1.5 + Math.random() * 2.8;
+      }
+
+      for (let j = 0; j < col.length; j++) {
+        const charY = col.y - j * 16;
+        if (charY < 0 || charY > this.height) continue;
+
+        const isHead = j === 0;
+        const alpha = Math.max(0, 1 - j / col.length) * 0.35;
+
+        if (isHead) {
+          this.ctx.fillStyle = '#ffffff';
+          this.ctx.shadowColor = '#f43f5e';
+          this.ctx.shadowBlur = 10;
+        } else {
+          this.ctx.fillStyle = `rgba(244, 63, 94, ${alpha})`;
+          this.ctx.shadowBlur = 0;
+        }
+
+        const ch = Math.random() < 0.08 ? this.chars[Math.floor(Math.random() * this.chars.length)] : (col.data[j] || '0');
+        col.data[j] = ch;
+        this.ctx.fillText(ch, col.x, charY);
+      }
+      this.ctx.shadowBlur = 0;
+    });
+
+    requestAnimationFrame(this.animate);
+  }
+}
+
+let ransomBgEngine = null;
+
 // Window Onload
 window.addEventListener('DOMContentLoaded', () => {
+    ransomBgEngine = new RansomBgGlitchEngine();
     initAudio();
     startDownloadPhase();
 
