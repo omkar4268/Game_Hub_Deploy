@@ -276,6 +276,8 @@
 
   /* Main Floating Space Terminal Auth Card */
   .auth-portal-card {
+    --panel-rgb: 0, 240, 255;
+    --panel-ratio: 0.5;
     position: relative;
     z-index: 10;
     width: 92vw;
@@ -284,19 +286,19 @@
     overflow: hidden !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
-    background: rgba(4, 9, 22, 0.92);
+    background: radial-gradient(circle at calc(var(--panel-ratio, 0.5) * 100%) 0%, rgba(var(--panel-rgb, 0, 240, 255), 0.12) 0%, rgba(4, 9, 22, 0.94) 75%);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(0, 240, 255, 0.35);
+    border: 1px solid rgba(var(--panel-rgb, 0, 240, 255), 0.35);
     border-radius: 24px;
     padding: 1.45rem 1.75rem;
-    box-shadow: 0 0 60px rgba(0, 240, 255, 0.18), 0 30px 80px rgba(0, 0, 0, 0.95);
+    box-shadow: 0 0 55px rgba(var(--panel-rgb, 0, 240, 255), 0.18), 0 30px 80px rgba(0, 0, 0, 0.95);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     animation: cardSpringIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     box-sizing: border-box;
   }
   .auth-portal-card::-webkit-scrollbar {
@@ -310,11 +312,12 @@
     content: '';
     position: absolute;
     top: 0;
-    left: 15%;
-    right: 15%;
+    left: 12%;
+    right: 12%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    box-shadow: 0 0 16px var(--primary);
+    background: linear-gradient(90deg, transparent, rgb(var(--panel-rgb, 0, 240, 255)), transparent);
+    box-shadow: 0 0 16px rgb(var(--panel-rgb, 0, 240, 255));
+    transition: background 0.2s ease, box-shadow 0.2s ease;
   }
 
   @keyframes cardSpringIn {
@@ -335,26 +338,28 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 240, 255, 0.08);
-    border: 1px solid rgba(0, 240, 255, 0.3);
+    background: rgba(var(--panel-rgb, 0, 240, 255), 0.08);
+    border: 1px solid rgba(var(--panel-rgb, 0, 240, 255), 0.32);
     padding: 4px 12px;
     border-radius: 9999px;
     font-size: 0.70rem;
     font-weight: 800;
     letter-spacing: 2px;
-    color: var(--primary);
+    color: rgb(var(--panel-rgb, 0, 240, 255));
     text-transform: uppercase;
     margin-bottom: 0.55rem;
-    box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
+    box-shadow: 0 0 16px rgba(var(--panel-rgb, 0, 240, 255), 0.2);
+    transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   }
   .portal-tag::before {
     content: '';
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
+    background: rgb(var(--panel-rgb, 0, 240, 255));
+    box-shadow: 0 0 8px rgb(var(--panel-rgb, 0, 240, 255));
     animation: pulseDot 1.8s infinite;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
   }
   @keyframes pulseDot {
     0%, 100% { transform: scale(1); opacity: 1; }
@@ -366,13 +371,35 @@
     font-weight: 900;
     letter-spacing: 2.5px;
     color: #ffffff;
-    text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+    text-shadow: 0 0 25px rgba(var(--panel-rgb, 0, 240, 255), 0.45);
     margin: 0 0 0.25rem 0;
     line-height: 1.1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: text-shadow 0.2s ease;
   }
   .portal-title span {
     color: var(--primary);
     text-shadow: 0 0 35px var(--primary);
+  }
+
+  /* Hollow HUB with Pure White Outline Lines */
+  .hollow-hub {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    -webkit-text-stroke: 1.8px #ffffff !important;
+    text-stroke: 1.8px #ffffff !important;
+    letter-spacing: 3.5px;
+    font-weight: 900;
+    display: inline-block;
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.75));
+    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.3s ease;
+  }
+  .hollow-hub:hover {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 30px rgba(var(--panel-rgb, 0, 240, 255), 0.7));
+    -webkit-text-stroke: 2.2px #ffffff !important;
   }
 
   .portal-subtitle {
@@ -412,9 +439,10 @@
     color: #ffffff;
   }
   .auth-tab.active {
-    background: var(--primary);
+    background: rgb(var(--panel-rgb, 0, 240, 255));
     color: #02040a;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
+    box-shadow: 0 0 18px rgba(var(--panel-rgb, 0, 240, 255), 0.45);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
   }
 
   /* Forms & Inputs */
@@ -461,7 +489,7 @@
   .auth-field {
     width: 100%;
     background: rgba(2, 4, 10, 0.85);
-    border: 1px solid rgba(0, 240, 255, 0.25);
+    border: 1px solid rgba(var(--panel-rgb, 0, 240, 255), 0.25);
     border-radius: 11px;
     padding: 9px 12px 9px 38px;
     color: #ffffff;
@@ -471,8 +499,8 @@
     box-sizing: border-box;
   }
   .auth-field:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+    border-color: rgb(var(--panel-rgb, 0, 240, 255));
+    box-shadow: 0 0 20px rgba(var(--panel-rgb, 0, 240, 255), 0.35);
     background: rgba(2, 6, 16, 0.95);
   }
   .auth-field::placeholder {
@@ -486,24 +514,24 @@
     padding: 11px 16px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary), #0284c7);
+    background: linear-gradient(135deg, rgb(var(--panel-rgb, 0, 240, 255)), #0284c7);
     color: #02040a;
     font-weight: 900;
     font-size: 0.82rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 25px rgba(var(--panel-rgb, 0, 240, 255), 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 4px;
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, background 0.2s ease;
   }
   .btn-submit:hover {
     transform: scale(1.02);
-    box-shadow: 0 0 35px rgba(0, 240, 255, 0.65);
+    box-shadow: 0 0 35px rgba(var(--panel-rgb, 0, 240, 255), 0.65);
   }
   .btn-submit:active {
     transform: scale(0.98);
@@ -648,7 +676,7 @@
   <!-- Dedicated Space Terminal Auth Card -->
   <div class="auth-portal-card" id="authCard">
     <div class="portal-tag">🧠 BRAIN AGILITY & LOGIC PLATFORM</div>
-    <h1 class="portal-title">GAME <span>HUB</span></h1>
+    <h1 class="portal-title">GAME <span class="hollow-hub">HUB</span></h1>
     <p class="portal-subtitle">
       Cognitive agility, pattern recognition, and split-second reflex training. Zero latency.
     </p>
@@ -902,35 +930,29 @@
   }
 
   // =========================================================
-  // KINETIC GRID ENGINE (60 FPS Canvas with Cursor & Touch Warp)
+  // KINETIC GRID ENGINE (Dual-Spectrum Space-White & Cyan-Tech)
   // =========================================================
   (function initKineticGrid() {
     const canvas = document.getElementById('techRaysCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const authCard = document.getElementById('authCard');
 
-    let W = 0, H = 0, horizonY = 0;
+    let W = 0, H = 0;
     const CELL_SIZE = 55;
     const INFLUENCE_RADIUS = 260;
     const MAX_WARP = 24;
-    const DOT_SPACING = 30;
     const LERP_SPEED = 0.08;
-
-    const LINE_BASE = { r: 0, g: 240, b: 255, a: 0.18 };
-    const LINE_ACTIVE = { r: 74, g: 158, b: 255, a: 0.95 };
-    const NODE_ACTIVE = { r: 74, g: 158, b: 255, a: 1.0 };
-    const NODE_BASE_RADIUS = 1.8;
-    const NODE_ACTIVE_RADIUS = 3.5;
 
     const mouse = { x: -9999, y: -9999 };
     const targetMouse = { x: -9999, y: -9999 };
     const ripples = [];
+    let panelRatio = 0.5;
 
     function resize() {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      horizonY = Math.round(H * 0.78);
     }
     window.addEventListener('resize', resize);
     resize();
@@ -998,14 +1020,6 @@
       return { x: px + wx, y: py + wy, factor: Math.min(factor, 1) };
     }
 
-    function lerpColor(c1, c2, t) {
-      return 'rgba(' +
-        Math.round(c1.r + (c2.r - c1.r) * t) + ',' +
-        Math.round(c1.g + (c2.g - c1.g) * t) + ',' +
-        Math.round(c1.b + (c2.b - c1.b) * t) + ',' +
-        (c1.a + (c2.a - c1.a) * t).toFixed(3) + ')';
-    }
-
     let cols = 0, rows = 0;
     let grid = [];
 
@@ -1027,6 +1041,18 @@
       mouse.x += (targetMouse.x - mouse.x) * LERP_SPEED;
       mouse.y += (targetMouse.y - mouse.y) * LERP_SPEED;
 
+      // Dynamic color interpolation between Space White (left) and Cyan Tech (right)
+      const targetRatio = (targetMouse.x >= 0 && W > 0) ? Math.max(0, Math.min(1, targetMouse.x / W)) : 0.5;
+      panelRatio += (targetRatio - panelRatio) * 0.075;
+
+      // Synchronize Auth Card color with cursor position
+      if (authCard) {
+        const cardR = Math.round(255 * (1 - panelRatio) + 0 * panelRatio);
+        const cardG = Math.round(255 * (1 - panelRatio) + 240 * panelRatio);
+        authCard.style.setProperty('--panel-rgb', `${cardR}, ${cardG}, 255`);
+        authCard.style.setProperty('--panel-ratio', panelRatio.toFixed(3));
+      }
+
       for (let i = ripples.length - 1; i >= 0; i--) {
         let rip = ripples[i];
         rip.radius += rip.speed;
@@ -1047,7 +1073,7 @@
         }
       }
 
-      // Draw Lines
+      // Draw Lines with Dual Space-White (left) to Cyan-Tech (right) Spectrum
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           let p = pts[r][c];
@@ -1055,22 +1081,34 @@
           if (c < cols - 1) {
             let pr = pts[r][c + 1];
             let avgFactor = (p.factor + pr.factor) * 0.5;
+            let midX = (p.x + pr.x) * 0.5;
+            let blend = Math.max(0, Math.min(1, (midX / W) * 0.65 + panelRatio * 0.35));
+            let lr = Math.round(255 * (1 - blend));
+            let lg = Math.round(255 * (1 - blend) + 240 * blend);
+            let alpha = avgFactor > 0.05 ? Math.min(0.92, 0.18 + avgFactor * 0.75) : 0.16;
+
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(pr.x, pr.y);
-            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, avgFactor);
-            ctx.lineWidth = avgFactor > 0.05 ? 1 + avgFactor * 1.5 : 0.8;
+            ctx.strokeStyle = `rgba(${lr}, ${lg}, 255, ${alpha.toFixed(3)})`;
+            ctx.lineWidth = avgFactor > 0.05 ? 1 + avgFactor * 1.6 : 0.85;
             ctx.stroke();
           }
 
           if (r < rows - 1) {
             let pb = pts[r + 1][c];
             let avgFactor = (p.factor + pb.factor) * 0.5;
+            let midX = (p.x + pb.x) * 0.5;
+            let blend = Math.max(0, Math.min(1, (midX / W) * 0.65 + panelRatio * 0.35));
+            let lr = Math.round(255 * (1 - blend));
+            let lg = Math.round(255 * (1 - blend) + 240 * blend);
+            let alpha = avgFactor > 0.05 ? Math.min(0.92, 0.18 + avgFactor * 0.75) : 0.16;
+
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(pb.x, pb.y);
-            ctx.strokeStyle = lerpColor(LINE_BASE, LINE_ACTIVE, avgFactor);
-            ctx.lineWidth = avgFactor > 0.05 ? 1 + avgFactor * 1.5 : 0.8;
+            ctx.strokeStyle = `rgba(${lr}, ${lg}, 255, ${alpha.toFixed(3)})`;
+            ctx.lineWidth = avgFactor > 0.05 ? 1 + avgFactor * 1.6 : 0.85;
             ctx.stroke();
           }
         }
@@ -1081,16 +1119,20 @@
         for (let c = 0; c < cols; c++) {
           let p = pts[r][c];
           if (p.factor > 0.04) {
-            let rad = NODE_BASE_RADIUS + (NODE_ACTIVE_RADIUS - NODE_BASE_RADIUS) * p.factor;
+            let blend = Math.max(0, Math.min(1, (p.x / W) * 0.65 + panelRatio * 0.35));
+            let nr = Math.round(255 * (1 - blend));
+            let ng = Math.round(255 * (1 - blend) + 240 * blend);
+            let rad = 1.8 + (3.8 - 1.8) * p.factor;
+
             ctx.beginPath();
             ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(' + NODE_ACTIVE.r + ',' + NODE_ACTIVE.g + ',' + NODE_ACTIVE.b + ',' + p.factor.toFixed(2) + ')';
+            ctx.fillStyle = `rgba(${nr}, ${ng}, 255, ${p.factor.toFixed(2)})`;
             ctx.fill();
 
-            if (p.factor > 0.3) {
+            if (p.factor > 0.28) {
               ctx.beginPath();
-              ctx.arc(p.x, p.y, rad * 2.2, 0, Math.PI * 2);
-              ctx.fillStyle = 'rgba(' + NODE_ACTIVE.r + ',' + NODE_ACTIVE.g + ',' + NODE_ACTIVE.b + ',' + (p.factor * 0.25).toFixed(2) + ')';
+              ctx.arc(p.x, p.y, rad * 2.3, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(${nr}, ${ng}, 255, ${(p.factor * 0.28).toFixed(2)})`;
               ctx.fill();
             }
           }

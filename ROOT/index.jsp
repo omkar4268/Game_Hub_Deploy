@@ -489,6 +489,26 @@
     text-shadow: 0 2px 20px rgba(255, 255, 255, 0.35);
   }
 
+  /* Hollow HUB Typography with Pure White Outline Lines */
+  .hollow-hub {
+    background: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    -webkit-text-stroke: 1.8px #ffffff !important;
+    text-stroke: 1.8px #ffffff !important;
+    letter-spacing: 3.5px;
+    font-weight: 900;
+    display: inline-block;
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
+    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.3s ease;
+  }
+  .hollow-hub:hover {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 30px rgba(0, 240, 255, 0.6));
+    -webkit-text-stroke: 2.2px #ffffff !important;
+  }
+
   .portal-subtitle {
     font-size: clamp(0.82rem, 2vw, 0.9rem);
     color: #94a3b8;
@@ -3159,7 +3179,7 @@
         <canvas id="portalOrbCanvas" width="96" height="96"></canvas>
       </div>
       <div class="portal-tag">🧠 BRAIN TRAINING & LOGIC HUB</div>
-      <h1 class="portal-title">GAME HUB</h1>
+      <h1 class="portal-title">GAME <span class="hollow-hub">HUB</span></h1>
       <p class="portal-subtitle">
         Simple mind-training & logic puzzles. Boost your memory, focus, problem solving, and reflexes.
       </p>
@@ -3200,7 +3220,7 @@
        ========================================================= -->
   <aside>
     <div class="brand" onclick="showPortal()">
-      <span class="brand-glyph">⬡</span> GAME <span class="brand-badge">CORE v3.5</span>
+      <span class="brand-glyph">⬡</span> GAME <span class="hollow-hub" style="font-size:0.92em;letter-spacing:2.5px;">HUB</span> <span class="brand-badge">CORE v3.5</span>
     </div>
 
     <div class="auth-widget" id="authWidget">
@@ -4030,7 +4050,7 @@
       <div class="master-library-header">
         <div>
           <div class="master-tag">// MASTER PROTOCOLS ARCHIVE</div>
-          <h2 class="master-title">GAME HUB LIBRARY</h2>
+          <h2 class="master-title">GAME <span class="hollow-hub" style="font-size:0.95em;">HUB</span> LIBRARY</h2>
           <div class="master-subtitle">6 operational cyber-simulation modules online. Select a game to view intel or launch.</div>
         </div>
         <button type="button" class="btn-master-close" onclick="closeModal('masterLibraryModal')" aria-label="Close Library">✕</button>
@@ -6429,11 +6449,16 @@
           randomStreak(SPREAD, positions, i * 6);
         }
 
-        const head = new THREE.Color('#ffffff').lerp(new THREE.Color('#00f0ff'), 0.45);
-        const tail = new THREE.Color('#00f0ff').multiplyScalar(0.22);
+        const headWhite = new THREE.Color('#ffffff');
+        const tailWhite = new THREE.Color('#cbd5e1').multiplyScalar(0.28);
+        const headCyan = new THREE.Color('#00f0ff');
+        const tailCyan = new THREE.Color('#0284c7').multiplyScalar(0.25);
 
         for (let i = 0; i * 6 < colors.length; i++) {
           const o = i * 6;
+          const isLeft = positions[o] < 0;
+          const head = isLeft ? headWhite : headCyan;
+          const tail = isLeft ? tailWhite : tailCyan;
           colors[o] = head.r;
           colors[o + 1] = head.g;
           colors[o + 2] = head.b;
@@ -6503,6 +6528,17 @@
             arr[o + 5] += dz;
             if (arr[o + 5] > NEAR_Z) {
               randomStreak(SPREAD, arr, o, FAR_Z - Math.random() * 6);
+              const isLeft = arr[o] < 0;
+              const head = isLeft ? headWhite : headCyan;
+              const tail = isLeft ? tailWhite : tailCyan;
+              const colArr = geometry.getAttribute('color').array;
+              colArr[o] = head.r;
+              colArr[o + 1] = head.g;
+              colArr[o + 2] = head.b;
+              colArr[o + 3] = tail.r;
+              colArr[o + 4] = tail.g;
+              colArr[o + 5] = tail.b;
+              geometry.getAttribute('color').needsUpdate = true;
             }
           }
           posAttr.needsUpdate = true;
